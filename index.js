@@ -13,6 +13,7 @@ app.use(bodyParser.urlencoded({
   extended: false,
   limit: 50000
 }))
+app.use(express.static('static'))
 app.use(router)
 
 
