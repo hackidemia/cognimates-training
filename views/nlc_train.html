@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Text Classifier - Cognimates Studio</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+    }
+
+  .carousel-inner img {
+      width: 100%; /* Set width to 100% */
+      margin: auto;
+      min-height:200px;
+  }
+
+  /* Hide the carousel text when the screen is less than 600 pixels wide */
+  @media (max-width: 600px) {
+    .carousel-caption {
+      display: none;
+    }
+  }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/home">Cognimates</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="/nlc_home" id="backButton">Text Classification</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" id="logoutButton"><span class="glyphicon glyphicon-log-in"></span> Log out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container text-center">
+  <h3>Cognimates Watson Studio</h3><br>
+
+  <div class="row">
+    <h3 id="classifierTitle"></h3>
+  </div>
+  <br>
+  <div class="row">
+    <h3>Training</h3>
+    <br>
+    <div class="col-sm-4">
+      <form id="labelInputForm">
+        <div class="form-group">
+          <input class="form-control input-lg" id="labelInput" type="text" onkeypress="return event.keyCode!=13">
+        </div>
+      </form>
+    </div>
+    <div class="col-sm-2">
+      <div class="btn btn-success btn-lg" id="addLabelButton">
+        + Add Label
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="btn btn-success btn-lg" id="trainButton">
+        Train classifier
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <ul class="list-group" id="labelList">
+    </ul>
+  </div>
+</div><br>
+
+
+<div id="labelModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="labelModalHeader"></h4>
+      </div>
+      <div class="modal-body">
+        <p>Add examples for selected label here:</p>
+        <ul class="list-group" id="examplesList">
+        </ul>
+        <div class="row">
+          <div class="col-sm-8">
+            <br>
+            <form id="exampleForm">
+              <div class="form-group">
+                <input class="form-control input-sm" id="exampleInput" type="text">
+              </div>
+            </form>
+          </div>
+          <div class="col-sm-2 col-sm-push-1">
+            <br>
+            <div class="btn btn-primary btn-sm" id="addExampleButton">
+              Add Example
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal" id="removeLabelButton">Remove label</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="closeLabelModal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function init() {
+    if (window.localStorage.getItem('token_expiry') != 'null') {
+      if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
+        window.localStorage.setItem('access_token', null)
+        window.localStorage.setItem('token_expiry', null)
+        window.location.replace("/");
+      } else {
+
+        if(window.localStorage.getItem('temp_classifierName') == 'null') {
+          window.location.replace("/nlc_home");
+          return
+        }
+        window.access_token = window.localStorage.getItem('access_token')
+        window.classifierName = window.localStorage.getItem('temp_classifierName');
+        $('#classifierTitle').html(window.classifierName)
+        return
+      }
+    } else {
+      window.location.replace("/");
+      return
+    }
+  }
+
+  $(document).ready(function(){
+    $('#logoutButton').click(function(evt) {
+      evt.preventDefault();
+      window.localStorage.setItem('access_token', null)
+      window.localStorage.setItem('token_expiry', null)
+      window.location.replace("/");
+      return false;
+    })
+
+    $('#labelInputForm').on("keypress", 'form', function (e) {
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+            e.preventDefault();
+            var labelInput = $('#labelInput').val()
+            if(labelInput != null) {
+              addLabelItem(labelInput);
+            }
+            return false;
+        }
+    });
+
+
+    $('#addLabelButton').click(function (e) {
+      e.preventDefault();
+      var labelInput = $('#labelInput').val()
+      if(labelInput != null && labelInput.length > 0) {
+        addLabelItem(labelInput);
+      }
+      return false;
+    })
+
+    $('#removeLabelButton').click(function (e) {
+      e.preventDefault();
+      $(`#label_item_${window.selectedLabel}`).remove()
+      window.examples[window.selectedLabel] = undefined
+      var index = window.labelListItems.indexOf(window.selectedLabel);
+      if (index > -1) {
+        window.labelListItems.splice(index, 1);
+      }
+      window.selectedLabel = undefined
+      $('#labelModal').modal('hide')
+      return false;
+    })
+
+    $('#addExampleButton').click(function (e) {
+      e.preventDefault();
+      if(window.selectedLabel == undefined) return;
+      if(window.examples == undefined) {
+        window.examples = {}
+      }
+      if(window.examples[window.selectedLabel] == undefined) {
+        window.examples[window.selectedLabel] = []
+      }
+      var exampleInput = $('#exampleInput').val()
+      if(window.examples[window.selectedLabel].includes(exampleInput) == true) {
+        return
+      }
+      if(exampleInput != null && exampleInput.length > 0) {
+        window.examples[window.selectedLabel].push(exampleInput)
+        addExampleItem(exampleInput);
+        $(`#label_badge_${window.selectedLabel}`).html(window.examples[window.selectedLabel].length)
+      }
+      return false;
+    })
+
+
+    $('#trainButton').click(function (e) {
+      if (window.labelListItems == undefined || window.labelListItems.length < 2) {
+        alert('Two or more labels are required to train')
+        return
+      }
+      var error = false
+      for (var idx = 0, label = window.labelListItems[idx]; idx < window.labelListItems.length; idx++) {
+        if (window.examples[label].length < 5) {
+          alert('5 or more examples required for each label')
+          error = true
+          break
+        }
+      }
+      if(error == true) {
+        return
+      }
+      var requestData = {}
+      requestData.name = window.classifierName
+      requestData.training_data = []
+      window.labelListItems.forEach((label) => {
+        window.examples[label].forEach((example) => {
+          var exampleObject = {
+            phrase: example,
+            label: label
+          }
+          requestData.training_data.push(exampleObject)
+        })
+      })
+      $.ajax({
+        url: '/nlc/classifier',
+        type: 'POST',
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(requestData),
+        headers: { token: window.access_token },
+        success: function (data) {
+          if(data.error == null) {
+            console.log(data)
+            window.localStorage.setItem('selectedClassifier', data.classifier_id)
+            window.location.replace('/nlc')
+          } else {
+            alert(data.error)
+          }
+        }
+      })
+    })
+
+    init();
+  });
+
+
+  function addLabelItem(label) {
+    if(window.labelListItems == null) {
+      window.labelListItems = []
+    }
+    if(window.labelListItems.includes(label) != false) {
+      alert('Label already exists')
+      return
+    }
+    var listItem = document.createElement('li')
+    listItem.className = "list-group-item"
+    listItem.id = `label_item_${label}`
+    var span = document.createElement('span')
+    span.className = "badge"
+    span.id = `label_badge_${label}`
+    span.innerHTML = 0
+    listItem.append(`${label} `)
+    listItem.addEventListener('click', function(labelName) {
+      return function() { showLabelModal(labelName) }
+    }(label))
+    listItem.append(span)
+    $('#labelList').append(listItem)
+    window.labelListItems.push(label)
+    console.log(window.examples);
+    if(window.examples === undefined) {
+      window.examples = {}
+    }
+    window.examples[label] = []
+  }
+
+
+  function selectLabel(label) {
+    window.selectedLabel = label
+  }
+
+  function showLabelModal(label) {
+    selectLabel(label)
+    $('#labelModalHeader').html(label);
+    $('#labelModal').modal();
+    loadExampleItems()
+  }
+
+
+  function addExampleItem(example) {
+    if(example == undefined || example.length == 0) return;
+    if(window.selectedLabel == undefined || window.examples[window.selectedLabel] == undefined) return;
+    var exampleItem = document.createElement('li')
+    exampleItem.className = "list-group-item"
+    exampleItem.innerHTML = example
+    $('#examplesList').append(exampleItem)
+  }
+
+  function clearExampleItems() {
+    $('#examplesList').empty()
+  }
+
+
+  function loadExampleItems() {
+    clearExampleItems()
+    if(window.examples == undefined) return
+    if(window.selectedLabel == undefined || window.examples[window.selectedLabel] == undefined) return;
+    window.examples[window.selectedLabel].forEach((example) => {
+      addExampleItem(example)
+    })
+  }
+</script>
+</body>
+</html>
