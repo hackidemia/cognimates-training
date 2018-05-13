@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Home - Cognimates Studio</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+    }
+
+  .carousel-inner img {
+      width: 100%; /* Set width to 100% */
+      margin: auto;
+      min-height:200px;
+  }
+
+  /* Hide the carousel text when the screen is less than 600 pixels wide */
+  @media (max-width: 600px) {
+    .carousel-caption {
+      display: none;
+    }
+  }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Cognimates</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" id="logoutButton"><span class="glyphicon glyphicon-log-in"></span> Log out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container text-center">
+  <h3>Cognimates Studio</h3><br>
+  <div class="row">
+    <div class="col-sm-4">
+      <img src="/images/nlc_banner.png" class="img-responsive img-rounded" style="width:100%" alt="Image">
+      <p>Text Classification</p>
+    </div>
+    <div class="col-sm-4">
+      <img src="/images/vision_banner.png" class="img-responsive img-rounded" style="width:100%" alt="Image">
+      <p>Image Classification</p>
+    </div>
+    <div class="col-sm-4">
+
+      <div class="well">
+        <div class="btn btn-primary btn-lg btn-block" id="textClassifierButton">
+          Text classifier
+        </div>
+      </div>
+
+      <div class="well">
+        <div class="btn btn-primary btn-lg btn-block" id="imageClassificationButton">
+          Vision classifier
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div><br>
+
+<script>
+  (function init() {
+    if (window.localStorage.getItem('token_expiry') != 'null') {
+      if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
+        window.localStorage.setItem('access_token', null)
+        window.localStorage.setItem('token_expiry', null)
+        window.location.replace("/");
+      } else {
+        window.access_token = window.localStorage.getItem('access_token')
+        return
+      }
+    } else {
+      window.location.replace("/");
+      return
+    }
+  })();
+
+  $(document).ready(function(){
+    $('#logoutButton').click(function(evt) {
+      evt.preventDefault();
+      window.localStorage.setItem('access_token', null)
+      window.localStorage.setItem('token_expiry', null)
+      window.location.replace("/");
+      return false;
+    });
+
+    $('#textClassifierButton').click(function(evt) {
+      evt.preventDefault();
+      window.location.replace("/nlc_home")
+      return false;
+    })
+
+    $('#imageClassificationButton').click(function (evt) {
+      evt.preventDefault();
+      alert('Coming soon')
+      return false;
+    })
+  });
+</script>
+
+
+</body>
+</html>
