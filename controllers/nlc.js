@@ -132,9 +132,6 @@ function getClassifierInformation(req, res) {
     }
 }
 
-
-
-
 function createClassifier(req, res) {
   let token = req.headers.token
   var name = req.body.name
