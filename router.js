@@ -34,5 +34,15 @@ router.get('/nlc/classifier', nlcController.getClassifierInformation)
 router.delete('/nlc/classifier', nlcController.deleteClassifier)
 router.get('/nlc/classify', nlcController.classifyText)
 
+router.get('/vision_home', (req, res) => {
+  res.render('vision_home.html')
+})
+
+router.get('vision/classifiers', visionController.getClassifiersList)
+router.post('/vision/classifier', visionController.createClassifier)
+router.get('/vision/classifier', visionController.getClassifierInformation)
+router.delete('/vision/classifier', visionController.deleteClassifier)
+router.get('/vision/classify', visionController.classifyImages)
+
 
 module.exports = router
