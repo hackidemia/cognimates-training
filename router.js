@@ -1,7 +1,7 @@
 const express = require('express')
 const authController = require('./controllers/auth')
 const nlcController = require('./controllers/nlc')
-// const visionController = require('./controllers/vision')
+const visionController = require('./controllers/vision')
 const router = express.Router()
 
 

@@ -5,7 +5,7 @@ const config = require('../config');
 const path = require('path');
 const fs = require('fs');
 let archiver = require('archiver');
-let watson = require('watson-developer-cloud/visual-recognition/v3');
+let VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
 
 const watson = new VisualRecognitionV3({
     api_key: config.VISION_API,
