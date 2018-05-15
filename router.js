@@ -38,6 +38,14 @@ router.get('/vision_home', (req, res) => {
   res.render('vision_home.html')
 })
 
+router.get('/vision_train', (req, res) => {
+  res.render('vision_train.html')
+})
+
+router.get('/vision', (req, res) => {
+  res.render('vision.html')
+})
+
 router.get('vision/classifiers', visionController.getClassifiersList)
 router.post('/vision/classifier', visionController.createClassifier)
 router.get('/vision/classifier', visionController.getClassifierInformation)
