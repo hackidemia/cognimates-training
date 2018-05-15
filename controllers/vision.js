@@ -3,9 +3,7 @@ const auth = require('../controllers/auth');
 const UserClassifier = require('../models/UserClassifier');
 const config = require('../config');
 const path = require('path');
-var csv = require('csv');
 const fs = require('fs');
-let nodeJsZip = require("nodeJs-zip");
 let archiver = require('archiver');
 let watson = require('watson-developer-cloud/visual-recognition/v3');
 
@@ -165,17 +163,11 @@ function createClassifier(req, res) {
       createZip()
     }
   
+    /**
+     * Use archiver to create a zip file.
+     */
     function createZip() {
-        let randomNumber = random(10000,99999)
-        filepath = path.join(__dirname, `${randomNumber}.csv`)
-        csv.stringify(data, (err, output) => {
-          if(err) {
-            res.json({ error: err.message })
-            return
-          }
-  
-          fs.writeFile(filepath, output, onCSVWritten)
-        })
+
     }
   
     function onCSVWritten(err) {
