@@ -110,7 +110,7 @@ header h2 {
 	height: 60px;
 	background: none;
 	border: none;
-	border-bottom: 1px solid #bdc3c7;
+	border-bottom: 1px solid #ffffff;
 	outline: none;
 	font: 300 28px 'Ubuntu', sans-serif;
 	padding: 20px;
@@ -141,7 +141,7 @@ header h2 {
 	transition: all .2s ease;
 }
 .task:hover {
-	background: rgba(0, 0, 0, .04);
+	background: rgba(172, 197, 222, 0.8);
 	cursor: pointer;
 }
 .task:hover .remove-task {
@@ -191,6 +191,10 @@ header h2 {
 }
 .remove-task:hover {
 	color: #333;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #000000;
 }
 
 /*

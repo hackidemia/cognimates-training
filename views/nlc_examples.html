@@ -34,10 +34,16 @@
       display: none;
     }
   }
+
+  body {
+    background-color: rgba(172, 197, 222, 0.8)
+  }
+
   </style>
 </head>
 
 <body>
+
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -60,15 +66,15 @@
 </nav>
       
 <header class="main-header">
-  <h1 id="labelName"></h1>
-  <h2>Add examples to your label</h2><br>
+  <h1 id="labelName" style="color:#328EDE"></h1>
+  <h2 style="color:#328EDE">Add examples to your label</h2><br>
   <div class="btn btn-success btn-lg" id="goBack">
         Return to your classifier
    </div>
 </header>
 
 <section class="example-insert">
-  <input type="text" name="task" placeholder="Add your examples here" id="exampleInput">
+  <input style= "color:#ffffff" type="text" name="task" placeholder="Add your examples here" id="exampleInput">
 </section>
 
 <section class="example-list">
