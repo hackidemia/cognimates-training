@@ -110,7 +110,7 @@ header h2 {
 	height: 60px;
 	background: none;
 	border: none;
-	border-bottom: 1px solid #ffffff;
+	border-bottom: 1px solid #000;
 	outline: none;
 	font: 300 28px 'Ubuntu', sans-serif;
 	padding: 20px;
@@ -168,12 +168,13 @@ header h2 {
 	line-height: 60px;
 	padding: 0 20px;
 	position: relative;
-	color: #333;
+	color: #000;
 
 	transition: all .2s ease;
 }
 .example:hover {
-	background: rgba(0, 0, 0, .04);
+	color: #fff;
+	background: #328EDE;
 	cursor: pointer;
 }
 .example:hover .remove-example {
@@ -185,7 +186,7 @@ header h2 {
 	position: absolute;
 	right: 20px;
 	text-decoration: none;
-	color: #7f8c8d;
+	color: #fff;
 
 	transition: all .2s ease;
 }
