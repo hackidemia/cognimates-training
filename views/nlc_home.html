@@ -115,8 +115,13 @@
         alert("Enter a name for the classifier")
         return
       }
+      if(window.userClassifiers.length == 1) {
+        alert("You cannot create more than one classifier")
+        return
+      }
+
       window.localStorage.setItem('temp_classifierName', classifierName)
-      window.location.replace('/nlc_train')
+      window.location.replace('/train')
       return false;
     })
 
@@ -142,6 +147,7 @@
            window.userClassifiers = []
          }
       });
+
   }
 
   function displayClassifiers() {
