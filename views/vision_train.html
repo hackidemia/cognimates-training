@@ -258,7 +258,6 @@
         headers: { token: window.access_token },
         success: function (data) {
           if(data.error == null) {
-            console.log(data)
             window.localStorage.setItem('selectedClassifier', data.classifier_id)
             window.location.replace('/vision')
           } else {
@@ -294,7 +293,6 @@
     listItem.append(span)
     $('#labelList').append(listItem)
     window.labelListItems.push(label)
-    console.log(window.examples);
     if(window.examples === undefined) {
       window.examples = {}
     }

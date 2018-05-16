@@ -168,24 +168,28 @@ function createClassifier(req, res) {
      */
     function createZip() {
       //this is supposed to be a valid way of zipping files?
-      var output = fs.createWriteStream('./example.zip');
-      var archive = archiver('zip', {
-                    gzip: true,
-                    zlib: { level: 9 } // Sets the compression level.
-                    });
+      data.forEach((element) => {
+        console.log(element)
+        console.log('done')
+      })
+      // var output = fs.createWriteStream('./example.zip');
+      // var archive = archiver('zip', {
+      //               gzip: true,
+      //               zlib: { level: 9 } // Sets the compression level.
+      //               });
 
-      archive.on('error', function(err) {
-          throw err;
-        });
+      // archive.on('error', function(err) {
+      //     throw err;
+      //   });
 
-        // pipe archive data to the output file
-        archive.pipe(output);
+      //   // pipe archive data to the output file
+      //   archive.pipe(output);
 
-        // append files (go through the prepared data one by one)
-        archive.file('/path/to/file0.txt', {name: 'file0-or-change-this-whatever.txt'});
+      //   // append files (go through the prepared data one by one)
+      //   archive.file('/path/to/file0.txt', {name: 'file0-or-change-this-whatever.txt'});
 
-        //
-        archive.finalize();
+      //   //
+      //   archive.finalize();
     }
   
     function onCSVWritten(err) {
@@ -201,7 +205,7 @@ function createClassifier(req, res) {
         positive_examples2: 'pos-examples2', 
       }
 
-      watson.createClassifier(params, onCreateClassifier)
+      // watson.createClassifier(params, onCreateClassifier)
     }
   
     function onCreateClassifier(err, response) {
