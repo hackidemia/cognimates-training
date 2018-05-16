@@ -8,12 +8,15 @@ const UserClassifier = require('./models/UserClassifier')
 
 const app = express()
 app.engine('html', require('ejs').renderFile);
+app.use(express.static('static'));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
   extended: false,
   limit: 50000
 }))
-app.use(express.static('static'))
+//app.use(express.static('static'))
+
+
 app.use(router)
 
 
@@ -30,6 +33,7 @@ mongoose.connect(config.mongooseURL)
 // classifier.save((err, doc) => {
 //   console.log(err, doc);
 // })
+
 
 app.listen(config.SERVER_PORT, () => {
   console.log(`Server running on port ${config.SERVER_PORT}`);

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Text Classifier - Cognimates Studio</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,700">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <base href="/"> 
+    <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+    }
+
+  .carousel-inner img {
+      width: 100%; /* Set width to 100% */
+      margin: auto;
+      min-height:200px;
+  }
+
+  /* Hide the carousel text when the screen is less than 600 pixels wide */
+  @media (max-width: 600px) {
+    .carousel-caption {
+      display: none;
+    }
+  }
+  </style>
+</head>
+
+<body>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/home">Cognimates</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="/nlc_home" id="backButton">Text Classification</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" id="logoutButton"><span class="glyphicon glyphicon-log-in"></span> Log out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+      
+<header class="main-header">
+  <h1 id="labelName"></h1>
+  <h2>Add examples to your label</h2><br>
+  <div class="btn btn-success btn-lg" id="goBack">
+        Return to your classifier
+   </div>
+</header>
+
+<section class="example-insert">
+  <input type="text" name="task" placeholder="Add your examples here" id="exampleInput">
+</section>
+
+<section class="example-list">
+  <ul></ul>
+</section>
+  
+  
+
+<script>
+	(function() {
+
+	var  exapp = {
+		init: function() {
+			// Load list
+			exapp.storage('get');
+
+			// Add label
+			document.querySelector('.example-insert input').addEventListener('keyup', function(e) {
+				if ( e.which === 13 && this.value !== '' ) {
+					exapp.addExample(this.value);
+					exapp.storage('update');
+					this.value = '';
+				}
+			}, false);
+
+			document.querySelector('.example-list').addEventListener('click', function(e) {
+				// Remove label
+				if ( e.target.classList.contains('remove-example') ) {
+					exapp.removeExample(e.target.parentNode);
+				}
+			}, false);
+
+      document.querySelector('#goBack').addEventListener('click', function(e) {
+        window.location.replace('/train')
+      }, false);
+
+			if (window.localStorage.getItem('token_expiry') != 'null') {
+		      if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
+		        window.localStorage.setItem('access_token', null)
+		        window.localStorage.setItem('token_expiry', null)
+		        window.location.replace("/");
+		      } else {
+
+		        if(window.localStorage.getItem('temp_classifierName') == 'null') {
+		          window.location.replace("/nlc_home");
+		          return
+		        }
+		        window.access_token = window.localStorage.getItem('access_token')
+		        window.labelName = window.localStorage.getItem('temp_labelName');
+            window.classifierName = window.sessionStorage.getItem('classifierName')
+		        $('#labelName').html(window.labelName)
+		        return
+		      }
+		    } else {
+		      window.location.replace("/");
+		      return
+		    }
+		},
+
+		addExample: function (example) {  
+      var new_example = document.createElement('li');
+        new_example.setAttribute('class', 'example');
+        new_example.innerHTML = example + '<a href="javascript:;" class="remove-example">remove</a>'; 
+      var $list = document.querySelector('.example-list ul');
+      $list.appendChild(new_example);
+      var exampleInput = $('#exampleInput').val()
+      var label = window.labelName
+      if(label == undefined) return;
+      console.log(classifierName)
+      var examples = JSON.parse(window.sessionStorage.getItem(classifierName+"_examples"))
+      console.log('examples',examples)
+      if(examples == null) {
+        examples = {}
+      }
+      if(examples[label] == undefined) {
+        examples[label] = []
+      }
+      if(examples[label].includes(exampleInput) == true) {
+        return
+      }
+      if(exampleInput != null && exampleInput.length > 0) {
+        examples[window.labelName].push(exampleInput)
+        addExampleItem(exampleInput, label, examples);
+        $(`#label_badge_${label}`).html(examples[label].length)
+      }
+      console.log(examples)
+      window.sessionStorage.setItem(classifierName+'_examples', JSON.stringify(examples))
+      return false;
+		},
+
+		removeExample: function (example) {
+			example.style.opacity = 0;
+			setTimeout(function() {
+				example.remove();
+				exapp.storage('update');
+			}, 400);
+			var ex = example.innerHTML
+      ex = ex.slice(0, ex.indexOf('<a href'))
+      var label = window.labelName
+      var examples = JSON.parse(window.sessionStorage.getItem(classifierName+'_examples'))
+      var idx = examples[label].indexOf(ex)
+      if(idx > -1) {
+        examples[label].splice(idx, 1)
+      }
+      window.sessionStorage.setItem(classifierName+'_examples', JSON.stringify(examples))
+      loadExampleItems()
+		},
+
+		storage: function(type) {
+			if ( type === 'get' ) {
+        var name = window.labelName + '_examples'
+				if ( localStorage.getItem(name) !== null ) {
+					document.querySelector('.example-list').innerHTML = localStorage.getItem(name);
+          console.log(name)
+				}
+			} else if ( type === 'update' ) {
+				var str = document.querySelector('.example-list').innerHTML;
+				localStorage.setItem(name, str);
+			}
+		}
+	};
+	exapp.init();
+})()
+  function addExampleItem(example, label, examples) {
+    
+    if(example == undefined || example.length == 0) return;
+    if(label == undefined || examples[label] == undefined) return;
+    var exampleItem = document.createElement('li')
+    exampleItem.className = "list-group-item"
+    exampleItem.innerHTML = example
+    $('#examplesList').append(exampleItem)    
+  }
+
+  function loadExampleItems (label){
+    clearExampleItems()
+    if(window.examples == undefined) return
+    if(window.label == undefined || window.examples[label] == undefined) return;
+    window.examples[label].forEach((example) => {
+      addExampleItem(example)
+    })
+  }
+</script>
+
+
+
+
+</body>
+
+</html>

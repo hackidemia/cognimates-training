@@ -1,0 +1,201 @@
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/*
+  ========================================
+  General styles
+  ========================================
+*/
+*,
+*:after,
+*:before {
+	box-sizing: border-box;
+}
+body {
+	font: 16px 'Ubuntu', sans-serif;
+	background: #ecf0f1;
+	border-top: 5px solid #95a5a6;
+}
+
+
+/*
+  ========================================
+  Header
+  ========================================
+*/
+header {
+	text-align: center;
+}
+header h1 {
+	font-size: 64px;
+	font-weight: 300;
+	margin: 80px 0 25px;
+	color: #7f8c8d;
+}
+header h1 span {
+	font-weight: 700;
+}
+header h2 {
+	color: #bdc3c7;
+}
+
+/*
+  ========================================
+  Insert
+  ========================================
+*/
+.app-insert {
+	width: 800px;
+	margin: 50px auto 20px;
+}
+.app-insert input {
+	width: 100%;
+	height: 60px;
+	background: none;
+	border: none;
+	border-bottom: 1px solid #bdc3c7;
+	outline: none;
+	font: 300 28px 'Ubuntu', sans-serif;
+	padding: 20px;
+}
+
+.example-insert {
+	width: 800px;
+	margin: 50px auto 20px;
+}
+.example-insert input {
+	width: 100%;
+	height: 60px;
+	background: none;
+	border: none;
+	border-bottom: 1px solid #bdc3c7;
+	outline: none;
+	font: 300 28px 'Ubuntu', sans-serif;
+	padding: 20px;
+}
+
+/*
+  ========================================
+  List
+  ========================================
+*/
+.app-list {
+	width: 800px;
+	margin: 0 auto;
+}
+
+.example-list {
+	width: 800px;
+	margin: 0 auto;
+}
+.task {
+	width: 100%;
+	height: 60px;
+	line-height: 60px;
+	padding: 0 20px;
+	position: relative;
+	color: #333;
+
+	transition: all .2s ease;
+}
+.task:hover {
+	background: rgba(0, 0, 0, .04);
+	cursor: pointer;
+}
+.task:hover .remove-task {
+	opacity: 1;
+}
+
+.remove-task {
+	opacity: 0;
+	position: absolute;
+	right: 20px;
+	text-decoration: none;
+	color: #7f8c8d;
+
+	transition: all .2s ease;
+}
+.remove-task:hover {
+	color: #333;
+}
+
+
+.example {
+	width: 100%;
+	height: 60px;
+	line-height: 60px;
+	padding: 0 20px;
+	position: relative;
+	color: #333;
+
+	transition: all .2s ease;
+}
+.example:hover {
+	background: rgba(0, 0, 0, .04);
+	cursor: pointer;
+}
+.example:hover .remove-example {
+	opacity: 1;
+}
+
+.remove-example {
+	opacity: 0;
+	position: absolute;
+	right: 20px;
+	text-decoration: none;
+	color: #7f8c8d;
+
+	transition: all .2s ease;
+}
+.remove-task:hover {
+	color: #333;
+}
+
+/*
+  ========================================
+  Reset
+  ========================================
+*/
+

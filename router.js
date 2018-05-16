@@ -25,6 +25,14 @@ router.get('/nlc', (req, res) => {
   res.render('nlc.html')
 })
 
+router.get('/train', (req, res) => {
+  res.render('train.html')
+})
+
+router.get('/nlc_examples', (req, res) => {
+	res.render('nlc_examples.html')
+})
+
 router.post('/auth/register', authController.register)
 router.post('/auth/login', authController.login)
 

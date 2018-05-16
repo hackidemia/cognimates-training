@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Text Classifier - Cognimates Studio</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,700">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <base href="/"> 
+    <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+    }
+
+  .carousel-inner img {
+      width: 100%; /* Set width to 100% */
+      margin: auto;
+      min-height:200px;
+  }
+
+  /* Hide the carousel text when the screen is less than 600 pixels wide */
+  @media (max-width: 600px) {
+    .carousel-caption {
+      display: none;
+    }
+  }
+  </style>
+</head>
+
+<body>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/home">Cognimates</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="/nlc_home" id="backButton">Text Classification</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" id="logoutButton"><span class="glyphicon glyphicon-log-in"></span> Log out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+      
+<header class="main-header">
+  <h1 id="classifierTitle"></h1>
+  <h2>Train your own text classification model. Click on your label to add examples to it.</h2><br>
+  <div class="btn btn-success btn-lg" id="trainButton">
+        Train classifier
+   </div>
+</header>
+
+<section class="app-insert">
+  <input type="text" name="task" placeholder="Add your label here" id="labelInput">
+</section>
+
+<section class="app-list">
+  <ul></ul>
+</section>
+  
+  
+
+<script>
+	(function() {
+
+	var app = {
+		init: function() {
+			// Load list
+			app.storage('get');
+
+			// Add label
+			document.querySelector('.app-insert input').addEventListener('keyup', function(e) {
+				if ( e.which === 13 && this.value !== '' ) {
+					app.addLabel(this.value);
+					app.storage('update');
+					this.value = '';
+				}
+			}, false);
+
+			document.querySelector('.app-list').addEventListener('click', function(e) {
+				// Remove label
+				if ( e.target.classList.contains('remove-task') ) {
+					app.removeLabel(e.target.parentNode);
+				// Add examples
+				} else if ( e.target.classList.contains('task') ) {
+					console.log(e.target.innerHTML)
+					app.addExamples(e.target);
+				}
+			}, false);
+
+			document.querySelector('#trainButton').addEventListener('click', function(e){
+				var classifierName = window.sessionStorage.getItem("classifierName")
+				var labelList = JSON.parse(window.sessionStorage.getItem(classifierName+'_labels'))
+				console.log(labelList)
+				var examples = JSON.parse(window.sessionStorage.getItem(classifierName + "_examples")) 
+				if (labelList == undefined || labelList.length < 2) {
+		        alert('Two or more labels are required to train')
+		        return
+		      }
+		      var error = false
+		      for (var idx = 0, label = labelList[idx]; idx < labelList.length; idx++) {
+		      	console.log(label)
+		        if (examples[label].length < 5) {
+		          alert('5 or more examples required for each label')
+		          error = true
+		          break
+		        }
+		      }
+		      if(error == true) {
+		        return
+		      }
+		      var requestData = {}
+		      requestData.name = classifierName
+		      requestData.training_data = []
+		      labelList.forEach((label) => {
+		        examples[label].forEach((example) => {
+		          var exampleObject = {
+		            phrase: example,
+		            label: label
+		          }
+		          requestData.training_data.push(exampleObject)
+		        })
+		      })
+		      $.ajax({
+		        url: '/nlc/classifier',
+		        type: 'POST',
+		        dataType: 'json',
+		        contentType: "application/json; charset=utf-8",
+		        data: JSON.stringify(requestData),
+		        headers: { token: window.access_token },
+		        success: function (data) {
+		          if(data.error == null) {
+		            console.log('id', data.clasifier_id)
+		            window.localStorage.setItem('selectedClassifier', data.classifier_id)
+		            window.location.replace('/nlc')
+		          } else {
+		            alert(data.error)
+		          }
+		        }
+		      })
+			})
+
+			if (window.localStorage.getItem('token_expiry') != 'null') {
+		      if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
+		        window.localStorage.setItem('access_token', null)
+		        window.localStorage.setItem('token_expiry', null)
+		        window.location.replace("/");
+		      } else {
+
+		        if(window.localStorage.getItem('temp_classifierName') == 'null') {
+		          window.location.replace("/nlc_home");
+		          return
+		        }
+		        window.access_token = window.localStorage.getItem('access_token')
+		        window.sessionStorage.setItem("classifierName", window.localStorage.getItem('temp_classifierName'))
+		        $('#classifierTitle').html(window.sessionStorage.getItem("classifierName"))
+		        return
+		      }
+		    } else {
+		      window.location.replace("/");
+		      return
+		    }
+		},
+		addLabel: function (task) {
+			var new_task = document.createElement('li');
+				new_task.setAttribute('class', 'task');
+				new_task.innerHTML = task + '<a href="javascript:;" class="remove-task">remove</a>';
+				
+			console.log(new_task)
+			var labelInput = $('#labelInput').val()
+			if (labelInput != null && labelInput.length > 0) {
+				addLabelItem (labelInput, new_task);
+			}
+		},
+		removeLabel: function (task) {
+			task.style.opacity = 0;
+			setTimeout(function() {
+				task.remove();
+				app.storage('update');
+			}, 400);
+			var label = task.innerHTML
+			label = label.slice(0, label.indexOf('<a href'))
+			console.log(label)
+			$(`#label_item_${label}`).remove()
+		     window.examples[label] = null
+		     var index = window.labelListItems.indexOf(label);
+		     if (index > -1) {
+		       window.labelListItems.splice(index, 1);
+		     }
+		},
+		addExamples: function (task) {
+			app.storage('update');
+			var label = task.innerHTML
+			label = label.slice(0, label.indexOf('<a href'))
+			window.localStorage.setItem('temp_labelName', label)
+			window.location.replace('/nlc_examples')
+		},
+		storage: function(type) {
+			var name = window.sessionStorage.getItem("classifierName") + '_labels'
+			console.log(name)
+			if ( type === 'get' ) {
+				if ( localStorage.getItem(name) !== null ) {
+					document.querySelector('.app-list').innerHTML = localStorage.getItem(name);
+				}
+			} else if ( type === 'update' ) {
+				var str = document.querySelector('.app-list').innerHTML;
+				localStorage.setItem(name, str);
+			}
+		}
+	};
+	app.init();
+})();
+  function addLabelItem(label, task) {
+    if(window.labelListItems == null) {
+      window.labelListItems = []
+    }
+    if(window.labelListItems.includes(label) != false) {
+      alert('Label already exists')
+      return
+    }
+    var $list = document.querySelector('.app-list ul');
+	$list.appendChild(task);
+    var listItem = document.createElement('li')
+    var classifierName = window.sessionStorage.getItem("classifierName")
+    listItem.className = "list-group-item"
+    listItem.id = `label_item_${label}`
+    var span = document.createElement('span')
+    span.className = "badge"
+    span.id = `label_badge_${label}`
+    span.innerHTML = 0
+    listItem.append(`${label} `)
+    listItem.append(span)
+    $('#labelList').append(listItem)
+    window.labelListItems.push(label)
+    var examples = JSON.parse(window.sessionStorage.getItem(classifierName + "_examples"))
+    
+    if(examples === null) {
+      examples = {}
+    }
+    examples[label] = []
+    window.sessionStorage.setItem(classifierName + "_examples", JSON.stringify(examples))
+    window.sessionStorage.setItem(classifierName + "_labels", JSON.stringify(labelListItems))
+    console.log('examples', examples)
+    console.log('labels', window.sessionStorage.getItem(classifierName+'_labels'))
+  }
+</script>
+
+
+
+
+</body>
+
+</html>
