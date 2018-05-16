@@ -132,6 +132,7 @@ function createClassifier(req, res) {
     let token = req.headers.token;
     var name = req.body.name;
     var data = req.body.training_data;
+    var labels = [];
   
     var userId = null
     var filepath = null
@@ -151,12 +152,10 @@ function createClassifier(req, res) {
     })
   
     function prepareData() {
-      var preparedData = []
-      data.forEach((element) => {
-        var row = []
-        row.push(`${element.image_file}`) //need to figure out how to handle image files and validate (jpeg, png)
-        row.push(`${element.label}`)
-        preparedData.push(row)
+      var preparedData = {}
+      data.forEach((label_list) => {
+        prepareData[`${label_list.label}`] = label_list.label_items
+        labels.push(`${label_list.label}`)
       })
       data = preparedData
       //Check for valid data here first? 10 + images for each classifier, valid formats?
@@ -168,9 +167,28 @@ function createClassifier(req, res) {
      */
     function createZip() {
       //this is supposed to be a valid way of zipping files?
-      data.forEach((element) => {
-        console.log(element)
-        console.log('done')
+      labels.forEach((label) => {
+        var output = fs.createWriteStream(`${label}`);
+        var archive = archiver('zip', {
+                      gzip: true,
+                      zlib: { level: 9 } // Sets the compression level.
+                      });
+
+        archive.on('error', function(err) {
+            throw err;
+        });
+
+        // pipe archive data to the output file
+        archive.pipe(output);
+        prepareData[`${label}`].forEach((filepath) => {
+          // append files (go through the prepared data one by one)
+          console.log('here')
+          //need to figure out handling correct types?
+          archive.file(filepath, {name: `${filepath}`});
+        });
+
+        //
+        archive.finalize();
       })
       // var output = fs.createWriteStream('./example.zip');
       // var archive = archiver('zip', {
