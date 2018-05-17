@@ -157,14 +157,17 @@ function createClassifier(req, res) {
     function validateData() {
       var errorFound = false
       var errorMessage = ''
-      for(var idx = 0; idx < data.length; idx++) {
-        if(data[idx].length < 10) {
+      preparedData = {}
+      for(var idx in data) {
+        var label = data[idx].label
+        preparedData[label] = data[idx].label_items
+        if(preparedData[label].length < 5) {
           errorMessage = 'Label must have a minimum of 10 examples'
           errorFound = true
           break;
         }
-        for(var subidx = 0; subidx < data[idx].length; subidx++) {
-          let imageType = getImageType(data[idx][subidx].substring(0, 20))
+        for(var subidx = 0; subidx < preparedData[label].length; subidx++) {
+          let imageType = utils.getImageType(preparedData[label][subidx].substring(0, 20))
           if(imageType == null) {
             errorFound = true
             errorMessage = 'Unsupported image type'
@@ -174,7 +177,10 @@ function createClassifier(req, res) {
         if(errorFound == true) {
           break;
         }
+        labels.push(label)
       }
+      data = preparedData
+      preparedData = undefined
       if(errorFound == true) {
         res.json({ error: errorMessage})
         return
