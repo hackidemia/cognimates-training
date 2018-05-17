@@ -318,114 +318,119 @@ function createClassifier(req, res) {
 }
 
 function deleteClassifier(req, res) {
-    let token = req.headers.token
-    var classifier_id = req.body.classifier_id
-    if(token == null) {
-      res.json({ error: 'Unauthorized'})
+  let token = req.headers.token
+  var classifier_id = req.body.classifier_id
+  if(token == null) {
+    res.json({ error: 'Unauthorized'})
+    return
+  }
+  auth.validateToken(token, (err, _user) => {
+    if(err != null) {
+      res.json({ error: err.message })
       return
     }
-    auth.validateToken(token, (err, _user) => {
-      if(err != null) {
+
+    if(_user == null) {
+      res.json({ error: 'User not found'})
+      return
+    } else {
+      checkUserClassifier(_user.id, classifier_id)
+    }
+  })
+
+  function checkUserClassifier(userId, classifier_id) {
+    VisionClassifier.findOne({ user: userId, classifier_id : classifier_id}, (err, classifier) => {
+      if (err) {
         res.json({ error: err.message })
         return
       }
 
-      if(_user == null) {
-        res.json({ error: 'User not found'})
+      if(classifier != null) {
+        delClassifier(classifier_id)
         return
       } else {
-        checkUserClassifier(_user.id, classifier_id)
+        res.json({ error: 'This classifier does not belong to this account'})
+        return
       }
     })
-
-    function checkUserClassifier(userId, classifier_id) {
-      VisionClassifier.findOne({ user: userId, classifier_id : classifier_id}, (err, classifier) => {
-        if (err) {
-          res.json({ error: err.message })
-          return
-        }
-
-        if(classifier != null) {
-          delClassifier(classifier_id)
-          return
-        } else {
-          res.json({ error: 'This classifier does not belong to this account'})
-          return
-        }
-      })
-    }
-
-    /**
-     * Watson Visual Recognition method of deleting a classifier is the same, only requires
-     * classifier_id.
-     */
-    function delClassifier(classifier_id) {
-      watson.deleteClassifier({ classifier_id: classifier_id }, (err, response) => {
-        if (err) {
-          res.json({ error: err.message })
-          return
-        }
-
-        deleteUserClassifier(classifier_id)
-      })
-    }
-
-    function deleteUserClassifier(classifier_id) {
-      VisionClassifier.remove({ classifier_id: classifier_id }, (err, doc) => {
-        if(err) {
-          res.json({ error: err.message })
-          return
-        }
-
-        res.json(doc)
-        return
-      })
-    }
   }
 
   /**
-   * Modify this for Watson Visual Recognition. Instead of phrase, takes in a single image.
-   * No threshold put in, so it is set to defaul of 0.5,
+   * Watson Visual Recognition method of deleting a classifier is the same, only requires
+   * classifier_id.
    */
-  function classify(req, res) {
-    let token = req.headers.token
-    var classifier_id = req.query.classifier_id
-    var image = req.query.image_file
-    if(token == null) {
-      res.json({ error: 'Unauthorized'})
-      return
-    }
-    auth.validateToken(token, (err, _user) => {
-      if(err != null) {
+  function delClassifier(classifier_id) {
+    watson.deleteClassifier({ classifier_id: classifier_id }, (err, response) => {
+      if (err) {
         res.json({ error: err.message })
         return
       }
 
-      if(_user == null) {
-        res.json({ error: 'User not found'})
-        return
-      } else {
-        getClassification(classifier_id, phrase)
-      }
+      deleteUserClassifier(classifier_id)
     })
-
-    function getClassification(classifier_id, phrase) {
-      watson.classify({ classifier_id: classifier_id, images_file: images}, (err, response) => {
-        if(err) {
-          res.json({ error: err.message })
-          return
-        }
-
-        res.json(response)
-        return
-      })
-    }
   }
+
+  function deleteUserClassifier(classifier_id) {
+    VisionClassifier.remove({ classifier_id: classifier_id }, (err, doc) => {
+      if(err) {
+        res.json({ error: err.message })
+        return
+      }
+
+      res.json(doc)
+      return
+    })
+  }
+}
+
+
+
+
+/**
+ * No threshold put in, so it is set to default of 0.5,
+ */
+function classifyImage(req, res) {
+  let image_data = req.body.image_data
+  let classifier_id = req.body.classifier_id
+
+  if(classifier_id == null) {
+    res.json({error: 'classifier_id not specified'})
+    return
+  }
+  if(image_data == null) {
+    res.json({error: 'Neither image_data nor image_url were specified'})
+    return
+  }
+
+  let parameters = {
+    classifier_ids: classifier_id
+  }
+
+  try {
+    let resource = utils.parseBase64Image(image_data);
+    let temp = path.join(paths.IMAGES_PATH, utils.random(1000,99999) + '.' + resource.type);
+    fs.writeFileSync(temp, resource.data);
+    parameters.images_file = fs.createReadStream(temp);
+  } catch (e) {
+    res.json({ error: e.message })
+    return
+  }
+
+  watson.classify(parameters, function(err, response) {
+    if (err) {
+      console.log(err);
+      res.json(err)
+    }
+    else {
+      res.json(response)
+    }
+  });
+}
 
 module.exports = {
     getClassifiersList: getClassifiersList,
     getClassifierInformation: getClassifierInformation,
-    classifyImages: classify,
+    classifyImages: classifyImage,
     deleteClassifier: deleteClassifier,
     createClassifier: createClassifier
   }
