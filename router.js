@@ -50,7 +50,7 @@ router.get('vision/classifiers', visionController.getClassifiersList)
 router.post('/vision/classifier', visionController.createClassifier)
 router.get('/vision/classifier', visionController.getClassifierInformation)
 router.delete('/vision/classifier', visionController.deleteClassifier)
-router.get('/vision/classify', visionController.classifyImages)
+router.post('/vision/classify', visionController.classifyImages)
 
 
 module.exports = router
