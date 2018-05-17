@@ -261,15 +261,6 @@ function createClassifier(req, res) {
 
           // pipe archive data to the file
           archive.pipe(output);
-          var globPromise = new Promise(function(resolve, reject) {
-            glob(`${label}_*`, { cwd: directory }, function(err, list) {
-              if(err) {
-                reject(err)
-                return
-              }
-              resolve(list)
-            })
-          });
           var basename = path.parse(filePath).base;
           archive.glob(`${label}_*`, { basename: name, cwd: directory })
           archive.finalize()
@@ -294,7 +285,7 @@ function createClassifier(req, res) {
       labels.forEach((label) => {
         params[`${label}_positive_examples`] = fs.createReadStream(zipFiles[label])
       })
-      
+
       watson.createClassifier(params, onCreateClassifier)
     }
 
