@@ -209,7 +209,7 @@ function createClassifier(req, res) {
           }
           let fileName = `${label}_${parseInt(utils.random(10000, 99999))}.${imageType}`
           let filePath = path.join(directory, fileName)
-          fs.writeFileSync(fileName, binaryData, "binary");
+          fs.writeFileSync(filePath, binaryData, "binary");
         })
       })
       onFilesWritten(directory)
