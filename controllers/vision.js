@@ -290,7 +290,7 @@ function createClassifier(req, res) {
     }
 
     function onCreateClassifier(err, response) {
-      fs.unlink(directory)
+      utils.rimraf(directory)
       if(err) {
         res.json({ error: err.message })
         return
