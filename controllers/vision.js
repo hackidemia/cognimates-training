@@ -4,6 +4,9 @@ const UserClassifier = require('../models/UserClassifier');
 const config = require('../config');
 const path = require('path');
 const fs = require('fs');
+const paths = require('../paths')
+const mkdirp = require('mkdirp')
+const utils = require('../utils')
 let archiver = require('archiver');
 let VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
 
@@ -133,7 +136,7 @@ function createClassifier(req, res) {
     var name = req.body.name;
     var data = req.body.training_data;
     var labels = [];
-  
+
     var userId = null
     var filepath = null
     auth.validateToken(token, (err, _user) => {
@@ -141,91 +144,78 @@ function createClassifier(req, res) {
         res.json({ error: err.message })
         return
       }
-  
+
       if(_user == null) {
         res.json({ error: 'User not found'})
         return
       } else {
         userId = _user.id
-        prepareData()
+        validateData()
       }
     })
-  
-    function prepareData() {
-      var preparedData = {}
-      data.forEach((label_list) => {
-        prepareData[`${label_list.label}`] = label_list.label_items
-        labels.push(`${label_list.label}`)
-      })
-      data = preparedData
-      //Check for valid data here first? 10 + images for each classifier, valid formats?
-      createZip()
-    }
-  
-    /**
-     * Use archiver to create a zip file.
-     */
-    function createZip() {
-      //this is supposed to be a valid way of zipping files?
-      labels.forEach((label) => {
-        var output = fs.createWriteStream(`${label}`);
-        var archive = archiver('zip', {
-                      gzip: true,
-                      zlib: { level: 9 } // Sets the compression level.
-                      });
 
-        archive.on('error', function(err) {
-            throw err;
-        });
-
-        // pipe archive data to the output file
-        archive.pipe(output);
-        prepareData[`${label}`].forEach((filepath) => {
-          // append files (go through the prepared data one by one)
-          console.log('here')
-          //need to figure out handling correct types?
-          archive.file(filepath, {name: `${filepath}`});
-        });
-
-        //
-        archive.finalize();
-      })
-      // var output = fs.createWriteStream('./example.zip');
-      // var archive = archiver('zip', {
-      //               gzip: true,
-      //               zlib: { level: 9 } // Sets the compression level.
-      //               });
-
-      // archive.on('error', function(err) {
-      //     throw err;
-      //   });
-
-      //   // pipe archive data to the output file
-      //   archive.pipe(output);
-
-      //   // append files (go through the prepared data one by one)
-      //   archive.file('/path/to/file0.txt', {name: 'file0-or-change-this-whatever.txt'});
-
-      //   //
-      //   archive.finalize();
-    }
-  
-    function onCSVWritten(err) {
-      if(err) {
-        res.json({ error: err.message })
+    function validateData() {
+      var errorFound = false
+      var errorMessage = ''
+      for(var idx = 0; idx < data.length; idx++) {
+        if(data[idx].length < 10) {
+          errorMessage = 'Label must have a minimum of 10 examples'
+          errorFound = true
+          break;
+        }
+        for(var subidx = 0; subidx < data[idx].length; subidx++) {
+          let imageType = getImageType(data[idx][subidx].substring(0, 20))
+          if(imageType == null) {
+            errorFound = true
+            errorMessage = 'Unsupported image type'
+            break;
+          }
+        }
+        if(errorFound == true) {
+          break;
+        }
+      }
+      if(errorFound == true) {
+        res.json({ error: errorMessage})
         return
       }
-  
-      //the necessary params are at least 2 examples w/ zip files of 10 minimum images
-      var params = {
-        name: 'classifier',
-        positive_examples1: 'pos-examples',
-        positive_examples2: 'pos-examples2', 
-      }
-
-      // watson.createClassifier(params, onCreateClassifier)
+      saveImages()
     }
-  
+
+    function saveImages() {
+      var directory = `${paths.IMAGES_PATH}/${parseInt(utils.random(1000, 99999))}`
+      mkdirp.sync(directory)
+      data.forEach((label) => {
+        data[label].forEach((imageData) => {
+          let imageType = getImageType(imageData.substring(0, 20))
+          let base64Data = null
+          if(imageType == 'jpeg') {
+            base64Data = imageData.replace(/^data:image\/jpeg;base64,/,"")
+          } else if (imageType == 'png'){
+            base64Data = imageData.replace(/^data:image\/png;base64,/,"")
+          } else {
+            base64Data = imageData.replace(/^data:image\/jpg;base64,/,"")
+          }
+          let binaryData = new Buffer(base64Data, 'base64').toString('binary');
+          if(imageType == 'jpeg') {
+            imageType = 'jpg'
+          }
+          let fileName = `${label}_${parseInt(utils.random(10000, 99999))}.${imageType}`
+          let filePath = path.join(directory, fileName)
+          fs.writeFileSync(fileName, binaryData, "binary");
+        })
+      })
+      onFilesWritten(directory)
+    }
+
+    let zipFiles = undefined
+
+    function onFilesWritten(directory) {
+      zipFiles = []
+    }
+
+    // watson.createClassifier(params, onCreateClassifier)
+
     function onCreateClassifier(err, response) {
       fs.unlink(filepath)
       if(err) {
@@ -234,7 +224,7 @@ function createClassifier(req, res) {
       }
       saveClassifier(response)
     }
-  
+
     function saveClassifier(classifier_data) {
       var classifier = new UserClassifier({
         user: userId,
@@ -248,7 +238,7 @@ function createClassifier(req, res) {
           res.json({ error: err.message })
           return
         }
-  
+
         res.json(doc)
       })
     }
@@ -266,7 +256,7 @@ function deleteClassifier(req, res) {
         res.json({ error: err.message })
         return
       }
-  
+
       if(_user == null) {
         res.json({ error: 'User not found'})
         return
@@ -274,14 +264,14 @@ function deleteClassifier(req, res) {
         checkUserClassifier(_user.id, classifier_id)
       }
     })
-  
+
     function checkUserClassifier(userId, classifier_id) {
       UserClassifier.findOne({ user: userId, classifier_id : classifier_id}, (err, classifier) => {
         if (err) {
           res.json({ error: err.message })
           return
         }
-  
+
         if(classifier != null) {
           delClassifier(classifier_id)
           return
@@ -294,7 +284,7 @@ function deleteClassifier(req, res) {
 
     /**
      * Watson Visual Recognition method of deleting a classifier is the same, only requires
-     * classifier_id. 
+     * classifier_id.
      */
     function delClassifier(classifier_id) {
       watson.deleteClassifier({ classifier_id: classifier_id }, (err, response) => {
@@ -302,27 +292,27 @@ function deleteClassifier(req, res) {
           res.json({ error: err.message })
           return
         }
-  
+
         deleteUserClassifier(classifier_id)
       })
     }
-  
+
     function deleteUserClassifier(classifier_id) {
       UserClassifier.remove({ classifier_id: classifier_id }, (err, doc) => {
         if(err) {
           res.json({ error: err.message })
           return
         }
-  
+
         res.json(doc)
         return
       })
     }
   }
-  
+
   /**
    * Modify this for Watson Visual Recognition. Instead of phrase, takes in a single image.
-   * No threshold put in, so it is set to defaul of 0.5, 
+   * No threshold put in, so it is set to defaul of 0.5,
    */
   function classify(req, res) {
     let token = req.headers.token
@@ -337,7 +327,7 @@ function deleteClassifier(req, res) {
         res.json({ error: err.message })
         return
       }
-  
+
       if(_user == null) {
         res.json({ error: 'User not found'})
         return
@@ -345,14 +335,14 @@ function deleteClassifier(req, res) {
         getClassification(classifier_id, phrase)
       }
     })
-  
+
     function getClassification(classifier_id, phrase) {
       watson.classify({ classifier_id: classifier_id, images_file: images}, (err, response) => {
         if(err) {
           res.json({ error: err.message })
           return
         }
-  
+
         res.json(response)
         return
       })
