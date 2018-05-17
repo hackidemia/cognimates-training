@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const router = require('./router')
 const config = require('./config')
 const UserClassifier = require('./models/UserClassifier')
-
+const bb = require('express-busboy')
 
 const app = express()
 app.engine('html', require('ejs').renderFile);
@@ -15,6 +15,11 @@ app.use(bodyParser.urlencoded({
 }))
 app.use(express.static('static'))
 app.use(router)
+
+bb.extend(app, {
+  upload: true
+})
+
 
 
 mongoose.connect(config.mongooseURL)
