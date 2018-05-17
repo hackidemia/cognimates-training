@@ -218,7 +218,83 @@ function createClassifier(req, res) {
     let zipFiles = undefined
 
     function onFilesWritten(directory) {
-      zipFiles = []
+      zipFiles = {}
+      var promises = []
+      labels.forEach((label) => {
+        var promise = new Promise(function (resolve, reject) {
+          var filePath = path.join(directory, `${label}.zip`)
+          var output = fs.createWriteStream(filePath);
+          var archive = archiver('zip', {
+            zlib: { level: 1} // Sets the compression level.
+          });
+
+          // listen for all archive data to be written
+          // 'close' event is fired only when a file descriptor is involved
+          output.on('close', function() {
+            zipFiles[label] = filePath
+            resolve(filePath)
+          });
+
+          // This event is fired when the data source is drained no matter what was the data source.
+          // It is not part of this library but rather from the NodeJS Stream API.
+          // @see: https://nodejs.org/api/stream.html#stream_event_end
+          output.on('end', function() {
+            console.log(`Zipped files for label ${label}`);
+            zipFiles[label] = filePath
+            resolve(filePath)
+          });
+
+          // good practice to catch warnings (ie stat failures and other non-blocking errors)
+          archive.on('warning', function(err) {
+            if (err.code === 'ENOENT') {
+              console.log(err);
+            } else {
+              reject(err)
+            }
+          });
+
+          // good practice to catch this error explicitly
+          archive.on('error', function(err) {
+            reject(err)
+          });
+
+          // pipe archive data to the file
+          archive.pipe(output);
+          var globPromise = new Promise(function(resolve, reject) {
+            glob(`${label}_*`, { cwd: directory }, function(err, list) {
+              if(err) {
+                reject(err)
+                return
+              }
+              resolve(list)
+            })
+          });
+          var basename = path.parse(filePath).base;
+          archive.glob(`${label}_*`, { basename: name, cwd: directory })
+          archive.finalize()
+        })
+        promises.push(promise)
+      })
+      Promise.all(promises).then(function (result) {
+        console.log(result);
+        onFilesZipped(directory)
+      }).catch(function (err) {
+        console.log(err.message);
+        res.json({ error: err.message })
+        return
+      });
+    }
+
+
+    function onFilesZipped(directory) {
+      var params = {
+        'name': name
+      }
+      labels.forEach((label) => {
+        params[`${label}_positive_examples`] = fs.createReadStream(zipFiles[label])
+      })
+
+      console.log(params)
     }
 
     // watson.createClassifier(params, onCreateClassifier)
