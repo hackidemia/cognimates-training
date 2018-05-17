@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Text Classifier - Cognimates Studio</title>
+  <title>Vision Classifier - Cognimates Studio</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -126,7 +126,7 @@
 
   function loadUserClassifiers() {
     $.ajax({
-         url: "/nlc/classifiers",
+         url: "/vision/classifiers",
          type: "GET",
          headers: { 'token': window.access_token },
          success: function (data) {
