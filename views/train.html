@@ -95,9 +95,33 @@
 
 	var app = {
 		init: function() {
+			if (window.localStorage.getItem('token_expiry') != 'null') {
+		      if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
+		        window.localStorage.setItem('access_token', null)
+		        window.localStorage.setItem('token_expiry', null)
+		        window.location.replace("/");
+		      } else {
+
+		        if(window.localStorage.getItem('temp_classifierName') == 'null') {
+		          window.location.replace("/nlc_home");
+		          return
+		        }
+		        window.access_token = window.localStorage.getItem('access_token')
+		        window.sessionStorage.setItem("classifierName", window.localStorage.getItem('temp_classifierName'))
+		        classifierName = window.sessionStorage.getItem("classifierName")
+		        $('#classifierTitle').html(window.sessionStorage.getItem("classifierName"))
+		      }
+		    } else {
+		      window.location.replace("/");
+		      return
+		    }
+		    console.log(classifierName)
+		    console.log(window.localStorage.getItem('temp_classifierName'))
 			// Load list
 			ix = 0
-			app.storage('get');
+			if (classifierName == window.localStorage.getItem('temp_classifierName')) {
+				app.storage('get');
+			}			
 
 			// Add label
 			document.querySelector('.app-insert input').addEventListener('keyup', function(e) {
@@ -120,7 +144,6 @@
 			}, false);
 
 			document.querySelector('#trainButton').addEventListener('click', function(e){
-				var classifierName = window.sessionStorage.getItem("classifierName")
 				var labelList = JSON.parse(window.sessionStorage.getItem(classifierName+'_labels'))
 				console.log(labelList)
 				var examples = JSON.parse(window.sessionStorage.getItem(classifierName + "_examples")) 
@@ -170,28 +193,8 @@
 		        }
 		      })
 			})
-
-			if (window.localStorage.getItem('token_expiry') != 'null') {
-		      if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
-		        window.localStorage.setItem('access_token', null)
-		        window.localStorage.setItem('token_expiry', null)
-		        window.location.replace("/");
-		      } else {
-
-		        if(window.localStorage.getItem('temp_classifierName') == 'null') {
-		          window.location.replace("/nlc_home");
-		          return
-		        }
-		        window.access_token = window.localStorage.getItem('access_token')
-		        window.sessionStorage.setItem("classifierName", window.localStorage.getItem('temp_classifierName'))
-		        classifierName = window.sessionStorage.getItem("classifierName")
-		        $('#classifierTitle').html(window.sessionStorage.getItem("classifierName"))
-		        return
-		      }
-		    } else {
-		      window.location.replace("/");
-		      return
-		    }
+			return
+			
 		},
 		addLabel: function (task) {
 			var random_color = colors[ix%colors.length]
