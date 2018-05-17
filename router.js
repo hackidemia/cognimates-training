@@ -46,7 +46,7 @@ router.get('/vision', (req, res) => {
   res.render('vision.html')
 })
 
-router.get('vision/classifiers', visionController.getClassifiersList)
+router.get('/vision/classifiers', visionController.getClassifiersList)
 router.post('/vision/classifier', visionController.createClassifier)
 router.get('/vision/classifier', visionController.getClassifierInformation)
 router.delete('/vision/classifier', visionController.deleteClassifier)
