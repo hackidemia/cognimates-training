@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path')
 
 /**
  * Parse a base 64 image and return the extension and buffer

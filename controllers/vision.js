@@ -12,6 +12,7 @@ let VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3'
 
 const watson = new VisualRecognitionV3({
     api_key: config.VISION_API,
+    url: config.VISION_URL,
     version: '2018-03-19'
 });
 
@@ -193,7 +194,6 @@ function createClassifier(req, res) {
     function saveImages() {
       mkdirp.sync(directory)
       labels.forEach((label) => {
-        console.log(label)
         data[label].forEach((imageData) => {
           let imageType = utils.getImageType(imageData.substring(0, 20))
           let base64Data = null
@@ -268,7 +268,6 @@ function createClassifier(req, res) {
         promises.push(promise)
       })
       Promise.all(promises).then(function (result) {
-        console.log(result);
         onFilesZipped()
       }).catch(function (err) {
         console.log(err.message);
@@ -282,6 +281,7 @@ function createClassifier(req, res) {
       var params = {
         'name': name
       }
+
       labels.forEach((label) => {
         params[`${label}_positive_examples`] = fs.createReadStream(zipFiles[label])
       })
