@@ -48,7 +48,7 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li><a href="/nlc_home" id="backButton">Text Classification</a></li>
+        <li><a href="/vision_home" id="backButton">Visual Classification</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#" id="logoutButton"><span class="glyphicon glyphicon-log-in"></span> Log out</a></li>
@@ -213,7 +213,7 @@
          data: { classifier_id: window.userClassifier.classifier_id },
          success: function (data) {
            if(data.error == null) {
-             window.location.replace('/nlc_home')
+             window.location.replace('/vision_home')
            } else {
              alert(data.error)
            }
@@ -231,14 +231,13 @@
          url: "/vision/classify",
          type: "GET",
          headers: { 'token': window.access_token },
-         data: { classifier_id: window.userClassifier.classifier_id, phrase: phrase },
+         data: { classifier_id: window.userClassifier.classifier_id },
          success: function (data) {
            if(data.error == null) {
              alert(data.top_class);
            } else {
              alert(data.error)
            }
-           displayClassifierDetails()
          },
          error: function (data) {
            console.log(data);
