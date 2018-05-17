@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const auth = require('../controllers/auth');
-const UserClassifier = require('../models/UserClassifier');
+const VisionClassifier = require('../models/VisionClassifier');
 const config = require('../config');
 const path = require('path');
 const fs = require('fs');
@@ -41,7 +41,7 @@ function getClassifiersList(req, res) {
     })
 
     function getUserClassifiers(user) {
-      UserClassifier.find({ "user": user._id }, (err, classifiers) => {
+      VisionClassifier.find({ "user": user._id }, (err, classifiers) => {
         if(err != null) {
           res.json({ error: err.message})
           return
@@ -71,7 +71,7 @@ function getClassifiersList(req, res) {
               deletedClassifiers.push(classifier.classifier_id);
             }
           })
-          UserClassifier.remove({ classifier_id: { $in: deletedClassifiers }}, (err, res) => {
+          VisionClassifier.remove({ classifier_id: { $in: deletedClassifiers }}, (err, res) => {
             if(err) {
               console.log(err.message);
             }
@@ -105,7 +105,7 @@ function getClassifierInformation(req, res) {
     })
 
     function checkUserClassifier(userId, classifier_id) {
-        UserClassifier.findOne({ user: userId, classifier_id : classifier_id}, (err, classifier) => {
+        VisionClassifier.findOne({ user: userId, classifier_id : classifier_id}, (err, classifier) => {
         if (err) {
             res.json({ error: err.message })
             return
@@ -161,7 +161,7 @@ function createClassifier(req, res) {
       for(var idx in data) {
         var label = data[idx].label
         preparedData[label] = data[idx].label_items
-        if(preparedData[label].length < 5) {
+        if(preparedData[label].length < 10) {
           errorMessage = 'Label must have a minimum of 10 examples'
           errorFound = true
           break;
@@ -188,8 +188,9 @@ function createClassifier(req, res) {
       saveImages()
     }
 
+    var directory = `${paths.IMAGES_PATH}/${parseInt(utils.random(1000, 99999))}`
+
     function saveImages() {
-      var directory = `${paths.IMAGES_PATH}/${parseInt(utils.random(1000, 99999))}`
       mkdirp.sync(directory)
       labels.forEach((label) => {
         console.log(label)
@@ -212,12 +213,12 @@ function createClassifier(req, res) {
           fs.writeFileSync(filePath, binaryData, "binary");
         })
       })
-      onFilesWritten(directory)
+      onFilesWritten()
     }
 
     let zipFiles = undefined
 
-    function onFilesWritten(directory) {
+    function onFilesWritten() {
       zipFiles = {}
       var promises = []
       labels.forEach((label) => {
@@ -277,7 +278,7 @@ function createClassifier(req, res) {
       })
       Promise.all(promises).then(function (result) {
         console.log(result);
-        onFilesZipped(directory)
+        onFilesZipped()
       }).catch(function (err) {
         console.log(err.message);
         res.json({ error: err.message })
@@ -286,21 +287,19 @@ function createClassifier(req, res) {
     }
 
 
-    function onFilesZipped(directory) {
+    function onFilesZipped() {
       var params = {
         'name': name
       }
       labels.forEach((label) => {
         params[`${label}_positive_examples`] = fs.createReadStream(zipFiles[label])
       })
-
-      console.log(params)
+      
+      watson.createClassifier(params, onCreateClassifier)
     }
 
-    // watson.createClassifier(params, onCreateClassifier)
-
     function onCreateClassifier(err, response) {
-      fs.unlink(filepath)
+      fs.unlink(directory)
       if(err) {
         res.json({ error: err.message })
         return
@@ -309,11 +308,11 @@ function createClassifier(req, res) {
     }
 
     function saveClassifier(classifier_data) {
-      var classifier = new UserClassifier({
+      var classifier = new VisionClassifier({
         user: userId,
         classifier_id: classifier_data.classifier_id,
-        url: classifier_data.url,
         created: classifier_data.created,
+        updated: classifier_data.updated,
         name: classifier_data.name
       })
       classifier.save((err, doc) => {
@@ -349,7 +348,7 @@ function deleteClassifier(req, res) {
     })
 
     function checkUserClassifier(userId, classifier_id) {
-      UserClassifier.findOne({ user: userId, classifier_id : classifier_id}, (err, classifier) => {
+      VisionClassifier.findOne({ user: userId, classifier_id : classifier_id}, (err, classifier) => {
         if (err) {
           res.json({ error: err.message })
           return
@@ -381,7 +380,7 @@ function deleteClassifier(req, res) {
     }
 
     function deleteUserClassifier(classifier_id) {
-      UserClassifier.remove({ classifier_id: classifier_id }, (err, doc) => {
+      VisionClassifier.remove({ classifier_id: classifier_id }, (err, doc) => {
         if(err) {
           res.json({ error: err.message })
           return
