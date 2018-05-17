@@ -191,7 +191,8 @@ function createClassifier(req, res) {
     function saveImages() {
       var directory = `${paths.IMAGES_PATH}/${parseInt(utils.random(1000, 99999))}`
       mkdirp.sync(directory)
-      data.forEach((label) => {
+      labels.forEach((label) => {
+        console.log(label)
         data[label].forEach((imageData) => {
           let imageType = getImageType(imageData.substring(0, 20))
           let base64Data = null
