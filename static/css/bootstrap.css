@@ -5,7 +5,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 :root {
-  --blue: #007bff;
+  --blue: #328EDE;
   --indigo: #6610f2;
   --purple: #6f42c1;
   --pink: #e83e8c;
@@ -104,61 +104,12 @@ hr {
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
   margin-bottom: 0.5rem;
+  
 }
 
-/* New UI */
-.app-insert {
-  width: 800px;
-  margin: 50px auto 20px;
+h3 {
+  color: #328EDE;
 }
-.app-insert input {
-  width: 100%;
-  height: 60px;
-  background: none;
-  border: none;
-  border-bottom: 1px solid #bdc3c7;
-  outline: none;
-  font: 300 28px 'Ubuntu', sans-serif;
-  padding: 20px;
-}
-.app-list {
-  width: 800px;
-  margin: 0 auto;
-}
-.task {
-  width: 100%;
-  height: 60px;
-  line-height: 60px;
-  padding: 0 20px;
-  position: relative;
-  color: #333;
-
-  transition: all .2s ease;
-}
-.task:hover {
-  background: rgba(0, 0, 0, .04);
-  cursor: pointer;
-}
-.task:hover .remove-task {
-  opacity: 1;
-}
-.task-complete {
-  text-decoration: line-through;
-  color: #95a5a6;
-}
-.remove-task {
-  opacity: 0;
-  position: absolute;
-  right: 20px;
-  text-decoration: none;
-  color: #7f8c8d;
-
-  transition: all .2s ease;
-}
-.remove-task:hover {
-  color: #333;
-}
-/* end */
 
 p {
   margin-top: 0;
@@ -453,7 +404,7 @@ h1, h2, h3, h4, h5, h6,
   font-family: inherit;
   font-weight: 500;
   line-height: 1.2;
-  color: inherit;
+  color: #328EDE;;
 }
 
 h1, .h1 {
@@ -2594,13 +2545,13 @@ fieldset[disabled] a.btn {
 
 .btn-success {
   color: #fff;
-  background-color: #28a745;
+  background-color: #328EDE;
   border-color: #28a745;
 }
 
 .btn-success:hover {
   color: #fff;
-  background-color: #218838;
+  background-color: #328EDE;
   border-color: #1e7e34;
 }
 
@@ -2616,7 +2567,7 @@ fieldset[disabled] a.btn {
 .btn-success:not([disabled]):not(.disabled):active, .btn-success:not([disabled]):not(.disabled).active,
 .show > .btn-success.dropdown-toggle {
   color: #fff;
-  background-color: #1e7e34;
+  background-color: #328EDE;
   border-color: #1c7430;
 }
 

@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,700">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/css/example-style.css" type="text/css">
   <base href="/"> 
     <style>
     /* Remove the navbar's default margin-bottom and rounded borders */
@@ -35,9 +35,14 @@
     }
   }
 
-  body {
-    background-color: rgba(172, 197, 222, 0.8)
+   .btn-success{
+    background-color: #328EDE;
+    border-color: #328EDE;
   }
+
+  .btn-success:hover {
+    background-color: #DA2825;
+    border-color: #DA2825;
 
   </style>
 </head>
@@ -64,15 +69,15 @@
     </div>
   </div>
 </nav>
-      
+  
 <header class="main-header">
-  <h1 id="labelName" style="color:#328EDE"></h1>
-  <h2 style="color:#328EDE">Add examples to your label</h2><br>
+  <h1 id="labelName"></h1>
+  <h2>Add examples to your category</h2><br>
   <div class="btn btn-success btn-lg" id="goBack">
         Return to your classifier
    </div>
 </header>
-
+<div class="example-box">
 <section class="example-insert">
   <input style= "color:#000" type="text" name="task" placeholder="Add your examples here" id="exampleInput">
 </section>
@@ -80,17 +85,19 @@
 <section class="example-list">
   <ul></ul>
 </section>
-  
+</div>
   
 
 <script>
+  
 	(function() {
-
 	var  exapp = {
 		init: function() {
 			// Load list
 			exapp.storage('get');
-
+      var color = getColor()
+      $('.example-box').attr('style', 'background-color: '+color)
+      $('#labelName').attr('style', 'color:' + color)
 			// Add label
 			document.querySelector('.example-insert input').addEventListener('keyup', function(e) {
 				if ( e.which === 13 && this.value !== '' ) {
@@ -215,6 +222,12 @@
     window.examples[label].forEach((example) => {
       addExampleItem(example)
     })
+  }
+
+  function getColor() {
+    var label = window.localStorage.getItem('temp_labelName')
+    var color = window.sessionStorage.getItem(label+"_color")
+    return color
   }
 </script>
 

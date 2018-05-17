@@ -18,7 +18,7 @@
 
     /* Add a gray background color and some padding to the footer */
     footer {
-      background-color: #f2f2f2;
+      background-color: #fff;
       padding: 25px;
     }
 
@@ -33,6 +33,16 @@
     .carousel-caption {
       display: none;
     }
+  }
+
+   .btn-success{
+    background-color: #328EDE;
+    border-color: #328EDE;
+  }
+
+  .btn-success:hover {
+    background-color: #DA2825;
+    border-color: #DA2825;
   }
   </style>
 </head>
@@ -61,14 +71,14 @@
       
 <header class="main-header">
   <h1 id="classifierTitle"></h1>
-  <h2>Train your own text classification model. Click on your label to add examples to it.</h2><br>
+  <h2>Teach your computer how to recognize text. Click on your bucket to add examples to it.</h2><br>
   <div class="btn btn-success btn-lg" id="trainButton">
-        Train classifier
+        Teach me!
    </div>
 </header>
 
 <section class="app-insert">
-  <input type="text" name="task" placeholder="Add your label here" id="labelInput">
+  <input type="text" name="task" placeholder="Add your category here" id="labelInput">
 </section>
 
 <section class="app-list">
@@ -78,11 +88,15 @@
   
 
 <script>
+	var ix
+	var colors = ["#DA2825", "#328EDE", "#FB9009", "#5BD648", "#B187BA"]
+	var classifierName = null;
 	(function() {
 
 	var app = {
 		init: function() {
 			// Load list
+			ix = 0
 			app.storage('get');
 
 			// Add label
@@ -170,6 +184,7 @@
 		        }
 		        window.access_token = window.localStorage.getItem('access_token')
 		        window.sessionStorage.setItem("classifierName", window.localStorage.getItem('temp_classifierName'))
+		        classifierName = window.sessionStorage.getItem("classifierName")
 		        $('#classifierTitle').html(window.sessionStorage.getItem("classifierName"))
 		        return
 		      }
@@ -179,36 +194,45 @@
 		    }
 		},
 		addLabel: function (task) {
-			var new_task = document.createElement('li');
+			var random_color = colors[ix%colors.length]
+			ix = ix + 1
+			console.log(ix)
+			var new_task = document.createElement('li');	
 				new_task.setAttribute('class', 'task');
-				new_task.innerHTML = task + '<a href="javascript:;" class="remove-task">remove</a>';
-				
+				new_task.setAttribute('style', 'background-color:'+random_color)
+				new_task.innerHTML = task + '<br><a href="javascript:;" class="remove-task">remove</a>';
 			console.log(new_task)
 			var labelInput = $('#labelInput').val()
 			if (labelInput != null && labelInput.length > 0) {
 				addLabelItem (labelInput, new_task);
 			}
+			window.sessionStorage.setItem(task+"_color", random_color)
 		},
 		removeLabel: function (task) {
+			ix = ix - 1 %colors.length
+			console.log(ix)
 			task.style.opacity = 0;
 			setTimeout(function() {
 				task.remove();
 				app.storage('update');
 			}, 400);
-			var label = task.innerHTML
-			label = label.slice(0, label.indexOf('<a href'))
-			console.log(label)
-			$(`#label_item_${label}`).remove()
-		     window.examples[label] = null
-		     var index = window.labelListItems.indexOf(label);
-		     if (index > -1) {
-		       window.labelListItems.splice(index, 1);
-		     }
+			var label = getLabel(task)
+			var classifierName = window.sessionStorage.getItem("classifierName")
+			var name = classifierName + '_labels'
+			var labels = JSON.parse(window.sessionStorage.getItem(name))
+			var index = labels.indexOf(label);
+			if (index > -1) {
+				console.log(index)
+				labels.splice(index, 1);
+				console.log(labels)
+			}
+			window.sessionStorage.setItem(name, JSON.stringify(labels))
+			console.log('labels',labels)
 		},
 		addExamples: function (task) {
 			app.storage('update');
 			var label = task.innerHTML
-			label = label.slice(0, label.indexOf('<a href'))
+			label = label.slice(0, label.indexOf('<br>'))
 			window.localStorage.setItem('temp_labelName', label)
 			window.location.replace('/nlc_examples')
 		},
@@ -228,17 +252,17 @@
 	app.init();
 })();
   function addLabelItem(label, task) {
-    if(window.labelListItems == null) {
-      window.labelListItems = []
+  	labels = JSON.parse(window.sessionStorage.getItem(classifierName+"_labels"))
+    if(labels == null) {
+      labels = []
     }
-    if(window.labelListItems.includes(label) != false) {
+    if(labels.includes(label) != false) {
       alert('Label already exists')
       return
     }
     var $list = document.querySelector('.app-list ul');
 	$list.appendChild(task);
     var listItem = document.createElement('li')
-    var classifierName = window.sessionStorage.getItem("classifierName")
     listItem.className = "list-group-item"
     listItem.id = `label_item_${label}`
     var span = document.createElement('span')
@@ -248,7 +272,8 @@
     listItem.append(`${label} `)
     listItem.append(span)
     $('#labelList').append(listItem)
-    window.labelListItems.push(label)
+    
+    labels.push(label)
     var examples = JSON.parse(window.sessionStorage.getItem(classifierName + "_examples"))
     
     if(examples === null) {
@@ -256,9 +281,15 @@
     }
     examples[label] = []
     window.sessionStorage.setItem(classifierName + "_examples", JSON.stringify(examples))
-    window.sessionStorage.setItem(classifierName + "_labels", JSON.stringify(labelListItems))
+    window.sessionStorage.setItem(classifierName + "_labels", JSON.stringify(labels))
     console.log('examples', examples)
     console.log('labels', window.sessionStorage.getItem(classifierName+'_labels'))
+  }
+
+  function getLabel(task) {
+  	var label = task.innerHTML
+	label = label.slice(0, label.indexOf('<br>'))
+	return label
   }
 </script>
 

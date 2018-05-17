@@ -32,6 +32,20 @@
       display: none;
     }
   }
+
+  h3 {
+    color: #328EDE;
+  }
+
+  .btn-success{
+    background-color: #328EDE;
+    border-color: #328EDE;
+  }
+
+  .btn-success:hover {
+    background-color: #DA2825;
+    border-color: #DA2825;
+  }
   </style>
 </head>
 <body>
@@ -55,22 +69,22 @@
 </nav>
 
 <div class="container text-center">
-  <h3>Cognimates Watson Studio</h3><br>
-
+  <h3>Teach it to recognize Text</h3><br>
+  <center><img src="/images/nlc_banner.png" class="img-responsive img-rounded" style="width:45%" alt="Image"></center>
   <div class="row">
     <div class="col-sm-4">
-      <h3>Your classifiers</h3>
+      <h3>Your projects</h3>
       <br><br>
       <div id="classifiersList"></div>
     </div>
 
     <div class="col-sm-8">
-      <h3>Create classifier</h3>
+      <h3>Create a project</h3>
       <br>
       <form id="createClassifierForm">
         <div class="form-group row">
           <div class="col-xs-4 col-xs-push-4">
-            <label for="classifierName">Classifier Name:</label>
+            <label for="classifierName">Project Name:</label>
             <input type="text" class="form-control input-lg" id="classifierName">
           </div>
         </div>
@@ -152,7 +166,7 @@
 
   function displayClassifiers() {
       if(window.userClassifiers.length == 0) {
-        $('#classifiersList').append("You have no classifiers")
+        $('#classifiersList').append("You have no projects")
         return
       }
 
