@@ -8,10 +8,10 @@ const UserClassifier = require('./models/UserClassifier')
 
 const app = express()
 app.engine('html', require('ejs').renderFile);
-app.use(bodyParser.json())
+app.use(bodyParser.json({limit: '50mb'}))
 app.use(bodyParser.urlencoded({
   extended: false,
-  limit: 50000
+  limit: '50mb'
 }))
 app.use(express.static('static'))
 app.use(router)
