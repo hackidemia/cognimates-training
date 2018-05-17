@@ -110,7 +110,7 @@
             <br>
             <form id="exampleForm">
               <div class="form-group">
-                <input class="form-control input-sm" id="exampleInput" type="file" name="pic" accept="image/*">
+                <input class="form-control input-sm" id="exampleInput" type="file" onchange="encodeImageFileAsURL(this)" accept="image/*">
               </div>
             </form>
           </div>
@@ -202,13 +202,17 @@
     $('#addExampleButton').click(function (e) {
       e.preventDefault();
       if(window.selectedLabel == undefined) return;
+      if(window.currentExample == undefined) {
+        alert('No example file chosen')
+        return;
+      }
       if(window.examples == undefined) {
         window.examples = {}
       }
       if(window.examples[window.selectedLabel] == undefined) {
         window.examples[window.selectedLabel] = []
       }
-      var exampleInput = $('#exampleInput').val()
+      var exampleInput = window.currentExample
       if(window.examples[window.selectedLabel].includes(exampleInput) == true) {
         return
       }
@@ -269,6 +273,16 @@
     init();
   });
 
+  function encodeImageFileAsURL(element) {
+    var file = element.files[0];
+    if(file == undefined) return;
+    var reader = new FileReader();
+    reader.onloadend = function() {
+      window.currentExample = reader.result
+    }
+    reader.readAsDataURL(file);
+  }
+
 
   function addLabelItem(label) {
     if(window.labelListItems == null) {
@@ -306,6 +320,7 @@
   function showLabelModal(label) {
     selectLabel(label)
     $('#labelModalHeader').html(label);
+    $("#exampleInput").val('');
     $('#labelModal').modal();
     loadExampleItems()
   }
@@ -315,12 +330,18 @@
     if(example == undefined || example.length == 0) return;
     if(window.selectedLabel == undefined || window.examples[window.selectedLabel] == undefined) return;
     var exampleItem = document.createElement('li')
+    var examplePreview = document.createElement('img')
+    examplePreview.className = 'img-responsive'
+    examplePreview.src = example
+    examplePreview.style.maxHeight = "50px"
     exampleItem.className = "list-group-item"
-    exampleItem.innerHTML = example
+    exampleItem.append(examplePreview)
     exampleItem.addEventListener('click', function(labelName, phrase) {
       return function() { removeExample(labelName, phrase) }
     }(window.selectedLabel, example))
     $('#examplesList').append(exampleItem)
+    $("#exampleInput").val('');
+    window.currentExample = undefined
   }
 
   function clearExampleItems() {
