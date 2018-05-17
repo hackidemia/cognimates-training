@@ -194,7 +194,7 @@ function createClassifier(req, res) {
       labels.forEach((label) => {
         console.log(label)
         data[label].forEach((imageData) => {
-          let imageType = getImageType(imageData.substring(0, 20))
+          let imageType = utils.getImageType(imageData.substring(0, 20))
           let base64Data = null
           if(imageType == 'jpeg') {
             base64Data = imageData.replace(/^data:image\/jpeg;base64,/,"")
