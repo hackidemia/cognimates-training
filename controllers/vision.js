@@ -11,8 +11,8 @@ let archiver = require('archiver');
 let VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
 
 const watson = new VisualRecognitionV3({
-    api_key: config.VISION_API,
-    url: config.VISION_URL,
+    api_key: "1438a8fdb764f1c8af8ada02e6c601cec369fc40",
+    url: "https://gateway-a.watsonplatform.net/visual-recognition/api",
     version: '2018-03-19'
 });
 

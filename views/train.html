@@ -239,15 +239,15 @@
 			window.location.replace('/nlc_examples')
 		},
 		storage: function(type) {
-			var name = window.localStorage.getItem("classifierName") + '_labels'
+			var name = window.localStorage.getItem("classifierName") + '_labels_html'
 			console.log(name)
 			if ( type === 'get' ) {
-				if ( localStorage.getItem(name+"_html") != null ) {
-					document.querySelector('.app-list').innerHTML = localStorage.getItem(name+"_html");
+				if ( localStorage.getItem(name) != null ) {
+					document.querySelector('.app-list').innerHTML = localStorage.getItem(name);
 				}
 			} else if ( type === 'update' ) {
 				var str = document.querySelector('.app-list').innerHTML;
-				localStorage.setItem(name+"_html", str);
+				localStorage.setItem(name, str);
 			}
 		}
 	};
