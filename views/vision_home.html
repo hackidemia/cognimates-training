@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Home - Cognimates Studio</title>
+  <title>Vision Classifier - Cognimates Studio</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -32,14 +32,6 @@
       display: none;
     }
   }
-
-  h3 {
-    color: #328EDE;
-  }
-
-  btn btn-primary btn-lg btn-block{
-    color: #328EDE;
-  }
   </style>
 </head>
 <body>
@@ -52,7 +44,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Cognimates</a>
+      <a class="navbar-brand" href="/home">Cognimates</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav navbar-right">
@@ -63,40 +55,33 @@
 </nav>
 
 <div class="container text-center">
-  <h3>Cognimates Studio</h3><br>
+  <h3>Cognimates Watson Studio</h3><br>
+
   <div class="row">
-    <div class="col-sm-6">
-      <img src="/images/nlc_banner.png" class="img-responsive img-rounded" style="width:100%" alt="Image">
-      <p></p>
-      <p>Teach it to recognize Text</p>
-      <div class="well">
-        <div class="btn btn-primary btn-lg btn-block" id="textClassifierButton">
-          Teach it to recognize Text
-        </div>
-      </div>
+    <div class="col-sm-4">
+      <h3>Your classifiers</h3>
+      <br><br>
+      <div id="classifiersList"></div>
     </div>
-    <div class="col-sm-6">
-      <img src="/images/vision_banner.png" class="img-responsive img-rounded" style="width:100%" alt="Image">
-      <p></p>
-      <p>Teach it to recognize Images</p>
-      <div class="well">
-        <div class="btn btn-primary btn-lg btn-block" id="imageClassificationButton">
-          Teach it to recognize Images
+
+    <div class="col-sm-8">
+      <h3>Create classifier</h3>
+      <br>
+      <form id="createClassifierForm">
+        <div class="form-group row">
+          <div class="col-xs-4 col-xs-push-4">
+            <label for="classifierName">Classifier Name:</label>
+            <input type="text" class="form-control input-lg" id="classifierName">
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="col-sm-6">
-
-      
-
-      
-
+        <button type="submit" class="btn btn-success">Create</button>
+      </form>
     </div>
   </div>
 </div><br>
 
 <script>
-  (function init() {
+  function init() {
     if (window.localStorage.getItem('token_expiry') != 'null') {
       if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
         window.localStorage.setItem('access_token', null)
@@ -104,13 +89,14 @@
         window.location.replace("/");
       } else {
         window.access_token = window.localStorage.getItem('access_token')
+        loadUserClassifiers();
         return
       }
     } else {
       window.location.replace("/");
       return
     }
-  })();
+  }
 
   $(document).ready(function(){
     $('#logoutButton').click(function(evt) {
@@ -121,20 +107,67 @@
       return false;
     });
 
-    $('#textClassifierButton').click(function(evt) {
-      evt.preventDefault();
-      window.location.replace("/nlc_home")
+
+    $('#createClassifierForm').submit(function (e) {
+      e.preventDefault();
+      var classifierName = $('#classifierName').val()
+      if(classifierName == null || classifierName.length < 0) {
+        alert("Enter a name for the classifier")
+        return
+      }
+      window.localStorage.setItem('temp_classifierName', classifierName)
+      window.location.replace('/vision_train')
       return false;
     })
 
-    $('#imageClassificationButton').click(function (evt) {
-      evt.preventDefault();
-      window.location.replace("/vision_home")
-      return false;
-    })
+    init();
   });
-</script>
 
+
+  function loadUserClassifiers() {
+    $.ajax({
+         url: "/vision/classifiers",
+         type: "GET",
+         headers: { 'token': window.access_token },
+         success: function (data) {
+           if(data.error == null) {
+             window.userClassifiers = data.classifiers
+           } else {
+             window.userClassifiers = []
+           }
+           displayClassifiers()
+         },
+         error: function (data) {
+           console.log(data);
+           window.userClassifiers = []
+         }
+      });
+  }
+
+  function displayClassifiers() {
+      if(window.userClassifiers.length == 0) {
+        $('#classifiersList').append("You have no classifiers")
+        return
+      }
+
+      window.userClassifiers.forEach(function (classifier) {
+        var button = document.createElement('div')
+        button.className = "btn btn-primary btn-lg"
+        button.addEventListener('click', function (classifier_id)  {
+          return function() { selectClassifier(classifier_id) }
+        }(classifier.classifier_id))
+        button.innerHTML = classifier.name
+
+        $('#classifiersList').append(button)
+      })
+  }
+
+  function selectClassifier(classifier_id) {
+    window.localStorage.setItem('selectedClassifier', classifier_id)
+    window.location.replace('/vision')
+  }
+
+</script>
 
 </body>
 </html>

@@ -1,7 +1,7 @@
 const express = require('express')
 const authController = require('./controllers/auth')
 const nlcController = require('./controllers/nlc')
-// const visionController = require('./controllers/vision')
+const visionController = require('./controllers/vision')
 const router = express.Router()
 
 
@@ -41,6 +41,24 @@ router.post('/nlc/classifier', nlcController.createClassifier)
 router.get('/nlc/classifier', nlcController.getClassifierInformation)
 router.delete('/nlc/classifier', nlcController.deleteClassifier)
 router.get('/nlc/classify', nlcController.classifyText)
+
+router.get('/vision_home', (req, res) => {
+  res.render('vision_home.html')
+})
+
+router.get('/vision_train', (req, res) => {
+  res.render('vision_train.html')
+})
+
+router.get('/vision', (req, res) => {
+  res.render('vision.html')
+})
+
+router.get('/vision/classifiers', visionController.getClassifiersList)
+router.post('/vision/classifier', visionController.createClassifier)
+router.get('/vision/classifier', visionController.getClassifierInformation)
+router.delete('/vision/classifier', visionController.deleteClassifier)
+router.post('/vision/classify', visionController.classifyImages)
 
 
 module.exports = router
