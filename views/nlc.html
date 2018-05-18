@@ -130,6 +130,10 @@
           window.location.replace("/nlc_home");
           return
         }
+        /*if (window.refreshTimer != undefined) {
+          clearTimeout(window.refreshTimer);
+          window.refreshTimer = undefined;
+        }*/
         window.access_token = window.localStorage.getItem('access_token')
         loadUserClassifier(window.localStorage.getItem('selectedClassifier'));
         return
@@ -193,11 +197,10 @@
          success: function (data) {
            if(data.error == null) {
              window.userClassifier = data
+             displayClassifierDetails()
            } else {
              alert(data.error)
            }
-
-
          },
          error: function (data) {
            console.log(data);
@@ -218,11 +221,15 @@
       $('#classifierStatus').html(`Classifier Status: ${window.userClassifier.status}`)
       $('#classifierCreated').html(`Creation date: ${window.userClassifier.created}`)
       $("#status").html("Your project is " + window.userClassifier.status)
-       displayClassifierDetails()           
   
       //Refreshes to check classifier status
       if (window.userClassifier.status != "Available") {
-        setTimeout(displayClassifierDetails, 10000);
+        //window.refreshTimer = setTimeout(loadUserClassifier, 10000);
+      } else {
+        if ( window.refreshTimer != undefined) {
+          clearTimeout(window.refreshTimer);
+          window.refreshTimer = undefined;
+        }
       }
   }
 
