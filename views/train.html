@@ -107,9 +107,9 @@
 		          return
 		        }
 		        window.access_token = window.localStorage.getItem('access_token')
-		        window.sessionStorage.setItem("classifierName", window.localStorage.getItem('temp_classifierName'))
-		        classifierName = window.sessionStorage.getItem("classifierName")
-		        $('#classifierTitle').html(window.sessionStorage.getItem("classifierName"))
+		        window.localStorage.setItem("classifierName", window.localStorage.getItem('temp_classifierName'))
+		        classifierName = window.localStorage.getItem("classifierName")
+		        $('#classifierTitle').html(window.localStorage.getItem("classifierName"))
 		      }
 		    } else {
 		      window.location.replace("/");
@@ -121,7 +121,7 @@
 			ix = 0
 			if (classifierName == window.localStorage.getItem('temp_classifierName')) {
 				app.storage('get');
-			}			
+			}		
 
 			// Add label
 			document.querySelector('.app-insert input').addEventListener('keyup', function(e) {
@@ -144,9 +144,9 @@
 			}, false);
 
 			document.querySelector('#trainButton').addEventListener('click', function(e){
-				var labelList = JSON.parse(window.sessionStorage.getItem(classifierName+'_labels'))
+				var labelList = JSON.parse(window.localStorage.getItem(classifierName+'_labels'))
 				console.log(labelList)
-				var examples = JSON.parse(window.sessionStorage.getItem(classifierName + "_examples")) 
+				var examples = JSON.parse(window.localStorage.getItem(classifierName + "_examples")) 
 				if (labelList == undefined || labelList.length < 2) {
 		        alert('Two or more labels are required to train')
 		        return
@@ -197,7 +197,7 @@
 			
 		},
 		addLabel: function (task) {
-			var random_color = colors[ix%colors.length]
+			var random_color = colors[Math.abs(ix%colors.length)]
 			ix = ix + 1
 			console.log(ix)
 			var new_task = document.createElement('li');	
@@ -210,7 +210,7 @@
 			if (labelInput != null && labelInput.length > 0) {
 				addLabelItem (labelInput, new_task);
 			}
-			window.sessionStorage.setItem(task+"_color", random_color)
+			window.localStorage.setItem(task+"_color", random_color)
 		},
 		removeLabel: function (task) {
 			ix = ix - 1 %colors.length
@@ -221,16 +221,16 @@
 				app.storage('update');
 			}, 400);
 			var label = getLabel(task)
-			var classifierName = window.sessionStorage.getItem("classifierName")
+			var classifierName = window.localStorage.getItem("classifierName")
 			var name = classifierName + '_labels'
-			var labels = JSON.parse(window.sessionStorage.getItem(name))
+			var labels = JSON.parse(window.localStorage.getItem(name))
 			var index = labels.indexOf(label);
 			if (index > -1) {
 				console.log(index)
 				labels.splice(index, 1);
 				console.log(labels)
 			}
-			window.sessionStorage.setItem(name, JSON.stringify(labels))
+			window.localStorage.setItem(name, JSON.stringify(labels))
 			console.log('labels',labels)
 		},
 		addExamples: function (task) {
@@ -241,53 +241,44 @@
 			window.location.replace('/nlc_examples')
 		},
 		storage: function(type) {
-			var name = window.sessionStorage.getItem("classifierName") + '_labels'
+			var name = window.localStorage.getItem("classifierName") + '_labels'
 			console.log(name)
 			if ( type === 'get' ) {
-				if ( localStorage.getItem(name) !== null ) {
-					document.querySelector('.app-list').innerHTML = localStorage.getItem(name);
+				if ( localStorage.getItem(name+"_html") != null ) {
+					document.querySelector('.app-list').innerHTML = localStorage.getItem(name+"_html");
 				}
 			} else if ( type === 'update' ) {
 				var str = document.querySelector('.app-list').innerHTML;
-				localStorage.setItem(name, str);
+				localStorage.setItem(name+"_html", str);
 			}
 		}
 	};
 	app.init();
 })();
   function addLabelItem(label, task) {
-  	labels = JSON.parse(window.sessionStorage.getItem(classifierName+"_labels"))
+  	labels = JSON.parse(window.localStorage.getItem(classifierName+"_labels"))
     if(labels == null) {
       labels = []
     }
     if(labels.includes(label) != false) {
-      alert('Label already exists')
+      alert('Bucket already exists')
       return
     }
     var $list = document.querySelector('.app-list ul');
 	$list.appendChild(task);
-    var listItem = document.createElement('li')
-    listItem.className = "list-group-item"
-    listItem.id = `label_item_${label}`
-    var span = document.createElement('span')
-    span.className = "badge"
-    span.id = `label_badge_${label}`
-    span.innerHTML = 0
-    listItem.append(`${label} `)
-    listItem.append(span)
-    $('#labelList').append(listItem)
-    
     labels.push(label)
-    var examples = JSON.parse(window.sessionStorage.getItem(classifierName + "_examples"))
+    console.log("label", label)
+    console.log("result", labels)
+    var examples = JSON.parse(window.localStorage.getItem(classifierName + "_examples"))
     
     if(examples === null) {
       examples = {}
     }
     examples[label] = []
-    window.sessionStorage.setItem(classifierName + "_examples", JSON.stringify(examples))
-    window.sessionStorage.setItem(classifierName + "_labels", JSON.stringify(labels))
+    window.localStorage.setItem(classifierName + "_examples", JSON.stringify(examples))
+    window.localStorage.setItem(classifierName + "_labels", JSON.stringify(labels))
     console.log('examples', examples)
-    console.log('labels', window.sessionStorage.getItem(classifierName+'_labels'))
+    console.log('labels', window.localStorage.getItem(classifierName+'_labels'))
   }
 
   function getLabel(task) {
