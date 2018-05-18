@@ -196,7 +196,8 @@
            } else {
              alert(data.error)
            }
-           displayClassifierDetails()
+
+
          },
          error: function (data) {
            console.log(data);
@@ -217,7 +218,8 @@
       $('#classifierStatus').html(`Classifier Status: ${window.userClassifier.status}`)
       $('#classifierCreated').html(`Creation date: ${window.userClassifier.created}`)
       $("#status").html("Your project is " + window.userClassifier.status)
-      
+       displayClassifierDetails()           
+  
       //Refreshes to check classifier status
       if (window.userClassifier.status != "Available") {
         setTimeout(displayClassifierDetails, 10000);
