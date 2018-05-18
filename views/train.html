@@ -199,7 +199,6 @@
 		addLabel: function (task) {
 			var random_color = colors[Math.abs(ix%colors.length)]
 			ix = ix + 1
-			console.log(ix)
 			var new_task = document.createElement('li');	
 				new_task.setAttribute('class', 'task');
 				new_task.setAttribute('id', 'task');
@@ -214,7 +213,6 @@
 		},
 		removeLabel: function (task) {
 			ix = ix - 1 %colors.length
-			console.log(ix)
 			task.style.opacity = 0;
 			setTimeout(function() {
 				task.remove();

@@ -88,20 +88,42 @@
   
 
 <script>
-  
+  var labelName = null;
 	(function() {
-	var  exapp = {
+	var  app = {
 		init: function() {
+      if (window.localStorage.getItem('token_expiry') != 'null') {
+          if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
+            window.localStorage.setItem('access_token', null)
+            window.localStorage.setItem('token_expiry', null)
+            window.location.replace("/");
+          } else {
+
+            if(window.localStorage.getItem('temp_classifierName') == 'null') {
+              window.location.replace("/nlc_home");
+              return
+            }
+            window.access_token = window.localStorage.getItem('access_token')
+            window.labelName = window.localStorage.getItem('temp_labelName');
+            window.classifierName = window.localStorage.getItem('classifierName')
+            $('#labelName').html(window.labelName)
+          }
+        } else {
+          window.location.replace("/");
+          return
+        }
 			// Load list
-			exapp.storage('get');
+			app.storage('get');
+
       var color = getColor()
       $('.example-box').attr('style', 'background-color: '+color)
       $('#labelName').attr('style', 'color:' + color)
+      $('input').attr('placeholder', 'Add your ' + window.labelName + ' here')
 			// Add label
 			document.querySelector('.example-insert input').addEventListener('keyup', function(e) {
 				if ( e.which === 13 && this.value !== '' ) {
-					exapp.addExample(this.value);
-					exapp.storage('update');
+					app.addExample(this.value);
+					app.storage('update');
 					this.value = '';
 				}
 			}, false);
@@ -109,43 +131,21 @@
 			document.querySelector('.example-list').addEventListener('click', function(e) {
 				// Remove label
 				if ( e.target.classList.contains('remove-example') ) {
-					exapp.removeExample(e.target.parentNode);
+					app.removeExample(e.target.parentNode);
 				}
 			}, false);
 
       document.querySelector('#goBack').addEventListener('click', function(e) {
         window.location.replace('/train')
       }, false);
-
-			if (window.localStorage.getItem('token_expiry') != 'null') {
-		      if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
-		        window.localStorage.setItem('access_token', null)
-		        window.localStorage.setItem('token_expiry', null)
-		        window.location.replace("/");
-		      } else {
-
-		        if(window.localStorage.getItem('temp_classifierName') == 'null') {
-		          window.location.replace("/nlc_home");
-		          return
-		        }
-		        window.access_token = window.localStorage.getItem('access_token')
-		        window.labelName = window.localStorage.getItem('temp_labelName');
-            window.classifierName = window.localStorage.getItem('classifierName')
-		        $('#labelName').html(window.labelName)
-		        return
-		      }
-		    } else {
-		      window.location.replace("/");
-		      return
-		    }
 		},
 
 		addExample: function (example) {  
       var new_example = document.createElement('li');
         new_example.setAttribute('class', 'example');
         new_example.innerHTML = example + '<a href="javascript:;" class="remove-example">remove</a>'; 
-      var $list = document.querySelector('.example-list ul');
-      $list.appendChild(new_example);
+      
+      
       var exampleInput = $('#exampleInput').val()
       var label = window.labelName
       if(label == undefined) return;
@@ -157,14 +157,18 @@
       if(examples[label] == undefined) {
         examples[label] = []
       }
-      if(examples[label].includes(exampleInput) == true) {
-        alert('example already exists')
-        return
-      }
+      
       if(exampleInput != null && exampleInput.length > 0) {
-        examples[window.labelName].push(exampleInput)
-        addExampleItem(exampleInput, label, examples);
-        $(`#label_badge_${label}`).html(examples[label].length)
+        
+        if(example == undefined || example.length == 0) return;
+        if(label == undefined || examples[label] == undefined) return;
+        if(examples[label].includes(exampleInput) == true) {
+          alert('example already exists')
+          return
+        }
+        var $list = document.querySelector('.example-list ul');
+        $list.appendChild(new_example);
+        examples[label].push(exampleInput)
       }
       console.log(examples)
       window.localStorage.setItem(classifierName+'_examples', JSON.stringify(examples))
@@ -175,7 +179,7 @@
 			example.style.opacity = 0;
 			setTimeout(function() {
 				example.remove();
-				exapp.storage('update');
+				app.storage('update');
 			}, 400);
 			var ex = example.innerHTML
       ex = ex.slice(0, ex.indexOf('<a href'))
@@ -186,32 +190,29 @@
         examples[label].splice(idx, 1)
       }
       window.localStorage.setItem(classifierName+'_examples', JSON.stringify(examples))
-      loadExampleItems()
 		},
 
 		storage: function(type) {
+      var name = window.labelName + '_examples'
+      console.log(name)
 			if ( type === 'get' ) {
-        var name = window.labelName + '_examples'
-				if ( localStorage.getItem(name) !== null ) {
-					document.querySelector('.example-list').innerHTML = localStorage.getItem(name);
-          console.log(name)
+        console.log("get")
+				if ( localStorage.getItem(name+"_html") != null ) {
+					document.querySelector('.example-list').innerHTML = localStorage.getItem(name+"_html");
+          console.log("get",localStorage.getItem(name+"_html"))
 				}
 			} else if ( type === 'update' ) {
 				var str = document.querySelector('.example-list').innerHTML;
-				localStorage.setItem(name, str);
+				localStorage.setItem(name+"_html", str);
+        console.log(localStorage.getItem(name+"_html"))
 			}
 		}
 	};
-	exapp.init();
+	app.init();
 })()
-  function addExampleItem(example, label, examples) {
+  function addExampleItem(example, label, examples, new_example) {
     
-    if(example == undefined || example.length == 0) return;
-    if(label == undefined || examples[label] == undefined) return;
-    var exampleItem = document.createElement('li')
-    exampleItem.className = "list-group-item"
-    exampleItem.innerHTML = example
-    $('#examplesList').append(exampleItem)    
+    
   }
 
   function loadExampleItems (label){

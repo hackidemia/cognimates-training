@@ -32,6 +32,19 @@
       display: none;
     }
   }
+    h3 {
+    color: #328EDE;
+  }
+
+  .btn-primary{
+    background-color: #328EDE;
+    border-color: #328EDE;
+  }
+
+  .btn-primary:hover {
+    background-color: #DA2825;
+    border-color: #DA2825;
+  }
   </style>
 </head>
 <body>
@@ -58,7 +71,7 @@
 </nav>
 
 <div class="container text-center">
-  <h3>Cognimates Watson Studio</h3><br>
+  <h3 id="status"></h3><br>
 
   <div class="row">
     <h3 id="classifierTitle"></h3>
@@ -125,6 +138,7 @@
       window.location.replace("/");
       return
     }
+
   }
 
   $(document).ready(function(){
@@ -202,6 +216,12 @@
       $('#classifierId').html(`Classifier ID: ${window.userClassifier.classifier_id}`)
       $('#classifierStatus').html(`Classifier Status: ${window.userClassifier.status}`)
       $('#classifierCreated').html(`Creation date: ${window.userClassifier.created}`)
+      $("#status").html("Your project is " + window.userClassifier.status)
+      
+      //Refreshes to check classifier status
+      if (window.userClassifier.status != "Available") {
+        setTimeout(displayClassifierDetails, 10000);
+      }
   }
 
 
