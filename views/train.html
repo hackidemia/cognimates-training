@@ -89,7 +89,7 @@
 
 <script>
 	var ix
-	var colors = ["#DA2825", "#328EDE", "#FB9009", "#5BD648", "#B187BA"]
+	//var colors = ["#DA2825", "#328EDE", "#FB9009", "#5BD648", "#B187BA"]
 	var classifierName = null;
 	(function() {
 
@@ -197,22 +197,22 @@
 			
 		},
 		addLabel: function (task) {
-			var random_color = colors[Math.abs(ix%colors.length)]
-			ix = ix + 1
+			//var random_color = colors[Math.abs(ix%colors.length)]
+			//ix = ix + 1
 			var new_task = document.createElement('li');	
 				new_task.setAttribute('class', 'task');
 				new_task.setAttribute('id', 'task');
-				new_task.setAttribute('style', 'background-color:'+random_color)
-				new_task.innerHTML = task + '<br><a href="javascript:;" class="remove-task">remove</a>';
+				//new_task.setAttribute('style', 'background-color:'+random_color)
+				new_task.innerHTML = task + '<br><br><a href="javascript:;" class="remove-task">remove</a';
 			console.log(new_task)
 			var labelInput = $('#labelInput').val()
 			if (labelInput != null && labelInput.length > 0) {
 				addLabelItem (labelInput, new_task);
 			}
-			window.localStorage.setItem(task+"_color", random_color)
+			//window.localStorage.setItem(task+"_color", random_color)
 		},
 		removeLabel: function (task) {
-			ix = ix - 1 %colors.length
+			//ix = ix - 1 %colors.length
 			task.style.opacity = 0;
 			setTimeout(function() {
 				task.remove();
