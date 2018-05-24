@@ -50,6 +50,14 @@ router.get('/vision_train', (req, res) => {
   res.render('vision_train.html')
 })
 
+router.get('/vision-train', (req, res) => {
+  res.render('vision-train.html')
+})
+
+router.get('/vision_examples', (req, res) => {
+  res.render('vision_examples.html')
+})
+
 router.get('/vision', (req, res) => {
   res.render('vision.html')
 })

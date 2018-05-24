@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Text Classifier - Cognimates Studio</title>
+  <title>Vision Classifier - Cognimates Studio</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,700">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -80,7 +80,7 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li><a href="/nlc_home" id="backButton">Text Classification</a></li>
+        <li><a href="/vision_home" id="backButton">Vision Classification</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#" id="logoutButton"><span class="glyphicon glyphicon-log-in"></span> Log out</a></li>
@@ -187,36 +187,34 @@
 		      if(error == true) {
 		        return
 		      }
-		      var requestData = {}
-		      requestData.name = classifierName
-		      requestData.training_data = []
-		      labelList.forEach((label) => {
-		        examples[label].forEach((example) => {
-		          var exampleObject = {
-		            phrase: example,
-		            label: label
-		          }
-		          requestData.training_data.push(exampleObject)
-		        })
-		      })
-		      $.ajax({
-		        url: '/nlc/classifier',
-		        type: 'POST',
-		        dataType: 'json',
-		        contentType: "application/json; charset=utf-8",
-		        data: JSON.stringify(requestData),
-		        headers: { token: window.access_token },
-		        success: function (data) {
-		          if(data.error == null) {
-		            console.log('id', data.clasifier_id)
-		            window.localStorage.setItem('selectedClassifier', data.classifier_id)
-		            window.location.replace('/nlc')
-		          } else {
-		            alert(data.error)
-		          }
-		        }
-		      })
-			})
+				var requestData = {}
+			      requestData.name = window.classifierName
+			      requestData.training_data = []
+			      labelList.forEach((label) => {
+			        label_items = []
+			        examples[label].forEach((example) => {
+			          var image_file = example
+			          label_items.push(image_file)
+			        })
+			        requestData.training_data.push({label: label, label_items: label_items})
+			      })
+			      $.ajax({
+			        url: '/vision/classifier',
+			        type: 'POST',
+			        dataType: 'json',
+			        contentType: "application/json; charset=utf-8",
+			        data: JSON.stringify(requestData),
+			        headers: { token: window.access_token },
+			        success: function (data) {
+			          if(data.error == null) {
+			            window.localStorage.setItem('selectedClassifier', data.classifier_id)
+			            window.location.replace('/vision')
+			          } else {
+			            alert(data.error)
+			          }
+			        }
+			      })
+			    })
 			return
 			
 		},
@@ -263,7 +261,7 @@
 			var label = getLabel(task)
 			console.log(label)
 			window.localStorage.setItem('temp_labelName', label)
-			window.location.replace('/nlc_examples')
+			window.location.replace('/vision_examples')
 		},
 		storage: function(type) {
 			var name = window.localStorage.getItem("classifierName") + '_labels_html'

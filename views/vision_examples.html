@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Text Classifier - Cognimates Studio</title>
+  <title>Vision Classifier - Cognimates Studio</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,700">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -35,7 +35,7 @@
     }
   }
 
-   .btn-success{
+  .btn-success{
     background-color: #328EDE;
     border-color: #328EDE;
   }
@@ -43,6 +43,14 @@
   .btn-success:hover {
     background-color: #DA2825;
     border-color: #DA2825;
+  }
+
+  .btn-remove{
+    background-color: #DA2825;
+    border-color: #DA2825;
+    color: #fff;
+    margin: 0 auto;
+  }
 
   </style>
 </head>
@@ -60,7 +68,7 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li><a href="/nlc_home" id="backButton">Text Classification</a></li>
+        <li><a href="/vision_home" id="backButton">Vision Classification</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#" id="logoutButton"><span class="glyphicon glyphicon-log-in"></span> Log out</a></li>
@@ -71,20 +79,22 @@
   
 <header class="main-header">
   <h1 id="labelName"></h1>
-  <h2>Add examples to your bucket. Try to add at least five!</h2><br>
+  <h2>Add examples to your bucket. Try to add at least ten!</h2><br>
   <div class="btn btn-success btn-lg" id="goBack">
         Return to your project
    </div>
 </header>
-<div class="example-box">
 <section class="example-insert">
-  <input style= "color:#000" type="text" name="task" placeholder="Add your examples here" id="exampleInput">
+    <input class="form-control input-sm" id="exampleInput" type="file" name="task" onchange="encodeImageFileAsURL(this)" accept="image/*">
+    <center><span class="btn btn-success" style="font-size: 20px; margin: 10px;" id="addExampleButton">
+              Upload Example
+    </span></center>
 </section>
 
 <section class="example-list">
   <ul></ul>
 </section>
-</div>
+
   
 
 <script>
@@ -115,37 +125,37 @@
 			// Load list
 			app.storage('get');
 
-      var color = getColor()
-      //$('.example-box').attr('style', 'background-color: '+color)
-      $('#labelName').attr('style', 'color:' + color)
       $('input').attr('placeholder', 'Add your ' + window.labelName + ' examples here')
-			// Add label
-			document.querySelector('.example-insert input').addEventListener('keyup', function(e) {
-				if ( e.which === 13 && this.value !== '' ) {
-					app.addExample(this.value);
-					app.storage('update');
-					this.value = '';
-				}
+
+			// Add example
+			document.querySelector("#addExampleButton").addEventListener('click', 
+        function(e) {
+          var example = e.target.parentNode.parentNode.firstChild;
+          var exampleInput = window.currentExample
+          console.log(exampleInput)
+  				app.addExample(exampleInput);
+  				app.storage('update');
 			}, false);
 
 			document.querySelector('.example-list').addEventListener('click', function(e) {
 				// Remove label
-				if ( e.target.classList.contains('remove-example') ) {
-					app.removeExample(e.target.parentNode);
+				if ( e.target.classList.contains('remove-image') ) {
+          console.log('check', e.target.parentNode.parentNode)
+					app.removeExample(e.target.parentNode.parentNode);
 				}
 			}, false);
 
       document.querySelector('#goBack').addEventListener('click', function(e) {
-        window.location.replace('/train')
+        window.location.replace('/vision-train')
       }, false);
 		},
 
 		addExample: function (example) {  
       var new_example = document.createElement('li');
-        new_example.setAttribute('class', 'example');
-        new_example.innerHTML = example + '<a href="javascript:;" class="remove-example">remove</a>'; 
-      
-      
+        new_example.setAttribute('class', 'img-example');
+        new_example.setAttribute('style', 'background-image: url(' + example + ')')
+        new_example.innerHTML = '<center><a href="javascript:;" class="remove-image">remove</a></center>'; 
+      console.log(new_example) 
       var exampleInput = $('#exampleInput').val()
       var label = window.labelName
       if(label == undefined) return;
@@ -162,13 +172,13 @@
         
         if(example == undefined || example.length == 0) return;
         if(label == undefined || examples[label] == undefined) return;
-        if(examples[label].includes(exampleInput) == true) {
+        if(examples[label].includes(example) == true) {
           alert('example already exists')
           return
         }
         var $list = document.querySelector('.example-list ul');
         $list.appendChild(new_example);
-        examples[label].push(exampleInput)
+        examples[label].push(example)
       }
       console.log(examples)
       window.localStorage.setItem(classifierName+'_examples', JSON.stringify(examples))
@@ -181,11 +191,13 @@
 				example.remove();
 				app.storage('update');
 			}, 400);
-			var ex = example.innerHTML
-      ex = ex.slice(0, ex.indexOf('<a href'))
+			var ex = example.getAttribute('style', 'background-image')
+      ex = ex.slice(23, -15)
+      console.log("now this",ex)
       var label = window.labelName
       var examples = JSON.parse(window.localStorage.getItem(classifierName+'_examples'))
       var idx = examples[label].indexOf(ex)
+      console.log("index",idx)
       if(idx > -1) {
         examples[label].splice(idx, 1)
       }
@@ -210,10 +222,6 @@
 	};
 	app.init();
 })()
-  function addExampleItem(example, label, examples, new_example) {
-    
-    
-  }
 
   function loadExampleItems (label){
     clearExampleItems()
@@ -224,10 +232,14 @@
     })
   }
 
-  function getColor() {
-    var label = window.localStorage.getItem('temp_labelName')
-    var color = window.localStorage.getItem(label+"_color")
-    return color
+  function encodeImageFileAsURL(element) {
+    var file = element.files[0];
+    if(file == undefined) return;
+    var reader = new FileReader();
+    reader.onloadend = function() {
+      window.currentExample = reader.result
+    }
+    reader.readAsDataURL(file);
   }
 </script>
 

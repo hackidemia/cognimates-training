@@ -106,6 +106,7 @@
 
 <script>
   function init() {
+    window.test = "ok"
     if (window.localStorage.getItem('token_expiry') != 'null') {
       if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
         window.localStorage.setItem('access_token', null)
@@ -140,7 +141,7 @@
         return
       }
       window.localStorage.setItem('temp_classifierName', classifierName)
-      window.location.replace('/vision_train')
+      window.location.replace('/vision-train')
       return false;
     })
 
