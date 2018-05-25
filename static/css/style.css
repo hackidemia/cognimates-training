@@ -131,7 +131,7 @@ ul {
 }
 
 .app-list {
-	width: 900px;
+	width: 1000px;
 	height: 200px;
 	margin: 0 auto;
 }
@@ -153,10 +153,10 @@ ul {
 	font-size: 30px;
 	font-weight: bold;
 	text-align: center;
-	/*background-color: inherit;*/
+	background-color: inherit;
 	transition: all .2s ease;
 	border-radius: 20px;
-	background-image: url("https://imgur.com/LpBjrXm.png/");
+	/*background-image: url("https://imgur.com/LpBjrXm.png/");*/
 	background-size: 270px;
 
 }
@@ -188,7 +188,7 @@ ul {
 }
 
 .remove-task:hover {
-	background-color: #328EDE;
+	background-color: #29AFCF;
 }
 
 

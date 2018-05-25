@@ -84,13 +84,14 @@
         Return to your project
    </div>
 </header>
+<div class="example-box">
 <section class="example-insert">
     <input class="form-control input-sm" id="exampleInput" type="file" name="task" onchange="encodeImageFileAsURL(this)" accept="image/*">
     <center><span class="btn btn-success" style="font-size: 20px; margin: 10px;" id="addExampleButton">
               Upload Example
     </span></center>
 </section>
-
+</div>
 <section class="example-list">
   <ul></ul>
 </section>
@@ -124,6 +125,8 @@
         }
 			// Load list
 			app.storage('get');
+      var color = getColor()
+      $('.example-box').attr('style', 'background-color: '+color)
 
       $('input').attr('placeholder', 'Add your ' + window.labelName + ' examples here')
 

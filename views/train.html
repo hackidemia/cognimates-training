@@ -47,11 +47,10 @@
 
   }
   .btn-primary{
-    background-color: #328EDE;
-    border-color: #328EDE;
+    background-color: #29AFCF;
+    border-color: #29AFCF;
     width: 100px;
     margin: 0 auto;
-    margin-top: 50px;
     font-weight: bold;
   }
 
@@ -109,7 +108,7 @@
 
 <script>
 	var ix
-	//var colors = ["#DA2825", "#328EDE", "#FB9009", "#5BD648", "#B187BA"]
+	var colors = ["#BA1F1A", "#328EDE", "#FB9009", "#5BD648", "#B187BA"]
 	var classifierName = null;
 	(function() {
 
@@ -221,21 +220,22 @@
 			
 		},
 		addLabel: function (task) {
-			//var random_color = colors[Math.abs(ix%colors.length)]
-			//ix = ix + 1
+			var random_color = colors[Math.abs(ix%colors.length)]
+			ix = ix + 1
 			var new_task = document.createElement('li');	
 				new_task.setAttribute('class', 'task');
 				new_task.setAttribute('id', 'task');
+				new_task.setAttribute('style', 'background-color: '+random_color)
 				new_task.innerHTML = task + '<div class="btn btn-primary btn-sm btn-block" id="addExampleButton">Add examples</div><a href="javascript:;" class="remove-task">remove</a';
 			var labelInput = $('#labelInput').val()
 			console.log('labelInput', labelInput)
 			if (labelInput != null && labelInput.length > 0) {
 				addLabelItem (labelInput, new_task);
 			}
-			//window.localStorage.setItem(task+"_color", random_color)
+			window.localStorage.setItem(task+"_color", random_color)
 		},
 		removeLabel: function (task) {
-			//ix = ix - 1 %colors.length
+			ix = ix - 1 %colors.length
 			console.log('removing', task.parentNode.innerHTML)
 			task.style.opacity = 0;
 			setTimeout(function() {
@@ -266,7 +266,7 @@
 			window.location.replace('/nlc_examples')
 		},
 		storage: function(type) {
-			var name = window.localStorage.getItem("classifierName") + '_labels_html'
+			var name = window.localStorage.getItem("classifierName") + '_nlc_labels_html'
 			console.log(name)
 			if ( type === 'get' ) {
 				if ( localStorage.getItem(name) != null ) {

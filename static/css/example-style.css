@@ -95,7 +95,7 @@ ul {
   ========================================
 */
 .app-insert {
-	width: 800px;
+	width: 100%;
 	margin: 50px auto 20px;
 }
 .app-insert input {
@@ -103,14 +103,14 @@ ul {
 	height: 60px;
 	background: none;
 	border: none;
-	/*border-bottom: 1px solid #bdc3c7;*/
+	border-bottom: 1px solid #bdc3c7;
 	outline: none;
 	font: 300 28px 'Roboto', sans-serif;
 	padding: 20px;
 }
 
 .example-insert {
-	width: 800px;
+	width: 100%;
 	margin: 50px auto 20px;
 }
 .example-insert input {
@@ -118,6 +118,7 @@ ul {
 	height: 60px;
 	background: none;
 	border: none;
+	border-bottom: 1px solid #bdc3c7;
 	outline: none;
 	font: 300 20px 'Roboto', sans-serif;
 	padding: 10px;
@@ -201,6 +202,20 @@ ul {
 .img-example:hover .remove-image{
 	opacity: 1;
 }
+.example:hover .remove-example {
+	opacity: 1;
+}
+.remove-example {
+	opacity: 0;
+	position: absolute;
+	right: 20px;
+	text-decoration: none;
+	color: #fff;
+	transition: all .2s ease;
+}
+.remove-task:hover {
+	color: #333;
+}
 
 .remove-image {
 	padding: 0 20px;
@@ -219,7 +234,7 @@ ul {
 }
 
 .remove-image:hover {
-	background-color: #328EDE;
+	background-color: #29AFCF;
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
