@@ -126,9 +126,9 @@
 		          return
 		        }
 		        window.access_token = window.localStorage.getItem('access_token')
-		        window.localStorage.setItem("classifierName", window.localStorage.getItem('temp_classifierName'))
+		        window.localStorage.setItem("classifierName", window.localStorage.getItem('temp_classifierName')+'_vision')
 		        classifierName = window.localStorage.getItem("classifierName")
-		        $('#classifierTitle').html(window.localStorage.getItem("classifierName"))
+		        $('#classifierTitle').html(classifierName.slice(0, classifierName.indexOf('_')))
 		      }
 		    } else {
 		      window.location.replace("/");
@@ -138,7 +138,7 @@
 		    console.log(window.localStorage.getItem('temp_classifierName'))
 			// Load list
 			ix = 0
-			if (classifierName == window.localStorage.getItem('temp_classifierName')) {
+			if (classifierName == window.localStorage.getItem('temp_classifierName')+'_vsion') {
 				app.storage('get');
 			}		
 
@@ -264,7 +264,7 @@
 			window.location.replace('/vision_examples')
 		},
 		storage: function(type) {
-			var name = window.localStorage.getItem("classifierName") + '_vision_labels_html'
+			var name = classifierName + '_labels_html'
 			console.log(name)
 			if ( type === 'get' ) {
 				if ( localStorage.getItem(name) != null ) {
