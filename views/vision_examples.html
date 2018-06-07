@@ -244,6 +244,12 @@
     }
     reader.readAsDataURL(file);
   }
+
+  function getColor() {
+    var label = window.localStorage.getItem('temp_labelName')
+    var color = window.localStorage.getItem(label+"_color")
+    return color
+  }
 </script>
 
 
