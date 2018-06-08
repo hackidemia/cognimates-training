@@ -108,7 +108,7 @@
 
 <script>
 	var ix
-	var colors = ["#BA1F1A", "#328EDE", "#FB9009", "#5BD648", "#B187BA"]
+	var colors = ["#328EDE", "#FB9009", "#5BD648", "#B187BA"]
 	var classifierName = null;
 	(function() {
 
@@ -153,12 +153,12 @@
 
 			document.querySelector('.app-list').addEventListener('click', function(e) {
 				// Remove label
-				if ( e.target.classList.contains('remove-task') ) {
+				if ( e.target.id == 'remove') {
 					app.removeLabel(e.target);
 				// Add examples
 				} else if ( e.target.id == 'addExampleButton' ) {
 					console.log(e.target.innerHTML)
-					app.addExamples(e.target.parentNode);
+					app.addExamples(e.target.parentNode.parentNode);
 				}
 			}, false);
 
@@ -226,7 +226,7 @@
 				new_task.setAttribute('class', 'task');
 				new_task.setAttribute('id', 'task');
 				new_task.setAttribute('style', 'background-color: '+random_color)
-				new_task.innerHTML = task + '<div class="btn btn-primary btn-sm btn-block" id="addExampleButton">Add examples</div><a href="javascript:;" class="remove-task">remove</a';
+				new_task.innerHTML = task + '<div class = box-buttons><div class="remove-task" id="addExampleButton">Add examples</div><a href="javascript:;" class="remove-task" id="remove">Remove</a></div>';
 			var labelInput = $('#labelInput').val()
 			console.log('labelInput', labelInput)
 			if (labelInput != null && labelInput.length > 0) {
@@ -234,17 +234,18 @@
 			}
 			window.localStorage.setItem(task+"_color", random_color)
 		},
+
 		removeLabel: function (task) {
 			ix = ix - 1 %colors.length
-			console.log('removing', task.parentNode.innerHTML)
+			var removeNode = task.parentNode.parentNode
+			console.log('removing', removeNode.innerHTML)
 			task.style.opacity = 0;
 			setTimeout(function() {
 				console.log(task)
-				task.parentNode.remove();
+				removeNode.remove();
 				app.storage('update');
 			}, 400);
-			console.log(task.parentNode)
-			var label = getLabel(task.parentNode)
+			var label = getLabel(removeNode)
 			console.log(label)
 			var classifierName = window.localStorage.getItem("classifierName")
 			var name = classifierName + '_labels'

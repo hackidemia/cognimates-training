@@ -39,12 +39,7 @@
     background-color: #328EDE;
     border-color: #328EDE;
   }
-
-  .btn-success:hover {
-    background-color: #DA2825;
-    border-color: #DA2825;
-  }
-
+  
   .btn-remove{
     background-color: #DA2825;
     border-color: #DA2825;
@@ -87,9 +82,6 @@
 <div class="example-box">
 <section class="example-insert">
     <input class="form-control input-sm" id="exampleInput" type="file" name="task" onchange="encodeImageFileAsURL(this)" accept="image/*">
-    <center><span class="btn btn-success" style="font-size: 20px; margin: 10px;" id="addExampleButton">
-              Upload Example
-    </span></center>
 </section>
 </div>
 <section class="example-list">
@@ -100,8 +92,9 @@
 
 <script>
   var labelName = null;
+  var app;
 	(function() {
-	var  app = {
+	app = {
 		init: function() {
       if (window.localStorage.getItem('token_expiry') != 'null') {
           if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
@@ -126,18 +119,20 @@
 			// Load list
 			app.storage('get');
       var color = getColor()
-      $('.example-box').attr('style', 'background-color: '+color)
+      //$('.example-box').attr('style', 'background-color: '+color)
 
       $('input').attr('placeholder', 'Add your ' + window.labelName + ' examples here')
 
 			// Add example
-			document.querySelector("#addExampleButton").addEventListener('click', 
+			$("#exampleInput").change( 
         function(e) {
-          var example = e.target.parentNode.parentNode.firstChild;
-          var exampleInput = window.currentExample
-          console.log(exampleInput)
-  				app.addExample(exampleInput);
-  				app.storage('update');
+            console.log('changed')
+            var example = e.target.parentNode.parentNode.firstChild;
+            var exampleInput = window.currentExample
+            console.log(exampleInput)
+            app.addExample(exampleInput);
+            app.storage('update');
+        
 			}, false);
 
 			document.querySelector('.example-list').addEventListener('click', function(e) {
@@ -236,11 +231,15 @@
   }
 
   function encodeImageFileAsURL(element) {
+    console.log(element)
     var file = element.files[0];
+    console.log('file', file)
     if(file == undefined) return;
     var reader = new FileReader();
     reader.onloadend = function() {
       window.currentExample = reader.result
+      app.addExample(window.currentExample);
+      app.storage('update');
     }
     reader.readAsDataURL(file);
   }

@@ -102,6 +102,7 @@ ul {
 	outline: none;
 	font: 300 28px 'Roboto', sans-serif;
 	padding: 20px;
+	text-align: center;
 }
 
 .example-insert {
@@ -117,6 +118,7 @@ ul {
 	outline: none;
 	font: 300 28px 'Roboto', sans-serif;
 	padding: 20px;
+	text-align: center;
 }
 
 /*
@@ -170,25 +172,29 @@ ul {
 	opacity: 1;
 }
 
+.box-buttons {
+	margin-top: 30px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-content: stretch;
+}
+
 .remove-task {
-	padding: 0 20px;
-	margin-top: 20px;
-	margin: 0 auto;
+	/*margin: 0 20px;*/
+	margin: 10px;
 	opacity: 1;
 	position: relative;
 	font-size: 12px;
-	text-decoration: none;
 	color: #fff;
 	text-align: center;
 	transition: all .2s ease;
-	background-color: #DA2825;
+	border: 1px;
+	border-style: solid;
+	border-color:#e6e6e6;
 	padding: 0.375rem 0.75rem;
 	line-height: 1.5;
 	border-radius: 0.25rem;
-}
-
-.remove-task:hover {
-	background-color: #29AFCF;
 }
 
 
