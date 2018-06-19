@@ -45,7 +45,7 @@
     background-color: #DA2825;
     border-color: #DA2825;
   }
-  
+
   .btn-success{
     background-color: #328EDE;
     border-color: #328EDE;
@@ -133,7 +133,7 @@
             <br>
             <form id="exampleForm">
               <div class="form-group">
-                <input class="form-control input-sm" id="exampleInput" type="file" onchange="encodeImageFileAsURL(this)" accept="image/*">
+                <input class="form-control input-sm" id="exampleInput" type="file" onchange="encodeImageFileAsURL(this)" accept="image/*" multiple>
               </div>
             </form>
           </div>
@@ -297,13 +297,24 @@
   });
 
   function encodeImageFileAsURL(element) {
-    var file = element.files[0];
-    if(file == undefined) return;
-    var reader = new FileReader();
-    reader.onloadend = function() {
-      window.currentExample = reader.result
+    if(element.files.length == 1) {
+      var file = element.files[0];
+      if(file == undefined) return;
+      var reader = new FileReader();
+      reader.onloadend = function() {
+        window.currentExample = reader.result
+      }
+      reader.readAsDataURL(file);
+    } else if(element.files.length > 1) {
+      Array.from(element.files).forEach((file) => {
+        if(file == undefined) return;
+        var reader = new FileReader();
+        reader.onloadend = function() {
+          addExampleFromData(reader.result)
+        }
+        reader.readAsDataURL(file);
+      })
     }
-    reader.readAsDataURL(file);
   }
 
 
@@ -365,6 +376,29 @@
     $('#examplesList').append(exampleItem)
     $("#exampleInput").val('');
     window.currentExample = undefined
+  }
+
+  function addExampleFromData(exampleInput) {
+    if(window.selectedLabel == undefined) return;
+    if(exampleInput == undefined) {
+      console.log(`exampleInput variable is undefined`);
+      return;
+    }
+    if(window.examples == undefined) {
+      window.examples = {}
+    }
+    if(window.examples[window.selectedLabel] == undefined) {
+      window.examples[window.selectedLabel] = []
+    }
+    if(window.examples[window.selectedLabel].includes(exampleInput) == true) {
+      console.log(`Example already exists in given label`);
+      return
+    }
+    if(exampleInput != null && exampleInput.length > 0) {
+      window.examples[window.selectedLabel].push(exampleInput)
+      addExampleItem(exampleInput);
+      $(`#label_badge_${window.selectedLabel}`).html(window.examples[window.selectedLabel].length)
+    }
   }
 
   function clearExampleItems() {
