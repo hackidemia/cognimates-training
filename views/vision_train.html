@@ -255,8 +255,8 @@
       }
       var error = false
       for (var idx = 0, label = window.labelListItems[idx]; idx < window.labelListItems.length; idx++) {
-        if (window.examples[label].length < 5) {
-          alert('5 or more examples required for each label')
+        if (window.examples[label].length < 10) {
+          alert('10 or more examples required for each label')
           error = true
           break
         }
@@ -361,6 +361,7 @@
 
 
   function addExampleItem(example) {
+    console.log(example)
     if(example == undefined || example.length == 0) return;
     if(window.selectedLabel == undefined || window.examples[window.selectedLabel] == undefined) return;
     var exampleItem = document.createElement('li')

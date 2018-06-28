@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Text Classifier - Cognimates Studio</title>
+  <title>Vision Classifier - Cognimates Studio</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,700">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -45,19 +45,21 @@
     background-color: #DA2825;
     border-color: #DA2825;
 
-  }
+	}
+	
   .btn-primary{
-    background-color: #29AFCF;
-    border-color: #29AFCF;
+    background-color: transparent;
+		border-color: #e6e6e6;
+		border-style: solid;
+		border: 1px;
     width: 100px;
     margin: 0 auto;
     font-weight: bold;
-  }
-
-  .btn-primary:hover {
-    background-color: #DA2825;
-    border-color: #DA2825;
-  }
+	}
+	
+	.btn-primary:hover {
+		background-color: transparent;
+	}
 
    .btn-danger {
     background-color: #DA2825;
@@ -79,7 +81,7 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li><a href="/nlc_home" id="backButton">Text Classification</a></li>
+        <li><a href="/vision_home" id="backButton">Vision Classification</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#" id="logoutButton"><span class="glyphicon glyphicon-log-in"></span> Log out</a></li>
@@ -90,7 +92,7 @@
       
 <header class="main-header">
   <h1 id="classifierTitle"></h1>
-	<h2>Make at least 2 categories. Click on the category to add examples to it.</h2><br>
+  <h2>Make at least 2 categories. Click on the category to add examples to it.</h2><br>
   <div class="btn btn-success btn-lg" id="trainButton">
         Teach me!
    </div>
@@ -126,7 +128,7 @@
 		          return
 		        }
 		        window.access_token = window.localStorage.getItem('access_token')
-		        window.localStorage.setItem("classifierName", window.localStorage.getItem('temp_classifierName')+'_nlc')
+		        window.localStorage.setItem("classifierName", window.localStorage.getItem('temp_classifierName')+'_vision')
 		        classifierName = window.localStorage.getItem("classifierName")
 		        $('#classifierTitle').html(classifierName.slice(0, classifierName.indexOf('_')))
 		      }
@@ -138,7 +140,7 @@
 		    console.log(window.localStorage.getItem('temp_classifierName'))
 			// Load list
 			ix = 0
-			if (classifierName == window.localStorage.getItem('temp_classifierName')+'_nlc') {
+			if (classifierName == window.localStorage.getItem('temp_classifierName')+'_vision') {
 				app.storage('get');
 			}		
 
@@ -153,7 +155,7 @@
 
 			document.querySelector('.app-list').addEventListener('click', function(e) {
 				// Remove label
-				if ( e.target.id == 'remove') {
+				if ( e.target.id == ('remove') ) {
 					app.removeLabel(e.target);
 				// Add examples
 				} else if ( e.target.id == 'addExampleButton' ) {
@@ -163,7 +165,8 @@
 			}, false);
 
 			document.querySelector('#addExampleButton').addEventListener('click', function(e) {
-				app.addExamples(e.target);
+				console.log('adding this example', e.target.innerHTML)
+				app.addExamples(e.target.parentNode.parentNode);
 			}, false)
 
 			document.querySelector('#trainButton').addEventListener('click', function(e){
@@ -186,36 +189,34 @@
 		      if(error == true) {
 		        return
 		      }
-		      var requestData = {}
-		      requestData.name = classifierName
-		      requestData.training_data = []
-		      labelList.forEach((label) => {
-		        examples[label].forEach((example) => {
-		          var exampleObject = {
-		            phrase: example,
-		            label: label
-		          }
-		          requestData.training_data.push(exampleObject)
-		        })
-		      })
-		      $.ajax({
-		        url: '/nlc/classifier',
-		        type: 'POST',
-		        dataType: 'json',
-		        contentType: "application/json; charset=utf-8",
-		        data: JSON.stringify(requestData),
-		        headers: { token: window.access_token },
-		        success: function (data) {
-		          if(data.error == null) {
-		            console.log('id', data.clasifier_id)
-		            window.localStorage.setItem('selectedClassifier', data.classifier_id)
-		            window.location.replace('/nlc')
-		          } else {
-		            alert(data.error)
-		          }
-		        }
-		      })
-			})
+				var requestData = {}
+			      requestData.name = window.classifierName
+			      requestData.training_data = []
+			      labelList.forEach((label) => {
+			        label_items = []
+			        examples[label].forEach((example) => {
+			          var image_file = example
+			          label_items.push(image_file)
+			        })
+			        requestData.training_data.push({label: label, label_items: label_items})
+			      })
+			      $.ajax({
+			        url: '/vision/classifier',
+			        type: 'POST',
+			        dataType: 'json',
+			        contentType: "application/json; charset=utf-8",
+			        data: JSON.stringify(requestData),
+			        headers: { token: window.access_token },
+			        success: function (data) {
+			          if(data.error == null) {
+			            window.localStorage.setItem('selectedClassifier', data.classifier_id)
+			            window.location.replace('/vision')
+			          } else {
+			            alert(data.error)
+			          }
+			        }
+			      })
+			    })
 			return
 			
 		},
@@ -225,7 +226,7 @@
 			var new_task = document.createElement('li');	
 				new_task.setAttribute('class', 'task');
 				new_task.setAttribute('id', 'task');
-				new_task.setAttribute('style', 'background-color: '+random_color)
+				new_task.setAttribute('style', 'background-color:'+random_color)
 				new_task.innerHTML = task + '<div class = box-buttons><div class="remove-task" id="addExampleButton">Add examples</div><a href="javascript:;" class="remove-task" id="remove">Remove</a></div>';
 			var labelInput = $('#labelInput').val()
 			console.log('labelInput', labelInput)
@@ -234,7 +235,6 @@
 			}
 			window.localStorage.setItem(task+"_color", random_color)
 		},
-
 		removeLabel: function (task) {
 			ix = ix - 1 %colors.length
 			var removeNode = task.parentNode.parentNode
@@ -245,6 +245,7 @@
 				removeNode.remove();
 				app.storage('update');
 			}, 400);
+			console.log(removeNode)
 			var label = getLabel(removeNode)
 			console.log(label)
 			var classifierName = window.localStorage.getItem("classifierName")
@@ -260,11 +261,12 @@
 			console.log('labels',labels)
 		},
 		addExamples: function (task) {
+			console.log('example task', task.innerHTML)
 			app.storage('update');
 			var label = getLabel(task)
 			console.log(label)
 			window.localStorage.setItem('temp_labelName', label)
-			window.location.replace('/nlc_examples')
+			window.location.replace('/vision_examples')
 		},
 		storage: function(type) {
 			var name = classifierName + '_labels_html'
@@ -292,7 +294,6 @@
     }
     var $list = document.querySelector('.app-list ul');
 	$list.appendChild(task);
-	console.log($list)
     labels.push(label)
     console.log("label", label)
     console.log("result", labels)
