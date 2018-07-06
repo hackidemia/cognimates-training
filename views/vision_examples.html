@@ -8,7 +8,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/example-style.css" type="text/css">
-  <base href="/"> 
+  <base href="/">
     <style>
     /* Remove the navbar's default margin-bottom and rounded borders */
     .navbar {
@@ -39,7 +39,7 @@
     background-color: #328EDE;
     border-color: #328EDE;
   }
-  
+
   .btn-remove{
     background-color: #DA2825;
     border-color: #DA2825;
@@ -71,7 +71,7 @@
     </div>
   </div>
 </nav>
-  
+
 <header class="main-header">
   <h1 id="labelName"></h1>
   <h2>Add examples to your bucket. Try to add at least ten!</h2><br>
@@ -81,14 +81,14 @@
 </header>
 <div class="example-box">
 <section class="example-insert">
-    <input class="form-control input-sm" id="exampleInput" type="file" name="task" onchange="encodeImageFileAsURL(this)" accept="image/*">
+    <input class="form-control input-sm" id="exampleInput" type="file" name="task" onchange="encodeImageFileAsURL(this)" accept="image/*" multiple>
 </section>
 </div>
 <section class="example-list">
   <ul></ul>
 </section>
 
-  
+
 
 <script>
   var labelName = null;
@@ -124,7 +124,7 @@
       $('input').attr('placeholder', 'Add your ' + window.labelName + ' examples here')
 
 			// Add example
-			$("#exampleInput").change( 
+			$("#exampleInput").change(
         function(e) {
             console.log('changed')
             var example = e.target.parentNode.parentNode.firstChild;
@@ -132,7 +132,7 @@
             console.log(exampleInput)
             app.addExample(exampleInput);
             app.storage('update');
-        
+
 			}, false);
 
 			document.querySelector('.example-list').addEventListener('click', function(e) {
@@ -148,12 +148,12 @@
       }, false);
 		},
 
-		addExample: function (example) {  
+		addExample: function (example) {
       var new_example = document.createElement('li');
         new_example.setAttribute('class', 'img-example');
         new_example.setAttribute('style', 'background-image: url(' + example + ')')
-        new_example.innerHTML = '<center><a href="javascript:;" class="remove-image">remove</a></center>'; 
-      console.log(new_example) 
+        new_example.innerHTML = '<center><a href="javascript:;" class="remove-image">remove</a></center>';
+      console.log(new_example)
       var exampleInput = $('#exampleInput').val()
       var label = window.labelName
       if(label == undefined) return;
@@ -165,9 +165,9 @@
       if(examples[label] == undefined) {
         examples[label] = []
       }
-      
+
       if(exampleInput != null && exampleInput.length > 0) {
-        
+
         if(example == undefined || example.length == 0) return;
         if(label == undefined || examples[label] == undefined) return;
         if(examples[label].includes(example) == true) {
@@ -231,17 +231,26 @@
   }
 
   function encodeImageFileAsURL(element) {
-    console.log(element)
-    var file = element.files[0];
-    console.log('file', file)
-    if(file == undefined) return;
-    var reader = new FileReader();
-    reader.onloadend = function() {
-      window.currentExample = reader.result
-      app.addExample(window.currentExample);
-      app.storage('update');
+    if(element.files.length == 1) {
+      var file = element.files[0];
+      if(file == undefined) return;
+      var reader = new FileReader();
+      reader.onloadend = function() {
+        app.addExample(reader.result)
+        app.storage('update')
+      }
+      reader.readAsDataURL(file);
+    } else if(element.files.length > 1) {
+      Array.from(element.files).forEach((file) => {
+        if(file == undefined) return;
+        var reader = new FileReader();
+        reader.onloadend = function() {
+          app.addExample(reader.result)
+          app.storage('update')
+        }
+        reader.readAsDataURL(file);
+      })
     }
-    reader.readAsDataURL(file);
   }
 
   function getColor() {
