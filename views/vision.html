@@ -133,7 +133,12 @@
           window.location.replace("/vision_home");
           return
         }
+        if(window.localStorage.getItem('vision_apiKey') == 'null') {
+          window.location.replace("/vision_home");
+          return
+        }
         window.access_token = window.localStorage.getItem('access_token')
+        window.apiKey = window.localStorage.getItem('vision_apiKey');
         loadUserClassifier(window.localStorage.getItem('selectedClassifier'));
         return
       }
@@ -148,6 +153,7 @@
       evt.preventDefault();
       window.localStorage.setItem('access_token', null)
       window.localStorage.setItem('token_expiry', null)
+      window.localStorage.setItem('vision_apiKey', null)
       window.location.replace("/");
       return false;
     })
@@ -203,7 +209,7 @@
     $.ajax({
          url: "/vision/classifier",
          type: "GET",
-         headers: { 'token': window.access_token },
+         headers: { 'apikey': window.apiKey },
          data: { classifier_id: classifier_id},
          success: function (data) {
            if(data.error == null) {
@@ -231,7 +237,7 @@
       $('#classifierId').html(`Classifier ID: ${window.userClassifier.classifier_id}`)
       $('#classifierStatus').html(`Classifier Status: ${window.userClassifier.status}`)
       $('#classifierCreated').html(`Creation date: ${window.userClassifier.created}`)
-      $("#status").html("Your project is " + window.userClassifier.status)
+      $("#status").html("Project status: " + window.userClassifier.status)
   }
 
 
@@ -239,7 +245,7 @@
     $.ajax({
          url: "/vision/classifier",
          type: "DELETE",
-         headers: { 'token': window.access_token },
+         headers: { 'apikey': window.apiKey },
          data: { classifier_id: window.userClassifier.classifier_id },
          success: function (data) {
            if(data.error == null) {
@@ -256,7 +262,6 @@
   }
 
   function showClassification(response) {
-    response = response.images[0].classifiers[0].classes;
     if(response.length == 1) {
       alert(`${response[0].class} with confidence ${response[0].score}`)
     } else {
@@ -285,7 +290,7 @@
     $.ajax({
          url: "/vision/classify",
          type: "POST",
-         headers: { 'token': window.access_token },
+         headers: { 'apikey': window.apiKey },
          data: { classifier_id: window.userClassifier.classifier_id,
          image_data: window.predictionImage },
          success: function (data) {
