@@ -233,7 +233,8 @@
         return
       }
       console.log(window.userClassifier);
-      $('#classifierTitle').html(window.userClassifier.name)
+      var name = window.userClassifier.name.slice(0, window.userClassifier.name.indexOf('_'))
+      $('#classifierTitle').html(name)
       $('#classifierId').html(`Classifier ID: ${window.userClassifier.classifier_id}`)
       $('#classifierStatus').html(`Classifier Status: ${window.userClassifier.status}`)
       $('#classifierCreated').html(`Creation date: ${window.userClassifier.created}`)

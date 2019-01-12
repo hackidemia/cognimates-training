@@ -6,8 +6,10 @@
   <title>Vision Classifier - Cognimates Studio</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,700">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.7.3/localforage.min.js" type="text/javascript"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
   <base href="/"> 
     <style>
     /* Remove the navbar's default margin-bottom and rounded borders */
@@ -124,25 +126,28 @@
 		      } else {
 
 		        if(window.localStorage.getItem('temp_classifierName') == 'null') {
-		          window.location.replace("/nlc_home");
+		          window.location.replace("/vision_home");
 		          return
 		        }
 		        window.access_token = window.localStorage.getItem('access_token')
+                window.apiKey = window.localStorage.getItem('vision_apiKey');
+
 		        window.localStorage.setItem("classifierName", window.localStorage.getItem('temp_classifierName')+'_vision')
+
 		        classifierName = window.localStorage.getItem("classifierName")
+                console.log(classifierName)
 		        $('#classifierTitle').html(classifierName.slice(0, classifierName.indexOf('_')))
 		      }
 		    } else {
 		      window.location.replace("/");
 		      return
 		    }
-		    console.log(classifierName)
-		    console.log(window.localStorage.getItem('temp_classifierName'))
+
 			// Load list
 			ix = 0
 			if (classifierName == window.localStorage.getItem('temp_classifierName')+'_vision') {
 				app.storage('get');
-			}		
+			}
 
 			// Add label
 			document.querySelector('.app-insert input').addEventListener('keyup', function(e) {
@@ -159,64 +164,65 @@
 					app.removeLabel(e.target);
 				// Add examples
 				} else if ( e.target.id == 'addExampleButton' ) {
-					console.log(e.target.innerHTML)
 					app.addExamples(e.target.parentNode.parentNode);
 				}
 			}, false);
 
 			document.querySelector('#addExampleButton').addEventListener('click', function(e) {
-				console.log('adding this example', e.target.innerHTML)
 				app.addExamples(e.target.parentNode.parentNode);
 			}, false)
 
 			document.querySelector('#trainButton').addEventListener('click', function(e){
-				var labelList = JSON.parse(window.localStorage.getItem(classifierName+'_labels'))
-				console.log(labelList)
-				var examples = JSON.parse(window.localStorage.getItem(classifierName + "_examples")) 
-				if (labelList == undefined || labelList.length < 2) {
-		        alert('Two or more labels are required to train')
-		        return
-		      }
-		      var error = false
-		      for (var idx = 0, label = labelList[idx]; idx < labelList.length; idx++) {
-		      	console.log(label)
-		        if (examples[label].length < 5) {
-		          alert('5 or more examples required for each label')
-		          error = true
-		          break
-		        }
-		      }
-		      if(error == true) {
-		        return
-		      }
-				var requestData = {}
-			      requestData.name = window.classifierName
-			      requestData.training_data = []
-			      labelList.forEach((label) => {
-			        label_items = []
-			        examples[label].forEach((example) => {
-			          var image_file = example
-			          label_items.push(image_file)
-			        })
-			        requestData.training_data.push({label: label, label_items: label_items})
-			      })
-			      $.ajax({
-			        url: '/vision/classifier',
-			        type: 'POST',
-			        dataType: 'json',
-			        contentType: "application/json; charset=utf-8",
-			        data: JSON.stringify(requestData),
-			        headers: { token: window.access_token },
-			        success: function (data) {
-			          if(data.error == null) {
-			            window.localStorage.setItem('selectedClassifier', data.classifier_id)
-			            window.location.replace('/vision')
-			          } else {
-			            alert(data.error)
-			          }
-			        }
-			      })
-			    })
+
+                localforage.getItem(classifierName+'_labels').then((labelList) => {
+                    console.log(labelList)
+                    if (labelList == undefined || labelList.length < 2) {
+                        alert('Two or more labels are required to train')
+                        return
+                      }
+                    localforage.getItem(classifierName + "_examples").then((examples) => {
+                      var error = false
+                      for (var idx = 0; idx < labelList.length; ++idx) {
+                        var label = labelList[idx]
+                        if (examples[label].length < 5) {
+                          alert('5 or more examples required for each label')
+                          error = true
+                          break
+                        }
+                      }
+                      if(error == true) {
+                        return
+                      }
+                    var requestData = {}
+                      requestData.name = window.classifierName
+                      requestData.training_data = []
+                      labelList.forEach((label) => {
+                        label_items = []
+                        examples[label].forEach((example) => {
+                          var image_file = example.split(',')[1]
+                          label_items.push(image_file)
+                        })
+                        requestData.training_data.push({label: label, label_items: label_items})
+                      })
+                      $.ajax({
+                        url: '/vision/classifier',
+                        type: 'POST',
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(requestData),
+                        headers: { apikey: window.apiKey },
+                        success: function (data) {
+                          if(data.error == null) {
+                            window.localStorage.setItem('selectedClassifier', data.classifier_id)
+                            window.location.replace('/vision')
+                          } else {
+                            alert(data.error)
+                          }
+                        }
+                      })
+                    })
+                })
+            })
 			return
 			
 		},
@@ -227,13 +233,14 @@
 				new_task.setAttribute('class', 'task');
 				new_task.setAttribute('id', 'task');
 				new_task.setAttribute('style', 'background-color:'+random_color)
-				new_task.innerHTML = task + '<div class = box-buttons><div class="remove-task" id="addExampleButton">Add examples</div><a href="javascript:;" class="remove-task" id="remove">Remove</a></div>';
+				new_task.innerHTML = task + '<div class = box-buttons><div class="remove-task" id="addExampleButton">Add examples</div><a href="javascript:;" class="remove-task" id="remove">Remove</a></div><div id="overlay"></div>';
 			var labelInput = $('#labelInput').val()
-			console.log('labelInput', labelInput)
 			if (labelInput != null && labelInput.length > 0) {
 				addLabelItem (labelInput, new_task);
+                app.storage('update')
 			}
 			window.localStorage.setItem(task+"_color", random_color)
+
 		},
 		removeLabel: function (task) {
 			ix = ix - 1 %colors.length
@@ -250,18 +257,20 @@
 			console.log(label)
 			var classifierName = window.localStorage.getItem("classifierName")
 			var name = classifierName + '_labels'
-			var labels = JSON.parse(window.localStorage.getItem(name))
-			var index = labels.indexOf(label);
-			console.log(index)
-			if (index > -1) {
-				labels.splice(index, 1);
-				console.log(labels)
-			}
-			window.localStorage.setItem(name, JSON.stringify(labels))
-			console.log('labels',labels)
+			//var labels = JSON.parse(window.localStorage.getItem(name))
+            localforage.getItem(name).then((labels) => {
+                var index = labels.indexOf(label);
+                console.log(index)
+                if (index > -1) {
+                    labels.splice(index, 1);
+                    console.log(labels)
+                }
+                localforage.setItem(name, labels).then((labels) => {
+                    console.log('labels', labels)
+                })
+            })
 		},
 		addExamples: function (task) {
-			console.log('example task', task.innerHTML)
 			app.storage('update');
 			var label = getLabel(task)
 			console.log(label)
@@ -270,9 +279,9 @@
 		},
 		storage: function(type) {
 			var name = classifierName + '_labels_html'
-			console.log(name)
 			if ( type === 'get' ) {
 				if ( localStorage.getItem(name) != null ) {
+
 					document.querySelector('.app-list').innerHTML = localStorage.getItem(name);
 				}
 			} else if ( type === 'update' ) {
@@ -284,36 +293,34 @@
 	app.init();
 })();
   function addLabelItem(label, task) {
-  	labels = JSON.parse(window.localStorage.getItem(classifierName+"_labels"))
-    if(labels == null) {
-      labels = []
-    }
-    if(labels.includes(label) != false) {
-      alert('Bucket already exists')
-      return
-    }
-    var $list = document.querySelector('.app-list ul');
-	$list.appendChild(task);
-    labels.push(label)
-    console.log("label", label)
-    console.log("result", labels)
-    var examples = JSON.parse(window.localStorage.getItem(classifierName + "_examples"))
-    
-    if(examples === null) {
-      examples = {}
-    }
-    examples[label] = []
-    window.localStorage.setItem(classifierName + "_examples", JSON.stringify(examples))
-    window.localStorage.setItem(classifierName + "_labels", JSON.stringify(labels))
-    console.log('examples', examples)
-    console.log('labels', window.localStorage.getItem(classifierName+'_labels'))
+  	//labels = JSON.parse(window.localStorage.getItem(classifierName+"_labels"))
+    localforage.getItem(classifierName+"_labels").then((value) => {
+        labels = value
+        if(labels == null) {
+          labels = []
+        }
+        if(labels.includes(label) != false) {
+          alert('Bucket already exists')
+          return
+        }
+        var $list = document.querySelector('.app-list ul');
+        $list.appendChild(task);
+        labels.push(label)
+
+        localforage.getItem(classifierName + "_examples").then((examples) => {
+            if(examples === null) {
+              examples = {}
+            }
+            examples[label] = []
+            localforage.setItem(classifierName + "_examples", examples)
+            localforage.setItem(classifierName + "_labels", labels)
+        })
+    })
   }
 
   function getLabel(task) {
   	var label = task.innerHTML
-  	console.log('passed label', label)
 	label = label.slice(0, label.indexOf('<div'))
-	console.log("get label", label)
 	return label
   }
 </script>

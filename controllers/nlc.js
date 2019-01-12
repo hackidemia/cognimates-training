@@ -8,8 +8,8 @@ const fs = require('fs')
 let NaturalLanguageClassifierV1 = require('watson-developer-cloud/natural-language-classifier/v1');
 
 const watson = new NaturalLanguageClassifierV1({
-    username: config.NLC_USERNAME,
-    password: config.NLC_PASSWORD,
+    iam_apikey: config.NLC_API,
+    //password: config.NLC_PASSWORD,
     url: config.NLC_URL
 });
 

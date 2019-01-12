@@ -6,9 +6,12 @@
   <title>Vision Classifier - Cognimates Studio</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,700">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.7.3/localforage.min.js" type="text/javascript"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/example-style.css" type="text/css">
   <base href="/">
+  
+
     <style>
     /* Remove the navbar's default margin-bottom and rounded borders */
     .navbar {
@@ -153,34 +156,36 @@
         new_example.setAttribute('class', 'img-example');
         new_example.setAttribute('style', 'background-image: url(' + example + ')')
         new_example.innerHTML = '<center><a href="javascript:;" class="remove-image">remove</a></center>';
-      console.log(new_example)
-      var exampleInput = $('#exampleInput').val()
-      var label = window.labelName
-      if(label == undefined) return;
-      var examples = JSON.parse(window.localStorage.getItem(classifierName+"_examples"))
-      console.log('examples',examples)
-      if(examples == null) {
-        examples = {}
-      }
-      if(examples[label] == undefined) {
-        examples[label] = []
-      }
+        var exampleInput = $('#exampleInput').val()
+        var label = window.labelName
+        if(label == undefined) return;
+        // var examples = JSON.parse(window.localStorage.getItem(classifierName+"_examples"))
+        localforage.getItem(classifierName+"_examples").then((examples) => {
+          if(examples == null) {
+            examples = {}
+          }
+          if(examples[label] == undefined) {
+            examples[label] = []
+          }
 
-      if(exampleInput != null && exampleInput.length > 0) {
+          if(exampleInput != null && exampleInput.length > 0) {
 
-        if(example == undefined || example.length == 0) return;
-        if(label == undefined || examples[label] == undefined) return;
-        if(examples[label].includes(example) == true) {
-          alert('example already exists')
-          return
-        }
-        var $list = document.querySelector('.example-list ul');
-        $list.appendChild(new_example);
-        examples[label].push(example)
-      }
-      console.log(examples)
-      window.localStorage.setItem(classifierName+'_examples', JSON.stringify(examples))
-      return false;
+            if(example == undefined || example.length == 0) return;
+            if(label == undefined || examples[label] == undefined) return;
+            if(examples[label].includes(example) == true) {
+              alert('example already exists')
+              return
+            }
+            var $list = document.querySelector('.example-list ul');
+            $list.appendChild(new_example);
+            examples[label].push(example)
+            app.storage('update')
+          }
+
+          localforage.setItem(classifierName+'_examples', examples).then((examples) => {
+            return false;
+          })
+      })
 		},
 
 		removeExample: function (example) {
@@ -193,28 +198,34 @@
       ex = ex.slice(23, -15)
       console.log("now this",ex)
       var label = window.labelName
-      var examples = JSON.parse(window.localStorage.getItem(classifierName+'_examples'))
-      var idx = examples[label].indexOf(ex)
-      console.log("index",idx)
-      if(idx > -1) {
-        examples[label].splice(idx, 1)
-      }
-      window.localStorage.setItem(classifierName+'_examples', JSON.stringify(examples))
+      localforage.getItem(classifierName+'_examples').then((examples) => {
+        var idx = examples[label].indexOf(ex)
+        console.log("index",idx)
+        if(idx > -1) {
+          examples[label].splice(idx, 1)
+        }
+        localforage.setItem(classifierName+'_examples', examples).then((examples) => {
+          console.log('set', examples[0])
+        })
+      })
+
+      
 		},
 
 		storage: function(type) {
       var name = window.classifierName+ '_' + window.labelName + '_examples'
-      console.log(name)
 			if ( type === 'get' ) {
-        console.log("get")
-				if ( localStorage.getItem(name+"_html") != null ) {
-					document.querySelector('.example-list').innerHTML = localStorage.getItem(name+"_html");
-          console.log("get",localStorage.getItem(name+"_html"))
-				}
+
+        localforage.getItem(name + "_html").then((examples) => {
+          if (examples != null) {
+            document.querySelector('.example-list').innerHTML = examples;
+          }
+        })
+
 			} else if ( type === 'update' ) {
 				var str = document.querySelector('.example-list').innerHTML;
-				localStorage.setItem(name+"_html", str);
-        console.log(localStorage.getItem(name+"_html"))
+        localforage.setItem(name + "_html", str).then((value) => {
+        })
 			}
 		}
 	};
@@ -246,7 +257,6 @@
         var reader = new FileReader();
         reader.onloadend = function() {
           app.addExample(reader.result)
-          app.storage('update')
         }
         reader.readAsDataURL(file);
       })

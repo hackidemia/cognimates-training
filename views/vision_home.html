@@ -154,7 +154,7 @@
         return
       }
       window.localStorage.setItem('temp_classifierName', classifierName)
-      window.location.replace('/vision_train')
+      window.location.replace('/vision-train')
       return false;
     })
 
@@ -207,7 +207,7 @@
         button.addEventListener('click', function (classifier_id)  {
           return function() { selectClassifier(classifier_id) }
         }(classifier.classifier_id))
-        button.innerHTML = classifier.name
+        button.innerHTML = displayName(classifier.name)
 
         $('#classifiersList').append(button)
       })
@@ -216,6 +216,10 @@
   function selectClassifier(classifier_id) {
     window.localStorage.setItem('selectedClassifier', classifier_id)
     window.location.replace('/vision')
+  }
+
+  function displayName(name) {
+    return name.slice(0, name.indexOf('_'))
   }
 
 </script>
