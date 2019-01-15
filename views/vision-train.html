@@ -9,8 +9,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.7.3/localforage.min.js" type="text/javascript"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/style.css" type="text/css">
-  
-  <base href="/"> 
+
+  <base href="/">
     <style>
     /* Remove the navbar's default margin-bottom and rounded borders */
     .navbar {
@@ -48,7 +48,7 @@
     border-color: #DA2825;
 
 	}
-	
+
   .btn-primary{
     background-color: transparent;
 		border-color: #e6e6e6;
@@ -58,7 +58,7 @@
     margin: 0 auto;
     font-weight: bold;
 	}
-	
+
 	.btn-primary:hover {
 		background-color: transparent;
 	}
@@ -91,7 +91,7 @@
     </div>
   </div>
 </nav>
-      
+
 <header class="main-header">
   <h1 id="classifierTitle"></h1>
   <h2>Make at least 2 categories. Click on the category to add examples to it.</h2><br>
@@ -107,8 +107,8 @@
 <section class="app-list">
   <ul></ul>
 </section>
-  
-  
+
+
 
 <script>
 	var ix
@@ -181,6 +181,7 @@
                       }
                     localforage.getItem(classifierName + "_examples").then((examples) => {
                       var error = false
+                      console.log(examples);
                       for (var idx = 0; idx < labelList.length; ++idx) {
                         var label = labelList[idx]
                         if (examples[label].length < 5) {
@@ -223,12 +224,12 @@
                 })
             })
 			return
-			
+
 		},
 		addLabel: function (task) {
 			var random_color = colors[Math.abs(ix%colors.length)]
 			ix = ix + 1
-			var new_task = document.createElement('li');	
+			var new_task = document.createElement('li');
 				new_task.setAttribute('class', 'task');
 				new_task.setAttribute('id', 'task');
 				new_task.setAttribute('style', 'background-color:'+random_color)

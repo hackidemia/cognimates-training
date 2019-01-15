@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/example-style.css" type="text/css">
   <base href="/">
-  
+
 
     <style>
     /* Remove the navbar's default margin-bottom and rounded borders */
@@ -88,7 +88,7 @@
 </section>
 </div>
 <section class="example-list">
-  <ul></ul>
+  <ul id="exampleList"></ul>
 </section>
 
 
@@ -100,43 +100,41 @@
 	app = {
 		init: function() {
       if (window.localStorage.getItem('token_expiry') != 'null') {
-          if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
-            window.localStorage.setItem('access_token', null)
-            window.localStorage.setItem('token_expiry', null)
-            window.location.replace("/");
-          } else {
-
-            if(window.localStorage.getItem('temp_classifierName') == 'null') {
-              window.location.replace("/nlc_home");
-              return
-            }
-            window.access_token = window.localStorage.getItem('access_token')
-            window.labelName = window.localStorage.getItem('temp_labelName');
-            window.classifierName = window.localStorage.getItem('classifierName')
-            $('#labelName').html(window.labelName)
-          }
-        } else {
+        if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
+          window.localStorage.setItem('access_token', null)
+          window.localStorage.setItem('token_expiry', null)
           window.location.replace("/");
-          return
+        } else {
+          if(window.localStorage.getItem('temp_classifierName') == 'null') {
+            window.location.replace("/nlc_home");
+            return
+          }
+          window.access_token = window.localStorage.getItem('access_token')
+          window.labelName = window.localStorage.getItem('temp_labelName');
+          window.classifierName = window.localStorage.getItem('classifierName')
+          $('#labelName').html(window.labelName)
         }
+      } else {
+        window.location.replace("/");
+        return
+      }
 			// Load list
 			app.storage('get');
       var color = getColor()
-      //$('.example-box').attr('style', 'background-color: '+color)
 
       $('input').attr('placeholder', 'Add your ' + window.labelName + ' examples here')
 
-			// Add example
-			$("#exampleInput").change(
-        function(e) {
-            console.log('changed')
-            var example = e.target.parentNode.parentNode.firstChild;
-            var exampleInput = window.currentExample
-            console.log(exampleInput)
-            app.addExample(exampleInput);
-            app.storage('update');
-
-			}, false);
+			// // Add example
+			// $("#exampleInput").change(
+      //   function(e) {
+      //       console.log('changed')
+      //       var example = e.target.parentNode.parentNode.firstChild;
+      //       var exampleInput = window.currentExample
+      //       console.log(exampleInput)
+      //       app.addExample(exampleInput);
+      //       app.storage('update');
+      //
+			// }, false);
 
 			document.querySelector('.example-list').addEventListener('click', function(e) {
 				// Remove label
@@ -156,7 +154,7 @@
         new_example.setAttribute('class', 'img-example');
         new_example.setAttribute('style', 'background-image: url(' + example + ')')
         new_example.innerHTML = '<center><a href="javascript:;" class="remove-image">remove</a></center>';
-        var exampleInput = $('#exampleInput').val()
+        // var exampleInput = $('#exampleInput').val()
         var label = window.labelName
         if(label == undefined) return;
         // var examples = JSON.parse(window.localStorage.getItem(classifierName+"_examples"))
@@ -188,6 +186,44 @@
       })
 		},
 
+    addExamples: function (examples) {
+      var label = window.labelName;
+      if(label == undefined) return;
+      if (window.examples == null || window.examples == undefined) {
+        window.examples = {};
+      }
+      if (window.examples[label] == undefined) {
+        window.examples[label] = [];
+      }
+
+      var $list = document.querySelector('.example-list ul');
+
+      if (examples != null && examples.length != null) {
+        examples.forEach((example) => {
+          if(window.examples[label].includes(example) == true) {
+            alert('example already exists')
+            return;
+          }
+          window.examples[label].push(example);
+          var new_example = createExampleElement(example);
+          $list.appendChild(new_example);
+        })
+      }
+
+      function createExampleElement(example) {
+          var new_example = document.createElement('li');
+          new_example.setAttribute('class', 'img-example');
+          new_example.setAttribute('style', 'background-image: url(' + example + ')')
+          new_example.innerHTML = '<center><a href="javascript:;" class="remove-image">remove</a></center>';
+          return new_example;
+      }
+      console.log(window.examples);
+      localforage.setItem(classifierName+'_examples', window.examples).then((savedExamples) => {
+        console.log(savedExamples);
+        return false;
+      })
+		},
+
 		removeExample: function (example) {
 			example.style.opacity = 0;
 			setTimeout(function() {
@@ -209,16 +245,24 @@
         })
       })
 
-      
+
 		},
 
 		storage: function(type) {
       var name = window.classifierName+ '_' + window.labelName + '_examples'
 			if ( type === 'get' ) {
-
-        localforage.getItem(name + "_html").then((examples) => {
+        localforage.getItem(window.classifierName + '_examples').then((examples) => {
+          console.log("Loaded examples on init:");
+          console.log(examples);
           if (examples != null) {
-            document.querySelector('.example-list').innerHTML = examples;
+            window.examples = examples;
+            if (window.examples[window.labelName] == undefined) {
+              window.examples[window.labelName] = [];
+            }
+            loadExampleItems(window.labelName);
+          } else {
+            window.examples = {};
+            window.examples[window.labelName] = [];
           }
         })
 
@@ -232,13 +276,32 @@
 	app.init();
 })()
 
-  function loadExampleItems (label){
+  function loadExampleItems (label) {
     clearExampleItems()
-    if(window.examples == undefined) return
-    if(window.label == undefined || window.examples[label] == undefined) return;
+    if(window.examples == undefined) return;
+    if(window.examples[label] == undefined) return;
     window.examples[label].forEach((example) => {
       addExampleItem(example)
     })
+  }
+
+  function clearExampleItems() {
+    var $list = document.querySelector('.example-list ul');
+    $("#exampleList").empty();
+  }
+
+  function addExampleItem(example) {
+    var $list = document.querySelector('.example-list ul');
+    var new_example = createExampleElement(example);
+    $list.appendChild(new_example);
+  }
+
+  function createExampleElement(example) {
+      var new_example = document.createElement('li');
+      new_example.setAttribute('class', 'img-example');
+      new_example.setAttribute('style', 'background-image: url(' + example + ')')
+      new_example.innerHTML = '<center><a href="javascript:;" class="remove-image">remove</a></center>';
+      return new_example;
   }
 
   function encodeImageFileAsURL(element) {
@@ -252,13 +315,25 @@
       }
       reader.readAsDataURL(file);
     } else if(element.files.length > 1) {
+      console.log(element.files.length);
+      var promises = [];
       Array.from(element.files).forEach((file) => {
         if(file == undefined) return;
-        var reader = new FileReader();
-        reader.onloadend = function() {
-          app.addExample(reader.result)
-        }
-        reader.readAsDataURL(file);
+        var promise = new Promise((resolve, reject) => {
+          var reader = new FileReader();
+          reader.onloadend = function() {
+            resolve(reader.result);
+          }
+          reader.readAsDataURL(file);
+        });
+        promises.push(promise);
+      });
+      Promise.all(promises)
+      .then((result) => {
+        app.addExamples(result);
+      })
+      .catch((e) => {
+        console.log(e);
       })
     }
   }
