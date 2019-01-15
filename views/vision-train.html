@@ -153,7 +153,6 @@
 			document.querySelector('.app-insert input').addEventListener('keyup', function(e) {
 				if ( e.which === 13 && this.value !== '' ) {
 					app.addLabel(this.value);
-					app.storage('update');
 					this.value = '';
 				}
 			}, false);
@@ -237,13 +236,16 @@
 			var labelInput = $('#labelInput').val()
 			if (labelInput != null && labelInput.length > 0) {
 				addLabelItem (labelInput, new_task);
-                app.storage('update')
+                setTimeout(() => {
+                    app.storage('update')
+                }, 400)
+                //app.storage('update')
 			}
 			window.localStorage.setItem(task+"_color", random_color)
 
 		},
 		removeLabel: function (task) {
-			ix = ix - 1 %colors.length
+			ix = (ix - 1) %colors.length
 			var removeNode = task.parentNode.parentNode
 			console.log('removing', removeNode.innerHTML)
 			task.style.opacity = 0;
@@ -252,23 +254,38 @@
 				removeNode.remove();
 				app.storage('update');
 			}, 400);
-			console.log(removeNode)
 			var label = getLabel(removeNode)
-			console.log(label)
 			var classifierName = window.localStorage.getItem("classifierName")
+            //remove examples
+            localforage.getItem(classifierName + "_examples").then((examples) => {
+                console.log(examples)
+                delete examples[label]
+                localforage.setItem(classifierName + "_examples").then((examples) => {
+                    console.log("examples deleted")
+                })
+            })
+
+            //delete html display
+            localforage.removeItem(classifierName + "_" + label + "_examples_html").then((html) => {
+                console.log(html)
+                console.log("html deleted")
+            })
+            localforage.removeItem(classifierName + "_labels_html").then((html) => {
+                console.log("labels html deleted")
+            })
+
 			var name = classifierName + '_labels'
-			//var labels = JSON.parse(window.localStorage.getItem(name))
             localforage.getItem(name).then((labels) => {
                 var index = labels.indexOf(label);
                 console.log(index)
                 if (index > -1) {
                     labels.splice(index, 1);
-                    console.log(labels)
                 }
                 localforage.setItem(name, labels).then((labels) => {
                     console.log('labels', labels)
                 })
             })
+            app.storage('update')
 		},
 		addExamples: function (task) {
 			app.storage('update');
@@ -286,6 +303,7 @@
 				}
 			} else if ( type === 'update' ) {
 				var str = document.querySelector('.app-list').innerHTML;
+                console.log(str)
 				localStorage.setItem(name, str);
 			}
 		}
@@ -294,8 +312,7 @@
 })();
   function addLabelItem(label, task) {
   	//labels = JSON.parse(window.localStorage.getItem(classifierName+"_labels"))
-    localforage.getItem(classifierName+"_labels").then((value) => {
-        labels = value
+    localforage.getItem(classifierName+"_labels").then((labels) => {
         if(labels == null) {
           labels = []
         }
@@ -303,6 +320,9 @@
           alert('Bucket already exists')
           return
         }
+        localforage.removeItem(classifierName + "_" + label + "_examples_html").then(() => {
+            console.log("clear previous examples")
+        })
         var $list = document.querySelector('.app-list ul');
         $list.appendChild(task);
         labels.push(label)
