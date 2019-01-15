@@ -233,7 +233,7 @@
         $('#classifiersList').text("You have no projects")
         return
       }
-
+      $('#classifiersList').text("");
       window.userClassifiers.forEach(function (classifier) {
         var button = document.createElement('div')
         button.className = "btn btn-primary btn-lg"
