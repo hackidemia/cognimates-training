@@ -9,7 +9,7 @@ let NaturalLanguageClassifierV1 = require('watson-developer-cloud/natural-langua
 
 const watson = new NaturalLanguageClassifierV1({
     iam_apikey: config.NLC_API,
-    //password: config.NLC_PASSWORD,
+    password: config.NLC_PASSWORD,
     url: config.NLC_URL
 });
 
