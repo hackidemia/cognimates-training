@@ -205,7 +205,7 @@
           return false
         })
       })
-    }) 
+    })
   }
 
   function loadUserClassifiers() {
@@ -229,8 +229,8 @@
   }
 
   function displayClassifiers() {
-      if(window.userClassifiers.length == 0) {
-        $('#classifiersList').append("You have no projects")
+      if(window.userClassifiers == undefined || window.userClassifiers.length == 0) {
+        $('#classifiersList').text("You have no projects")
         return
       }
 
