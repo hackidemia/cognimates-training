@@ -163,7 +163,18 @@ function deleteClassifier(req, res) {
 function classifyImage(req, res) {
   const apiKey = req.headers.apikey;
   var image_data = req.body.image_data;
-  image_data = image_data.split(',').pop()
+  if (image_data != undefined) {
+    if (image_data.length == 0) {
+      res.json({ error: 'Send a valid image in base64 format'});
+      return;
+    }
+    if (image_data.indexOf(',') != -1) {
+      image_data = image_data.split(',').pop();
+    }
+  } else {
+    res.json({ error: 'Send a valid image in base64 format'});
+    return;
+  }
   const model_id = req.body.classifier_id;
   const app = init(apiKey);
   app.models.predict(model_id, { base64: image_data }).then(
