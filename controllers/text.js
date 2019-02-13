@@ -288,52 +288,32 @@ function deleteClassifier(req, res) {
 }
 
 function classify(req, res) {
-  let token = req.headers.token;
-  var classifier_id = req.query.classifier_id;
-  var phrase = req.query.phrase;
-  var read_api = req.query.api_key;
-  var classify_username = req.query.classify_username;
-  if(token == null) {
-    res.json({ error: 'Unauthorized'})
-    return
-  }
+  let token = req.body.token;
+  var classifier_id = req.body.classifier_id;
+  var phrase = req.body.phrase;
+  var classify_username = req.body.classify_username;
+  let content_type = "application/json";
 
-  let content_type = req.headers.content_type;
-  if(content_type != "application/json"){
-    res.json({error: "Content Type is not application/json"});
-    return
-  }
+  let classifyURL = base_url+classify_username+'/'+classifier_id+'/classify';
+  let token_text = 'Token ' + token;
 
-  auth.validateToken(token, (err, _user) => {
-    if(err != null) {
-      res.json({ error: err.message })
-      return
-    }
-
-    if(_user == null) {
-      res.json({ error: 'User not found'})
-      return
-    } else {
-      getClassification(classify_username, classifier_id, phrase, content_type, read_api)
-    }
-  })
-
-
-
-  function getClassification(classify_username, classifier_id, phrase, content_type, read_api) {
-    let classifyURL = base_url+classify_username+'/'+classifier_id+'/'+phrase+'/classify';
-    request.post({
-      url:     classifyURL,
-      headers: {'Content-Type': content_type, 'Authorization:Token': read_api},
-      }, function(error, response){
-        if(error){
-          res.json({error: error.message});
-          return;
-        }
-        res.json(response);
-        return;
+  request.post({
+    url:classifyURL, 
+    headers: {'Content-Type': content_type, 'Authorization': token_text},
+    body: {texts: [phrase]}, json: true}, 
+    function(err,httpResponse, body){
+       if(err){
+         console.log("error here!!");
+         res.json({error: err.message});
+         return;
+       } 
+       if(httpResponse.statusCode === 200){
+         res.json(body[0].classification);
+         return;
+       } else {
+        res.json({ error: 'Could not classify the image' });
+       }
       });
-  }
 }
 
 
