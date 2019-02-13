@@ -40,7 +40,6 @@ router.post('/auth/login', authController.login)
 // router.post('/nlc/classifier', nlcController.createClassifier)
 // router.get('/nlc/classifier', nlcController.getClassifierInformation)
 // router.delete('/nlc/classifier', nlcController.deleteClassifier)
-// router.get('/nlc/classify', nlcController.classifyText)
 router.post('/nlc/classify', nlcController.classifyText)
 
 router.get('/vision_home', (req, res) => {

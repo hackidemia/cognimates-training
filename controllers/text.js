@@ -292,14 +292,13 @@ function classify(req, res) {
   var classifier_id = req.body.classifier_id;
   var phrase = req.body.phrase;
   var classify_username = req.body.classify_username;
-  let content_type = "application/json";
 
   let classifyURL = base_url+classify_username+'/'+classifier_id+'/classify';
   let token_text = 'Token ' + token;
 
   request.post({
     url:classifyURL, 
-    headers: {'Content-Type': content_type, 'Authorization': token_text},
+    headers: {'Content-Type': 'application/json', 'Authorization': token_text},
     body: {texts: [phrase]}, json: true}, 
     function(err,httpResponse, body){
        if(err){
