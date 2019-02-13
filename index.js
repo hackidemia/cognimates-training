@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const router = require('./router')
@@ -7,6 +8,7 @@ const UserClassifier = require('./models/UserClassifier')
 const bb = require('express-busboy')
 
 const app = express()
+app.use(cors())
 app.engine('html', require('ejs').renderFile);
 app.use(express.static('static'));
 app.use(bodyParser.json({limit: '337mb'}))
