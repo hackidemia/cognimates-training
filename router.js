@@ -1,6 +1,6 @@
 const express = require('express')
 const authController = require('./controllers/auth')
-const nlcController = require('./controllers/nlc')
+// const nlcController = require('./controllers/nlc')
 const visionController = require('./controllers/clarifai')
 const router = express.Router()
 
@@ -36,11 +36,11 @@ router.get('/nlc_examples', (req, res) => {
 router.post('/auth/register', authController.register)
 router.post('/auth/login', authController.login)
 
-router.get('/nlc/classifiers', nlcController.getClassifiersList)
-router.post('/nlc/classifier', nlcController.createClassifier)
-router.get('/nlc/classifier', nlcController.getClassifierInformation)
-router.delete('/nlc/classifier', nlcController.deleteClassifier)
-router.get('/nlc/classify', nlcController.classifyText)
+// router.get('/nlc/classifiers', nlcController.getClassifiersList)
+// router.post('/nlc/classifier', nlcController.createClassifier)
+// router.get('/nlc/classifier', nlcController.getClassifierInformation)
+// router.delete('/nlc/classifier', nlcController.deleteClassifier)
+// router.get('/nlc/classify', nlcController.classifyText)
 
 router.get('/vision_home', (req, res) => {
   res.render('vision_home.html')
