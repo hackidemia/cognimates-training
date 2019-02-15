@@ -60,7 +60,7 @@ function getClassifiersList(req, res) {
             if(err){
               console.log("this classifier no longer exists");
             } else {
-              remainingClassifiers.push(classifier.classifier_id)
+              remainingClassifiers.push(classifier)
               return;
             } 
           });
