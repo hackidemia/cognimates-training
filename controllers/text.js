@@ -40,41 +40,43 @@ function getClassifiersList(req, res) {
           res.json({ error: err.message})
           return
         }
-        getWatsonClassifiers(classifiers)
+        getClassifiers(classifiers)
       })
     }
+  }
 
-    function getWatsonClassifiers(userClassifiers) {
-      watson.listClassifiers({}, (err, response) => {
-        if(err) {
-          res.json({ error: err.message})
-          return
-        }
-        if (response != null) {
-          remainingClassifiers = []
-          deletedClassifiers = []
-          userClassifiers.forEach((classifier) => {
-            var found = false
-            for (var idx = 0; idx < response.classifiers.length; idx++) {
-              if (classifier.classifier_id == response.classifiers[idx].classifier_id) {
-                found = true
-                remainingClassifiers.push(classifier)
-              }
-            }
-            if(found == false) {
-              deletedClassifiers.push(classifier.classifier_id)
-            }
-          })
-          UserClassifier.remove({ classifier_id: { $in: deletedClassifiers }}, (err, res) => {
-            if(err) {
-              console.log(err.message);
-            }
+    function getClassifiers(userClassifiers, read_token, username) {
+      remainingClassifiers = []
+      deletedClassifiers = []
+
+      userClassifiers.forEach((classifier) => {
+        var found = false
+        get_classifier_url = base_url + username + "/" + classifier.classifier_id;
+        token_text = "Token " + read_token;
+        request.get({
+          url:get_classifier_url, 
+          headers: {'Content-Type': 'application/json', 'Authorization': token_text}},
+          function(err,httpResponse){
+            if(err){
+              console.log("this classifier no longer exists");
+            } else {
+              remainingClassifiers.push(classifier.classifier_id)
+              return;
+            } 
           });
-          res.json({classifiers: remainingClassifiers})
-          return
+        if(found == false) {
+          deletedClassifiers.push(classifier.classifier_id)
+        }
+      })
+
+      UserClassifier.remove({ classifier_id: { $in: deletedClassifiers }}, (err, res) => {
+        if(err) {
+          console.log(err.message);
         }
       });
-    }
+      res.json({classifiers: remainingClassifiers})
+
+      return
 }
 
 function getClassifierInformation(req, res) {
@@ -115,15 +117,22 @@ function getClassifierInformation(req, res) {
       })
     }
 
-    function getInformation(classifier_id) {
-      watson.getClassifier({ classifier_id: classifier_id }, (err, response) => {
-        if(err) {
-          res.json({ error: err.message })
-          return
-        }
-
-        res.json(response)
-      })
+    //https://www.uclassify.com/docs/restapi#readcalls-getinformation
+    function getInformation(classifier_id, read_token, username) {
+      get_classifier_url = base_url + username + "/" + classifier_id;
+      token_text = "Token " + read_token;
+      request.get({
+        url:get_classifier_url, 
+        headers: {'Content-Type': 'application/json', 'Authorization': token_text}},
+        function(err,httpResponse){
+          if(err){
+            res.json({error: err.message});
+            return;
+          } else {
+            res.json(httpResponse);
+            return;
+          } 
+        });
     }
 }
 
@@ -321,7 +330,7 @@ function classify(req, res) {
         res.json({ error: 'Could not classify the image' });
        }
       });
-}
+  }
 
 
 
