@@ -263,15 +263,23 @@ function deleteClassifier(req, res) {
     })
   }
 
-  function delClassifier(classifier_id) {
-    watson.deleteClassifier({ classifier_id: classifier_id }, (err, response) => {
-      if (err) {
-        res.json({ error: err.message })
-        return
-      }
+  function delClassifier(classifier_id, username, write_token) {
+    var del_url = base_url + "/" + username + "/" + classifier_id;
+    let token_text = 'Token ' + write_token;
+    request.delete({
+      url:del_url, 
+      headers: {'Content-Type': 'application/json', 'Authorization': token_text}},
+      function(err,httpResponse){
+        if(err){
+          console.log("error here!!");
+          res.json({error: err.message});
+          return;
+        } else {
+          deleteUserClassifier(classifier_id)
+          return;
+        } 
+      });
 
-      deleteUserClassifier(classifier_id)
-    })
   }
 
   function deleteUserClassifier(classifier_id) {
