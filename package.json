@@ -18,6 +18,7 @@
     "express": "^4.16.3",
     "express-busboy": "^7.0.0",
     "localforage": "^1.7.3",
+    "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "mongoose": "^5.0.17",
     "watson-developer-cloud": "^3.4.1",
