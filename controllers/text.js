@@ -14,71 +14,6 @@ String.prototype.toObjectId = function() {
   return new ObjectId(this.toString());
 };
 
-function getClassifiersList(req, res) {
-    let token = req.headers.token
-    if(token == null) {
-      res.json({ error: 'Unauthorized'})
-      return
-    }
-    auth.validateToken(token, (err, _user) => {
-      if(err != null) {
-        res.json({ error: err.message })
-        return
-      }
-
-      if(_user == null) {
-        res.json({ error: 'User not found'})
-        return
-      } else {
-        getUserClassifiers(_user)
-      }
-    })
-
-    function getUserClassifiers(user) {
-      UserClassifier.find({ "user": user._id }, (err, classifiers) => {
-        if(err != null) {
-          res.json({ error: err.message})
-          return
-        }
-        getClassifiers(classifiers)
-      })
-    }
-  }
-
-    function getClassifiers(userClassifiers, read_token, username) {
-      remainingClassifiers = []
-      deletedClassifiers = []
-
-      userClassifiers.forEach((classifier) => {
-        var found = false
-        get_classifier_url = base_url + username + "/" + classifier.classifier_id;
-        token_text = "Token " + read_token;
-        request.get({
-          url:get_classifier_url, 
-          headers: {'Content-Type': 'application/json', 'Authorization': token_text}},
-          function(err,httpResponse){
-            if(err){
-              console.log("this classifier no longer exists");
-            } else {
-              remainingClassifiers.push(classifier)
-              return;
-            } 
-          });
-        if(found == false) {
-          deletedClassifiers.push(classifier.classifier_id)
-        }
-      })
-
-      UserClassifier.remove({ classifier_id: { $in: deletedClassifiers }}, (err, res) => {
-        if(err) {
-          console.log(err.message);
-        }
-      });
-      res.json({classifiers: remainingClassifiers})
-
-      return
-}
-
 function getClassifierInformation(req, res) {
     let read_token = req.headers.read_token
     var classifier_id = req.query.classifier_id
@@ -96,6 +31,12 @@ function getClassifierInformation(req, res) {
           return;
         } 
     });
+}
+
+function addExamples(req, res){
+  let write_token = req.write_token;
+  let classifier_name = req.classifier_name;
+  let data = req.data;
 }
 
 function createClassifier(req, res) {
@@ -157,9 +98,9 @@ function classify(req, res) {
 
 
 module.exports = {
-  getClassifiersList: getClassifiersList,
   getClassifierInformation: getClassifierInformation,
   classifyText: classify,
   deleteClassifier: delClassifier,
-  createClassifier: createClassifier
+  createClassifier: createClassifier,
+  addExamples: addExamples
 }
