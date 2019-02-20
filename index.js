@@ -3,9 +3,12 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const router = require('./router')
+const fs = require('fs')
 const config = require('./config')
 const UserClassifier = require('./models/UserClassifier')
 const bb = require('express-busboy')
+const https = require('https')
+const args = require('minimist')(process.argv.slice(2))
 
 const app = express()
 app.use(cors())
@@ -41,7 +44,19 @@ mongoose.connect(config.mongooseURL)
 //   console.log(err, doc);
 // })
 
-
-app.listen(config.SERVER_PORT, () => {
-  console.log(`Server running on port ${config.SERVER_PORT}`);
-})
+if(args.http == true) {
+  app.listen(config.SERVER_PORT, () => {
+    console.log(`Server running on port ${config.SERVER_PORT}`);
+  })
+} else {
+  const config = require('./config');
+  var options = {
+    ca: fs.readFileSync(config.sslCA),
+    key: fs.readFileSync(config.sslKeyPath),
+    cert: fs.readFileSync(config.sslCertPath)
+  }
+  var server = https.createServer(options, app);
+  server.listen(config.SERVER_PORT, () => {
+    console.log(`Server running on port ${config.SERVER_PORT}`);
+  });
+}
