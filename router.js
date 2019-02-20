@@ -36,8 +36,7 @@ router.get('/nlc_examples', (req, res) => {
 router.post('/auth/register', authController.register)
 router.post('/auth/login', authController.login)
 
-// router.post('/nlc/classifier', nlcController.createClassifier)
-router.get('/nlc/classifiers', nlcController.getClassifiersList)
+router.post('/nlc/classifier', nlcController.createClassifier)
 router.get('/nlc/classifier', nlcController.getClassifierInformation)
 router.delete('/nlc/classifier', nlcController.deleteClassifier)
 router.post('/nlc/classify', nlcController.classifyText)
