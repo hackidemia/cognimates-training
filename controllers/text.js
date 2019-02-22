@@ -36,12 +36,31 @@ function getClassifierInformation(req, res) {
 
 /**
  * This allows for adding examples + more training for a classifier.
- * This can be called
+ * This will be called after a classifier has already been created.
  */
-function addExamples(req, res){
-  let write_token = req.write_token;
-  let classifier_name = req.classifier_name;
-  let data = req.data;
+function addExamples(req, res) {
+}
+
+function createClass(req, res) {
+  let write_token = req.body.write_token;
+  let classifier_name = req.body.classifier_name;
+  let class_name = req.body.class_name;
+  var create_url = base_url + "me/" + classifier_name + "/addClass";
+  let token_text = 'Token ' + write_token;
+  request.post({
+    url:create_url,
+    headers: {'Content-Type': 'application/json', 'Authorization': token_text},
+    body: {className: class_name}, json: true}, 
+    function(err, httpResponse){
+      if(err){
+        res.json({error: err.message});
+        return;
+      } else {
+        console.log(httpResponse);
+        res.json();
+        return;
+      } 
+  });
 }
 
 /**
@@ -128,5 +147,6 @@ module.exports = {
   classifyText: classify,
   deleteClassifier: delClassifier,
   createClassifier: createClassifier,
-  addExamples: addExamples
+  addExamples: addExamples,
+  createClass: createClass
 }
