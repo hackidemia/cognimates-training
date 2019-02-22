@@ -47,20 +47,22 @@ function createClassifier(req, res) {
 }
 
 function delClassifier(req, res) {
-  let classifier_id = req.classifier_id;
-  let username = req.username; 
-  let write_token = req.write_token;
-  var del_url = base_url + "/" + username + "/" + classifier_id;
+  let classifier_id = req.body.classifier_id;
+  let write_token = req.body.write_token;
+  var del_url = base_url + "me/" + classifier_id;
   let token_text = 'Token ' + write_token;
+  console.log(del_url);
+  console.log(token_text)
   request.delete({
     url:del_url, 
     headers: {'Content-Type': 'application/json', 'Authorization': token_text}},
     function(err,httpResponse){
       if(err){
-        console.log("error here!!");
-        res.json({error: err.message});
+        // res.json({error: err.message});
         return;
       } else {
+        // console.log(httpResponse);
+        res.json();
         return;
       } 
     });
