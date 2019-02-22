@@ -34,17 +34,40 @@ function getClassifierInformation(req, res) {
     });
 }
 
+/**
+ * This allows for adding examples + more training for a classifier.
+ * This can be called
+ */
 function addExamples(req, res){
   let write_token = req.write_token;
   let classifier_name = req.classifier_name;
   let data = req.data;
 }
 
+/**
+ * User first creates a classifier by choosing a name, create an empty classifier
+ * so that we can use the above function
+ * addExamples for both initializing + adding examples later.
+ */
 function createClassifier(req, res) {
-  let token = req.headers.tokenl
-  let classifier_name = req.classifier_name;
-  var data = req.body.training_data;
-  
+  let write_token = req.body.write_token;
+  let classifier_name = req.body.classifier_name;
+  var create_url = base_url + "me/";
+  let token_text = 'Token ' + write_token;
+  request.post({
+    url:create_url,
+    headers: {'Content-Type': 'application/json', 'Authorization': token_text},
+    body: {classifierName: classifier_name}, json: true}, 
+    function(err, httpResponse){
+      if(err){
+        res.json({error: err.message});
+        return;
+      } else {
+        console.log(httpResponse);
+        res.json();
+        return;
+      } 
+  });
 }
 
 function delClassifier(req, res) {
@@ -59,7 +82,7 @@ function delClassifier(req, res) {
     headers: {'Content-Type': 'application/json', 'Authorization': token_text}},
     function(err,httpResponse){
       if(err){
-        // res.json({error: err.message});
+        res.json({error: err.message});
         return;
       } else {
         // console.log(httpResponse);
