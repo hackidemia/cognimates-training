@@ -39,6 +39,26 @@ function getClassifierInformation(req, res) {
  * This will be called after a classifier has already been created.
  */
 function addExamples(req, res) {
+  let write_token = req.body.write_token;
+  let classifier_name = req.body.classifier_name;
+  let class_name = req.body.class_name;
+  let training_data = req.body.texts;
+  var create_url = base_url + "me/" + classifier_name + "/" + class_name + "/train";
+  let token_text = 'Token ' + write_token;
+  request.post({
+    url:create_url,
+    headers: {'Content-Type': 'application/json', 'Authorization': token_text},
+    body: {texts: training_data}, json: true}, 
+    function(err, httpResponse){
+      if(err){
+        res.json({error: err.message});
+        return;
+      } else {
+        console.log(httpResponse);
+        res.json();
+        return;
+      } 
+  });
 }
 
 function createClass(req, res) {
