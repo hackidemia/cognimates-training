@@ -15,8 +15,9 @@ String.prototype.toObjectId = function() {
 };
 
 function getClassifierInformation(req, res) {
-    let read_token = req.headers.read_token
-    var classifier_id = req.query.classifier_id
+    let read_token = req.body.read_token
+    var classifier_id = req.body.classifier_id
+    let username = req.body.username;
     get_classifier_url = base_url + username + "/" + classifier_id;
     token_text = "Token " + read_token;
     request.get({
@@ -27,7 +28,7 @@ function getClassifierInformation(req, res) {
           res.json({error: err.message});
           return;
         } else {
-          res.json(httpResponse);
+          res.json(JSON.parse(httpResponse.body));
           return;
         } 
     });
