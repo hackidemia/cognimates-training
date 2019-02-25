@@ -154,7 +154,8 @@ function classify(req, res) {
          res.json(body[0].classification);
          return;
        } else {
-        res.json({ error: 'Could not classify the image' });
+        res.json({ error: 'Could not classify the text' });
+        console.log(httpResponse);
        }
       });
   }
