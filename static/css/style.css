@@ -25,6 +25,7 @@ footer, header, hgroup, menu, nav {
 }
 body {
 	line-height: 1;
+	overflow-x: hidden;
 }
 ol, ul {
 	list-style: none;
@@ -69,6 +70,11 @@ header h1 {
 	font-size: 64px;
 	font-weight: 300;
 	margin: 80px 0 25px;
+	color: #328EDE;
+}
+
+h2 {
+	font-size: 48px;
 	color: #328EDE;
 }
 header h1 span {
@@ -247,9 +253,39 @@ ul {
   cursor: pointer; /* Add a pointer on hover */
 }
 
-/*
-  ========================================
-  Reset
-  ========================================
-*/
+@-webkit-keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
 
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fadeInUp {
+  -webkit-animation-name: fadeInUp;
+  animation-name: fadeInUp;
+}
+
+.answer {
+	margin-top: 20%;
+}

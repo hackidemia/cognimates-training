@@ -91,6 +91,7 @@ function createClass(req, res) {
 function createClassifier(req, res) {
   let write_token = req.body.write_token;
   let classifier_name = req.body.classifier_name;
+  console.log(classifier_name)
   var create_url = base_url + "me/";
   let token_text = 'Token ' + write_token;
   request.post({
@@ -136,6 +137,9 @@ function classify(req, res) {
   var classifier_id = req.body.classifier_id;
   var phrase = req.body.phrase;
   var classify_username = req.body.classify_username;
+  if (classify_username == null) {
+    classify_username = ""
+  }
 
   let classifyURL = base_url+classify_username+'/'+classifier_id+'/classify';
   let token_text = 'Token ' + token;

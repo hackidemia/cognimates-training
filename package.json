@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "angular-cli": "^1.0.0-beta.28.3",
     "archiver": "^2.1.1",
     "body-parser": "^1.18.2",
     "clarifai": "^2.9.0",

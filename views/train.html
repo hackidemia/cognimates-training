@@ -92,7 +92,7 @@
   <h1 id="classifierTitle"></h1>
 	<h2>Make at least 2 categories. Click on the category to add examples to it.</h2><br>
   <div class="btn btn-success btn-lg" id="trainButton">
-        Teach me!
+        Test me out!
    </div>
 </header>
 
@@ -167,54 +167,55 @@
 			}, false)
 
 			document.querySelector('#trainButton').addEventListener('click', function(e){
-				var labelList = JSON.parse(window.localStorage.getItem(classifierName+'_labels'))
-				console.log(labelList)
-				var examples = JSON.parse(window.localStorage.getItem(classifierName + "_examples")) 
-				if (labelList == undefined || labelList.length < 2) {
-		        alert('Two or more labels are required to train')
-		        return
-		      }
-		      var error = false
-		      for (var idx = 0, label = labelList[idx]; idx < labelList.length; idx++) {
-		      	console.log(label)
-		        if (examples[label].length < 5) {
-		          alert('5 or more examples required for each label')
-		          error = true
-		          break
-		        }
-		      }
-		      if(error == true) {
-		        return
-		      }
-		      var requestData = {}
-		      requestData.name = classifierName
-		      requestData.training_data = []
-		      labelList.forEach((label) => {
-		        examples[label].forEach((example) => {
-		          var exampleObject = {
-		            phrase: example,
-		            label: label
-		          }
-		          requestData.training_data.push(exampleObject)
-		        })
-		      })
-		      $.ajax({
-		        url: '/nlc/classifier',
-		        type: 'POST',
-		        dataType: 'json',
-		        contentType: "application/json; charset=utf-8",
-		        data: JSON.stringify(requestData),
-		        headers: { token: window.access_token },
-		        success: function (data) {
-		          if(data.error == null) {
-		            console.log('id', data.clasifier_id)
-		            window.localStorage.setItem('selectedClassifier', data.classifier_id)
-		            window.location.replace('/nlc')
-		          } else {
-		            alert(data.error)
-		          }
-		        }
-		      })
+				// var labelList = JSON.parse(window.localStorage.getItem(classifierName+'_labels'))
+				// console.log(labelList)
+				// var examples = JSON.parse(window.localStorage.getItem(classifierName + "_examples")) 
+				// if (labelList == undefined || labelList.length < 2) {
+		  //       alert('Two or more labels are required to train')
+		  //       return
+		  //     }
+		  //     var error = false
+		  //     for (var idx = 0, label = labelList[idx]; idx < labelList.length; idx++) {
+		  //     	console.log(label)
+		  //       if (examples[label].length < 5) {
+		  //         alert('5 or more examples required for each label')
+		  //         error = true
+		  //         break
+		  //       }
+		  //     }
+		  //     if(error == true) {
+		  //       return
+		  //     }
+		  //     var requestData = {}
+		  //     requestData.name = classifierName
+		  //     requestData.training_data = []
+		  //     labelList.forEach((label) => {
+		  //       examples[label].forEach((example) => {
+		  //         var exampleObject = {
+		  //           phrase: example,
+		  //           label: label
+		  //         }
+		  //         requestData.training_data.push(exampleObject)
+		  //       })
+		  //     })
+		  //     $.ajax({
+		  //       url: '/nlc/classifier',
+		  //       type: 'POST',
+		  //       dataType: 'json',
+		  //       contentType: "application/json; charset=utf-8",
+		  //       data: JSON.stringify(requestData),
+		  //       headers: { token: window.access_token },
+		  //       success: function (data) {
+		  //         if(data.error == null) {
+		  //           console.log('id', data.clasifier_id)
+		  //           window.localStorage.setItem('selectedClassifier', data.classifier_id)
+		  //           window.location.replace('/nlc')
+		  //         } else {
+		  //           alert(data.error)
+		  //         }
+		  //       }
+		  //     })
+                window.location.replace("/nlc");
 			})
 			return
 			
@@ -233,6 +234,7 @@
 				addLabelItem (labelInput, new_task);
 			}
 			window.localStorage.setItem(task+"_color", random_color)
+            addClass(labelInput)
 		},
 
 		removeLabel: function (task) {
@@ -245,6 +247,7 @@
 				removeNode.remove();
 				app.storage('update');
 			}, 400);
+
 			var label = getLabel(removeNode)
 			console.log(label)
 			var classifierName = window.localStorage.getItem("classifierName")
@@ -257,6 +260,9 @@
 				console.log(labels)
 			}
 			window.localStorage.setItem(name, JSON.stringify(labels))
+            var examples = JSON.parse(window.localStorage.getItem(classifierName + "_examples")) 
+            delete examples[label]
+            window.localStorage.setItem(classifierName+"_examples", JSON.stringify(examples))
 			console.log('labels',labels)
 		},
 		addExamples: function (task) {
@@ -314,6 +320,33 @@
 	label = label.slice(0, label.indexOf('<div'))
 	console.log("get label", label)
 	return label
+  }
+
+  function addClass(label) {
+    requestData = {"class_name": label, "write_token": window.localStorage.getItem("text_writeapiKey"), 
+              "classifier_name": window.localStorage.getItem("temp_classifierName")
+            }
+    console.log(requestData)
+    $.ajax({
+      url: '/nlc/createClass',
+      type: 'POST',
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(requestData),
+      success: function(data) {
+        console.log("hi", label, data)
+        if(data.error == null) {
+          console.log(data)
+          window.localStorage.setItem('selectedClassifier', data.classifier_id)
+          window.location.replace('/nlc')
+        } else {
+          alert(data.error)
+        }
+      },
+      error: function(data) {
+        console.log("error", data.error)
+      }
+
+    })
   }
 </script>
 

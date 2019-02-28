@@ -82,53 +82,36 @@
 
 
 <div class="container text-center">
-  <h3 id="status"></h3><br>
   <div class="row">
     <br><br>
-    <div class="col-sm-8" style="text-align: left">
-      <br>
-      <span id="classifierId"></span><br>
-      <span id="classifierStatus"></span><br>
-      <span id="classifierCreated"></span>
-    </div>
-    <div class="col-sm-4">
-  <div class="btn btn-primary btn-sm btn-block" id="refreshClassifier">
-    Refresh
-  </div><br>
-  <div class="btn btn-danger btn-sm btn-block" id="deleteClassifier">
-    Delete
-  </div>
-</div>
-</div>
-  </div>
-  <br>
-
-
-
-  <br>
-  <div class="row">
-    <div class="col-sm-8">
-      <br>
-      <form id="predictionForm">
+    <form id="predictionForm">
         <div class="form-group">
           <input class="form-control input-lg" id="predictionInput" type="text">
         </div>
       </form>
-    </div>
-    <div class="col-sm-2">
-    </div>
-    <div class="col-sm-2">
-      <br>
       <div class="btn btn-primary btn-lg" id="predictButton">
-        Predict
+                Predict
       </div>
-    </div>
+
+      <div class="btn btn-danger btn-lg" id="deleteClassifier">
+                Delete Classifier
+      </div>
+      <br><br>
+      <div class="row">
+        <h2 class="answer fadeInUp" id="prediction"></h2>
+      </div>
   </div>
+  </div>
+
+  <br>
+
+
+
   <br>
   <div class="row">
     <ul class="list-group" id="labelList">
     </ul>
-  </div>
+  </div></div>
 </div><br>
 
 <script>
@@ -144,10 +127,6 @@
           window.location.replace("/nlc_home");
           return
         }
-        /*if (window.refreshTimer != undefined) {
-          clearTimeout(window.refreshTimer);
-          window.refreshTimer = undefined;
-        }*/
         window.access_token = window.localStorage.getItem('access_token')
         loadUserClassifier(window.localStorage.getItem('selectedClassifier'));
         return
@@ -229,22 +208,8 @@
         window.location.replace('/nlc_home')
         return
       }
-      console.log(window.userClassifier);
-      $('#classifierTitle').html(window.userClassifier.name)
-      $('#classifierId').html(`Classifier ID: ${window.userClassifier.classifier_id}`)
-      $('#classifierStatus').html(`Classifier Status: ${window.userClassifier.status}`)
-      $('#classifierCreated').html(`Creation date: ${window.userClassifier.created}`)
-      $("#status").html("Your project is " + window.userClassifier.status)
-  
-      //Refreshes to check classifier status
-      if (window.userClassifier.status != "Available") {
-        //window.refreshTimer = setTimeout(loadUserClassifier, 10000);
-      } else {
-        if ( window.refreshTimer != undefined) {
-          clearTimeout(window.refreshTimer);
-          window.refreshTimer = undefined;
-        }
-      }
+      classifier = window.localStorage.getItem("temp_classifierName")
+      $('#classifierTitle').html(classifier)
   }
 
 
@@ -252,7 +217,6 @@
     $.ajax({
          url: "/nlc/classifier",
          type: "DELETE",
-         headers: { 'token': window.access_token },
          data: { classifier_id: window.userClassifier.classifier_id },
          success: function (data) {
            if(data.error == null) {
@@ -272,22 +236,38 @@
   function classify(phrase) {
     $.ajax({
          url: "/nlc/classify",
-         type: "GET",
-         headers: { 'token': window.access_token },
-         data: { classifier_id: window.userClassifier.classifier_id, phrase: phrase },
+         type: "POST",
+         data: { token: window.localStorage.getItem('text_readapiKey'),
+                  phrase: phrase, classifier_id: window.localStorage.getItem("temp_classifierName"),
+                  classify_username: "tammyqiu" },
          success: function (data) {
+          console.log("answer", data)
            if(data.error == null) {
-             alert(data.top_class);
+            var top = findTopClass(data)
+             //alert(findTopClass(data));
+             console.log(top)
+             $("#prediction").html(top);
            } else {
              alert(data.error)
            }
-           displayClassifierDetails()
          },
          error: function (data) {
            console.log(data);
            window.userClassifiers = []
          }
       });
+  }
+
+  function findTopClass(data) {
+    var max = 0;
+    var top;
+    Object.keys(data).forEach(function(key) {
+      if (data[key]["p"] > max) {
+        max = data[key]["p"]
+        top = data[key]["className"]
+      }
+    });
+    return top
   }
 </script>
 </body>

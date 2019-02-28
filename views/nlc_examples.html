@@ -75,6 +75,9 @@
   <div class="btn btn-success btn-lg" id="goBack">
         Return to your project
    </div>
+   <div class="btn btn-success btn-lg" id="confirm">
+        Train on your examples
+   </div>
 </header>
 <div class="example-box">
 <section class="example-insert">
@@ -138,13 +141,16 @@
       document.querySelector('#goBack').addEventListener('click', function(e) {
         window.location.replace('/train')
       }, false);
+
+      document.querySelector('#confirm').addEventListener('click', function(e) {
+        addExamples()
+      }, false);
 		},
 
 		addExample: function (example) {  
       var new_example = document.createElement('li');
         new_example.setAttribute('class', 'example');
         new_example.innerHTML = example + '<a href="javascript:;" class="remove-example">remove</a>'; 
-      
       
       var exampleInput = $('#exampleInput').val()
       var label = window.labelName
@@ -213,6 +219,36 @@
   function addExampleItem(example, label, examples, new_example) {
     
     
+  }
+
+  function addExamples() {
+    var examples = JSON.parse(window.localStorage.getItem(classifierName+'_examples'))
+    console.log(examples[window.labelName])
+    requestData = {"write_token": window.localStorage.getItem("text_writeapiKey"),
+                    "classifier_name": window.localStorage.getItem('temp_classifierName'),
+                    "class_name": window.labelName,
+                    "texts": examples[window.labelName]
+                  }
+    $.ajax({
+      url: '/nlc/addExamples',
+      type: 'POST',
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(requestData),
+      success: function(data) {
+        console.log("hi", label, data)
+        if(data.error == null) {
+          console.log(data)
+          window.localStorage.setItem('selectedClassifier', data.classifier_id)
+          window.location.replace('/nlc')
+        } else {
+          alert(data.error)
+        }
+      },
+      error: function(data) {
+        console.log("error", data.error)
+      }
+
+    })
   }
 
   function loadExampleItems (label){
