@@ -86,14 +86,22 @@
     <br><br>
     <form id="predictionForm">
         <div class="form-group">
-          <input class="form-control input-lg" id="predictionInput" type="text">
+          <div class="col-sm-6 offset-sm-3">
+          <input class="form-control input-lg" id="username" type="text" placeholder="uClassify username">
+          
+        </div>
+          <br><br><br>
+          <div class="col-sm-12">
+          <input class="form-control input-lg space" id="predictionInput" type="text">
+        </div>
         </div>
       </form>
-      <div class="btn btn-primary btn-lg" id="predictButton">
+
+      <div class="btn btn-primary btn-lg space" id="predictButton">
                 Predict
       </div>
 
-      <div class="btn btn-danger btn-lg" id="deleteClassifier">
+      <div class="btn btn-danger btn-lg space" id="deleteClassifier">
                 Delete Classifier
       </div>
       <br><br>
@@ -149,8 +157,10 @@
 
     $('#predictionForm').submit(function() {
       var predictionInput = $('#predictionInput').val()
-      if(predictionInput != null) {
-        classify(predictionInput);
+      var username = $('#username').val()
+      console.log(username)
+      if(predictionInput != null && username != null) {
+        classify(predictionInput, username);
       }
       return false;
     });
@@ -158,8 +168,9 @@
     $('#predictButton').click(function(evt) {
       evt.preventDefault();
       var predictionInput = $('#predictionInput').val()
+      var username = $('#username').val()
       if(predictionInput != null) {
-        classify(predictionInput);
+        classify(predictionInput, username);
       }
       return false;
     });
@@ -233,13 +244,13 @@
   }
 
 
-  function classify(phrase) {
+  function classify(phrase, username) {
     $.ajax({
          url: "/nlc/classify",
          type: "POST",
          data: { token: window.localStorage.getItem('text_readapiKey'),
                   phrase: phrase, classifier_id: window.localStorage.getItem("temp_classifierName"),
-                  classify_username: "tammyqiu" },
+                  classify_username: username },
          success: function (data) {
           console.log("answer", data)
            if(data.error == null) {
