@@ -40,6 +40,7 @@ router.post('/nlc/classifier', nlcController.createClassifier)
 router.get('/nlc/classifier', nlcController.getClassifierInformation)
 router.delete('/nlc/classifier', nlcController.deleteClassifier)
 router.post('/nlc/createClass', nlcController.createClass)
+router.delete('/nlc/removeClass', nlcController.removeClass)
 router.post('/nlc/classify', nlcController.classifyText)
 router.post('/nlc/addExamples', nlcController.addExamples)
 

@@ -115,8 +115,6 @@ function delClassifier(req, res) {
   let write_token = req.body.write_token;
   var del_url = base_url + "me/" + classifier_id;
   let token_text = 'Token ' + write_token;
-  console.log(del_url);
-  console.log(token_text)
   request.delete({
     url:del_url, 
     headers: {'Content-Type': 'application/json', 'Authorization': token_text}},
@@ -161,10 +159,28 @@ function classify(req, res) {
         res.json({ error: 'Could not classify the text' });
         console.log(httpResponse);
        }
-      });
+    });
   }
 
-
+function removeClass(req, res){
+  let classifier_id = req.body.classifier_name;
+  let class_name = req.body.class_name;
+  let write_token = req.body.write_token;
+  var del_url = base_url + "me/" + classifier_id + "/" + class_name;
+  let token_text = 'Token ' + write_token; 
+  request.delete({
+    url: del_url, 
+    headers: {'Content-Type': 'application/json', 'Authorization': token_text}},
+    function(err,httpResponse){
+      if(err){
+        res.json({error: err.message});
+        return;
+      } else {
+        res.json();
+        return;
+      } 
+    });
+}
 
 
 module.exports = {
@@ -173,5 +189,6 @@ module.exports = {
   deleteClassifier: delClassifier,
   createClassifier: createClassifier,
   addExamples: addExamples,
-  createClass: createClass
+  createClass: createClass,
+  removeClass: removeClass
 }
