@@ -182,6 +182,30 @@ function removeClass(req, res){
     });
 }
 
+function untrain(req, res){
+  //POST https://api.uclassify.com/v1/me/{classifierName}/{className}/untrain
+  let classifier_name = req.body.classifier_name;
+  let class_name = req.body.class_name;
+  let write_token = req.body.write_token;
+  let training_data = req.body.training_data;
+  var untrain_url = base_url + "me/" + classifier_name + "/" + class_name + "/untrain";
+  let token_text = 'Token ' + write_token;
+  request.post({
+    url: untrain_url,
+    headers: {'Content-Type': 'application/json', 'Authorization': token_text},
+    body: {texts: training_data}, json: true}, 
+    function(err, httpResponse){
+      if(err){
+        res.json({error: err.message});
+        return;
+      } else {
+        console.log(httpResponse);
+        res.json();
+        return;
+      } 
+  });
+}
+
 
 module.exports = {
   getClassifierInformation: getClassifierInformation,
@@ -190,5 +214,6 @@ module.exports = {
   createClassifier: createClassifier,
   addExamples: addExamples,
   createClass: createClass,
-  removeClass: removeClass
+  removeClass: removeClass,
+  untrain: untrain
 }
