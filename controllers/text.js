@@ -183,7 +183,6 @@ function removeClass(req, res){
 }
 
 function untrain(req, res){
-  //POST https://api.uclassify.com/v1/me/{classifierName}/{className}/untrain
   let classifier_name = req.body.classifier_name;
   let class_name = req.body.class_name;
   let write_token = req.body.write_token;
