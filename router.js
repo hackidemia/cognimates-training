@@ -68,5 +68,8 @@ router.get('/vision/classifier', visionController.getClassifierInformation)
 router.delete('/vision/classifier', visionController.deleteClassifier)
 router.post('/vision/classify', visionController.classifyImages)
 
+router.get('/doodle', (req, res) => {
+  res.render('doodle.html')
+})
 
 module.exports = router

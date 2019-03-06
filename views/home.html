@@ -86,7 +86,17 @@
       </div>
     </div>
     <div class="col-sm-6">
-
+    <div class="col-sm-6">
+      <img src="/images/doodle_banner.png" class="img-responsive img-rounded" style="width:100%" alt="Image">
+      <p></p>
+      <p>Teach it to recognize Doodles</p>
+      <div class="well">
+        <div class="btn btn-primary btn-lg btn-block" id="doodleClassificationButton">
+          Teach it to recognize Doodles
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
       
 
       
@@ -130,6 +140,12 @@
     $('#imageClassificationButton').click(function (evt) {
       evt.preventDefault();
       window.location.replace("/vision_home")
+      return false;
+    })
+
+    $('#doodleClassificationButton').click(function (evt) {
+      evt.preventDefault();
+      window.location.replace("/doodle")
       return false;
     })
   });
