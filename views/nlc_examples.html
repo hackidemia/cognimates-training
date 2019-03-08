@@ -8,7 +8,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/example-style.css" type="text/css">
-  <base href="/"> 
+  <base href="/">
     <style>
     /* Remove the navbar's default margin-bottom and rounded borders */
     .navbar {
@@ -68,7 +68,7 @@
     </div>
   </div>
 </nav>
-  
+
 <header class="main-header">
   <h1 id="labelName"></h1>
   <h2>Add examples to your bucket. Try to add at least five!</h2><br>
@@ -88,7 +88,7 @@
   <ul></ul>
 </section>
 </div>
-  
+
 
 <script>
   var labelName = null;
@@ -147,11 +147,11 @@
       }, false);
 		},
 
-		addExample: function (example) {  
+		addExample: function (example) {
       var new_example = document.createElement('li');
         new_example.setAttribute('class', 'example');
-        new_example.innerHTML = example + '<a href="javascript:;" class="remove-example">remove</a>'; 
-      
+        new_example.innerHTML = example + '<a href="javascript:;" class="remove-example">remove</a>';
+
       var exampleInput = $('#exampleInput').val()
       var label = window.labelName
       if(label == undefined) return;
@@ -163,9 +163,9 @@
       if(examples[label] == undefined) {
         examples[label] = []
       }
-      
+
       if(exampleInput != null && exampleInput.length > 0) {
-        
+
         if(example == undefined || example.length == 0) return;
         if(label == undefined || examples[label] == undefined) return;
         if(examples[label].includes(exampleInput) == true) {
@@ -217,8 +217,8 @@
 	app.init();
 })()
   function addExampleItem(example, label, examples, new_example) {
-    
-    
+
+
   }
 
   function addExamples() {
@@ -235,17 +235,15 @@
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify(requestData),
       success: function(data) {
-        console.log("hi", label, data)
-        if(data.error == null) {
-          console.log(data)
-          window.localStorage.setItem('selectedClassifier', data.classifier_id)
-          window.location.replace('/nlc')
-        } else {
-          alert(data.error)
+        if(data.error != null) {
+          alert(data.error);
         }
       },
       error: function(data) {
-        console.log("error", data.error)
+        if (data.status == 200 && data.error == undefined) {
+          alert("The class has been trained")
+          window.location.replace('/train')
+        }
       }
 
     })
