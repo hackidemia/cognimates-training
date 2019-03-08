@@ -204,6 +204,7 @@
                         })
                         requestData.training_data.push({label: label, label_items: label_items})
                       })
+                      alert("Please wait while the images are being uploaded. You will be automatically redirected.");
                       $.ajax({
                         url: '/vision/classifier',
                         type: 'POST',
