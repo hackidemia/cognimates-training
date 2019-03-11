@@ -46,7 +46,7 @@ mongoose.connect(config.mongooseURL)
 
 if(args.http == true) {
   app.listen(config.SERVER_PORT, () => {
-    console.log(`Server running on port ${config.SERVER_PORT}`);
+    console.log(`Server running at http://localhost:${config.SERVER_PORT}`);
   })
 } else {
   const config = require('./config');
@@ -57,6 +57,6 @@ if(args.http == true) {
   }
   var server = https.createServer(options, app);
   server.listen(config.SERVER_PORT, () => {
-    console.log(`Server running on port ${config.SERVER_PORT}`);
+    console.log(`Server running http://localhost:${config.SERVER_PORT}`);
   });
 }
