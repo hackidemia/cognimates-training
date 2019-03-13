@@ -12,26 +12,26 @@ router.get('/', function (req, res) {
 });
 
 // router.get('/login', (req, res) => {
-//   res.render('login.html')
+//   res.render('login')
 // })
 
 // router.post('/auth/register', authController.register)
 // router.post('/auth/login', authController.login)
 
 router.get('/text_home', (req, res) => {
-  res.render('models/text/text_home.html')
+  res.render('models/text/text_home')
 })
 
 router.get('/text_train', (req, res) => {
-  res.render('models/text/text_train.html')
+  res.render('models/text/text_train')
 })
 
 router.get('/text', (req, res) => {
-  res.render('models/text/text.html')
+  res.render('models/text/text')
 })
 
 router.get('/text_examples', (req, res) => {
-	res.render('models/text/text_examples.html')
+	res.render('models/text/text_examples')
 })
 
 ////////////////////
@@ -46,19 +46,19 @@ router.post('/text/untrain', textController.untrain)
 
 ////////////////////
 router.get('/vision_home', (req, res) => {
-  res.render('models/vision/vision_home.html')
+  res.render('models/vision/vision_home')
 })
 
 router.get('/vision_train', (req, res) => {
-  res.render('models/vision/vision_train.html')
+  res.render('models/vision/vision_train')
 })
 
 router.get('/vision_examples', (req, res) => {
-  res.render('models/vision/vision_examples.html')
+  res.render('models/vision/vision_examples')
 })
 
 router.get('/vision', (req, res) => {
-  res.render('models/vision/vision.html')
+  res.render('models/vision/vision')
 })
 
 ////////////////////
@@ -69,7 +69,7 @@ router.delete('/vision/classifier', visionController.deleteClassifier)
 router.post('/vision/classify', visionController.classifyImages)
 
 router.get('/doodle', (req, res) => {
-  res.render('models/doodle/doodle.html')
+  res.render('models/doodle/doodle')
 })
 
 module.exports = router
