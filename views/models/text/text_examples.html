@@ -35,7 +35,7 @@
     }
   }
 
-   .btn-success{
+   .btn-success {
     background-color: #328EDE;
     border-color: #328EDE;
   }
@@ -60,10 +60,10 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li><a href="/nlc_home" id="backButton">Text Classification</a></li>
+        <li><a href="/text_home" id="backButton">Text Classification</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#" id="logoutButton"><span class="glyphicon glyphicon-log-in"></span> Log out</a></li>
+        <!-- <li><a href="#" id="logoutButton"><span class="glyphicon glyphicon-log-in"></span> Log out</a></li> -->
       </ul>
     </div>
   </div>
@@ -103,7 +103,7 @@
           } else {
 
             if(window.localStorage.getItem('temp_classifierName') == 'null') {
-              window.location.replace("/nlc_home");
+              window.location.replace("/text_home");
               return
             }
             window.access_token = window.localStorage.getItem('access_token')
@@ -139,7 +139,7 @@
 			}, false);
 
       document.querySelector('#goBack').addEventListener('click', function(e) {
-        window.location.replace('/train')
+        window.location.replace('/text_train')
       }, false);
 
       document.querySelector('#confirm').addEventListener('click', function(e) {
@@ -230,7 +230,7 @@
                     "texts": examples[window.labelName]
                   }
     $.ajax({
-      url: '/nlc/addExamples',
+      url: '/text/addExamples',
       type: 'POST',
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify(requestData),
@@ -242,7 +242,7 @@
       error: function(data) {
         if (data.status == 200 && data.error == undefined) {
           alert("The class has been trained")
-          window.location.replace('/train')
+          window.location.replace('/text_train')
         }
       }
 

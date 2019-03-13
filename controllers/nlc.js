@@ -1,3 +1,4 @@
+/*
 const User = require('../models/User')
 const auth = require('../controllers/auth')
 const UserClassifier = require('../models/UserClassifier')
@@ -12,7 +13,6 @@ const watson = new NaturalLanguageClassifierV1({
     password: config.NLC_PASSWORD,
     url: config.NLC_URL
 });
-
 
 String.prototype.toObjectId = function() {
   var ObjectId = (require('mongoose').Types.ObjectId);
@@ -337,3 +337,4 @@ module.exports = {
   deleteClassifier: deleteClassifier,
   createClassifier: createClassifier
 }
+*/

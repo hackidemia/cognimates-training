@@ -1,3 +1,5 @@
+/*
+
 const User = require('../models/User')
 const AuthToken = require('../models/AuthToken')
 const Whirlpool = require('whirlpool')
@@ -5,7 +7,6 @@ const Whirlpool = require('whirlpool')
 /**
 * 1 - Check if all parameters exist
 * 2 - Delete token if expired
-**/
 
 
 function register(req, res) {
@@ -97,7 +98,6 @@ function validateToken(authToken, callback) {
     })
   }
 
-
   AuthToken.findOne({ 'token' : authToken }, (err, doc) => {
     if(err != null || doc == null) {
       callback(err, null)
@@ -132,3 +132,4 @@ module.exports = {
   login: login,
   validateToken: validateToken
 }
+*/

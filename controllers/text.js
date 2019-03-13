@@ -1,5 +1,5 @@
-const User = require('../models/User')
-const auth = require('../controllers/auth')
+// const User = require('../models/User')
+// const auth = require('../controllers/auth')
 const UserClassifier = require('../models/UserClassifier')
 const config = require('../config')
 const path = require('path')
@@ -7,7 +7,6 @@ var csv = require('csv')
 const fs = require('fs')
 const request = require('request');
 const base_url = "https://api.uclassify.com/v1/";
-
 
 String.prototype.toObjectId = function() {
   var ObjectId = (require('mongoose').Types.ObjectId);
@@ -43,7 +42,7 @@ function addExamples(req, res) {
   let classifier_name = req.body.classifier_name;
   let class_name = req.body.class_name;
   let training_data = req.body.texts;
-  var create_url = base_url + "me/" + classifier_name + "/" + class_name + "/train";
+  var create_url = base_url + "me/" + classifier_name + "/" + class_name + "/text_train";
   let token_text = 'Token ' + write_token;
   request.post({
     url:create_url,

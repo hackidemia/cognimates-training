@@ -22,7 +22,6 @@
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "mongoose": "^5.0.17",
-    "watson-developer-cloud": "^3.4.1",
     "whirlpool": "0.0.4"
   }
 }
