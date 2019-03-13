@@ -15,6 +15,7 @@ const app = express()
 app.use(cors())
 
 // app.engine('html', require('ejs').renderFile);
+// good example repo: https://github.com/ericf/express-handlebars/tree/master/examples/advanced
 app.engine(
   'handlebars', 
   expressHandlebars({
