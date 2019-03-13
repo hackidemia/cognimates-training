@@ -5,9 +5,14 @@ const textController = require('./controllers/text')
 const visionController = require('./controllers/clarifai')
 const router = express.Router()
 
-router.get('/', (req, res) => {
-  res.render('index.html')
-})
+// router.get('/', (req, res) => {
+//   res.render('index.html')
+// })
+
+router.get('/', function (req, res) {
+    res.render('home');
+});
+
 
 // router.get('/login', (req, res) => {
 //   res.render('login.html')

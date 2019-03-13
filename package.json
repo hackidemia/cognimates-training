@@ -18,6 +18,7 @@
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "express-busboy": "^7.0.0",
+    "express-handlebars": "^3.0.2",
     "localforage": "^1.7.3",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
