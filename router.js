@@ -19,19 +19,27 @@ router.get('/', function (req, res) {
 // router.post('/auth/login', authController.login)
 
 router.get('/text_home', (req, res) => {
-  res.render('models/text/text_home')
+  res.render('models/text/text_home', {
+      title: 'Train a text model, Home - Cognimates Studio'
+    })
 })
 
 router.get('/text_train', (req, res) => {
-  res.render('models/text/text_train')
+  res.render('models/text/text_train', {
+      title: 'Train a text model, Train - Cognimates Studio'
+    })
 })
 
 router.get('/text', (req, res) => {
-  res.render('models/text/text')
+  res.render('models/text/text', {
+      title: 'Train a text model - Cognimates Studio'
+    })
 })
 
 router.get('/text_examples', (req, res) => {
-	res.render('models/text/text_examples')
+	res.render('models/text/text_examples', {
+      title: 'Train a text model, Add examples - Cognimates Studio'
+    })
 })
 
 ////////////////////
@@ -46,19 +54,27 @@ router.post('/text/untrain', textController.untrain)
 
 ////////////////////
 router.get('/vision_home', (req, res) => {
-  res.render('models/vision/vision_home')
+  res.render('models/vision/vision_home', {
+      title: 'Home - Cognimates Studio'
+    })
 })
 
 router.get('/vision_train', (req, res) => {
-  res.render('models/vision/vision_train')
+  res.render('models/vision/vision_train', {
+      title: 'Home - Cognimates Studio'
+    })
 })
 
 router.get('/vision_examples', (req, res) => {
-  res.render('models/vision/vision_examples')
+  res.render('models/vision/vision_examples', {
+      title: 'Home - Cognimates Studio'
+    })
 })
 
 router.get('/vision', (req, res) => {
-  res.render('models/vision/vision')
+  res.render('models/vision/vision', {
+      title: 'Home - Cognimates Studio'
+    })
 })
 
 ////////////////////
