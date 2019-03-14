@@ -262,8 +262,6 @@ ul {
 
 }
 
-
-
 .task:hover {
     cursor: pointer;
 }
@@ -296,7 +294,6 @@ ul {
     line-height: 1.5;
     border-radius: 0.25rem;
 }
-
 
 .example {
     width: 100%;
@@ -399,7 +396,6 @@ ul {
     margin-top: 20px;
 }
 
-
 /* Remove the navbar's default margin-bottom and rounded borders */
 .navbar {
     margin-bottom: 0;
@@ -432,59 +428,7 @@ h3 {
 
 .btn-primary {
     background-color: #328EDE;
-    border-color: #328EDE;
-}
-
-.btn-primary:hover {
-    background-color: #DA2825;
-    border-color: #DA2825;
-}
-
-.btn-danger {
-    background-color: #DA2825;
-    border-color: #DA2825;
-}
-
-/* Remove the navbar's default margin-bottom and rounded borders */
-.navbar {
-    margin-bottom: 0;
-    border-radius: 0;
-}
-
-/* Add a gray background color and some padding to the footer */
-footer {
-    background-color: #fff;
-    padding: 25px;
-}
-
-.carousel-inner img {
-    width: 100%;
-    /* Set width to 100% */
-    margin: auto;
-    min-height: 200px;
-}
-
-/* Hide the carousel text when the screen is less than 600 pixels wide */
-@media (max-width: 600px) {
-    .carousel-caption {
-        display: none;
-    }
-}
-
-.btn-success {
-
-    background-color: #328EDE;
-    border-color: #328EDE;
-}
-
-.btn-success:hover {
-    background-color: #DA2825;
-    border-color: #DA2825;
-
-}
-
-.btn-primary {
-    background-color: #29AFCF;
+    /*border-color: #328EDE;*/
     border-color: #29AFCF;
     width: 100px;
     margin: 0 auto;
@@ -501,206 +445,18 @@ footer {
     border-color: #DA2825;
 }
 
-
-/* Remove the navbar's default margin-bottom and rounded borders */
-.navbar {
-    margin-bottom: 0;
-    border-radius: 0;
+.btn-success {
+    background-color: #328EDE;
+    border-color: #328EDE;
 }
 
-/* Add a gray background color and some padding to the footer */
-footer {
-    background-color: #f2f2f2;
-    padding: 25px;
-}
-
-.carousel-inner img {
-    width: 100%;
-    /* Set width to 100% */
-    margin: auto;
-    min-height: 200px;
-}
-
-/* Hide the carousel text when the screen is less than 600 pixels wide */
-@media (max-width: 600px) {
-    .carousel-caption {
-        display: none;
-    }
-}
-
-h3 {
-    color: #328EDE;
+.btn-success:hover {
+    background-color: #DA2825;
+    border-color: #DA2825;
 }
 
 btn btn-primary btn-lg btn-block {
     color: #328EDE;
-}
-
-
-.navbar {
-    margin-bottom: 0;
-    border-radius: 0;
-}
-
-/* Add a gray background color and some padding to the footer */
-footer {
-    background-color: #f2f2f2;
-    padding: 25px;
-}
-
-.carousel-inner img {
-    width: 100%;
-    /* Set width to 100% */
-    margin: auto;
-    min-height: 200px;
-}
-
-/* Hide the carousel text when the screen is less than 600 pixels wide */
-@media (max-width: 600px) {
-    .carousel-caption {
-        display: none;
-    }
-}
-
-.btn-success {
-    background-color: #328EDE;
-    border-color: #328EDE;
-}
-
-.btn-success:hover {
-    background-color: #DA2825;
-    border-color: #DA2825;
-
-
-
-
-/* Remove the navbar's default margin-bottom and rounded borders */
-.navbar {
-    margin-bottom: 0;
-    border-radius: 0;
-}
-
-/* Add a gray background color and some padding to the footer */
-footer {
-    background-color: #f2f2f2;
-    padding: 25px;
-}
-
-.carousel-inner img {
-    width: 100%;
-    /* Set width to 100% */
-    margin: auto;
-    min-height: 200px;
-}
-
-/* Hide the carousel text when the screen is less than 600 pixels wide */
-@media (max-width: 600px) {
-    .carousel-caption {
-        display: none;
-    }
-}
-
-h3 {
-    color: #328EDE;
-}
-
-.btn-primary {
-    background-color: #328EDE;
-    border-color: #328EDE;
-}
-
-.btn-primary:hover {
-    background-color: #DA2825;
-    border-color: #DA2825;
-}
-
-
-
-.navbar {
-    margin-bottom: 0;
-    border-radius: 0;
-}
-
-/* Add a gray background color and some padding to the footer */
-footer {
-    background-color: #f2f2f2;
-    padding: 25px;
-}
-
-.carousel-inner img {
-    width: 100%;
-    /* Set width to 100% */
-    margin: auto;
-    min-height: 200px;
-}
-
-/* Hide the carousel text when the screen is less than 600 pixels wide */
-@media (max-width: 600px) {
-    .carousel-caption {
-        display: none;
-    }
-}
-
-.btn-success {
-    background-color: #328EDE;
-    border-color: #328EDE;
-}
-
-.btn-remove {
-    background-color: #DA2825;
-    border-color: #DA2825;
-    color: #fff;
-    margin: 0 auto;
-}
-
-
-.navbar {
-    margin-bottom: 0;
-    border-radius: 0;
-}
-
-/* Add a gray background color and some padding to the footer */
-footer {
-    background-color: #f2f2f2;
-    padding: 25px;
-}
-
-.carousel-inner img {
-    width: 100%;
-    /* Set width to 100% */
-    margin: auto;
-    min-height: 200px;
-}
-
-/* Hide the carousel text when the screen is less than 600 pixels wide */
-@media (max-width: 600px) {
-    .carousel-caption {
-        display: none;
-    }
-}
-
-h3 {
-    color: #328EDE;
-}
-
-.btn-success {
-    background-color: #328EDE;
-    border-color: #328EDE;
-}
-
-.btn-success:hover {
-    background-color: #DA2825;
-    border-color: #DA2825;
-}
-
-.btn-primary {
-    background-color: #FB9009;
-    border-color: #FB9009;
-}
-
-.btn-primary:hover {
-    background-color: #328EDE;
-    border-color: #328EDE;
 }
 
 .doodle {
