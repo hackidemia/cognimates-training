@@ -9,36 +9,26 @@ const UserClassifier = require('./models/UserClassifier')
 const bb = require('express-busboy')
 const https = require('https')
 const args = require('minimist')(process.argv.slice(2))
-const expressHandlebars  = require('express-handlebars');
 
 const app = express()
 app.use(cors())
-
-// app.engine('html', require('ejs').renderFile);
-
-// good example of using handlebars in more detail
-// repo: https://github.com/ericf/express-handlebars/tree/master/examples/advanced
-app.engine(
-  'handlebars', 
-  expressHandlebars({
-    defaultLayout: 'main'
-  })
-);
-app.set('view engine', 'handlebars');
-
+app.engine('html', require('ejs').renderFile);
 app.use(express.static('static'));
 app.use(bodyParser.json({limit: '337mb'}))
 app.use(bodyParser.urlencoded({
   extended: false,
   limit: '50mb'
 }))
-app.use(express.static('static'))
+//app.use(express.static('static'))
+
 
 app.use(router)
 
 bb.extend(app, {
   upload: true
 })
+
+
 
 mongoose.connect(config.mongooseURL)
 
@@ -56,7 +46,7 @@ mongoose.connect(config.mongooseURL)
 
 if(args.http == true) {
   app.listen(config.SERVER_PORT, () => {
-    console.log(`Server running at http://localhost:${config.SERVER_PORT}`);
+    console.log(`Server running on port ${config.SERVER_PORT}`);
   })
 } else {
   const config = require('./config');
@@ -67,6 +57,6 @@ if(args.http == true) {
   }
   var server = https.createServer(options, app);
   server.listen(config.SERVER_PORT, () => {
-    console.log(`Server running http://localhost:${config.SERVER_PORT}`);
+    console.log(`Server running on port ${config.SERVER_PORT}`);
   });
 }
