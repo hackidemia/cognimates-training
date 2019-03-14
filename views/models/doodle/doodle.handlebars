@@ -1,41 +1,7 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>doodle classifier</title>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/addons/p5.dom.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.2"></script>
-  <script src="/doodle/sketch.js"></script>
-  <style>
-    body {
-      font-family: 'Courier New', Courier, monospace;
-    }
-
-    button {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 24pt;
-      margin-right: 10px;
-      border: 1px solid black;
-      background: white;
-    }
-
-    canvas {
-      border: 1px solid black;
-      margin: 20px 0;
-    }
-  </style>
-</head>
-
-<body>
+<div class="doodle">
   <h1>Doodle Classifier on 100 classes from Quickdraw dataset</h1>
-  <button id="guess">guess</button>
-  <button id="clear">clear</button>
+  <button class="doodle__button" id="guess">guess</button>
+  <button class="doodle__button" id="clear">clear</button>
   <div id="canvasContainer"></div>
   <h2 id="res"></h2>
   <p>
@@ -51,6 +17,4 @@
     'power_outlet', 'diving_board', 'rifle', 'eyeglasses', 'broom', 'donut', 'pillow', 'hot_dog', 'butterfly', 'hammer',
     'basketball', 'book', 'tent', 'pizza', 'cup'
   </p>
-</body>
-
-</html>
+</div>

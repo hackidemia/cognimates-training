@@ -1,0 +1,261 @@
+{{> header }}
+      
+<header class="main-header">
+  <h1 id="classifierTitle"></h1>
+    <h2>Make at least 2 categories. Click on the category to add examples to it.</h2><br>
+  <div class="btn btn-success btn-lg" id="trainButton">
+        Test me out!
+   </div>
+</header>
+
+<section class="app-insert">
+  <input type="text" name="task" placeholder="Add your category here" id="labelInput">
+</section>
+
+<section class="app-list">
+  <ul></ul>
+</section>
+
+<script>
+    var ix
+    var colors = ["#328EDE", "#FB9009", "#5BD648", "#B187BA"]
+    var classifierName = null;
+    (function() {
+
+    var app = {
+        init: function() {
+            if (window.localStorage.getItem('token_expiry') != 'null') {
+              if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
+                window.localStorage.setItem('access_token', null)
+                window.localStorage.setItem('token_expiry', null)
+                window.location.replace("/");
+              } else {
+
+                if(window.localStorage.getItem('temp_classifierName') == 'null') {
+                  window.location.replace("/text_home");
+                  return
+                }
+                window.access_token = window.localStorage.getItem('access_token')
+                window.localStorage.setItem("classifierName", window.localStorage.getItem('temp_classifierName')+'_text')
+                classifierName = window.localStorage.getItem("classifierName")
+                $('#classifierTitle').html(classifierName.slice(0, classifierName.indexOf('_')))
+              }
+            } else {
+              window.location.replace("/");
+              return
+            }
+            console.log(classifierName)
+            console.log(window.localStorage.getItem('temp_classifierName'))
+            // Load list
+            ix = 0
+            if (classifierName == window.localStorage.getItem('temp_classifierName')+'_text') {
+                app.storage('get');
+            }       
+
+            // Add label
+            document.querySelector('.app-insert input').addEventListener('keyup', function(e) {
+                if ( e.which === 13 && this.value !== '' ) {
+                    app.addLabel(this.value);
+                    app.storage('update');
+                    this.value = '';
+                }
+            }, false);
+
+            document.querySelector('.app-list').addEventListener('click', function(e) {
+                // Remove label
+                if ( e.target.id == 'remove') {
+                    app.removeLabel(e.target);
+                // Add examples
+                } else if ( e.target.id == 'addExampleButton' ) {
+                    console.log(e.target.innerHTML)
+                    app.addExamples(e.target.parentNode.parentNode);
+                }
+            }, false);
+
+            document.querySelector('#addExampleButton').addEventListener('click', function(e) {
+                app.addExamples(e.target);
+            }, false)
+
+            document.querySelector('#trainButton').addEventListener('click', function(e){
+                // var labelList = JSON.parse(window.localStorage.getItem(classifierName+'_labels'))
+                // console.log(labelList)
+                // var examples = JSON.parse(window.localStorage.getItem(classifierName + "_examples")) 
+                // if (labelList == undefined || labelList.length < 2) {
+          //       alert('Two or more labels are required to train')
+          //       return
+          //     }
+          //     var error = false
+          //     for (var idx = 0, label = labelList[idx]; idx < labelList.length; idx++) {
+          //        console.log(label)
+          //       if (examples[label].length < 5) {
+          //         alert('5 or more examples required for each label')
+          //         error = true
+          //         break
+          //       }
+          //     }
+          //     if(error == true) {
+          //       return
+          //     }
+          //     var requestData = {}
+          //     requestData.name = classifierName
+          //     requestData.training_data = []
+          //     labelList.forEach((label) => {
+          //       examples[label].forEach((example) => {
+          //         var exampleObject = {
+          //           phrase: example,
+          //           label: label
+          //         }
+          //         requestData.training_data.push(exampleObject)
+          //       })
+          //     })
+          //     $.ajax({
+          //       url: '/text/classifier',
+          //       type: 'POST',
+          //       dataType: 'json',
+          //       contentType: "application/json; charset=utf-8",
+          //       data: JSON.stringify(requestData),
+          //       headers: { token: window.access_token },
+          //       success: function (data) {
+          //         if(data.error == null) {
+          //           console.log('id', data.clasifier_id)
+          //           window.localStorage.setItem('selectedClassifier', data.classifier_id)
+          //           window.location.replace('/text')
+          //         } else {
+          //           alert(data.error)
+          //         }
+          //       }
+          //     })
+                window.location.replace("/text");
+            })
+            return
+            
+        },
+        addLabel: function (task) {
+            var random_color = colors[Math.abs(ix%colors.length)]
+            ix = ix + 1
+            var new_task = document.createElement('li');    
+                new_task.setAttribute('class', 'task');
+                new_task.setAttribute('id', 'task');
+                new_task.setAttribute('style', 'background-color: '+random_color)
+                new_task.innerHTML = task + '<div class = box-buttons><div class="remove-task" id="addExampleButton">Add examples</div><a href="javascript:;" class="remove-task" id="remove">Remove</a></div>';
+            var labelInput = $('#labelInput').val()
+            console.log('labelInput', labelInput)
+            if (labelInput != null && labelInput.length > 0) {
+                addLabelItem (labelInput, new_task);
+            }
+            window.localStorage.setItem(task+"_color", random_color)
+            addClass(labelInput)
+        },
+
+        removeLabel: function (task) {
+            ix = ix - 1 %colors.length
+            var removeNode = task.parentNode.parentNode
+            console.log('removing', removeNode.innerHTML)
+            task.style.opacity = 0;
+            setTimeout(function() {
+                console.log(task)
+                removeNode.remove();
+                app.storage('update');
+            }, 400);
+
+            var label = getLabel(removeNode)
+            console.log(label)
+            var classifierName = window.localStorage.getItem("classifierName")
+            var name = classifierName + '_labels'
+            var labels = JSON.parse(window.localStorage.getItem(name))
+            var index = labels.indexOf(label);
+            console.log(index)
+            if (index > -1) {
+                labels.splice(index, 1);
+                console.log(labels)
+            }
+            window.localStorage.setItem(name, JSON.stringify(labels))
+            var examples = JSON.parse(window.localStorage.getItem(classifierName + "_examples")) 
+            delete examples[label]
+            window.localStorage.setItem(classifierName+"_examples", JSON.stringify(examples))
+            console.log('labels',labels)
+        },
+        addExamples: function (task) {
+            app.storage('update');
+            var label = getLabel(task)
+            console.log(label)
+            window.localStorage.setItem('temp_labelName', label)
+            window.location.replace('/text_examples')
+        },
+        storage: function(type) {
+            var name = classifierName + '_labels_html'
+            console.log(name)
+            if ( type === 'get' ) {
+                if ( localStorage.getItem(name) != null ) {
+                    document.querySelector('.app-list').innerHTML = localStorage.getItem(name);
+                }
+            } else if ( type === 'update' ) {
+                var str = document.querySelector('.app-list').innerHTML;
+                localStorage.setItem(name, str);
+            }
+        }
+    };
+    app.init();
+})();
+  function addLabelItem(label, task) {
+    labels = JSON.parse(window.localStorage.getItem(classifierName+"_labels"))
+    if(labels == null) {
+      labels = []
+    }
+    if(labels.includes(label) != false) {
+      alert('Bucket already exists')
+      return
+    }
+    var $list = document.querySelector('.app-list ul');
+    $list.appendChild(task);
+    console.log($list)
+    labels.push(label)
+    console.log("label", label)
+    console.log("result", labels)
+    var examples = JSON.parse(window.localStorage.getItem(classifierName + "_examples"))
+    
+    if(examples === null) {
+      examples = {}
+    }
+    examples[label] = []
+    window.localStorage.setItem(classifierName + "_examples", JSON.stringify(examples))
+    window.localStorage.setItem(classifierName + "_labels", JSON.stringify(labels))
+    console.log('examples', examples)
+    console.log('labels', window.localStorage.getItem(classifierName+'_labels'))
+  }
+
+  function getLabel(task) {
+    var label = task.innerHTML
+    console.log('passed label', label)
+    label = label.slice(0, label.indexOf('<div'))
+    console.log("get label", label)
+    return label
+  }
+
+  function addClass(label) {
+    requestData = {"class_name": label, "write_token": window.localStorage.getItem("text_writeapiKey"), 
+              "classifier_name": window.localStorage.getItem("temp_classifierName")
+            }
+    console.log(requestData)
+    $.ajax({
+      url: '/text/createClass',
+      type: 'POST',
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(requestData),
+      success: function(data) {
+        console.log("hi", label, data)
+        if(data.error == null) {
+          console.log(data)
+          window.localStorage.setItem('selectedClassifier', data.classifier_id)
+          window.location.replace('/text')
+        } else {
+          alert(data.error)
+        }
+      },
+      error: function(data) {
+        console.log("error", data.error)
+      }
+
+    })
+  }
+</script>

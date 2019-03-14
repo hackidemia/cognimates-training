@@ -1,6 +1,10 @@
-# cognimates-training
+### cognimates-training
 Platform where kids train their own AI models 
 
-node index.js
-go to http://localhost:2634/ on browser
+#### setup
 
+- copy `config.js.example` in the project root as `config.js`
+- modify vars as needed
+- `npm install` to download necessary node packages
+- `npm run dev` to start server
+- open in `http://localhost:xxxx/`, with xxxx being whatver the `module.exports.SERVER_PORT` is set in config.js  

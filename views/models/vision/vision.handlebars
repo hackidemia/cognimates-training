@@ -1,75 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Vision Classifier - Cognimates Studio</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
- <link rel="stylesheet" href="/css/style.css" type="text/css">
-  <style>
-    /* Remove the navbar's default margin-bottom and rounded borders */
-    .navbar {
-      margin-bottom: 0;
-      border-radius: 0;
-    }
-
-    /* Add a gray background color and some padding to the footer */
-    footer {
-      background-color: #f2f2f2;
-      padding: 25px;
-    }
-
-  .carousel-inner img {
-      width: 100%; /* Set width to 100% */
-      margin: auto;
-      min-height:200px;
-  }
-
-  /* Hide the carousel text when the screen is less than 600 pixels wide */
-  @media (max-width: 600px) {
-    .carousel-caption {
-      display: none;
-    }
-  }
-  h3 {
-    color: #328EDE;
-  }
-
-  .btn-primary{
-    background-color: #328EDE;
-    border-color: #328EDE;
-  }
-
-  .btn-primary:hover {
-    background-color: #DA2825;
-    border-color: #DA2825;
-  }
-  </style>
-</head>
-<body>
-
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/home">Cognimates</a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-        <li><a href="/vision_home" id="backButton">Visual Classification</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#" id="logoutButton"><span class="glyphicon glyphicon-log-in"></span> Log out</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+{{> header }}
 
 <header class="main-header">
   <h1 id="classifierTitle"></h1>
@@ -149,14 +78,14 @@
   }
 
   $(document).ready(function(){
-    $('#logoutButton').click(function(evt) {
-      evt.preventDefault();
-      window.localStorage.setItem('access_token', null)
-      window.localStorage.setItem('token_expiry', null)
-      window.localStorage.setItem('vision_apiKey', null)
-      window.location.replace("/");
-      return false;
-    })
+    // $('#logoutButton').click(function(evt) {
+    //   evt.preventDefault();
+    //   window.localStorage.setItem('access_token', null)
+    //   window.localStorage.setItem('token_expiry', null)
+    //   window.localStorage.setItem('vision_apiKey', null)
+    //   window.location.replace("/");
+    //   return false;
+    // })
 
     $('#predictionForm').submit(function() {
       if(window.predictionImage != undefined) {
@@ -283,7 +212,6 @@
     }
   }
 
-
   function classify() {
     if(window.predictionImage == undefined) {
       return;
@@ -308,5 +236,3 @@
       });
   }
 </script>
-</body>
-</html>
