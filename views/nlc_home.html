@@ -1,4 +1,82 @@
-{{> header }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Text Classifier - Cognimates Studio</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+    }
+
+  .carousel-inner img {
+      width: 100%; /* Set width to 100% */
+      margin: auto;
+      min-height:200px;
+  }
+
+  /* Hide the carousel text when the screen is less than 600 pixels wide */
+  @media (max-width: 600px) {
+    .carousel-caption {
+      display: none;
+    }
+  }
+
+  h3 {
+    color: #328EDE;
+  }
+
+  .btn-success{
+    background-color: #328EDE;
+    border-color: #328EDE;
+  }
+
+  .btn-success:hover {
+    background-color: #DA2825;
+    border-color: #DA2825;
+  }
+
+  .btn-primary{
+    background-color: #FB9009;
+    border-color: #FB9009;
+  }
+
+  .btn-primary:hover {
+    background-color: #328EDE;
+    border-color: #328EDE;
+  }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/home">Cognimates</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" id="logoutButton"><span class="glyphicon glyphicon-log-in"></span> Log out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
 <div class="container text-center">
   <h3>Teach it to recognize Text</h3><br>
@@ -71,13 +149,13 @@
   }
 
   $(document).ready(function(){
-    // $('#logoutButton').click(function(evt) {
-    //   evt.preventDefault();
-    //   window.localStorage.setItem('access_token', null)
-    //   window.localStorage.setItem('token_expiry', null)
-    //   window.location.replace("/");
-    //   return false;
-    // });
+    $('#logoutButton').click(function(evt) {
+      evt.preventDefault();
+      window.localStorage.setItem('access_token', null)
+      window.localStorage.setItem('token_expiry', null)
+      window.location.replace("/");
+      return false;
+    });
 
 
     $('#createClassifierForm').submit(function (e) {
@@ -88,9 +166,10 @@
         return
       }
 
+
       window.localStorage.setItem('temp_classifierName', classifierName)
       createClassifier()
-      window.location.replace('/text_train')
+      window.location.replace('/train')
       return false;
     })
 
@@ -124,7 +203,7 @@
 
   function createClassifier() {
     $.ajax({
-      url: "/text/classifier",
+      url: "/nlc/classifier",
       type: "POST",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({'write_token': window.writeapiKey, 'classifier_name': window.localStorage.getItem("temp_classifierName")}),
@@ -139,7 +218,7 @@
 
   // function loadUserClassifiers() {
   //   $.ajax({
-  //        url: "/text/classifiers",
+  //        url: "/nlc/classifiers",
   //        type: "GET",
   //        headers: { 'token': window.access_token },
   //        success: function (data) {
@@ -178,7 +257,11 @@
 
   function selectClassifier(classifier_id) {
     window.localStorage.setItem('selectedClassifier', classifier_id)
-    window.location.replace('/text')
+    window.location.replace('/nlc')
   }
 
 </script>
+
+
+</body>
+</html>

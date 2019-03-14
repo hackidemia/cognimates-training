@@ -1,4 +1,3 @@
-/*
 const User = require('../models/User');
 const auth = require('../controllers/auth');
 const VisionClassifier = require('../models/VisionClassifier');
@@ -12,7 +11,7 @@ let archiver = require('archiver');
 let VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
 
 const watson = new VisualRecognitionV3({
-    api_key: "",
+    api_key: "1438a8fdb764f1c8af8ada02e6c601cec369fc40",
     url: "https://gateway-a.watsonplatform.net/visual-recognition/api",
     version: '2018-03-19'
 });
@@ -359,7 +358,7 @@ function deleteClassifier(req, res) {
   /**
    * Watson Visual Recognition method of deleting a classifier is the same, only requires
    * classifier_id.
-  * /
+   */
   function delClassifier(classifier_id) {
     watson.deleteClassifier({ classifier_id: classifier_id }, (err, response) => {
       if (err) {
@@ -389,7 +388,7 @@ function deleteClassifier(req, res) {
 
 /**
  * No threshold put in, so it is set to default of 0.5,
- * /
+ */
 function classifyImage(req, res) {
   let image_data = req.body.image_data
   let classifier_id = req.body.classifier_id
@@ -435,4 +434,3 @@ module.exports = {
     deleteClassifier: deleteClassifier,
     createClassifier: createClassifier
   }
-*/
