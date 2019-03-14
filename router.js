@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.get('/', function (req, res) {
     res.render('index', {
-      title: 'Home - Cognimates Studio'
+      title: 'Cognimates, Home'
     });
 });
 
@@ -20,25 +20,25 @@ router.get('/', function (req, res) {
 
 router.get('/text_home', (req, res) => {
   res.render('models/text/text_home', {
-      title: 'Train a text model, Home - Cognimates Studio'
+      title: 'Cognimates, Train a text model, Home'
     })
 })
 
 router.get('/text_train', (req, res) => {
   res.render('models/text/text_train', {
-      title: 'Train a text model, Train - Cognimates Studio'
+      title: 'Cognimates, Train a text model, Train'
     })
 })
 
 router.get('/text_examples', (req, res) => {
   res.render('models/text/text_examples', {
-      title: 'Train a text model, Examples - Cognimates Studio'
+      title: 'Cognimates, Train a text model, Examples'
     })
 })
 
 router.get('/text', (req, res) => {
   res.render('models/text/text', {
-      title: 'Train a text model, Result - Cognimates Studio'
+      title: 'Cognimates, Train a text model, Result'
     })
 })
 
@@ -55,31 +55,31 @@ router.post('/text/untrain', textController.untrain)
 ////////////////////
 // router.get('/vision_home', (req, res) => {
 //   res.render('models/vision/vision_home', {
-//       title: 'Train a vision model, Home - Cognimates Studio'
+//       title: 'Cognimates, Train a vision model, Home'
 //     })
 // })
 
 router.get('/vision_home', (req, res) => {
-  res.render('models/vision/vision_classifiers', {
-      title: 'Train a vision model, Home - Cognimates Studio'
+  res.render('models/vision/vision_home', {
+      title: 'Cognimates, Train a vision model, Home'
     })
 })
 
 router.get('/vision_train', (req, res) => {
   res.render('models/vision/vision_train', {
-      title: 'Train a vision model, Train - Cognimates Studio'
+      title: 'Cognimates, Train a vision model, Train'
     })
 })
 
 router.get('/vision_examples', (req, res) => {
   res.render('models/vision/vision_examples', {
-      title: 'Train a vision model, Examples - Cognimates Studio'
+      title: 'Cognimates, Train a vision model, Examples'
     })
 })
 
 router.get('/vision', (req, res) => {
   res.render('models/vision/vision', {
-      title: 'Train a vision model, Result - Cognimates Studio'
+      title: 'Cognimates, Train a vision model, Result'
     })
 })
 
@@ -92,7 +92,7 @@ router.post('/vision/classify', visionController.classifyImages)
 
 router.get('/doodle', (req, res) => {
   res.render('models/doodle/doodle', {
-      title: 'Doodle Classifier - Cognimates Studio'
+      title: 'Cognimates, Doodle Classifier'
     })
 })
 
