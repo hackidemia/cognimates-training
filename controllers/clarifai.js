@@ -1,8 +1,3 @@
-const path = require('path');
-const fs = require('fs');
-const paths = require('../paths');
-const mkdirp = require('mkdirp');
-const utils = require('../utils');
 const Clarifai = require('clarifai');
 
 function init(api_key) {

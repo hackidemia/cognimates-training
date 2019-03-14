@@ -22,7 +22,6 @@
     "localforage": "^1.7.3",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
-    "mongoose": "^5.0.17",
     "whirlpool": "0.0.4"
   }
 }
