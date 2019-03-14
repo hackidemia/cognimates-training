@@ -1,0 +1,16 @@
+.doodle {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.doodle__button {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 24pt;
+    margin-right: 10px;
+    border: 1px solid black;
+    background: white;
+}
+
+.doodle canvas {
+    border: 1px solid black;
+    margin: 20px 0;
+}

@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css?family=Droid+Serif:400i|Roboto:300,400,700');
+
+.stepper {
+	margin: 30px;
+	position: relative;
+}
+
+.stepper li {
+	display: flex;
+}
+
+.stepper__number {
+	flex: 0 0 150px;
+	margin-right: 50px;
+	font-family: 'Roboto', sans-serif;
+	font-size: 2rem;
+	text-align: right;
+	color: #acacac;
+}
+
+/*vertical line*/
+.step__circle {
+	flex: 0 0 50px;
+	position: relative;
+	text-align: center;
+}
+
+.step__circle:before {
+	content: '';
+	position: absolute;
+	z-index: 2;
+	right: 0;
+	left: 0;
+	height: 100%;
+	width: 2px;
+	margin: auto;
+	background: #ccc;
+}
+
+.step__circle i {
+	position: relative;
+	display: inline-block;
+	z-index: 3;
+	width: 8px;
+	height: 8px;
+	background: #222;
+	border-radius: 50%;
+	box-sizing: border-box;
+	transition: all 0.4s ease-in-out;
+}
+
+.step__description {
+	margin-left: 50px;
+	padding-bottom: 100px;
+}
+
+/*For the first stepper item*/
+.stepper li:first-child .stepper__number,
+.stepper li:first-child .step__description {
+	margin-top: 0.5rem;
+}
+
+.stepper li:first-child .step__circle:before {
+	margin-top: 0.5rem;
+}
+
+.stepper li:first-child .step__circle:after {
+	content: "";
+	position: absolute;
+	box-sizing: border-box;
+	z-index: 1;
+	left: 0;
+	right: 0;
+	width: 40px;
+	height: 40px;
+	margin: auto;
+	border: 2px solid #e9e9e9;
+	background: transparent;
+	border-radius: 50%;
+}
+
+.stepper li:first-child i {
+	width: 40px;
+	height: 40px;
+	background: transparent;
+}
+
+.stepper li:first-child i:after {
+	content: '';
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;	
+	width: 15px;
+	height: 15px;
+	margin: auto;
+	border-radius: 50%;
+	background: orange;
+}
+
+/*Now let us start do the hover effects*/
+.stepper li:hover .stepper__number {
+	color: #555;
+}
+
+.stepper li:first-child:hover .step__circle i {
+	background: #222;
+}
+
+.stepper li:first-child:hover .step__circle:after {
+	border-color: #222;
+}
+
+/*////////////////*/
+

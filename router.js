@@ -53,8 +53,14 @@ router.post('/text/addExamples', textController.addExamples)
 router.post('/text/untrain', textController.untrain)
 
 ////////////////////
+// router.get('/vision_home', (req, res) => {
+//   res.render('models/vision/vision_home', {
+//       title: 'Train a vision model, Home - Cognimates Studio'
+//     })
+// })
+
 router.get('/vision_home', (req, res) => {
-  res.render('models/vision/vision_home', {
+  res.render('models/vision/vision_classifiers', {
       title: 'Train a vision model, Home - Cognimates Studio'
     })
 })

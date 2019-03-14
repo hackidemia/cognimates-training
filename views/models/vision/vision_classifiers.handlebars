@@ -1,0 +1,182 @@
+<ul class="stepper stepper-vertical">
+
+    <li class="stepper__step">
+        <span class="stepper__number">1</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__description">
+            <h2 class="step-headline">Intro</h2>
+            <p class="step__text">
+                <span class="step__text-secondary">
+                    <div class="step--section">
+                        <h4>What are Machine Learning Models (classifiers) </h4>
+                        <p> “classifier” and “model” are synonymous in certain contexts; however, sometimes people refer to “classifier” as the learning algorithm that learns the model from the training data. To makes things more tractable, let’s define some of the key terminology:</p>
+                        <ul>
+                            <li>
+                                <p><strong><em>Training sample:</em></strong> A training sample is a data point <em>x</em> in an available training set that we use for tackling a predictive modeling task. For example, if we are interested in classifying emails, one email in our dataset would be one training sample. Sometimes, people also use the synonymous terms <em>training instance</em> or <em>training example</em>.</p>
+                            </li>
+                            <li>
+                                <p><strong><em>Target function:</em></strong> In predictive modeling, we are typically interested in modeling a particular process; we want to learn or approximate a particular function that, for example, let’s us distinguish spam from non-spam email. The <strong><em>target function</em></strong> <em>f(x) = y</em> is the <strong>true</strong> function <em>f</em> that we want to model.</p>
+                            </li>
+                            <li>
+                                <p><strong><em>Hypothesis:</em></strong> A hypothesis is a certain function that we believe (or hope) is similar to the true function, the <em>target function</em> that we want to model. In context of email spam classification, it would be the <em>rule</em> we came up with that allows us to separate spam from non-spam emails.</p>
+                            </li>
+                            {{!-- from https://sebastianraschka.com/faq/docs/difference_classifier_model.html --}}
+                        </ul>
+
+                        - Classes are options of what predict will choose
+                        - Examples
+                    </div>
+                </span>
+            </p>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="stepper__number">2</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__description">
+            <h2 class="step-headline">API Setup</h2>
+            <p class="step__text">
+                <span class="step__text-secondary">
+                    codelab references this
+                    <button class="btn btn-primary"
+                        type="button">
+                        Set API Key
+                    </button>
+                    <a href="#">Get Clarifia API key</a>
+                    <small id="emailHelp"
+                        class="form-text text-muted">codelab references this</small>
+
+                </span>
+            </p>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="stepper__number">3</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__description">
+            <h2 class="step-headline">Set up a project</h2>
+            <p class="step__text">
+                <form>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Name</label>
+                        <input type="email"
+                            class="form-control"
+                            id="exampleInputEmail1"
+                            aria-describedby="emailHelp"
+                            placeholder="Name">
+                        <small id="emailHelp"
+                            class="form-text text-muted">codelab references this</small>
+                    </div>
+
+            </p>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="stepper__number">4</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__description">
+            <h2 class="step-headline">Create classes + examples</h2>
+            <p class="step__text">
+                <span class="step__text-secondary">
+
+                    <!-- transform this input into a pond -->
+                    <input type="file"
+                        class="filepond js--classifier__upload-drop-zone"
+                        name="filepond"
+                        multiple
+                        data-max-file-size="3MB"
+                        data-max-files="3">
+
+                    You will lose your images/saved work if you leave this page
+                </span>
+            </p>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="stepper__number">5</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__description">
+            <h2 class="step-headline">Train</h2>
+            <p class="step__text">
+                <span class="step__text-secondary">
+                    <button class="btn btn-primary"
+                        type="button"
+                        disabled>
+                        <span class="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"></span>
+                        Loading...
+                    </button>
+
+                </span>
+            </p>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="stepper__number">6</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__description">
+            <h2 class="step-headline">Predict</h2>
+            <p class="step__text">
+                <div class="step__model-info">
+                </div>
+                <span class="step__text-secondary">
+                    <button class="btn btn-primary"
+                        type="button">
+                        Predict
+                    </button>
+                </span>
+            </p>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="stepper__number">7</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__description">
+            <h2 class="step-headline">Play!</h2>
+            <p class="step__text">
+                <div class="">
+                </div>
+                <span class="step__text-secondary">
+                    <button class="btn btn-primary"
+                        type="button">
+                        Load Project in Codelab
+                    </button>
+                </span>
+            </p>
+        </div>
+    </li>
+
+</ul>
+
+
+<script>
+    FilePond.registerPlugin(
+        // FilePondPluginImagePreview,
+        FilePondPluginFileValidateSize
+    );
+
+    FilePond.create(
+        document.querySelector('.js--classifier__upload-drop-zone')
+    );
+</script>
