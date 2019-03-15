@@ -228,11 +228,20 @@ function classifyURLImage(req, res){
   )
 }
 
+function updateClassifier(req, res){
+  const apiKey = req.body.apikey;
+  model_id = req.body.classifier_id;
+  images = req.body.images;
+  const app = init(apiKey);
+  app.models.update({id: model_id, concepts: images});
+}
+
 module.exports = {
   createClassifier : createClassifier,
   getClassifiersList : getClassifiersList,
   getClassifierInformation : getClassifierInformation,
   classifyImages : classifyImage,
   deleteClassifier : deleteClassifier,
-  classifyURLImage: classifyURLImage
+  classifyURLImage: classifyURLImage,
+  updateClassifier: updateClassifier
 };
