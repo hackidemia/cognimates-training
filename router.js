@@ -60,7 +60,7 @@ router.post('/text/untrain', textController.untrain)
 // })
 
 router.get('/vision_home', (req, res) => {
-  res.render('models/vision/vision_home', {
+  res.render('models/vision/vision_classifiers', {
       title: 'Cognimates, Train a vision model, Home'
     })
 })
