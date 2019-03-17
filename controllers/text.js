@@ -1,11 +1,6 @@
 const request = require('request');
 const base_url = "https://api.uclassify.com/v1/";
 
-String.prototype.toObjectId = function() {
-  var ObjectId = (require('mongoose').Types.ObjectId);
-  return new ObjectId(this.toString());
-};
-
 function getClassifierInformation(req, res) {
     let read_token = req.body.read_token
     var classifier_id = req.body.classifier_id
