@@ -7,6 +7,7 @@ var csv = require('csv')
 const fs = require('fs')
 const request = require('request');
 const base_url = "https://api.uclassify.com/v1/";
+const async = require('async')
 
 
 String.prototype.toObjectId = function() {
@@ -206,15 +207,15 @@ function untrain(req, res){
 }
 
 function trainAll(req, res) {
-  var classifierName = req.body.classifierName;
+  var classifierName = req.body.classifier_name;
   var training_data = req.body.training_data;
   var writeAPIKey = req.headers.api_key;
-	var functionsToExecute = [];
+  var functionsToExecute = [];
 	functionsToExecute.push(getCreateClassifierFunction(writeAPIKey, classifierName));
-	training_data.forEach((label) => {
-		functionsToExecute.push(getTrainLabelFunction(writeAPIKey, classifierName, label , train_data[label]));
+	Object.keys(training_data).forEach((key) => {
+		functionsToExecute.push(getTrainLabelFunction(writeAPIKey, classifierName, key, training_data[key]));
 	});
-
+  
   async.series(functionsToExecute, (err, results) => {
     if (err) {
       var errorMessages = [];
@@ -247,7 +248,6 @@ function getCreateClassifierFunction(writeAPIKey, classifierName) {
           callback(null, true);
         } 
     });
-	 	request.post(requestData, (err, body));
   };
 }
 
@@ -268,12 +268,10 @@ function getTrainLabelFunction(writeAPIKey, classifierName, label, labelData) {
         if(err){
           callback(err, body);
           return;
-        } else {
-          callback(null, true);
         } 
     });
-
-    train_url = base_url + "me/" + classifier_name + "/" + class_name + "/train"; 
+    
+    train_url = base_url + "me/" + classifierName + "/" + class_name + "/train"; 
     //train the label by adding examples
     request.post({
       url:train_url,
