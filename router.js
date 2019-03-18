@@ -44,6 +44,7 @@ router.delete('/nlc/removeClass', nlcController.removeClass)
 router.post('/nlc/classify', nlcController.classifyText)
 router.post('/nlc/addExamples', nlcController.addExamples)
 router.post('/nlc/untrain', nlcController.untrain)
+router.post('/nlc/trainAll', nlcController.trainAll)
 
 router.get('/vision_home', (req, res) => {
   res.render('vision_home.html')
