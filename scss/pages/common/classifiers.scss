@@ -115,3 +115,75 @@
 
 /*////////////////*/
 
+.category__container { 
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.category__box {
+    
+    padding: 1rem;
+    width: 100%;
+    margin: 0 2rem 0 0 ;
+    border: 3px dashed;
+    border-radius: 1rem;
+
+}
+
+.category__button--remove {
+	background: transparent;
+    border: none;
+    color: #ea5d5d;
+    font-size: 1.5rem;
+}
+
+.category__box:nth-of-type(1),
+.filepond--drop-label:nth-of-type(1) { background: lightblue; }
+
+.category__box:nth-of-type(2),
+.filepond--drop-label:nth-of-type(2) { background: lightyellow; }
+
+.category__name {
+    background: lightblue;
+    padding: 1rem;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    width: 100%;
+    margin: 0 2rem 0 0 ;
+}
+
+.category__button--remove {
+    display: inline-block;
+    margin: 0;
+    width: auto;
+}
+
+.category__new-form-container {
+	width: 100%;
+}
+
+.category__new-form-group {
+	display: inline-flex;
+}
+
+.category__new-form {
+	width: auto;
+}
+
+.category__button--create {
+
+}
+
+/*///// file pond*/
+.filepond {
+    width: 100%;
+    height: 30px;
+    background-color: transparent !important;
+}
+
+.filepond--drop-label {
+	min-height: auto !important;
+	    height: auto;
+}

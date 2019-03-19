@@ -1,6 +1,4 @@
 const express = require('express')
-// const authController = require('./controllers/auth')
-// const nlcController = require('./controllers/nlc')
 const textController = require('./controllers/text')
 const visionController = require('./controllers/clarifai')
 const router = express.Router()
@@ -10,13 +8,6 @@ router.get('/', function (req, res) {
       title: 'Cognimates, Home'
     });
 });
-
-// router.get('/login', (req, res) => {
-//   res.render('login')
-// })
-
-// router.post('/auth/register', authController.register)
-// router.post('/auth/login', authController.login)
 
 router.get('/text_home', (req, res) => {
   res.render('models/text/text_home', {

@@ -1,0 +1,88 @@
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+}
+
+body {
+	font-family: $font-family;
+	margin: 0;
+	padding: 0;
+
+	// fixes the banner extra pixels that display a horizontal scroll bar
+	// due to .panel being bigger than 100%
+	overflow-x: hidden;
+
+ 	h1 {
+		margin: 30px 0;
+		font-size: 4rem;
+		line-height: 1;
+		letter-spacing: -1px;
+	}
+	
+	h2 {
+		font-size: $extra-large-font;
+		font-weight: $heavy-weight;
+		color: $main-color;
+	}
+
+	h3 {
+		font-size: $large-font;
+		font-weight: $heavy-weight;
+		color: $main-color;
+	}
+
+	p {
+		margin-top: 0;
+		line-height: 1.2rem;
+	}
+
+	a {
+		color: $main-color;
+		text-decoration: none;
+		padding-bottom: 2px;
+	}
+
+	a:hover {
+		// color: $accent-color;
+	}
+
+	li {
+		padding-bottom: 10px;
+	}
+}
+
+
+
+
+// .btn-primary {
+//     background-color: $light-main-color;
+//     border-color: #29AFCF;
+//     margin: 0 auto;
+//     font-weight: bold;
+// }
+
+// .btn-primary:hover {
+//     background-color: --secondary-color;
+//     border-color: --secondary-color;
+// }
+
+// .btn-danger {
+//     background-color: --secondary-color;
+//     border-color: --secondary-color;
+// }
+
+// .btn-success {
+//     background-color: $light-main-color;
+//     border-color: $light-main-color;
+// }
+
+// .btn-success:hover {
+//     background-color: --secondary-color;
+//     border-color: --secondary-color;
+// }
+
+// btn btn-primary btn-lg btn-block {
+//     color: $light-main-color;
+// }
+
