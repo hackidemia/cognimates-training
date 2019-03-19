@@ -35,7 +35,7 @@
 					</ul>
 				</div>
 			</div>
-			
+
 			<div class="classifiers__card-wrapper col-12 col-md-6">
 				<div class="card classifiers__card">
 					<img src="/images/vision_banner.png"
@@ -120,19 +120,19 @@
 
 		$("#textClassifierButton").click(function(evt) {
 			evt.preventDefault();
-			window.location.replace("/text_home");
+			window.location.href = "/text_home";
 			return false;
 		});
 
 		$("#imageClassificationButton").click(function(evt) {
 			evt.preventDefault();
-			window.location.replace("/vision_home");
+			window.location.href = "/vision_home";
 			return false;
 		});
 
 		$("#doodleClassificationButton").click(function(evt) {
 			evt.preventDefault();
-			window.location.replace("/doodle");
+			window.location.href = "/doodle";
 			return false;
 		});
 	});
