@@ -1,234 +1,233 @@
 <ul class="stepper stepper-vertical">
 
 
-    <h1> Vision Classifer </h1>
-    <li class="stepper__step">
-        <span class="stepper__number">1</span>
-        <div class="step__circle">
-            <i></i>
-        </div>
-        <div class="step__description">
-            <h2 class="step-headline">What is your project name?</h2>
-            <p class="step__text">
-                <form>
-                    <div class="form-group">
-                        {{!-- <label for="exampleInputEmail1">Name</label> --}}
-                        <input type="email"
-                            class="form-control step__form-text"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Use this name in Codelab">
-                        {{!-- <small id="emailHelp"
-                            class="form-text text-muted">codelab references this</small> --}}
-                    </div>
-                </form>
-            </p>
-        </div>
-    </li>
+	<h1> Vision Classifer </h1>
+	<li class="stepper__step">
+		<span class="stepper__number">1</span>
+		<div class="step__circle">
+			<i></i>
+		</div>
+		<div class="step__description">
+			<h2 class="step-headline">What is your project name?</h2>
+			<p class="step__text">
+				<form>
+					<div class="form-group">
+						{{!-- <label for="exampleInputEmail1">Name</label> --}}
+						<input type="email"
+							class="form-control step__form-text"
+							id="exampleInputEmail1"
+							aria-describedby="emailHelp"
+							placeholder="Use this name in Codelab">
+						{{!-- <small id="emailHelp"
+							class="form-text text-muted">codelab references this</small> --}}
+					</div>
+				</form>
+			</p>
+		</div>
+	</li>
 
-    <li class="stepper__step">
-        <span class="stepper__number">2</span>
-        <div class="step__circle">
-            <i></i>
-        </div>
-        <div class="step__description">
-            <h2 class="step-headline">What are your {{ serviceName }} keys?</h2>
-            <p class="step__text">
-                Register for an account on {{ serviceName }}, make an API key there and 
-                copy it here. 
+	<li class="stepper__step">
+		<span class="stepper__number">2</span>
+		<div class="step__circle">
+			<i></i>
+		</div>
+		<div class="step__description">
+			<h2 class="step-headline">What are your {{ serviceName }} keys?</h2>
+			<p class="step__text">
+				Register for an account on {{ serviceName }}, make an API key there and 
+				copy it here. 
 
-                    <div class="form-group">
-                        <input type="email"
-                            class="form-control step__form-text"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="something like: 828gn21ng02n-gmffmn298fkskj-gsk2jg">
-                    </div>
+					<div class="form-group">
+						<input type="email"
+							class="form-control step__form-text"
+							id="exampleInputEmail1"
+							aria-describedby="emailHelp"
+							placeholder="something like: 828gn21ng02n-gmffmn298fkskj-gsk2jg">
+					</div>
 
-                 <a href="{{ serviceUrl }}" target="_blank">
-                    <i class="fas fa-question-circle d-inline-block"></i>
-                    <small id="emailHelp"
-                           class="form-text text-muted d-inline-block">
-                       How I do get a key?</small>
-                 </a>
-            </p>
-        </div>
-    </li>
+				 <a href="{{ serviceUrl }}" target="_blank">
+					<i class="fas fa-question-circle d-inline-block"></i>
+					<small id="emailHelp"
+						   class="form-text text-muted d-inline-block">
+					   How I do get a key?</small>
+				 </a>
+			</p>
+		</div>
+	</li>
 
-    <li class="stepper__step">
-        <span class="stepper__number">3</span>
-        <div class="step__circle">
-            <i></i>
-        </div>
-        <div class="step__description">
-            <h2 class="step-headline">What categories should your model have?</h2>
-            <p class="step__text">
-               <span>Categories are groups of things your model wil try to tell the difference between. 
-               Remember, it can only learn what you give it! </span>
-                <ul>
-                    <li><b>animals,</b>like <span> cats vs dogs</span></li>
-                    <li><b>objects</b>, like <span> cups vs jars</span></li>
-                    <li><b>expressions</b>, like <span> happy vs sad</span></li>
-                </ul>
+	<li class="stepper__step">
+		<span class="stepper__number">3</span>
+		<div class="step__circle">
+			<i></i>
+		</div>
+		<div class="step__description">
+			<h2 class="step-headline">What categories should your model have?</h2>
+			<p class="step__text">
+			   <span>Categories are groups of things your model wil try to tell the difference between. 
+			   Remember, it can only learn what you give it! </span>
+				<ul>
+					<li><b>animals,</b>like <span> cats vs dogs</span></li>
+					<li><b>objects</b>, like <span> cups vs jars</span></li>
+					<li><b>expressions</b>, like <span> happy vs sad</span></li>
+				</ul>
 
-                <div class="category__container">
+				<div class="category__container">
 
-                    <div class="category__box">
-                            <div class='topbottom'></div>
-                          <div class='leftright'></div>
-                        
-                        <h4 class="category__name">cats</h4>
+					<div class="category__box">
+							<div class='topbottom'></div>
+						  <div class='leftright'></div>
+						
+						<h4 class="category__name">cats</h4>
 
-                        <!-- transform this input into a pond -->
-                        <input type="file"
-                            class="filepond js--classifier__upload-drop-zone--1"
-                            name="filepond"
-                            multiple
-                            style=""
-                            data-max-file-size="3MB"
-                            data-max-files="3">Drag images here
-                    </div>
+						<!-- transform this input into a pond -->
+						<input type="file"
+							class="filepond js--classifier__upload-drop-zone--1"
+							name="filepond"
+							multiple
+							style=""
+							data-max-file-size="3MB"
+							data-max-files="3">Drag images here
+					</div>
 
-                    <button class="category__button--remove btn btn-primary" 
-                        type="button">
-                        X
-                    </button>
-                </div>
+					<button class="category__button--remove btn btn-primary" 
+						type="button">
+						X
+					</button>
+				</div>
 
 
-                <div class="category__container">
-                    <div class="category__box">
-                        <div class='topbottom'></div>
-                          <div class='leftright'></div>
-                        <h4 class="category__name">dogs</h4>
+				<div class="category__container">
+					<div class="category__box">
+						<div class='topbottom'></div>
+						  <div class='leftright'></div>
+						<h4 class="category__name">dogs</h4>
 
-                        <!-- transform this input into a pond -->
-                        <input type="file"
-                            class="filepond js--classifier__upload-drop-zone--2"
-                            name="filepond"
-                            multiple
-                            style=""
-                            data-max-file-size="3MB"
-                            data-max-files="3">
-                    </div>
+						<!-- transform this input into a pond -->
+						<input type="file"
+							class="filepond js--classifier__upload-drop-zone--2"
+							name="filepond"
+							multiple
+							style=""
+							data-max-file-size="3MB"
+							data-max-files="3">
+					</div>
 
-                    <button class="category__button--remove btn btn-primary" 
-                        type="button">
-                        X
-                    </button>
-                </div>
+					<button class="category__button--remove btn btn-primary" 
+						type="button">
+						X
+					</button>
+				</div>
 
-                <div class="category__container">
-                    <form class="category__new-form-container">
-                        <div class="category__new-form-group">
-                            <input type="email"
-                                class="form-control category__new-form"
-                                id="exampleInputEmail1"
-                                aria-describedby="emailHelp"
-                                placeholder="cfor example, cats">
-                             <button class="category__button--create d-inline-block btn btn-primary" 
-                                    type="button">
-                                    create class
-                                </button>
-                            <span class="step__text-secondary"></span>
-                        </div>
-                    </form>
-                </div>
-            </p>
-        </div>
-    </li>
+				<div class="category__container">
+					<form class="category__new-form-container">
+						<div class="category__new-form-group">
+							<input type="email"
+								class="form-control category__new-form"
+								id="exampleInputEmail1"
+								aria-describedby="emailHelp"
+								placeholder="cfor example, cats">
+							 <button class="category__button--create d-inline-block btn btn-primary" 
+									type="button">
+									create class
+								</button>
+							<span class="step__text-secondary"></span>
+						</div>
+					</form>
+				</div>
+			</p>
+		</div>
+	</li>
 
-    <li class="stepper__step">
-        <span class="stepper__number">4</span>
-        <div class="step__circle">
-            <i></i>
-        </div>
-        <div class="step__description">
-            <h2 class="step-headline">Train The Model</h2>
-            <p class="step__text">
-                <span class="step__text-secondary">
-                    <button class="btn btn-primary"
-                        type="button"
-                        disabled>
-                        <span class="spinner-border spinner-border-sm"
-                            role="status"
-                            aria-hidden="true"></span>
-                        Loading...
-                    </button>
+	<li class="stepper__step">
+		<span class="stepper__number">4</span>
+		<div class="step__circle">
+			<i></i>
+		</div>
+		<div class="step__description">
+			<h2 class="step-headline">Train The Model</h2>
+			<p class="step__text">
+				<span class="step__text-secondary">
+					<button class="btn btn-primary"
+						type="button"
+						disabled>
+						<span class="spinner-border spinner-border-sm"
+							role="status"
+							aria-hidden="true"></span>
+						Loading...
+					</button>
 
-                </span>
-            </p>
-        </div>
-    </li>
+				</span>
+			</p>
+		</div>
+	</li>
 
-    <li class="stepper__step">
-        <span class="stepper__number">6</span>
-        <div class="step__circle">
-            <i></i>
-        </div>
-        <div class="step__description">
-            <h2 class="step-headline">Now Test It Out</h2>
-            <p class="step__text">
-                <div class="step__model-info">
-                </div>
-                <span class="step__text-secondary">
-                    <button class="btn btn-primary"
-                        type="button">
-                        Predict
-                    </button>
-                </span>
-            </p>
-        </div>
-    </li>
+	<li class="stepper__step">
+		<span class="stepper__number">6</span>
+		<div class="step__circle">
+			<i></i>
+		</div>
+		<div class="step__description">
+			<h2 class="step-headline">Now Test It Out</h2>
+			<p class="step__text">
+				<div class="step__model-info">
+				</div>
+				<span class="step__text-secondary">
+					<button class="btn btn-primary"
+						type="button">
+						Predict
+					</button>
+				</span>
+			</p>
+		</div>
+	</li>
 
-    <li class="stepper__step">
-        <span class="stepper__number">5</span>
-        <div class="step__circle">
-            <i></i>
-        </div>
-        <div class="step__description">
-            <h2 class="step-headline">Play with the model in Codelab</h2>
-            <p class="step__text">
-                <div class="">
-                </div>
-                <span class="step__text-secondary">
-                    <button class="btn btn-primary"
-                        type="button">
-                        Go!
-                    </button>
-                </span>
-            </p>
-        </div>
-    </li>
+	<li class="stepper__step">
+		<span class="stepper__number">5</span>
+		<div class="step__circle">
+			<i></i>
+		</div>
+		<div class="step__description">
+			<h2 class="step-headline">Play with the model in Codelab</h2>
+			<p class="step__text">
+				<div class="">
+				</div>
+				<span class="step__text-secondary">
+					<button class="btn btn-primary"
+						type="button">
+						Go!
+					</button>
+				</span>
+			</p>
+		</div>
+	</li>
 
 </ul>
 
 
 <script>
 
-     $('.filepond')
-        .on('mouseenter',function(){
-            $(this).addClass('animate');
-            })
-        .on('mouseleave',function(){$(this).removeClass('animate');});
-
-
-    FilePond.registerPlugin(
-        // FilePondPluginImagePreview,
-        FilePondPluginFileValidateSize
-    );
-
-    // loop through categories and replace the # with a dynamic var
-    // pass to handlebars the var to make the class?s
-    FilePond.create(
-        document.querySelector('.js--classifier__upload-drop-zone--1')
-    );
-
-    FilePond.create(
-        document.querySelector('.js--classifier__upload-drop-zone--2')
-    );
-
     $(document).ready(function init() {
+
+		FilePond.registerPlugin(
+			// FilePondPluginImagePreview,
+			FilePondPluginFileValidateSize
+		);
+
+		// @todo: loop through categories and replace the # with a dynamic var
+		// pass to handlebars the var to make the class?s
+		FilePond.create(
+			document.querySelector('.js--classifier__upload-drop-zone--1')
+		);
+
+	    FilePond.create(
+	        document.querySelector('.js--classifier__upload-drop-zone--2')
+	    );
+
+		$('.filepond--root')
+		.on('mouseenter',function(){
+			$(this).addClass('animate');
+			})
+		.on('mouseleave',function(){$(this).removeClass('animate');});
 
       $('#button_apikey').click(function () {
         if ($('#input_apikey').val() == '') {
@@ -307,4 +306,5 @@
     function classifyImage() {
 
     }
+
 </script>
