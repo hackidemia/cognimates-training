@@ -88,36 +88,7 @@
 </div>
 
 <script>
-	(function init() {
-		if (window.localStorage.getItem("token_expiry") != "null") {
-			if (
-				parseInt(window.localStorage.getItem("token_expiry")) <
-				new Date().getTime()
-			) {
-				window.localStorage.setItem("access_token", null);
-				window.localStorage.setItem("token_expiry", null);
-				window.location.replace("/");
-			} else {
-				window.access_token = window.localStorage.getItem(
-					"access_token"
-				);
-				return;
-			}
-		} else {
-			window.location.replace("/");
-			return;
-		}
-	})();
-
 	$(document).ready(function() {
-		// $('#logoutButton').click(function(evt) {
-		//   evt.preventDefault();
-		//   window.localStorage.setItem('access_token', null)
-		//   window.localStorage.setItem('token_expiry', null)
-		//   window.location.replace("/");
-		//   return false;
-		// });
-
 		$("#textClassifierButton").click(function(evt) {
 			evt.preventDefault();
 			window.location.href = "/text_home";
