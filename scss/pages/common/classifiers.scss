@@ -9,13 +9,35 @@
 	display: flex;
 }
 
+.step-headline {
+    margin: 0 0 1rem 0;
+}
+
+.step__form-text {
+
+    &::placeholder {
+        user-select: none !important;
+        color: lightgray;
+    }
+
+    &:focus::-webkit-input-placeholder {
+        color: transparent;
+    }
+
+}
 .stepper__number {
 	flex: 0 0 150px;
 	margin-right: 50px;
+    margin-top: -0.6rem;
 	font-family: 'Roboto', sans-serif;
 	font-size: 2rem;
 	text-align: right;
 	color: #acacac;
+}
+
+.step__text {
+    color: $text-gray;
+    line-height: 1.4;
 }
 
 /*vertical line*/
@@ -122,13 +144,9 @@
 }
 
 .category__box {
-    
-    padding: 1rem;
+    position: relative; // for the borders, see filepond.scss
     width: 100%;
     margin: 0 2rem 0 0 ;
-    border: 3px dashed;
-    border-radius: 1rem;
-
 }
 
 .category__button--remove {
@@ -145,9 +163,10 @@
 .filepond--drop-label:nth-of-type(2) { background: lightyellow; }
 
 .category__name {
-    background: lightblue;
+    background: lightgray;
     padding: 1rem;
     align-items: center;
+    border-bottom: 1px solid lightgray;
     justify-content: center;
     display: flex;
     width: 100%;

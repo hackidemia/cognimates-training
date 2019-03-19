@@ -52,7 +52,9 @@ router.post('/text/untrain', textController.untrain)
 
 router.get('/vision_home', (req, res) => {
   res.render('models/vision/vision_classifiers', {
-      title: 'Cognimates, Train a vision model, Home'
+      title: 'Cognimates, Train a vision model, Home',
+      serviceName: 'Clarifai.com',
+      serviceUrl: 'https://clarifai.com/signup'
     })
 })
 
