@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js --http",
-    "build": "node index.js --http"
+    "sass-build": "node-sass scss/style.scss -o static/css/",
+    "sass-watch": "node-sass --watch scss/style.scss -o static/css/"
   },
   "author": "",
   "license": "ISC",
@@ -30,7 +31,8 @@
     "whirlpool": "0.0.4"
   },
   "devDependencies": {
-    "node-sass-middleware": "^0.11.0",
+    "concurrently": "^4.1.0",
+    "node-sass": "^4.11.0",
     "nodemon": "^1.18.10"
   }
 }
