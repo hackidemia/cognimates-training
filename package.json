@@ -27,5 +27,8 @@
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "whirlpool": "0.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
   }
 }
