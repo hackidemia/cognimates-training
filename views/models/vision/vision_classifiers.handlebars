@@ -179,4 +179,84 @@
     FilePond.create(
         document.querySelector('.js--classifier__upload-drop-zone')
     );
+
+    $(document).ready(function init() {
+
+      $('#button_apikey').click(function () {
+        if ($('#input_apikey').val() == '') {
+          alert('API Key cannot be empty');
+          return;
+        }
+        window.apiKey = $('#input_apikey').val();
+        // loadUserClassifiers();
+      })
+    });
+
+    function loadUserClassifiers() {
+      $.ajax({
+           url: "/vision/classifiers",
+           type: "GET",
+           headers: { 'apiKey': window.apiKey },
+           success: function (data) {
+             if(data.error == null) {
+               window.userClassifiers = data.classifiers;
+             } else {
+               window.userClassifiers = [];
+             }
+             displayClassifiers();
+           },
+           error: function (data) {
+             console.log(data);
+             window.userClassifiers = [];
+           }
+        });
+    }
+
+    function createClassifier() {
+      if (window.labels == undefined || window.labels.length < 2) {
+        alert('Two or more classes are required to train');
+        return
+      }
+      var error = false
+      for (var idx = 0, label = window.labelListItems[idx]; idx < window.labelListItems.length; idx++) {
+        if (window.examples[label].length < 10) {
+          alert('10 or more examples required for each label');
+          error = true;
+          break;
+        }
+      }
+      if(error == true) {
+        return;
+      }
+      var requestData = {};
+      requestData.name = window.classifierName;
+      requestData.training_data = [];
+      window.labels.forEach((label) => {
+        label_items = [];
+        window.examples[label].forEach((example) => {
+          var image_file = example.split(',')[1];
+          label_items.push(image_file);
+        })
+        requestData.training_data.push({label: label, label_items: label_items});
+      })
+      $.ajax({
+        url: '/vision/classifier',
+        type: 'POST',
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(requestData),
+        headers: { apikey: window.apiKey },
+        success: function (data) {
+          if(data.error != null) {
+            alert(data.error);
+            return;
+          }
+          
+        }
+      });
+    }
+
+    function classifyImage() {
+
+    }
 </script>
