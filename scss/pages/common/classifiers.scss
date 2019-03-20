@@ -25,7 +25,7 @@
 	padding: 0;
 }
 
-.step__header {
+.step__title {
 	margin: 0 0 1rem 0;
 }
 
@@ -41,7 +41,7 @@
 	}
 }
 
-.stepper__number {
+.step__number {
   flex: 0;
   margin: 0;
   
@@ -106,7 +106,7 @@
 	}
 }
 
-.stepper li:first-child .stepper__number,
+.stepper li:first-child .step__number,
 .stepper li:first-child .step__description {
 	margin-top: 0.5rem;
 }
@@ -151,7 +151,7 @@
 	background: orange;
 }
 
-.stepper li:hover .stepper__number {
+.stepper li:hover .step__number {
 	color: #555;
 }
 
@@ -266,15 +266,18 @@
 	white-space: nowrap;
 }
 
-.step__info-open-button {
+.step__help-open-button {
+    margin-left: 0.75rem;
+    font-size: 1.25rem;
+    vertical-align: middle;
+}
+
+.step__help--categories {
 
 }
 
-.step__info--categories {
-
-}
-
-.step__info {
+.step__help {
+	display: none;
 	transition: 1s all ease-in;
 	color: #6d6d6d;
 }

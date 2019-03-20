@@ -106,7 +106,7 @@
   display: flex;
   padding: 0; }
 
-.step__header {
+.step__title {
   margin: 0 0 1rem 0; }
 
 .step__form-text::placeholder {
@@ -116,11 +116,11 @@
 .step__form-text:focus::-webkit-input-placeholder {
   color: transparent; }
 
-.stepper__number {
+.step__number {
   flex: 0;
   margin: 0; }
   @media only screen and (min-width: 860px) {
-    .stepper__number {
+    .step__number {
       flex: 0 0 150px;
       margin-right: 50px;
       margin-top: -0.6rem;
@@ -172,7 +172,7 @@
       margin-left: 50px;
       padding-bottom: 60px; } }
 
-.stepper li:first-child .stepper__number,
+.stepper li:first-child .step__number,
 .stepper li:first-child .step__description {
   margin-top: 0.5rem; }
 
@@ -212,7 +212,7 @@
   border-radius: 50%;
   background: orange; }
 
-.stepper li:hover .stepper__number {
+.stepper li:hover .step__number {
   color: #555; }
 
 .stepper li:first-child:hover .step__circle i {
@@ -303,6 +303,12 @@
 .category__button--create {
   white-space: nowrap; }
 
-.step__info {
+.step__help-open-button {
+  margin-left: 0.75rem;
+  font-size: 1.25rem;
+  vertical-align: middle; }
+
+.step__help {
+  display: none;
   transition: 1s all ease-in;
   color: #6d6d6d; }

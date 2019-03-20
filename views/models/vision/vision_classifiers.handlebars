@@ -2,26 +2,24 @@
 
 <ul class="stepper">
 
-	<h1 class="stepper__header"> Vision Classifer </h1>
+	<h1 class="stepper__header"> Vision Classifier </h1>
 
 	<li class="stepper__step">
-		<span class="stepper__number">1</span>
+		<span class="step__number">1</span>
 		<div class="step__circle">
-			<i></i>
+			<i></i><!-- no dom here, gets made by css -->
 		</div>
 		<div class="step__description">
-			<h2 class="step__header">What is your project name?</h2>
+			<h2 class="step__title">What is your project name?</h2>
 			<div class="step__body">
 				<form>
 					<div class="form-group">
-						{{!-- <label for="exampleInputEmail1">Name</label> --}}
-						<input type="email"
-							class="form-control step__form-text"
-							id="exampleInputEmail1"
-							aria-describedby="emailHelp"
+						<input type=""
+							class="form-control 
+                                    sstep__form-text"
+							id=""
+							aria-describedby=""
 							placeholder="Use this name in Codelab">
-						{{!-- <small id="emailHelp"
-							class="form-text text-muted">codelab references this</small> --}}
 					</div>
 				</form>
 			</div>
@@ -29,55 +27,59 @@
 	</li>
 
 	<li class="stepper__step">
-		<span class="stepper__number">2</span>
+		<span class="step__number">2</span>
 		<div class="step__circle">
 			<i></i>
 		</div>
 		<div class="step__description">
-            <h2 class="step__header">What are your {{ serviceName }} keys?
-                <a href="#" class="step__info-open-button " role="button">
+            <h2 class="step__title">What are your {{ serviceName }} keys?
+                <a href="#" class="step__help-open-button 
+                                    js--open-help" role="button">
                     <i class="fas fa-question-circle"></i>
                 </a>
             </h2>
 
 			<div class="step__body">
-					<div class="form-group">
-						<input type="email"
-							class="form-control step__form-text"
-							id=""
-							aria-describedby=""
-							placeholder="something like: 828gn21ng02n-gmffmn298fkskj-gsk2jg">
-					</div>
-                <div class="step__info 
-                            step__info--keys">
-                    Register for an account on {{ serviceName }}, make an API key there and 
-                    copy it here. 
+				<div class="form-group">
+					<input type="email"
+						class="form-control step__form-text"
+						id=""
+						aria-describedby=""
+						placeholder="something like: 828gn21ng02n-gmffmn298fkskj-gsk2jg">
+				</div>
+                 <a href="{{ serviceUrl }}" target="_blank" >
+                       Sign up and get a key
+                 </a>
 
-    				 <a href="{{ serviceUrl }}" target="_blank" >
-    					   Get A key
-    				 </a>
+                <div class="step__help 
+                            step__help--keys">
+                    <div class="step__help-info-detail">
+                         <div>
+                            <iframe width="560" height="315" src="https://www.youtube.com/embed/YOrrROME2zc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                         </div>
+                    </div>
 
-                     <div>
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/YOrrROME2zc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-			         </div>
                  </div>
             </div>
 		</div>
 	</li>
 
 	<li class="stepper__step">
-		<span class="stepper__number">3</span>
+		<span class="step__number">3</span>
 		<div class="step__circle">
 			<i></i>
 		</div>
 		<div class="step__description">
-			<h2 class="step__header">What categories should your model have? 
-                <a href="#" class="step__info-open-button " role="button">
+			<h2 class="step__title">What categories should your model have? 
+                <a href="#" class="step__help-open-button 
+                                    js--open-help" role="button">
                     <i class="fas fa-question-circle"></i>
                 </a>
             </h2>
-			<p class="body_text">
-                <div class="step__info step__info--categories">
+
+			<div class="step__body">
+                <div class="step__help 
+                            step__help--categories">
     			   <span>Categories are groups of things your model wil try to tell the difference between. 
     			   Remember, it can only learn what you give it! </span>
     				<ul>
@@ -103,7 +105,6 @@
                     </form>
                 </div>
 
-
 				<div class="category__container">
 					<div class="category__box">
 						<form action="/file-upload"
@@ -127,19 +128,17 @@
 						<i class="fas fa-times"></i>
 					</a>
 				</div>
-
-				
 			</div>
 		</div>
 	</li>
 
 	<li class="stepper__step">
-		<span class="stepper__number">4</span>
+		<span class="step__number">4</span>
 		<div class="step__circle">
 			<i></i>
 		</div>
 		<div class="step__description">
-			<h2 class="step__header">Train the model</h2>
+			<h2 class="step__title">Train the model</h2>
 			<div class="step__body">
 				<span class="step__body-secondary">
 					<button class="btn btn-primary"
@@ -157,12 +156,12 @@
 	</li>
 
 	<li class="stepper__step">
-		<span class="stepper__number">5</span>
+		<span class="step__number">5</span>
 		<div class="step__circle">
 			<i></i>
 		</div>
 		<div class="step__description">
-			<h2 class="step__header">Upload an image to test your model</h2>
+			<h2 class="step__title">Upload an image to test your model</h2>
 			<div class="step__body">
 
                 <div class="category__container">
@@ -189,12 +188,12 @@
 	</li>
 
 	<li class="stepper__step">
-		<span class="stepper__number">6</span>
+		<span class="step__number">6</span>
 		<div class="step__circle">
 			<i></i>
 		</div>
 		<div class="step__description">
-			<h2 class="step__header">Play with the model in Codelab</h2>
+			<h2 class="step__title">Play with the model in Codelab</h2>
 			<div class="step__body">
 				<button class="btn btn-primary"
 					type="button">
@@ -210,16 +209,27 @@
 
 <script>
 
+    $(function() {
+        $('.js--open-help').on('click', function(e){
+            const section = $(e.target).closest('.step__description');
+            $(section).find('.step__help').toggle();
+            event.preventDefault(); // to keep from scrolling
+        });
+
+        // "jsDropzonePredict" is the camelized version of the HTML element's ID
+        Dropzone.options.jsDropzonePredict = {
+          paramName: "predict", // The name that will be used to transfer the file
+          maxFilesize: 5, // MB
+          maxFiles: 1,
+          previewsContainer: "dropzone__preview-container"
+        };
+        
+
+    });
+
     $(document).ready(function init() {
 
- 	// "jsDropzonePredict" is the camelized version of the HTML element's ID
-    Dropzone.options.jsDropzonePredict = {
-      paramName: "predict", // The name that will be used to transfer the file
-      maxFilesize: 5, // MB
-      maxFiles: 1,
-      previewsContainer: "dropzone__preview-container"
-    };
-    
+
 
       $('#button_apikey').click(function () {
         if ($('#input_apikey').val() == '') {
