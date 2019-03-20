@@ -18,21 +18,6 @@
     height: 80px;
 }
 
-.dropzone__upload-icon {
-    font-size: 2rem;
-    color: lightgray;
-    user-select: none;
-}
-
-.dropzone__header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    pointer-events: none;
-    transition: 0.1s ease-in all;
-}
-
 .dropzone .dz-message {
     margin: 0;
     display: none;
@@ -91,8 +76,7 @@
 .dropzone .dz-preview:hover .dz-image img {
     transform: scale(1.1, 1.1);
     filter: none;
-    transition: 0.1s ease-in all;
-    
+    transition: 0.2s ease-in all;
 }
 
 .dropzone .dz-preview .dz-error-message {
@@ -102,12 +86,6 @@
 .dropzone .dz-preview .dz-details .dz-size {
     font-size: 0.8rem;
 }
-
-.dropzone__preview-container {
-    background-color: red;
-    margin-bottom: 0.5rem;
-}
-
 
 .dropzone .dz-preview .dz-success-mark, 
 .dropzone .dz-preview .dz-error-mark {

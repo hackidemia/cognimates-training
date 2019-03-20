@@ -11,19 +11,6 @@
   width: 80px;
   height: 80px; }
 
-.dropzone__upload-icon {
-  font-size: 2rem;
-  color: lightgray;
-  user-select: none; }
-
-.dropzone__header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  pointer-events: none;
-  transition: 0.1s ease-in all; }
-
 .dropzone .dz-message {
   margin: 0;
   display: none; }
@@ -73,17 +60,13 @@
 .dropzone .dz-preview:hover .dz-image img {
   transform: scale(1.1, 1.1);
   filter: none;
-  transition: 0.1s ease-in all; }
+  transition: 0.2s ease-in all; }
 
 .dropzone .dz-preview .dz-error-message {
   display: none !important; }
 
 .dropzone .dz-preview .dz-details .dz-size {
   font-size: 0.8rem; }
-
-.dropzone__preview-container {
-  background-color: red;
-  margin-bottom: 0.5rem; }
 
 .dropzone .dz-preview .dz-success-mark,
 .dropzone .dz-preview .dz-error-mark {
@@ -179,7 +162,7 @@
   transition: all 0.4s ease-in-out; }
 
 .step__description {
-  padding-bottom: 50px; }
+  padding-bottom: 40px; }
   @media only screen and (min-width: 650px) {
     .step__description {
       margin-left: 25px;
@@ -187,7 +170,7 @@
   @media only screen and (min-width: 860px) {
     .step__description {
       margin-left: 50px;
-      padding-bottom: 100px; } }
+      padding-bottom: 60px; } }
 
 .stepper li:first-child .stepper__number,
 .stepper li:first-child .step__description {
@@ -237,6 +220,24 @@
 
 .stepper li:first-child:hover .step__circle:after {
   border-color: #222; }
+
+.dropzone__upload-icon {
+  font-size: 2rem;
+  color: lightgray;
+  user-select: none; }
+
+.dropzone__header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  pointer-events: none;
+  transition: 0.1s ease-in all;
+  color: #b7b7b7; }
+
+.dropzone__preview-container {
+  background-color: red;
+  margin-bottom: 0.5rem; }
 
 .category__container {
   position: relative;
@@ -303,5 +304,5 @@
   white-space: nowrap; }
 
 .step__info {
-  display: none;
-  transition: 1s all ease-in; }
+  transition: 1s all ease-in;
+  color: #6d6d6d; }
