@@ -1,0 +1,123 @@
+@import 'variables';
+@import 'mq';
+
+// Dropzone.js overrides
+
+.dropzone {
+    align-items: center;
+    justify-content: center;
+    min-height: auto;
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+
+.dropzone .dz-preview .dz-image {
+    border-radius: 0;
+    width: 80px;
+    height: 80px;
+}
+
+.dropzone__upload-icon {
+    font-size: 2rem;
+    color: lightgray;
+    user-select: none;
+}
+
+.dropzone__header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    pointer-events: none;
+    transition: 0.1s ease-in all;
+}
+
+.dropzone .dz-message {
+    margin: 0;
+    display: none;
+}
+
+.dropzone .dz-preview.dz-image-preview {
+    background-color: transparent;
+    max-width: 80px;
+}
+
+.dropzone .dz-preview {
+    margin: 0.25rem;
+}
+
+.dropzone .dz-preview .dz-details {
+    z-index: 20;
+    position: static;
+    top: auto;
+    left: auto;
+    opacity: 1;
+    font-size: 13px;
+    min-width: auto;
+    max-width: auto;
+    padding: 0;
+    text-align: center;
+    color: lightgray;
+    line-height: 1;
+}
+
+.dropzone.dz-drag-hover {
+    border: 0;
+    box-shadow: inset 0 0 0 -1px red;
+}
+
+.dropzone .dz-preview .dz-details .dz-filename:not(:hover) span {
+    border: none;
+}
+
+.dropzone .dz-preview .dz-details .dz-filename {
+    background-color: none;
+    padding: 0;
+    border-radius: 0;
+    color: black; 
+}
+
+.dropzone .dz-preview .dz-details .dz-size span {
+    color: #ababab;
+    font-size: 0.7rem;
+    letter-spacing: 0.2px;
+}
+
+.dropzone .dz-preview .dz-details .dz-size {
+    margin: 0.2rem;
+}
+
+.dropzone .dz-preview:hover .dz-image img {
+    transform: scale(1.1, 1.1);
+    filter: none;
+    transition: 0.1s ease-in all;
+    
+}
+
+.dropzone .dz-preview .dz-error-message {
+    display: none !important;
+}
+
+.dropzone .dz-preview .dz-details .dz-size {
+    font-size: 0.8rem;
+}
+
+.dropzone__preview-container {
+    background-color: red;
+    margin-bottom: 0.5rem;
+}
+
+
+.dropzone .dz-preview .dz-success-mark, 
+.dropzone .dz-preview .dz-error-mark {
+    pointer-events: auto;
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-left: 0;
+    margin-top: 0;
+    left: auto;
+    cursor: pointer;
+} 

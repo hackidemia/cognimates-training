@@ -22,7 +22,6 @@
   @include mq('xl') { background-color: green; }
   @include mq('xxl') { background-color: blue;   }
   @include mq('xxxl') { background-color: green;  }
-
 }
 
 // corresponds to breakpoints in mediaqueries.scss

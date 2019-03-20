@@ -1,3 +1,6 @@
+@import '../common/variables';
+@import '../common/mq';
+
 .classifier__page-header {
     font-size: 1.5rem;
     margin: 1rem 0;
@@ -10,7 +13,7 @@
 }
 
 .classifiers__card-image {
-    /*margin-bottom: 1rem;*/
+    border-bottom: 1px solid #e8e8e8;
 }
 
 .classifiers__card-headline {
