@@ -1,38 +1,50 @@
 @import 'variables';
 @import 'mq';
 
-// Dropzone.js overrides
-
 .dropzone {
+    border: 0;
+}
+
+// Dropzone.js overrides
+.dropzone--predict {
     align-items: center;
     justify-content: center;
     min-height: auto;
     border: none;
     background: transparent;
     padding: 0;
+    transition: 0.1s ease-in all;
+    padding: 0.75rem;
 }
 
-.dropzone .dz-preview .dz-image {
-    border-radius: 0;
-    width: 80px;
-    height: 80px;
+.dz-preview .dz-image {
+    border-radius: 0 ;
 }
 
-.dropzone .dz-message {
+.dz-message {
     margin: 0;
     display: none;
 }
 
-.dropzone .dz-preview.dz-image-preview {
+.dz-preview.dz-image-preview {
+    position: relative;
     background-color: transparent;
-    max-width: 80px;
 }
 
-.dropzone .dz-preview {
+.dropzone-previews {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.dropzone--predict .dropzone-previews {
+    justify-content: center;
+}
+
+.dz-preview {
     margin: 0.25rem;
 }
 
-.dropzone .dz-preview .dz-details {
+.dz-preview .dz-details {
     z-index: 20;
     position: static;
     top: auto;
@@ -43,59 +55,137 @@
     max-width: auto;
     padding: 0;
     text-align: center;
-    color: lightgray;
+    color: #c1c1c1;
     line-height: 1;
 }
 
-.dropzone.dz-drag-hover {
+.dz-drag-hover {
     border: 0;
     box-shadow: inset 0 0 0 -1px red;
+    background: #e6e9ff;
 }
 
-.dropzone .dz-preview .dz-details .dz-filename:not(:hover) span {
+.dz-preview .dz-details .dz-filename:not(:hover) span {
     border: none;
 }
 
-.dropzone .dz-preview .dz-details .dz-filename {
+
+.dz-preview .dz-details .dz-filename {
+    display: none;
     background-color: none;
     padding: 0;
     border-radius: 0;
     color: black; 
+    font-size: 0.7rem;
+    line-height: 0.8rem;
+    color: #8e8e8e;
 }
 
-.dropzone .dz-preview .dz-details .dz-size span {
+
+.dz-preview .dz-details .dz-size span {
     color: #ababab;
     font-size: 0.7rem;
     letter-spacing: 0.2px;
 }
 
-.dropzone .dz-preview .dz-details .dz-size {
-    margin: 0.2rem;
+.dz-preview .dz-details .dz-size {
+    margin: 0.25rem;
 }
 
-.dropzone .dz-preview:hover .dz-image img {
+.dz-preview:hover .dz-image img {
     transform: scale(1.1, 1.1);
     filter: none;
     transition: 0.2s ease-in all;
 }
 
-.dropzone .dz-preview .dz-error-message {
+.dz-preview .dz-error-message {
     display: none !important;
 }
 
-.dropzone .dz-preview .dz-details .dz-size {
+.dz-preview .dz-details .dz-size {
     font-size: 0.8rem;
 }
 
-.dropzone .dz-preview .dz-success-mark, 
-.dropzone .dz-preview .dz-error-mark {
-    pointer-events: auto;
-    opacity: 1;
+.dz-preview .dz-success-mark, 
+.dz-preview .dz-error-mark {
     position: absolute;
-    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: -1rem; // offset from the preview details to keep it centered vertically
+    left: 0;
     right: 0;
-    margin-left: 0;
-    margin-top: 0;
-    left: auto;
+    bottom: 0;
+    pointer-events: none;
+    font-size: 2rem;
+    text-shadow: 4px 2px 0px $pink;
+    color: white;
     cursor: pointer;
 } 
+
+.dz-remove {
+    position: relative;
+    z-index: 1000;
+}
+
+.dz-upload {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 4px;
+    background-color: white;
+}
+
+.dz-progress {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    top: 0;
+    z-index: 1;
+    background: #060606;
+    opacity: 0.1;
+}
+
+.dz-remove {
+    height: 1rem;
+    width: 1rem;
+    background: red;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.dz-remove:hover {
+    transition: 0.1s ease-in all;
+    opacity: 0.9;
+}
+
+
+/* Step 1: Common Properties: All required to make icons render reliably */
+.icon::before {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Step 2: Reference Individual Icons */
+.login::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f007";
+}
+
+/* Note: Make sure to include the correct weight and unicode value for the icon */
+.tps::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 400;
+  content: "\f1ea";
+}
+
+#dropzonePredictTemplate {
+    display: none;
+}

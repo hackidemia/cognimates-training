@@ -119,7 +119,8 @@
                             </div>
 
                             <!-- inject image previews here -->
-                            <div class="dropzone__preview-container">
+                            <div class="js--dropzone__previews-container--create-class 
+                                        dropzone-previews">
                             </div>
                         </form>
 					</div>
@@ -132,23 +133,31 @@
 		</div>
 	</li>
 
+
 	<li class="stepper__step">
 		<span class="step__number">4</span>
 		<div class="step__circle">
 			<i></i>
 		</div>
 		<div class="step__description">
-			<h2 class="step__title">Train the model</h2>
+			<h2 class="step__title">
+                <button class="btn btn-primary"
+                    type="button">
+                    <span class=""
+                        role="status"
+                        aria-hidden="true">Train </span>
+                </button>the model!
+                </h2>
 			<div class="step__body">
 				<span class="step__body-secondary">
-					<button class="btn btn-primary"
+					{{!-- <button class="btn btn-primary"
 						type="button"
 						disabled>
 						<span class="spinner-border spinner-border-sm"
 							role="status"
 							aria-hidden="true"></span>
 						Loading...
-					</button>
+					</button> --}}
 
 				</span>
 			</div>
@@ -166,15 +175,16 @@
 
                 <div class="category__container">
                     <div class="category__box">
-                        <form action="/file-upload"
-                          id="js-dropzone--predict"
-                          class="dropzone 
-                                 dropzone--predict">
+                        <form action=""
+                              id="js--dropzone-predict" 
+                              class="dropzone--predict">
 
                             <div class="dropzone__header">
                                 <i class="fas fa-cloud-upload-alt dropzone__upload-icon"></i>
-                                <span class="dropzone__label">Drag and drop images</span>
+                                <span class=" dropzone__label">Click or Drag and drop to add images</span>
                             </div>
+                            <div class="js--dropzone__previews-container--predict
+                                        dropzone-previews"></div>
                         </form>
                     </div>
                 </div>
@@ -193,12 +203,15 @@
 			<i></i>
 		</div>
 		<div class="step__description">
-			<h2 class="step__title">Play with the model in Codelab</h2>
+			<h2 class="step__title">
+                <button class="btn btn-primary"
+                        type="button">
+                        Play
+                    </button>
+                 with the model in Codelab
+            </h2>
 			<div class="step__body">
-				<button class="btn btn-primary"
-					type="button">
-					Go!
-				</button>
+				
 			</div>
 		</div>
 	</li>
@@ -206,6 +219,36 @@
 </ul>
 {{> footer }}
 
+<div id="dropzonePredictTemplate">
+    <div class="dz-preview dz-file-preview">
+      <div class="dz-details">
+        <img data-dz-thumbnail />
+        {{!-- <a type="button" class="btn btn-secondary" data-toggle="tooltip" data-html="true" 
+        title="
+            <div class='dz-filename'><span data-dz-name></span></div>
+           <div class='dz-size' data-dz-size></div>">
+        </a> --}}
+     {{!--    <div class="img__container">
+        </div> --}}
+        <div class='dz-filename'><span data-dz-name></span></div>
+        <div class='dz-size' data-dz-size></div>
+      </div>
+      
+      <div class="dz-progress">
+        <span class="dz-upload" data-dz-uploadprogress></span>
+        </div>
+
+      <div class="dz-success-mark">
+        <i class="fas fa-times"></i>
+      </div>
+      <div class="dz-error-mark">
+        <i class="fas fa-check"></i>
+        </div>
+
+      <div class="dz-error-message"><span data-dz-errormessage></span></div>
+    </div>
+
+</div>
 
 <script>
 
@@ -216,21 +259,72 @@
             event.preventDefault(); // to keep from scrolling
         });
 
-        // "jsDropzonePredict" is the camelized version of the HTML element's ID
-        Dropzone.options.jsDropzonePredict = {
-          paramName: "predict", // The name that will be used to transfer the file
-          maxFilesize: 5, // MB
-          maxFiles: 1,
-          previewsContainer: "dropzone__preview-container"
-        };
-        
+        $('[data-toggle="tooltip"]').tooltip();
 
+        // We'll manually create dropzone instances to control the options
+        Dropzone.autoDiscover = false;
+
+        const dropzonePredictEl = "#js--dropzone-predict";
+        var dropzonePredict = new Dropzone(dropzonePredictEl, { 
+            url: "/file/post",
+            paramName: "prediction-image", 
+            maxFilesize: 5, //  MB
+            maxFiles: 1,
+            dictRemoveFile: "", 
+            uploadMultiple: false,
+            acceptedFiles: "image/*",
+            addRemoveLinks: true, //  enable person to del file
+            thumbnailWidth: 80,
+            thumbnailHeight: 80,
+            previewsContainer: document.querySelector('.js--dropzone__previews-container--predict'),
+            previewTemplate: document.querySelector('#dropzonePredictTemplate').innerHTML // use a custom HTML template
+        });
+
+        // dropzonePredict.on("dragenter", function(file) {
+        //   console.log('enter');
+        // });
+
+        //  dropzonePredict.on("reset", function(file) {
+        //   console.log('reset');
+        // });
+
+        //  dropzonePredict.on("maxfilesreached", function(file) {
+        //   console.log('maxfilesreached');
+        // });
+
+        dropzonePredict.on("maxfilesexceeded", function(file) { this.removeFile(file); });
+
+        dropzonePredict.on("complete", function(file) {
+          // $(dropzonePredictEl).find('.dz-progress').fadeOut(300);
+          // $(dropzonePredictEl).find('.dz-success-mark').fadeOut(500);
+          // $(dropzonePredictEl).find('.dz-error-mark').fadeOut(600);
+
+        });
+
+        dropzonePredict.on("drop", function(maxfilesreached) {
+            console.log('file dropped');
+            // console.log("dropzonePredict.files.length: ", dropzonePredict.files.length)
+       
+            if(maxfilesreached + 1) {
+                // dropzonePredict.removeFile(file)
+                console.log('max files reached')
+            }
+          $(dropzonePredictEl).find('.dropzone__header').toggle();
+
+        });
+
+
+        // // "jsDropzonePredict" is the camelized version of the HTML element's ID
+        // Dropzone.options.jsDropzonePredict = {
+        //   paramName: "predict", // The name that will be used to transfer the file
+        //   maxFilesize: 5, // MB
+        //   maxFiles: 1,
+        //   previewsContainer: "dropzone__preview-container",
+        //   previewTemplate: document.querySelector('#tpl').innerHTML
+        // };
     });
 
     $(document).ready(function init() {
-
-
-
       $('#button_apikey').click(function () {
         if ($('#input_apikey').val() == '') {
           alert('API Key cannot be empty');

@@ -177,6 +177,16 @@
   pointer-events: none;
   transition: 0.1s ease-in all; 
   color: #b7b7b7;
+      /* z-index: 100000; */
+    // cursor: pointer;
+    /* position: relative; */
+    // pointer-events: auto;
+    
+	margin-bottom: 0.2rem;
+}
+
+.dropzone__label {
+    margin: 0.35rem 0 0rem 0;
 }
 
 .dropzone__preview-container {
