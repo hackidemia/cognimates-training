@@ -107,19 +107,22 @@
 
 				<div class="category__container">
 					<div class="category__box">
-						<form action="/file-upload"
-					           class="dropzone dropzone--category">
+						<form action="/"
+                                id="js--dropzone-categories"
+					           class="
+                                        dropzone--categories">
                           <div class="category__name">
                                 Cats
                             </div>
 
                             <div class="dropzone__header">
-                                <i class="fas fa-cloud-upload-alt dropzone__upload-icon"></i>
+                                <i class="fas fa-cloud-upload-alt 
+                                            dropzone__upload-icon"></i>
                                 <span class="dropzone__label">Drag and drop images</span>
                             </div>
 
                             <!-- inject image previews here -->
-                            <div class="js--dropzone__previews-container--create-class 
+                            <div class="js--dropzone__previews-container--categories 
                                         dropzone-previews">
                             </div>
                         </form>
@@ -148,6 +151,15 @@
                         aria-hidden="true">Train </span>
                 </button>the model!
                 </h2>
+
+                jquery instantiated
+                <form action="/file-upload"
+              class="dropzone"
+              id="my-awesome-dropzone"></form>
+                
+
+
+
 			<div class="step__body">
 				<span class="step__body-secondary">
 					{{!-- <button class="btn btn-primary"
@@ -175,7 +187,7 @@
 
                 <div class="category__container">
                     <div class="category__box">
-                        <form action=""
+                        <form action="/"
                               id="js--dropzone-predict" 
                               class="dropzone--predict">
 
@@ -219,17 +231,12 @@
 </ul>
 {{> footer }}
 
+
+<!-- custom template for predict dropzone -->
 <div id="dropzonePredictTemplate">
     <div class="dz-preview dz-file-preview">
       <div class="dz-details">
         <img data-dz-thumbnail />
-        {{!-- <a type="button" class="btn btn-secondary" data-toggle="tooltip" data-html="true" 
-        title="
-            <div class='dz-filename'><span data-dz-name></span></div>
-           <div class='dz-size' data-dz-size></div>">
-        </a> --}}
-     {{!--    <div class="img__container">
-        </div> --}}
         <div class='dz-filename'><span data-dz-name></span></div>
         <div class='dz-size' data-dz-size></div>
       </div>
@@ -244,14 +251,14 @@
       <div class="dz-error-mark">
         <i class="fas fa-check"></i>
         </div>
-
       <div class="dz-error-message"><span data-dz-errormessage></span></div>
     </div>
-
 </div>
 
-<script>
 
+
+
+<script>
     $(function() {
         $('.js--open-help').on('click', function(e){
             const section = $(e.target).closest('.step__description');
@@ -259,13 +266,61 @@
             event.preventDefault(); // to keep from scrolling
         });
 
-        $('[data-toggle="tooltip"]').tooltip();
-
+        // see full docs / events / config here: https://www.dropzonejs.com/#configuration
         // We'll manually create dropzone instances to control the options
         Dropzone.autoDiscover = false;
 
+
+        // this doesnt work, not sure why. getting error in console
+        // var a = new Dropzone("div#my-awesome-dropzone", { 
+        //     url: "/file/post"
+        // });
+
+// --------
+        
+    // this only works if Dropzone.autoDiscover = true, 
+    // but  these options arent applied. ORiginal styling works
+    var a = $("div#my-awesome-dropzone").dropzone({ 
+        url: "/file/post" ,
+        maxFilesize: 5, //  MB
+        acceptedFiles: "image/*",
+        addRemoveLinks: true //  enable person to del file
+    });
+
+    // a.on("maxfilesexceeded", function(file) { 
+    //     console.log('maxfilesexceededs'); 
+    //     this.removeFile(file); 
+    // });
+    
+    //  a.on("maxfilesreached", function(file) {
+    //       console.log('maxfilesreached');
+    //       this.removeFile(file);
+    //     });
+
+// --------
+
+        // custom insertion container 
+        // not using template, but not reverting to original design.
+        const dropzoneCategoriesEl = "#js--dropzone-categories";
+        const dropzoneCategories = new Dropzone(dropzoneCategoriesEl, { 
+            url: "/file/post" ,
+            paramName: "category-image", 
+            maxFilesize: 5, //  MB
+            maxFiles: 1,
+            dictRemoveFile: "", 
+            acceptedFiles: "image/*",
+            addRemoveLinks: true, //  enable person to del file
+            thumbnailWidth: 80,
+            thumbnailHeight: 80,
+            previewsContainer: document.querySelector('.js--dropzone__previews-container--categories')   
+                 });
+// --------
+
+
+        // custom insertion and template, but design needs work, particularly the animations
+        // checkmark and error icons are not fading out on load and progress isnt working 
         const dropzonePredictEl = "#js--dropzone-predict";
-        var dropzonePredict = new Dropzone(dropzonePredictEl, { 
+        const dropzonePredict = new Dropzone(dropzonePredictEl, { 
             url: "/file/post",
             paramName: "prediction-image", 
             maxFilesize: 5, //  MB
@@ -280,13 +335,6 @@
             previewTemplate: document.querySelector('#dropzonePredictTemplate').innerHTML // use a custom HTML template
         });
 
-        // dropzonePredict.on("dragenter", function(file) {
-        //   console.log('enter');
-        // });
-
-        //  dropzonePredict.on("reset", function(file) {
-        //   console.log('reset');
-        // });
 
         //  dropzonePredict.on("maxfilesreached", function(file) {
         //   console.log('maxfilesreached');
@@ -294,34 +342,25 @@
 
         dropzonePredict.on("maxfilesexceeded", function(file) { this.removeFile(file); });
 
-        dropzonePredict.on("complete", function(file) {
-          // $(dropzonePredictEl).find('.dz-progress').fadeOut(300);
-          // $(dropzonePredictEl).find('.dz-success-mark').fadeOut(500);
-          // $(dropzonePredictEl).find('.dz-error-mark').fadeOut(600);
+        // dropzonePredict.on("complete", function(file) {
+        //   // $(dropzonePredictEl).find('.dz-progress').fadeOut(300);
+        //   // $(dropzonePredictEl).find('.dz-success-mark').fadeOut(500);
+        //   // $(dropzonePredictEl).find('.dz-error-mark').fadeOut(600);
 
-        });
+        // });
 
-        dropzonePredict.on("drop", function(maxfilesreached) {
-            console.log('file dropped');
-            // console.log("dropzonePredict.files.length: ", dropzonePredict.files.length)
+        // dropzonePredict.on("drop", function(maxfilesreached) {
+        //     console.log('file dropped');
+        //     // console.log("dropzonePredict.files.length: ", dropzonePredict.files.length)
        
-            if(maxfilesreached + 1) {
-                // dropzonePredict.removeFile(file)
-                console.log('max files reached')
-            }
-          $(dropzonePredictEl).find('.dropzone__header').toggle();
+        //     if(maxfilesreached + 1) {
+        //         // dropzonePredict.removeFile(file)
+        //         console.log('max files reached')
+        //     }
+        //   $(dropzonePredictEl).find('.dropzone__header').toggle();
 
-        });
+        // });
 
-
-        // // "jsDropzonePredict" is the camelized version of the HTML element's ID
-        // Dropzone.options.jsDropzonePredict = {
-        //   paramName: "predict", // The name that will be used to transfer the file
-        //   maxFilesize: 5, // MB
-        //   maxFiles: 1,
-        //   previewsContainer: "dropzone__preview-container",
-        //   previewTemplate: document.querySelector('#tpl').innerHTML
-        // };
     });
 
     $(document).ready(function init() {
@@ -357,7 +396,7 @@
 
     function createClassifier() {
       if (window.labels == undefined || window.labels.length < 2) {
-        alert('Two or more classes are required to train');
+        alert('Two or more categories are required to train');
         return
       }
       var error = false
