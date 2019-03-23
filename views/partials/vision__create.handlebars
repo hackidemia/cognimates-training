@@ -1,0 +1,415 @@
+{{!-- <h1 class="stepper__header"> Create Vision Model</h1> --}}
+
+<ul class="stepper">
+
+
+    <li class="stepper__step">
+        <span class="step__number">1</span>
+        <div class="step__circle">
+            <i></i><!-- no dom here, gets made by css -->
+        </div>
+        <div class="step__description">
+            <h2 class="step__title">What is your project name?</h2>
+            <div class="step__body">
+                <form>
+                    <div class="form-group">
+                        <input type=""
+                            class="form-control 
+                                    sstep__form-text"
+                            id=""
+                            aria-describedby=""
+                            placeholder="Use this name in Codelab">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="step__number">2</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__description">
+            <h2 class="step__title">What are your {{ serviceName }} keys?
+                <a href="#" class="step__help-open-button 
+                                    js--open-help" role="button">
+                    <i class="fas fa-question-circle"></i>
+                </a>
+            </h2>
+
+            <div class="step__body">
+                <div class="form-group">
+                    <input type="email"
+                        class="form-control step__form-text"
+                        id=""
+                        aria-describedby=""
+                        placeholder="something like: 828gn21ng02n-gmffmn298fkskj-gsk2jg">
+                </div>
+                 <a href="{{ serviceUrl }}" target="_blank" >
+                       Sign up and get a key
+                 </a>
+
+                <div class="step__help 
+                            step__help--keys">
+                    <div class="step__help-info-detail">
+                         <div>
+                            <iframe width="560" height="315" src="https://www.youtube.com/embed/YOrrROME2zc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                         </div>
+                    </div>
+
+                 </div>
+            </div>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="step__number">3</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__description">
+            <h2 class="step__title">What categories should your model have? 
+                <a href="#" class="step__help-open-button 
+                                    js--open-help" role="button">
+                    <i class="fas fa-question-circle"></i>
+                </a>
+            </h2>
+
+            <div class="step__body">
+                <div class="step__help 
+                            step__help--categories">
+                   <span>Categories are groups of things your model wil try to tell the difference between. 
+                   Remember, it can only learn what you give it! </span>
+                    <ul>
+                        <li><b>animals,</b>like <span> cats vs dogs</span></li>
+                        <li><b>objects</b>, like <span> cups vs jars</span></li>
+                        <li><b>expressions</b>, like <span> happy vs sad</span></li>
+                    </ul>
+                </div>
+                <div class="">
+                    <form class="category__new-form-container">
+                        <div class="category__new-form-group">
+                            <input type="email"
+                                class="form-control category__new-form step__form-text"
+                                id=""
+                                aria-describedby=""
+                                placeholder="for example, cats">
+                             <button class="category__button--create d-inline-block btn btn-primary" 
+                                    type="button">
+                                    Create Class
+                                </button>
+                            <span class="step__body-secondary"></span>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="category__container">
+                    <div class="category__box">
+                        <form action="/"
+                                id="js--dropzone-categories"
+                               class="
+                                        dropzone--categories">
+                          <div class="category__name">
+                                Cats
+                            </div>
+
+                            <div class="dropzone__header">
+                                <i class="fas fa-cloud-upload-alt 
+                                            dropzone__upload-icon"></i>
+                                <span class="dropzone__label">Drag and drop images</span>
+                            </div>
+
+                            <!-- inject image previews here -->
+                            <div class="js--dropzone__previews-container--categories 
+                                        dropzone-previews">
+                            </div>
+                        </form>
+                    </div>
+
+                    <a href="#" class="category__button--remove btn btn-primary">
+                        <i class="fas fa-times"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </li>
+
+
+    <li class="stepper__step">
+        <span class="step__number">4</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__description">
+            <h2 class="step__title">
+                <button class="btn btn-primary"
+                    type="button">
+                    <span class=""
+                        role="status"
+                        aria-hidden="true">Train </span>
+                </button>the model!
+                </h2>
+
+                jquery instantiated
+                <form action="/file-upload"
+              class="dropzone"
+              id="my-awesome-dropzone"></form>
+                
+
+
+
+            <div class="step__body">
+                <span class="step__body-secondary">
+                    {{!-- <button class="btn btn-primary"
+                        type="button"
+                        disabled>
+                        <span class="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"></span>
+                        Loading...
+                    </button> --}}
+
+                </span>
+            </div>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="step__number">5</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__description">
+            <h2 class="step__title">Upload an image to test your model</h2>
+            <div class="step__body">
+
+                <div class="category__container">
+                    <div class="category__box">
+                        <form action="/"
+                              id="js--dropzone-predict" 
+                              class="dropzone--predict">
+
+                            <div class="dropzone__header">
+                                <i class="fas fa-cloud-upload-alt dropzone__upload-icon"></i>
+                                <span class=" dropzone__label">Click or Drag and drop to add images</span>
+                            </div>
+                            <div class="js--dropzone__previews-container--predict
+                                        dropzone-previews"></div>
+                        </form>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary"
+                    type="button">
+                    Predict
+                </button>
+            </div>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="step__number">6</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__description">
+            <h2 class="step__title">
+                <button class="btn btn-primary"
+                        type="button">
+                        Play
+                    </button>
+                 with the model in Codelab
+            </h2>
+            <div class="step__body">
+                
+            </div>
+        </div>
+    </li>
+</ul>
+
+<script>
+    $(function() {
+        $('.js--open-help').on('click', function(e){
+            const section = $(e.target).closest('.step__description');
+            $(section).find('.step__help').toggle();
+            event.preventDefault(); // to keep from scrolling
+        });
+
+        // see full docs / events / config here: https://www.dropzonejs.com/#configuration
+        // We'll manually create dropzone instances to control the options
+        Dropzone.autoDiscover = false;
+
+
+        // this doesnt work, not sure why. getting error in console
+        // var a = new Dropzone("div#my-awesome-dropzone", { 
+        //     url: "/file/post"
+        // });
+
+// --------
+        
+    // this only works if Dropzone.autoDiscover = true, 
+    // but  these options arent applied. ORiginal styling works
+    var a = $("div#my-awesome-dropzone").dropzone({ 
+        url: "/file/post" ,
+        maxFilesize: 5, //  MB
+        acceptedFiles: "image/*",
+        addRemoveLinks: true //  enable person to del file
+    });
+
+    // a.on("maxfilesexceeded", function(file) { 
+    //     console.log('maxfilesexceededs'); 
+    //     this.removeFile(file); 
+    // });
+    
+    //  a.on("maxfilesreached", function(file) {
+    //       console.log('maxfilesreached');
+    //       this.removeFile(file);
+    //     });
+
+// --------
+
+        // custom insertion container 
+        // not using template, but not reverting to original design.
+        const dropzoneCategoriesEl = "#js--dropzone-categories";
+        const dropzoneCategories = new Dropzone(dropzoneCategoriesEl, { 
+            url: "/file/post" ,
+            paramName: "category-image", 
+            maxFilesize: 5, //  MB
+            maxFiles: 1,
+            dictRemoveFile: "", 
+            acceptedFiles: "image/*",
+            addRemoveLinks: true, //  enable person to del file
+            thumbnailWidth: 80,
+            thumbnailHeight: 80,
+            previewsContainer: document.querySelector('.js--dropzone__previews-container--categories')   
+                 });
+// --------
+
+
+        // custom insertion and template, but design needs work, particularly the animations
+        // checkmark and error icons are not fading out on load and progress isnt working 
+        const dropzonePredictEl = "#js--dropzone-predict";
+        const dropzonePredict = new Dropzone(dropzonePredictEl, { 
+            url: "/file/post",
+            paramName: "prediction-image", 
+            maxFilesize: 5, //  MB
+            maxFiles: 1,
+            dictRemoveFile: "", 
+            uploadMultiple: false,
+            acceptedFiles: "image/*",
+            addRemoveLinks: true, //  enable person to del file
+            thumbnailWidth: 80,
+            thumbnailHeight: 80,
+            previewsContainer: document.querySelector('.js--dropzone__previews-container--predict'),
+            previewTemplate: document.querySelector('#dropzonePredictTemplate').innerHTML // use a custom HTML template
+        });
+
+
+        //  dropzonePredict.on("maxfilesreached", function(file) {
+        //   console.log('maxfilesreached');
+        // });
+
+        dropzonePredict.on("maxfilesexceeded", function(file) { this.removeFile(file); });
+
+        // dropzonePredict.on("complete", function(file) {
+        //   // $(dropzonePredictEl).find('.dz-progress').fadeOut(300);
+        //   // $(dropzonePredictEl).find('.dz-success-mark').fadeOut(500);
+        //   // $(dropzonePredictEl).find('.dz-error-mark').fadeOut(600);
+
+        // });
+
+        // dropzonePredict.on("drop", function(maxfilesreached) {
+        //     console.log('file dropped');
+        //     // console.log("dropzonePredict.files.length: ", dropzonePredict.files.length)
+       
+        //     if(maxfilesreached + 1) {
+        //         // dropzonePredict.removeFile(file)
+        //         console.log('max files reached')
+        //     }
+        //   $(dropzonePredictEl).find('.dropzone__header').toggle();
+
+        // });
+
+    });
+
+    $(document).ready(function init() {
+      $('#button_apikey').click(function () {
+        if ($('#input_apikey').val() == '') {
+          alert('API Key cannot be empty');
+          return;
+        }
+        window.apiKey = $('#input_apikey').val();
+        // loadUserClassifiers();
+      })
+    });
+
+    function loadUserClassifiers() {
+      $.ajax({
+           url: "/vision/classifiers",
+           type: "GET",
+           headers: { 'apiKey': window.apiKey },
+           success: function (data) {
+             if(data.error == null) {
+               window.userClassifiers = data.classifiers;
+             } else {
+               window.userClassifiers = [];
+             }
+             displayClassifiers();
+           },
+           error: function (data) {
+             console.log(data);
+             window.userClassifiers = [];
+           }
+        });
+    }
+
+    function createClassifier() {
+      if (window.labels == undefined || window.labels.length < 2) {
+        alert('Two or more categories are required to train');
+        return
+      }
+      var error = false
+      for (var idx = 0, label = window.labelListItems[idx]; idx < window.labelListItems.length; idx++) {
+        if (window.examples[label].length < 10) {
+          alert('10 or more examples required for each label');
+          error = true;
+          break;
+        }
+      }
+      if(error == true) {
+        return;
+      }
+      var requestData = {};
+      requestData.name = window.classifierName;
+      requestData.training_data = [];
+      window.labels.forEach((label) => {
+        label_items = [];
+        window.examples[label].forEach((example) => {
+          var image_file = example.split(',')[1];
+          label_items.push(image_file);
+        })
+        requestData.training_data.push({label: label, label_items: label_items});
+      })
+      $.ajax({
+        url: '/vision/classifier',
+        type: 'POST',
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(requestData),
+        headers: { apikey: window.apiKey },
+        success: function (data) {
+          if(data.error != null) {
+            alert(data.error);
+            return;
+          }
+          
+        }
+      });
+    }
+
+    function classifyImage() {
+
+    }
+
+</script>

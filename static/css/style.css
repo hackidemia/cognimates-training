@@ -32,8 +32,6 @@ body {
     color: #328EDE;
     text-decoration: none;
     padding-bottom: 2px; }
-  body li {
-    padding-bottom: 10px; }
 
 .breakpoint {
   display: block;
@@ -676,11 +674,21 @@ nav ul {
 #dropzonePredictTemplate {
   display: none; }
 
+.classifier__nav-tabs {
+  width: 100%;
+  margin: 4rem auto 0 auto;
+  justify-content: center; }
+
+.classifier__nav-item .nav-link.active {
+  background-color: #f7f7f7; }
+
+.classifier__tab {
+  background-color: #f7f7f7; }
+
 .stepper {
   position: relative;
   padding: 2rem;
-  margin: 0;
-  background-color: #f7f7f7; }
+  margin: 0; }
   @media only screen and (min-width: 650px) {
     .stepper {
       padding: 3rem; } }
@@ -689,18 +697,17 @@ nav ul {
       padding: 3rem; } }
 
 .stepper__header {
-  margin: 0 0 2rem 3.5rem;
   color: #949494; }
-  @media only screen and (min-width: 650px) {
-    .stepper__header {
-      margin: 0 0 2rem 5rem; } }
-  @media only screen and (min-width: 860px) {
-    .stepper__header {
-      margin: 0 0 4rem 18.5rem; } }
 
 .stepper__step {
   display: flex;
-  padding: 0; }
+  padding: 0;
+  flex-direction: column; }
+  @media only screen and (min-width: 650px) {
+    .stepper__step {
+      display: flex;
+      flex-direction: row;
+      padding: 0; } }
 
 .step__title {
   margin: 0 0 1rem 0; }
@@ -713,8 +720,14 @@ nav ul {
   color: transparent; }
 
 .step__number {
-  flex: 0;
-  margin: 0; }
+  margin: 0;
+  border-bottom: 1px solid #d6d6d6;
+  padding: 0.5rem 0 0.5rem 0;
+  margin: 0.5rem 0; }
+  @media only screen and (min-width: 650px) {
+    .step__number {
+      border: 0;
+      padding: 0; } }
   @media only screen and (min-width: 860px) {
     .step__number {
       flex: 0 0 150px;
@@ -731,9 +744,13 @@ nav ul {
 
 /* vertical line */
 .step__circle {
-  flex: 0 0 50px;
-  position: relative;
-  text-align: center; }
+  display: none; }
+  @media only screen and (min-width: 650px) {
+    .step__circle {
+      display: flex;
+      flex: 0 0 50px;
+      position: relative;
+      text-align: center; } }
 
 .step__circle:before {
   content: '';
