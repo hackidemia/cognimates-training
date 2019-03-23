@@ -161,8 +161,17 @@
   margin: 4rem auto 0 auto;
   justify-content: center; }
 
+.classifier__nav-item {
+  border-top: 1px solid transparent;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
+  border-bottom: 0; }
+
 .classifier__nav-item .nav-link.active {
   background-color: #f7f7f7; }
+
+.classifier__nav-item h2 {
+  padding: 0.5rem 1.25rem; }
 
 .classifier__tab {
   background-color: #f7f7f7; }
@@ -220,7 +229,7 @@
       text-align: right;
       color: #acacac; } }
 
-.step__body {
+.step__description {
   color: #a0a0a0;
   line-height: 1.4; }
 
@@ -256,19 +265,19 @@
   box-sizing: border-box;
   transition: all 0.4s ease-in-out; }
 
-.step__description {
+.step__body {
   padding-bottom: 40px; }
   @media only screen and (min-width: 650px) {
-    .step__description {
+    .step__body {
       margin-left: 25px;
       padding-bottom: 75px; } }
   @media only screen and (min-width: 860px) {
-    .step__description {
+    .step__body {
       margin-left: 50px;
       padding-bottom: 60px; } }
 
 .stepper li:first-child .step__number,
-.stepper li:first-child .step__description {
+.stepper li:first-child .step__body {
   margin-top: 0.5rem; }
 
 .stepper li:first-child .step__circle:before {
@@ -413,3 +422,7 @@
   display: none;
   transition: 1s all ease-in;
   color: #6d6d6d; }
+
+.button--train {
+  margin-right: 0.75rem;
+  width: 100px; }

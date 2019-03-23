@@ -9,10 +9,18 @@
 }
 
 .classifier__nav-item {
+	border-top: 1px solid transparent;
+	border-left: 1px solid transparent;
+	border-right: 1px solid transparent;
+	border-bottom: 0;
 }
 
 .classifier__nav-item .nav-link.active {
 	background-color: #f7f7f7;
+}
+
+.classifier__nav-item h2 {
+    padding: 0.5rem 1.25rem;
 }
 
 .classifier__tabs {
@@ -89,7 +97,7 @@
   } 
 }
 
-.step__body {
+.step__description {
 	color: $text-gray;
 	line-height: 1.4;
 }
@@ -131,7 +139,7 @@
 	transition: all 0.4s ease-in-out;
 }
 
-.step__description {
+.step__body {
 	padding-bottom: 40px;
 
 	@include mq('md') { 
@@ -146,7 +154,7 @@
 }
 
 .stepper li:first-child .step__number,
-.stepper li:first-child .step__description {
+.stepper li:first-child .step__body {
 	margin-top: 0.5rem;
 }
 
@@ -331,6 +339,7 @@
 	color: #6d6d6d;
 }
 
-
-
-
+.button--train {
+	margin-right: 0.75rem;
+	width: 100px;
+}

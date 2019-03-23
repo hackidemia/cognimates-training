@@ -1,9 +1,10 @@
 @import 'mq';
+@import 'variables';
 
 *,
 *:after,
 *:before {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 body {
@@ -11,34 +12,39 @@ body {
 	margin: 0;
 	padding: 0;
 
- 	h1 {
+	h1 {
 		font-size: 2rem;
 		line-height: 1;
 
-		  @include mq('md') {
+		@include mq('md') {
 			font-size: 2.5rem;
-		  }
+		}
 
-		  @include mq('lg') {
+		@include mq('lg') {
 			font-size: 2.75rem;
 			letter-spacing: -1px;
-		  }
+		}
 	}
 	
 	h2 {
 		font-size: $extra-large-font;
 		font-weight: $heavy-weight;
 		color: $main-color;
+		margin: 0;
+		padding: 0;
 	}
 
 	h3 {
 		font-size: $large-font;
 		font-weight: $heavy-weight;
 		color: $main-color;
+		margin: 0;
+		padding: 0;
 	}
 
 	p {
-		margin-top: 0;
+		padding: 0;
+		margin: 0;
 		line-height: 1.2rem;
 	}
 
@@ -46,44 +52,41 @@ body {
 		color: $main-color;
 		text-decoration: none;
 		padding-bottom: 2px;
+		transition: 0.1s all ease-in;
 	}
 
 	a:hover {
-		// color: $accent-color;
+		color: $accent-color;
 	}
 }
 
+.btn {
+	transition: 0.1s all ease-in;
+}
+
+.btn-primary {
+	background-color: $main-color;
+}
+
+.btn-primary:hover {
+    background-color: $accent-color;
+    border-color: $accent-color;
+}
+
+.btn-danger {
+    background-color: $accent-color;
+    border-color: $accent-color;
+}
+
+.btn-success {
+    background-color: $light-main-color;
+    border-color: $light-main-color;
+}
+
+.btn-success:hover {
+    background-color: $accent-color;
+    border-color: $accent-color;
+}
 
 
-
-// .btn-primary {
-//     background-color: $light-main-color;
-//     border-color: #29AFCF;
-//     margin: 0 auto;
-//     font-weight: bold;
-// }
-
-// .btn-primary:hover {
-//     background-color: --secondary-color;
-//     border-color: --secondary-color;
-// }
-
-// .btn-danger {
-//     background-color: --secondary-color;
-//     border-color: --secondary-color;
-// }
-
-// .btn-success {
-//     background-color: $light-main-color;
-//     border-color: $light-main-color;
-// }
-
-// .btn-success:hover {
-//     background-color: --secondary-color;
-//     border-color: --secondary-color;
-// }
-
-// btn btn-primary btn-lg btn-block {
-//     color: $light-main-color;
-// }
 
