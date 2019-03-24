@@ -724,12 +724,13 @@ nav ul {
   margin: 4rem auto 0 auto;
   justify-content: center; }
 
-.classifier__nav-item {
+.classifier__nav-item .nav-link {
   padding: 0.75rem 0.5rem;
   border-top: 1px solid transparent;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent;
-  border-bottom: 0; }
+  border-bottom: 0;
+  margin: 0 0.5rem; }
 
 .classifier__nav-item .nav-link.active {
   background-color: #f7f7f7; }
