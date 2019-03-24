@@ -281,13 +281,21 @@
           url: "/file/post" ,
           paramName: "category-image",
           maxFilesize: 5, //  MB
-          maxFiles: 1,
+          maxFiles: 20,
+          autoProcessQueue: false,
           dictRemoveFile: "",
-          acceptedFiles: "image/*",
+          acceptedFiles: ".jpg,.jpeg,.png",
           addRemoveLinks: true, //  enable person to del file
           thumbnailWidth: 80,
           thumbnailHeight: 80,
-          previewsContainer: document.querySelector(`#js--dropzone__previews-container_${categoryName}`)
+          previewsContainer: document.querySelector(`#js--dropzone__previews-container_${categoryName}`),
+          init: function () {
+            this.on("error", function(file) {
+              if (!file.accepted) {
+                this.removeFile(file);
+              }
+            });
+          }
       });
       window.dropZoneMap[categoryName] = dropzoneCategoryInstance;
     }
