@@ -295,11 +295,9 @@ li.stepper__step {
     border: 0;
 }
 
-// .category__box:nth-of-type(1),
-// .filepond-x-drop-label:nth-of-type(1) { background: lightblue; }
+.category__box:nth-of-type(1){ background: lightblue; }
 
-// .category__box:nth-of-type(2),
-// .filepond--drop-label:nth-of-type(2) { background: lightyellow; }
+.category__box:nth-of-type(2) { background: lightyellow; }
 
 .category__name {
 	display: flex;
