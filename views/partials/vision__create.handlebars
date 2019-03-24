@@ -134,6 +134,8 @@
                             <div class="js--dropzone__previews-container--categories 
                                         dropzone-previews">
                             </div>
+
+                            <div class="dropzone__error-container"></div>
                         </form>
                     </div>
 
@@ -144,7 +146,6 @@
             </div>
         </div>
     </li>
-
 
     <li class="stepper__step">
         <span class="step__number">4</span>
@@ -158,8 +159,24 @@
                     <span class=""
                         role="status"
                         aria-hidden="true">Train</span>
-                </button>the model!
-                </h2>
+                </button>
+
+                <button class="btn btn-primary button--train" 
+                        type="button" 
+                        disabled>
+                         <span class="spinner-grow spinner-grow-sm" 
+                             role="status" 
+                             aria-hidden="true">
+                         </span>
+                        Loading...
+                </button>
+
+                <span>the model!</span>
+            </h2>
+                 <a href="" class="step__link--get-key" target="_blank" >
+                       Why is it taking forever?
+                 </a>
+
         </div>
     </li>
 
@@ -203,8 +220,8 @@
         </div>
         <div class="step__body">
             <h2 class="step__title">
-                <button class="btn btn-primary"
-                        type="button">
+                <button class="btn btn-primary button--play"
+                        type="button ">
                         Play
                     </button>
                  with the model in Codelab

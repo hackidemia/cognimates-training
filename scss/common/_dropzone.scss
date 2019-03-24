@@ -21,11 +21,24 @@
     border-radius: 0;
     border: 1px solid #cdcdcd;
     overflow: hidden;
+    width: 80px;
+    height: 80px;
+    background: #fafafa;
+    transition: 0.1s ease-in all;
 }
-
+    
 .dz-message {
     margin: 0;
     display: none;
+}
+
+.dz-preview,
+.dz-processing,
+.dz-image-preview,
+.dz-error, 
+.dz-complete {
+    display: inline-block;
+    position: relative;
 }
 
 .dz-preview.dz-image-preview {
@@ -35,7 +48,11 @@
 }
 
 .dropzone-previews {
-    padding: 0.25rem;
+    padding: 0.25rem 0.75rem;
+}
+
+.dropzone__error-container {
+    color: red;
 }
 
 .dropzone--predict .dropzone-previews {
@@ -127,14 +144,6 @@
     display: none;
 } 
 
-// .dz-upload {
-//     position: absolute;
-//     top: 0;
-//     width: 100%;
-//     height: 4px;
-//     background-color: white;
-// }
-
 .dz-progress {
     position: absolute;
     height: 100%;
@@ -157,7 +166,6 @@
     font-family: "Font Awesome 5 Free";
     font-size: 0.71rem;
     font-weight: 700;
-
     position: absolute;
     display: inline-flex;
     align-items: center;
@@ -178,7 +186,6 @@
     background-color: $accent-color;
     border-color: $accent-color;
 }
-
 
 /* Step 1: Common Properties: All required to make icons render reliably */
 .icon::before {
@@ -207,4 +214,7 @@
     display: none;
 }
 
-
+.dropzone__header--hidden {
+    opacity: 0;
+    height: 0;
+}

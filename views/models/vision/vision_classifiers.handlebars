@@ -3,12 +3,12 @@
 <ul class="nav 
           nav-tabs
           classifier__nav-tabs" 
-    id="myTab" 
+    id="classifier__tabs" 
     role="tablist">
 
-  <li class="nav-item classifier__nav-item classifier__nav-item--create">
-    <a class="nav-link active" 
-      id="home-tab" 
+  <li class="nav-item classifier__nav-item ">
+    <a class="nav-link classifier__nav-link active" 
+      id="" 
       data-toggle="tab" 
       href="#home" 
       role="tab" 
@@ -16,14 +16,21 @@
       aria-selected="true">
         <h2>
           <i class="fas fa-plus"></i>
-          <span>Create New</span>
+          Create New
+          <span>Model</span>
         </h2>
     </a>
   </li>
 
-  <li class="nav-item classifier__nav-item classifier__nav-item--explore">
-    <a class="nav-link" 
-      id="profile-tab" 
+  <li class="nav-item classifier__nav-item--or">
+    <h2>
+      &mdash; or  &mdash;
+    </h2>
+  </li>
+
+  <li class="nav-item classifier__nav-item">
+    <a class="nav-link classifier__nav-link" 
+      id="" 
       data-toggle="tab" 
       href="#profile" 
       role="tab" 
@@ -31,18 +38,25 @@
       aria-selected="false">
         <h2>
           <i class="fas fa-eye"></i>
-          <span>Explore Existing</span>
+          Explore Existing
+          <span>Model</span>
         </h2>
     </a>
   </li>
 </ul>
 
 <div class="tab-content " id="myTabContent" class="classifier__tabs">
-  <div class="tab-pane classifier__tab fade show active" id="classifier__tab--create" role="tabpanel" aria-labelledby="home-tab">
+  <div class="tab-pane classifier__tab fade show active" 
+      id="classifier__tab--create" 
+      role="tabpanel" 
+      aria-labelledby="home-tab">
     {{> vision__create }}
   </div>
 {{!-- 
-  <div class="tab-pane classifier__tab fade" id="classifier__tab--explore" role="tabpanel" aria-labelledby="profile-tab">
+  <div class="tab-pane classifier__tab fade" 
+        id="classifier__tab--explore" 
+        role="tabpanel" 
+        aria-labelledby="profile-tab">
     {{> vision__explore }}
   </div> --}}
   
@@ -76,123 +90,61 @@
 <script>
     $(function() {
 
-      /// set up info icon toggles
-        $('.js--open-help').on('click', function(e){
-            const section = $(e.target).closest('.step__body');
-            $(section).find('.step__help').toggle();
-            event.preventDefault(); // to keep from scrolling
-        });
-
-        /// set up video embeds
-      const player = new Plyr('#js-classifier__video--clarifai');
-
-      // set up page tabs
-      $('.classifier__nav-item--create a').on('click', function (e) {
-        e.preventDefault()
-        $(this).tab('show')
-      })
-
-      $('.classifier__nav-item--explore a').on('click', function (e) {
-        e.preventDefault()
-        $(this).tab('show')
-      })
-
-      // set up dropzone instances
-        // see full docs / events / config here: https://www.dropzonejs.com/#configuration
-        // We'll manually create dropzone instances to control the options
-        Dropzone.autoDiscover = false;
-
-
-        // this doesnt work, not sure why. getting error in console
-        // var a = new Dropzone("div#my-awesome-dropzone", { 
-        //     url: "/file/post"
-        // });
-
-// --------
-        
-    // this only works if Dropzone.autoDiscover = true, 
-    // but  these options arent applied. ORiginal styling works
-    var a = $("div#my-awesome-dropzone").dropzone({ 
-        url: "/file/post" ,
-        maxFilesize: 5, //  MB
-        acceptedFiles: "image/*",
-        addRemoveLinks: true //  enable person to del file
+    /// set up info icon toggles
+    $('.js--open-help').on('click', function(e){
+        const section = $(e.target).closest('.step__body');
+        $(section).find('.step__help').toggle();
+        event.preventDefault(); // to keep from scrolling
     });
 
-    // a.on("maxfilesexceeded", function(file) { 
-    //     console.log('maxfilesexceededs'); 
-    //     this.removeFile(file); 
-    // });
-    
-    //  a.on("maxfilesreached", function(file) {
-    //       console.log('maxfilesreached');
-    //       this.removeFile(file);
-    //     });
+      /// set up video embeds
+    const player = new Plyr('#js-classifier__video--clarifai');
 
-// --------
+    // set up page tabs
+    // Doesnt work? https://getbootstrap.com/docs/4.0/components/navs/#javascript-behavior
+    $('#classifier__tabs a').on('click', function (e) {
+      e.preventDefault()
+      $(this).tab('show')
+    })
 
-        // custom insertion container 
-        // not using template, but not reverting to original design.
-        const dropzoneCategoriesEl = "#js--dropzone-categories";
-        const dropzoneCategories = new Dropzone(dropzoneCategoriesEl, { 
-            url: "/file/post" ,
-            paramName: "category-image", 
-            maxFilesize: 5, //  MB
-            maxFiles: 1,
-            dictRemoveFile: "", 
-            acceptedFiles: "image/*",
-            addRemoveLinks: true, //  enable person to del file
-            thumbnailWidth: 80,
-            thumbnailHeight: 80,
-            previewsContainer: document.querySelector('.js--dropzone__previews-container--categories')   
-        });
-// --------
+    // set up dropzone instances
+    // https://www.dropzonejs.com/#configuration
+    // Dropzone.autoDiscover = false;
 
+    const dropzoneCategoriesEl = '#js--dropzone-categories';
+    const dropzoneCategories = new Dropzone(dropzoneCategoriesEl, { 
+        url: '/file/post' ,
+        paramName: 'category-image', 
+        dictRemoveFile: '', 
+        acceptedFiles: 'image/*',
+        addRemoveLinks: true, 
+        thumbnailWidth: 80,
+        thumbnailHeight: 80,
+        previewsContainer: document.querySelector('.js--dropzone__previews-container--categories')   
+    });
 
-        // custom insertion and template, but design needs work, particularly the animations
-        // checkmark and error icons are not fading out on load and progress isnt working 
-        const dropzonePredictEl = "#js--dropzone-predict";
-        const dropzonePredict = new Dropzone(dropzonePredictEl, { 
-            url: "/file/post",
-            paramName: "prediction-image", 
-            maxFilesize: 5, //  MB
-            maxFiles: 1,
-            dictRemoveFile: "", 
-            uploadMultiple: false,
-            acceptedFiles: "image/*",
-            addRemoveLinks: true, //  enable person to del file
-            thumbnailWidth: 80,
-            thumbnailHeight: 80,
-            previewsContainer: document.querySelector('.js--dropzone__previews-container--predict'),
-            previewTemplate: document.querySelector('#dropzonePredictTemplate').innerHTML // use a custom HTML template
-        });
+      /*
+      Why doesnt this doesnt work?
+      dropzoneCategories.on('error', function(file, errorMessage, xhr) {
+        document.querySelector('.dropzone__error-container').innerHtml = errorMessage;
+        console.log('error: ', errorMessage);
+      });
+      */
 
-
-        //  dropzonePredict.on("maxfilesreached", function(file) {
-        //   console.log('maxfilesreached');
-        // });
-
-        dropzonePredict.on("maxfilesexceeded", function(file) { this.removeFile(file); });
-
-        // dropzonePredict.on("complete", function(file) {
-        //   // $(dropzonePredictEl).find('.dz-progress').fadeOut(300);
-        //   // $(dropzonePredictEl).find('.dz-success-mark').fadeOut(500);
-        //   // $(dropzonePredictEl).find('.dz-error-mark').fadeOut(600);
-
-        // });
-
-        // dropzonePredict.on("drop", function(maxfilesreached) {
-        //     console.log('file dropped');
-        //     // console.log("dropzonePredict.files.length: ", dropzonePredict.files.length)
-       
-        //     if(maxfilesreached + 1) {
-        //         // dropzonePredict.removeFile(file)
-        //         console.log('max files reached')
-        //     }
-        //   $(dropzonePredictEl).find('.dropzone__header').toggle();
-
-        // });
-
+      const dropzonePredictEl = "#js--dropzone-predict";
+      const dropzonePredict = new Dropzone(dropzonePredictEl, { 
+          url: "/file/post1",
+          paramName: "prediction-image", 
+          maxFiles: 1,
+          dictRemoveFile: "", 
+          uploadMultiple: false,
+          acceptedFiles: "image/*",
+          addRemoveLinks: true, //  enable person to del file
+          thumbnailWidth: 80,
+          thumbnailHeight: 80,
+          previewsContainer: document.querySelector('.js--dropzone__previews-container--predict'),
+          previewTemplate: document.querySelector('#dropzonePredictTemplate').innerHTML // use a custom HTML template
+      });
     });
 
     $(document).ready(function init() {

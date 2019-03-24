@@ -9,17 +9,43 @@
 }
 
 .classifier__nav-item .nav-link {
-	padding: 0.75rem 0.5rem;
-	border-top: 1px solid transparent;
-	border-left: 1px solid transparent;
-	border-right: 1px solid transparent;
-	border-bottom: 0;
-	margin: 0 0.5rem;
+    margin: 1rem;
+    border:  0;
+
+    @include mq('md') {  
+        padding: 0.75rem 0.5rem;
+        border-top: 1px solid transparent;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
+        border-bottom: 0;
+        margin: 0 0.5rem;
+    }
 }
 
-.classifier__nav-item .nav-link.active {
-	background-color: #f7f7f7;
+.classifier__nav-link.active {
+    background-color: #f7f7f7 !important;
 }
+
+.classifier__nav-link h2 span {
+    color: #bebebe;
+}
+
+.classifier__nav-item--or {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-style: italic;
+
+    @include mq('md') {  
+      display: none;
+    }
+
+    h2 {
+        color: #aeaeae;  
+    } 
+}
+
+
 
 .classifier__nav-item h2 {
 	// left right mismatch accounts for the left side having an icon
@@ -169,7 +195,7 @@ li.stepper__step {
 
 	.step__circle {
 	    i {
-			background: $accent-color;
+			background: $pink;
 			transform: scale(1.75);
 	    }
 	  }
@@ -212,13 +238,13 @@ li.stepper__step {
 }
 
 .dropzone__header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  pointer-events: none;
-  transition: 0.1s ease-in all; 
-  color: #b7b7b7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    pointer-events: none;
+    transition: 0.1s ease-in all; 
+    color: #b7b7b7;
     margin-bottom: 0.2rem;
 }
 
@@ -226,9 +252,9 @@ li.stepper__step {
     margin: 0.35rem 0 0rem 0;
 }
 
-.dropzone__preview-container {
-    background-color: red;
-    margin-bottom: 0.5rem;
+.category__dropzone {
+    align-items: center;
+    justify-content: center;
 }
 
 .category__container { 
@@ -237,23 +263,18 @@ li.stepper__step {
 	margin-bottom: 1rem;
 }
 
-.category__dropzone {
-	align-items: center;
-	justify-content: center;
-}
-
 .category__box {
 	border-radius: 1rem;
 	color: #ff0030;
 	border: 2px dashed #c5c5c5;
 	border-radius: 10px;
 	background-color: white;
+    cursor: pointer;
+    transition: 0.1s ease-out all;
 }
 
 .category__box:hover {
-	border: 2px dashed #f76161;
-	background-color: #f5faff;
-	transition: 0.2s ease-out all;
+	border: 2px dashed $pink;
 }
 
 .category__button--remove {
@@ -322,5 +343,9 @@ li.stepper__step {
 
 .button--train {
 	margin-right: 0.75rem;
-	width: 100px;
 }
+
+.button--play {
+    margin-right: 0.75rem;
+}
+

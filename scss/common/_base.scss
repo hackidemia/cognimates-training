@@ -35,7 +35,7 @@ body {
 		margin: 0;
 
 		@include mq('lg') {
-			font-size: 1.5rem;
+			font-size: 1.6rem;
 			line-height: 2.1rem;
 		}
 	}
@@ -55,14 +55,14 @@ body {
 	}
 
 	a {
-		color: $main-color;
+		color: $accent-color;
 		text-decoration: none;
 		padding-bottom: 2px;
 		transition: 0.1s all ease-in;
 	}
 
 	a:hover {
-		color: $accent-color;
+		color: $main-color;
 	}
 }
 
@@ -70,10 +70,12 @@ body {
 	transition: 0.1s all ease-in;
 	padding-right: 2rem;
     padding-left: 2rem;
+    border: 0;
 }
 
 .btn-primary {
 	background-color: $main-color;
+    border: 0;
 }
 
 .btn-primary:hover {
@@ -104,6 +106,12 @@ body {
 .no-radius--left {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
+}
+
+.btn-primary.disabled,  
+.btn-primary:disabled {  
+	background: #a8a8a8;
+    border: 0;
 }
 
 
