@@ -173,7 +173,14 @@
   background-color: #f7f7f7; }
 
 .classifier__nav-item h2 {
-  padding: 0 1rem; }
+  padding: 0 1rem;
+  font-size: 1.3rem;
+  letter-spacing: 0.3px; }
+
+.classifier__nav-item h2 i {
+  color: #3acefc;
+  font-size: 1.1rem;
+  margin: 0 0.5rem; }
 
 .classifier__tab {
   background-color: #f7f7f7; }

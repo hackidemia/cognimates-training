@@ -22,12 +22,15 @@
 }
 
 .classifier__nav-item h2 {
-    // padding: 0.5rem 1.25rem;
 	padding: 0 1rem;
-
+	font-size: 1.3rem;
+    letter-spacing: 0.3px;
 }
 
-.classifier__tabs {
+.classifier__nav-item h2 i { 
+	color: $accent-color;
+	font-size: 1.1rem;
+	margin: 0 0.5rem;
 }
 
 .classifier__tab {
