@@ -10,7 +10,7 @@
                 <form>
                     <div class="form-group">
                         <input type="text"
-                            class="form-control 
+                            class="form-control
                                    step__form-text"
                             aria-describedby=""
                             placeholder="Use this same name in Codelab">
@@ -27,7 +27,7 @@
         </div>
         <div class="step__body">
             <h2 class="step__title">What are your {{ serviceName }} keys?
-                <a href="#" class="step__help-open-button 
+                <a href="#" class="step__help-open-button
                                     js--open-help" role="button">
                     <i class="fas fa-question-circle"></i>
                 </a>
@@ -53,12 +53,12 @@
                        Sign up and get keys
                  </a>
 
-                <div class="step__help 
+                <div class="step__help
                             step__help--keys">
                     <div class="step__help-info-detail">
                         <div class="plyr__video-embed" id="js-classifier__video--clarifai">
-                            <iframe src="https://www.youtube.com/embed/YOrrROME2zc" 
-                                    frameborder="0" 
+                            <iframe src="https://www.youtube.com/embed/YOrrROME2zc"
+                                    frameborder="0"
                                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
                                 </iframe>
                         </div>
@@ -74,8 +74,8 @@
             <i></i>
         </div>
         <div class="step__body">
-            <h2 class="step__title">What categories should your model have? 
-                <a href="#" class="step__help-open-button 
+            <h2 class="step__title">What categories should your model have?
+                <a href="#" class="step__help-open-button
                                     js--open-help" role="button">
                     <i class="fas fa-question-circle"></i>
                 </a>
@@ -83,7 +83,7 @@
 
             <div class="step__description">
                 <div class="step__help">
-                   <span>Categories are groups of things your model wil try to tell the difference between. 
+                   <span>Categories are groups of things your model wil try to tell the difference between.
                    Remember, it can only learn what you give it! </span>
                     <ul>
                         <li><b>animals,</b>like <span> cats vs dogs</span></li>
@@ -95,17 +95,18 @@
                     <form class="category__new-form-container">
                         <div class="category__new-form-group">
                             <input type="text"
-                                class="form-control 
-                                        no-radius--right 
+                                class="form-control
+                                        no-radius--right
                                         step__form-text"
-                                id=""
+                                id="input_categoryName"
                                 aria-describedby=""
                                 placeholder="for example, cats">
-                             <button class="category__button--create 
-                                            d-inline-block 
-                                            btn 
+                             <button class="category__button--create
+                                            d-inline-block
+                                            btn
                                             btn-primary
-                                            no-radius--left" 
+                                            no-radius--left"
+                                    id="button_categoryName"
                                     type="button">
                                     Create Class
                                 </button>
@@ -114,34 +115,8 @@
                     </form>
                 </div>
 
-                <div class="category__container">
-                    <div class="category__box">
-                        <form action="/"
-                                id="js--dropzone-categories"
-                               class="
-                                        dropzone--categories">
-                          <div class="category__name">
-                                Cats
-                            </div>
+                <div id="categoriesContainer">
 
-                            <div class="dropzone__header">
-                                <i class="fas fa-cloud-upload-alt 
-                                            dropzone__upload-icon"></i>
-                                <span class="dropzone__label">Drag and drop images</span>
-                            </div>
-
-                            <!-- inject image previews here -->
-                            <div class="js--dropzone__previews-container--categories 
-                                        dropzone-previews">
-                            </div>
-
-                            <div class="dropzone__error-container"></div>
-                        </form>
-                    </div>
-
-                    <a href="#" class="category__button--remove btn btn-primary">
-                        <i class="fas fa-times"></i>
-                    </a>
                 </div>
             </div>
         </div>
@@ -161,11 +136,11 @@
                         aria-hidden="true">Train</span>
                 </button>
 
-                <button class="btn btn-primary button--train" 
-                        type="button" 
+                <button class="btn btn-primary button--train"
+                        type="button"
                         disabled>
-                         <span class="spinner-grow spinner-grow-sm" 
-                             role="status" 
+                         <span class="spinner-grow spinner-grow-sm"
+                             role="status"
                              aria-hidden="true">
                          </span>
                         Loading...
@@ -192,7 +167,7 @@
                 <div class="category__container">
                     <div class="category__box">
                         <form action="/"
-                              id="js--dropzone-predict" 
+                              id="js--dropzone-predict"
                               class="dropzone--predict">
 
                             <div class="dropzone__header">
@@ -227,7 +202,7 @@
                  with the model in Codelab
             </h2>
             <div class="step__description">
-                
+
             </div>
         </div>
     </li>
