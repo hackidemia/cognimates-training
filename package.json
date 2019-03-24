@@ -29,6 +29,7 @@
     "localforage": "^1.7.3",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
+    "plyr": "^3.5.2",
     "request": "^2.88.0",
     "whirlpool": "0.0.4"
   },

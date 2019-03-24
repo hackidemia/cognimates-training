@@ -27,15 +27,21 @@ body {
 	}
 	
 	h2 {
-		font-size: $extra-large-font;
+		font-size: 1.25rem;
 		font-weight: $heavy-weight;
+		line-height: 1.75rem;
 		color: $main-color;
-		margin: 0;
 		padding: 0;
+		margin: 0;
+
+		@include mq('lg') {
+			font-size: 1.5rem;
+			line-height: 2.1rem;
+		}
 	}
 
 	h3 {
-		font-size: $large-font;
+		font-size: 1.5rem;
 		font-weight: $heavy-weight;
 		color: $main-color;
 		margin: 0;
@@ -62,6 +68,8 @@ body {
 
 .btn {
 	transition: 0.1s all ease-in;
+	padding-right: 2rem;
+    padding-left: 2rem;
 }
 
 .btn-primary {

@@ -46,24 +46,34 @@
 .footer-banner {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    position: relative;
     background: #f7f7f7;
-}
-
-.footer-banner-headline {
-    font-size: 1.75rem;
-    line-height: 0;
-    color: $accent-color;
-    margin: 4rem auto 2.5rem auto;
+    overflow: hidden;
 
     @include mq('lg') {
-        font-size: 2.5rem;
-        margin: 7rem auto 3.5rem auto;
-    }   
+        padding-top: 7rem;
+        display: flex;
+        flex-direction: column;
+        background: #f7f7f7;
+    } 
 }
 
 .footer-banner-image {
-    height: auto;
-    max-height: 400px;
+    transform: scale(1.5);
+    margin: 5rem 0 3rem 0;
+    background: #f7f7f7;
+
+    @include mq('sm') {
+        transform: scale(1.75);
+        margin: 8rem 0 3rem 0;
+    }
+
+    @include mq('md') {
+        transform: scale(1.5);
+        margin: 4rem 0 0rem 0;
+    } 
+
+    @include mq('lg') {
+        transform: none;
+        max-height: 400px;
+    }
 }

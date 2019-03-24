@@ -162,6 +162,7 @@
   justify-content: center; }
 
 .classifier__nav-item {
+  padding: 0.75rem 0.5rem;
   border-top: 1px solid transparent;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent;
@@ -171,10 +172,15 @@
   background-color: #f7f7f7; }
 
 .classifier__nav-item h2 {
-  padding: 0.5rem 1.25rem; }
+  padding: 0 1rem; }
 
 .classifier__tab {
   background-color: #f7f7f7; }
+  @media only screen and (min-width: 860px) {
+    .classifier__tab {
+      display: flex !important;
+      align-items: center;
+      justify-content: center; } }
 
 ul.stepper {
   position: relative;
@@ -182,21 +188,32 @@ ul.stepper {
   margin: 0; }
   @media only screen and (min-width: 650px) {
     ul.stepper {
-      padding: 3rem; } }
+      padding: 4rem 2rem; } }
   @media only screen and (min-width: 860px) {
     ul.stepper {
-      padding: 3rem; } }
+      padding: 5rem 0 0 0;
+      margin-left: -10rem; } }
+  @media only screen and (min-width: 1200px) {
+    ul.stepper {
+      margin-left: -1rem; } }
 
 li.stepper__step {
   display: flex;
   padding: 0;
-  flex-direction: column; }
+  border-bottom: 1px solid #dddddd;
+  flex-direction: column;
+  margin-bottom: 4rem; }
   @media only screen and (min-width: 650px) {
     li.stepper__step {
       display: flex;
       flex-direction: row;
       line-height: 1;
-      padding: 0; } }
+      padding: 0;
+      border-bottom: 0;
+      margin-bottom: 0; } }
+  @media only screen and (min-width: 860px) {
+    li.stepper__step {
+      width: 800px; } }
 
 .step__title {
   margin: 0 0 1rem 0; }
@@ -209,22 +226,22 @@ li.stepper__step {
   color: transparent; }
 
 .step__number {
+  font-size: 1.25rem;
+  margin: 0.25rem 0;
+  user-select: none;
   transition: all 0.1s ease-out;
-  margin: 0;
-  border-bottom: 1px solid #3acefc;
-  padding: 0.5rem 0 0.5rem 0;
-  margin: 0.5rem 0;
-  user-select: none; }
+  color: #acacac; }
   @media only screen and (min-width: 650px) {
     .step__number {
+      margin: 0 1rem;
+      font-family: 'Roboto', sans-serif;
+      font-size: 1.75rem;
       border: 0;
-      margin: 0;
-      padding: 0; } }
+      text-align: right; } }
   @media only screen and (min-width: 860px) {
     .step__number {
       flex: 0 0 150px;
-      margin-right: 50px;
-      font-family: 'Roboto', sans-serif;
+      margin: 0 50px 0 0;
       font-size: 2rem;
       text-align: right;
       color: #acacac; } }
@@ -237,9 +254,11 @@ li.stepper__step {
       position: relative;
       display: flex;
       justify-content: center;
-      flex: 0 0 50px;
-      margin-top: 10px;
-      text-align: center; } }
+      width: 50px;
+      margin-top: 0.5rem; } }
+  @media only screen and (min-width: 860px) {
+    .step__circle {
+      margin-top: 0.7rem; } }
 
 .step__circle:before {
   content: '';
@@ -267,25 +286,31 @@ li.stepper__step {
   color: #328EDE; }
 
 .stepper li:hover .step__circle i {
-  transform: scale(2.25); }
+  background: #3acefc;
+  transform: scale(1.75); }
 
 .stepper li:hover .step__description {
   color: #3acefc; }
 
 .step__body {
-  padding-bottom: 40px; }
+  padding-bottom: 1rem;
+  width: 100%; }
   @media only screen and (min-width: 650px) {
     .step__body {
       margin-left: 25px;
-      padding-bottom: 75px; } }
+      padding-bottom: 100px; } }
   @media only screen and (min-width: 860px) {
     .step__body {
-      margin-left: 50px;
-      padding-bottom: 60px; } }
+      margin-left: 50px; } }
 
 .step__description {
   color: #a0a0a0;
   line-height: 1.4; }
+
+.step__link--get-key {
+  display: inline-block;
+  margin: 0.5rem 0;
+  font-size: 0.9rem; }
 
 .dropzone__upload-icon {
   font-size: 2rem;
@@ -329,10 +354,17 @@ li.stepper__step {
 
 .category__box:hover {
   border: 2px dashed #f76161;
-  transition: 0.2s ease-in all; }
+  background-color: #f5faff;
+  transition: 0.2s ease-out all; }
 
 .category__button--remove {
   position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  width: 2rem;
+  padding: 0;
   top: -1rem;
   right: 0.5rem;
   font-size: 1rem;
@@ -354,13 +386,6 @@ li.stepper__step {
   border-bottom: 1px solid lightgray;
   pointer-events: none;
   color: #656565; }
-
-.category__button--remove {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 2rem;
-  width: 2rem; }
 
 .category__new-form-container {
   width: 100%;

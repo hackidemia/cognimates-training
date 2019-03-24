@@ -45,7 +45,6 @@
 
   <div class="tab-pane classifier__tab fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
     {{> vision__explore }}
-
   </div>
 </div>
 
@@ -74,15 +73,16 @@
     </div>
 </div>
 
-
-
 <script>
     $(function() {
         $('.js--open-help').on('click', function(e){
-            const section = $(e.target).closest('.step__description');
+            const section = $(e.target).closest('.step__body');
             $(section).find('.step__help').toggle();
             event.preventDefault(); // to keep from scrolling
         });
+
+      const player = new Plyr('#js-classifier__video--clarifai');
+
 
         // see full docs / events / config here: https://www.dropzonejs.com/#configuration
         // We'll manually create dropzone instances to control the options
@@ -131,7 +131,7 @@
             thumbnailWidth: 80,
             thumbnailHeight: 80,
             previewsContainer: document.querySelector('.js--dropzone__previews-container--categories')   
-                 });
+        });
 // --------
 
 

@@ -9,6 +9,7 @@
 }
 
 .classifier__nav-item {
+	padding: 0.75rem 0.5rem;
 	border-top: 1px solid transparent;
 	border-left: 1px solid transparent;
 	border-right: 1px solid transparent;
@@ -20,7 +21,9 @@
 }
 
 .classifier__nav-item h2 {
-    padding: 0.5rem 1.25rem;
+    // padding: 0.5rem 1.25rem;
+	padding: 0 1rem;
+
 }
 
 .classifier__tabs {
@@ -28,28 +31,49 @@
 
 .classifier__tab {
 	background-color: #f7f7f7;
+
+	@include mq('lg') {  
+		// override Bootstrap tab
+		display: flex !important;
+		align-items: center;
+		justify-content: center;
+	}
 }
 
+// adapted from https://codepen.io/lifeinchords/pen/wOyOEm
 ul.stepper {
 	position: relative;
 	padding: 2rem;
 	margin: 0;
 
-	@include mq('md') {  padding: 3rem; }
-	@include mq('lg') {  padding: 3rem; }
+	@include mq('md') {  padding: 4rem 2rem; }
+	@include mq('lg') {  
+		padding: 5rem 0 0 0; 
+	    margin-left: -10rem;
+	}
+	@include mq('xxl') {  
+	    margin-left: -1rem;
+	}
 }
 
 li.stepper__step {
 	display: flex;
 	padding: 0;
-
+	border-bottom: 1px solid #dddddd;
 	flex-direction: column;
+	margin-bottom: 4rem;
 
   	@include mq('md') {
 		display: flex;
 		flex-direction: row; 
 		line-height: 1;
 		padding: 0;
+		border-bottom: 0;
+		margin-bottom: 0;
+	}
+
+  	@include mq('lg') {
+		width: 800px;
 	}
 }
 
@@ -69,32 +93,28 @@ li.stepper__step {
 }
 
 .step__number {
-	transition: all 0.1s ease-out;
-	margin: 0;
-	border-bottom: 1px solid $accent-color;
-	padding: 0.5rem 0 0.5rem 0;
-	margin: 0.5rem 0;
+	font-size: 1.25rem;
+    margin: 0.25rem 0;
 	user-select: none;
+	transition: all 0.1s ease-out;
+	color: #acacac; 
 
   	@include mq('md') {
-    	// position: relative;
-  		// top: -10px;
+		margin: 0 1rem;
+		font-family: 'Roboto', sans-serif;
+		font-size: 1.75rem;
 		border: 0;
-		margin: 0;
-		padding: 0;
-	}
+		text-align: right;
+	} 
 
-  @include mq('lg') {
-	flex: 0 0 150px;
-	margin-right: 50px;
-	// margin-top: -0.6rem;
-	font-family: 'Roboto', sans-serif;
-	font-size: 2rem;
-	text-align: right;
-	color: #acacac; 
-  } 
+	@include mq('lg') {
+		flex: 0 0 150px;
+		margin: 0 50px 0 0;
+		font-size: 2rem;
+		text-align: right;
+		color: #acacac; 
+	} 
 }
-
 
 /* vertical line */
 .step__circle {
@@ -104,9 +124,12 @@ li.stepper__step {
 		position: relative;
 		display: flex;
 		justify-content: center;
-		flex: 0 0 50px;
-	    margin-top: 10px;
-		text-align: center;
+		width: 50px;
+	    margin-top: 0.5rem;
+	}
+
+  	@include mq('lg') {
+	    margin-top: 0.7rem;
 	}
 }
 	
@@ -141,46 +164,47 @@ li.stepper__step {
 
 	.step__circle {
 	    i {
-	     transform: scale(2.25);
+			background: $accent-color;
+			transform: scale(1.75);
 	    }
 	  }
 	  
 	  .step__description {
 	    color: $accent-color;
 	  }
-
 }
 
-
-
 .step__body {
-	padding-bottom: 40px;
+	padding-bottom: 1rem;
+	width: 100%;
 
 	@include mq('md') { 
 		margin-left: 25px;
-		padding-bottom: 75px;
+		padding-bottom: 100px;
 	}
 
 	@include mq('lg') { 
 		margin-left: 50px;
-		padding-bottom: 60px;
 	}
 }
-
-
 
 .step__description {
 	color: $text-gray;
 	line-height: 1.4;
 }
 
-
+.step__link--get-key {
+    display: inline-block;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+}
 
 // these dropzone classes are new, not overrides
 .dropzone__upload-icon {
   font-size: 2rem;
   color: lightgray;
-  user-select: none; }
+  user-select: none; 
+}
 
 .dropzone__header {
   display: flex;
@@ -229,11 +253,18 @@ li.stepper__step {
 
 .category__box:hover {
 	border: 2px dashed #f76161;
-	transition: 0.2s ease-in all;
+	background-color: #f5faff;
+	transition: 0.2s ease-out all;
 }
 
 .category__button--remove {
 	position: absolute;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 2rem;
+	width: 2rem;
+	padding: 0;
 	top: -1rem;
 	right: 0.5rem;
 	font-size: 1rem;
@@ -243,6 +274,7 @@ li.stepper__step {
 	border-radius: 50%;
 	border: 1px solid gray;
 }
+
 
 // .category__box:nth-of-type(1),
 // .filepond-x-drop-label:nth-of-type(1) { background: lightblue; }
@@ -262,14 +294,6 @@ li.stepper__step {
 	border-bottom: 1px solid lightgray;
 	pointer-events: none;
     color: #656565;
-}
-
-.category__button--remove {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	height: 2rem;
-	width: 2rem;
 }
 
 .category__new-form-container {
