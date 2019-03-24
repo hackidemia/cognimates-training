@@ -140,6 +140,12 @@
       window.labels = [];
       window.dropZoneMap = {};
 
+      $('#input_projectName').on('input', function () {
+        if ($(this).val().length > 0) {
+          window.projectName = $(this).val();
+        }
+      });
+
       $('#button_apikey').click(function () {
         if ($('#input_apikey').val() == '') {
           alert('API Key cannot be empty');
