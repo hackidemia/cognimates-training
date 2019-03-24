@@ -96,5 +96,14 @@ body {
     border-color: $accent-color;
 }
 
+.no-radius--right {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.no-radius--left {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
 
 

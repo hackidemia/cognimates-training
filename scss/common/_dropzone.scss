@@ -18,7 +18,9 @@
 }
 
 .dz-preview .dz-image {
-    border-radius: 0 ;
+    border-radius: 0;
+    border: 1px solid #cdcdcd;
+    overflow: hidden;
 }
 
 .dz-message {
@@ -27,13 +29,13 @@
 }
 
 .dz-preview.dz-image-preview {
+    display: inline-block;
     position: relative;
     background-color: transparent;
 }
 
 .dropzone-previews {
-    display: flex;
-    flex-wrap: wrap;
+    padding: 0.25rem;
 }
 
 .dropzone--predict .dropzone-previews {
@@ -69,7 +71,6 @@
     border: none;
 }
 
-
 .dz-preview .dz-details .dz-filename {
     display: none;
     background-color: none;
@@ -80,7 +81,6 @@
     line-height: 0.8rem;
     color: #8e8e8e; 
 }
-
 
 .dz-preview .dz-details .dz-size span {
     color: #ababab;
@@ -108,6 +108,7 @@
 
 .dz-preview .dz-success-mark, 
 .dz-preview .dz-error-mark {
+
     position: absolute;
     display: flex;
     justify-content: center;
@@ -121,20 +122,18 @@
     text-shadow: 4px 2px 0px $pink;
     color: white;
     cursor: pointer;
+
+    // Temporary: until we can figure out animations and how this works with layers
+    display: none;
 } 
 
-.dz-remove {
-    position: relative;
-    z-index: 1000;
-}
-
-.dz-upload {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 4px;
-    background-color: white;
-}
+// .dz-upload {
+//     position: absolute;
+//     top: 0;
+//     width: 100%;
+//     height: 4px;
+//     background-color: white;
+// }
 
 .dz-progress {
     position: absolute;
@@ -144,22 +143,40 @@
     align-items: center;
     top: 0;
     z-index: 1;
-    background: #060606;
-    opacity: 0.1;
 }
 
 .dz-remove {
-    height: 1rem;
-    width: 1rem;
-    background: red;
     position: absolute;
+    z-index: 1;
     right: 0;
     top: 0;
 }
 
-.dz-remove:hover {
+.dz-remove::after {
+    content: "\f00d";
+    font-family: "Font Awesome 5 Free";
+    font-size: 0.71rem;
+    font-weight: 700;
+
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.1rem;
+    width: 1.1rem;
+    top: -0.25rem;
+    right: -0.4rem;
+    padding: 0;
+    background: #c5c5c5;
+    color: white;
+    border-radius: 50%;
+    border: 0;
     transition: 0.1s ease-in all;
-    opacity: 0.9;
+}
+
+.dz-remove:hover::after {
+    background-color: $accent-color;
+    border-color: $accent-color;
 }
 
 
@@ -189,3 +206,5 @@
 #dropzonePredictTemplate {
     display: none;
 }
+
+

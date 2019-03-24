@@ -70,6 +70,14 @@ body {
   background-color: #3acefc;
   border-color: #3acefc; }
 
+.no-radius--right {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0; }
+
+.no-radius--left {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0; }
+
 .breakpoint {
   display: block;
   position: fixed;
@@ -575,19 +583,21 @@ nav ul {
   padding: 0.75rem; }
 
 .dz-preview .dz-image {
-  border-radius: 0; }
+  border-radius: 0;
+  border: 1px solid #cdcdcd;
+  overflow: hidden; }
 
 .dz-message {
   margin: 0;
   display: none; }
 
 .dz-preview.dz-image-preview {
+  display: inline-block;
   position: relative;
   background-color: transparent; }
 
 .dropzone-previews {
-  display: flex;
-  flex-wrap: wrap; }
+  padding: 0.25rem; }
 
 .dropzone--predict .dropzone-previews {
   justify-content: center; }
@@ -660,18 +670,8 @@ nav ul {
   font-size: 2rem;
   text-shadow: 4px 2px 0px #ff718b;
   color: white;
-  cursor: pointer; }
-
-.dz-remove {
-  position: relative;
-  z-index: 1000; }
-
-.dz-upload {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 4px;
-  background-color: white; }
+  cursor: pointer;
+  display: none; }
 
 .dz-progress {
   position: absolute;
@@ -680,21 +680,37 @@ nav ul {
   display: flex;
   align-items: center;
   top: 0;
-  z-index: 1;
-  background: #060606;
-  opacity: 0.1; }
+  z-index: 1; }
 
 .dz-remove {
-  height: 1rem;
-  width: 1rem;
-  background: red;
   position: absolute;
+  z-index: 1;
   right: 0;
   top: 0; }
 
-.dz-remove:hover {
-  transition: 0.1s ease-in all;
-  opacity: 0.9; }
+.dz-remove::after {
+  content: "\f00d";
+  font-family: "Font Awesome 5 Free";
+  font-size: 0.71rem;
+  font-weight: 700;
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.1rem;
+  width: 1.1rem;
+  top: -0.25rem;
+  right: -0.4rem;
+  padding: 0;
+  background: #c5c5c5;
+  color: white;
+  border-radius: 50%;
+  border: 0;
+  transition: 0.1s ease-in all; }
+
+.dz-remove:hover::after {
+  background-color: #3acefc;
+  border-color: #3acefc; }
 
 /* Step 1: Common Properties: All required to make icons render reliably */
 .icon::before {
@@ -736,7 +752,7 @@ nav ul {
   background-color: #f7f7f7; }
 
 .classifier__nav-item h2 {
-  padding: 0 1rem;
+  padding: 0 1rem 0 0.65rem;
   font-size: 1.3rem;
   letter-spacing: 0.3px; }
 
@@ -896,8 +912,6 @@ li.stepper__step {
   pointer-events: none;
   transition: 0.1s ease-in all;
   color: #b7b7b7;
-  /* z-index: 100000; */
-  /* position: relative; */
   margin-bottom: 0.2rem; }
 
 .dropzone__label {
@@ -933,17 +947,17 @@ li.stepper__step {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 2rem;
-  width: 2rem;
+  height: 1.1rem;
+  width: 1.1rem;
+  top: -0.5rem;
+  right: 0.7rem;
   padding: 0;
-  top: -1rem;
-  right: 0.5rem;
-  font-size: 1rem;
+  font-size: 0.71rem;
   font-weight: 700;
-  background: white;
-  color: blue;
+  background: #c5c5c5;
+  color: white;
   border-radius: 50%;
-  border: 1px solid gray; }
+  border: 0; }
 
 .category__name {
   display: flex;
@@ -965,9 +979,6 @@ li.stepper__step {
 .category__new-form-group {
   display: flex; }
 
-.category__new-form {
-  width: 100%; }
-
 .category__button--create {
   white-space: nowrap; }
 
@@ -978,7 +989,8 @@ li.stepper__step {
 
 .step__help {
   display: none;
-  transition: 1s all ease-in;
+  margin: 0 0 1rem 0;
+  transition: 0.1s all ease-in;
   color: #6d6d6d; }
 
 .button--train {

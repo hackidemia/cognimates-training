@@ -1,4 +1,3 @@
-{{!-- <h1 class="stepper__header"> Create Vision Model</h1> --}}
 <ul class="stepper">
     <li class="stepper__step">
         <span class="step__number">1</span>
@@ -83,8 +82,7 @@
             </h2>
 
             <div class="step__description">
-                <div class="step__help 
-                            step__help--categories">
+                <div class="step__help">
                    <span>Categories are groups of things your model wil try to tell the difference between. 
                    Remember, it can only learn what you give it! </span>
                     <ul>
@@ -97,11 +95,17 @@
                     <form class="category__new-form-container">
                         <div class="category__new-form-group">
                             <input type="text"
-                                class="form-control category__new-form step__form-text"
+                                class="form-control 
+                                        no-radius--right 
+                                        step__form-text"
                                 id=""
                                 aria-describedby=""
                                 placeholder="for example, cats">
-                             <button class="category__button--create d-inline-block btn btn-primary" 
+                             <button class="category__button--create 
+                                            d-inline-block 
+                                            btn 
+                                            btn-primary
+                                            no-radius--left" 
                                     type="button">
                                     Create Class
                                 </button>
