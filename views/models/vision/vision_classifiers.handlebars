@@ -171,6 +171,12 @@
         createCategoryHTMLElement(categoryName);
         $('#input_categoryName').val('');
       });
+
+      $('#button_train').on('click', function () {
+          setTrainButtonState('training');
+      })
+
+
     });
 
     function loadUserClassifiers() {
@@ -298,6 +304,18 @@
           }
       });
       window.dropZoneMap[categoryName] = dropzoneCategoryInstance;
+    }
+
+    function setTrainButtonState(state) {
+        if (state == 'normal') {
+            $('#button_train').removeAttr('disabled');
+            $('#span_train').removeClass('spinner-grow spinner-grow-sm');
+            $('#span_train_status').html('Train');
+        } else if (state == 'training') {
+            $('#button_train').attr('disabled', '');
+            $('#span_train').addClass('spinner-grow spinner-grow-sm');
+            $('#span_train_status').html('Training');
+        }
     }
 
 </script>
