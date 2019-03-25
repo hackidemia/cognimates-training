@@ -176,6 +176,29 @@ function classifyImage(req, res) {
     return;
   }
   const model_id = req.body.classifier_id;
+  if(model_id === 'general1234'){
+    const app = init(apiKey);
+    app.models.predict(Clarifai.GENERAL_MODEL, { base64: image_data }).then(
+    (response) => {
+      if (response.status.code == 10000) {
+        var output = response.outputs[0].data.concepts;
+        var results = [];
+        for (var index = 0; index < output.length; index++) {
+          var result = {};
+          result.class = output[index].name;
+          result.score = output[index].value;
+          results.push(result);
+        }
+        res.json(results)
+      } else {
+        res.json({ error: 'Could not classify the image' });
+      }
+    },
+    (err) => {
+      console.log(err)
+      res.json({ error: err });
+    });
+  }
   const app = init(apiKey);
   app.models.predict(model_id, { base64: image_data }).then(
   (response) => {
@@ -203,6 +226,29 @@ function classifyURLImage(req, res){
   const apiKey = req.headers.apikey;
   var image_link = req.body.image_data;
   const model_id = req.body.classifier_id;
+  if(model_id === 'general1234'){
+    app.models.predict(Clarifai.GENERAL_MODEL, { url: image_link }).then(
+      (response) =>{
+        if(response.status.code == 10000) {
+          var output = response.outputs[0].data.concepts;
+          var results = [];
+          for(var index = 0; index < output.length; index++){
+            var result = {};
+            result.class = output[index].name;
+            result.score = output[index].value;
+            results.push(result);
+          }
+          res.json(results);
+        } else {
+          res.json({error: 'Could not classify image'});
+        }
+      },
+      (err) => {
+        console.log(err);
+        res.json({error: err});
+      }
+    )
+  }
   const app = init(apiKey);
   console.log(req.body);
   app.models.predict(model_id, { url: image_link }).then(
