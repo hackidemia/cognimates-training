@@ -226,7 +226,8 @@ function classifyURLImage(req, res){
   const apiKey = req.headers.apikey;
   var image_link = req.body.image_data;
   const model_id = req.body.classifier_id;
-  if(model_id === 'general1234'){
+  if(model_id === 'general1234'){  
+    const app = init(apiKey);
     app.models.predict(Clarifai.GENERAL_MODEL, { url: image_link }).then(
       (response) =>{
         if(response.status.code == 10000) {
