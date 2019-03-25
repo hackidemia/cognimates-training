@@ -250,8 +250,7 @@
         const htmlStructure = `<div class="category__container">
             <div class="category__box">
                 <form action="/"
-                        id="js--dropzone-category_${categoryName}"
-                       class="dropzone--categories">
+                       class="dropzone--categories js--dropzone__category--${categoryName}">
                   <div class="category__name">
                         ${categoryName}
                     </div>
@@ -271,7 +270,7 @@
                 </form>
             </div>
 
-            <a href="#" class="category__button--remove btn btn-primary">
+            <a href="#" class="category__button--remove btn btn-primary js--dropzone__category__remove--${categoryName}">
                 <i class="fas fa-times"></i>
             </a>
         </div>`;
@@ -282,8 +281,10 @@
     }
 
     function initDropZoneForClass(categoryName) {
-      const dropzoneElementId = `#js--dropzone-category_${categoryName}`;
-      const dropzoneCategoryInstance = new Dropzone(dropzoneElementId, {
+      const dropzoneFormClass = `.js--dropzone__category--${categoryName}`;
+      const dropzonePreviewsContainerClass = `.js--dropzone__previews__container--${categoryName}`;
+      const dropzoneRemoveClass = `.js--dropzone__category__remove--${categoryName}`;
+      const dropzoneCategoryInstance = new Dropzone(dropzoneFormClass, {
           url: "/file/post" ,
           paramName: "category-image",
           maxFilesize: 5, //  MB
@@ -294,7 +295,7 @@
           addRemoveLinks: true, //  enable person to del file
           thumbnailWidth: 80,
           thumbnailHeight: 80,
-          previewsContainer: document.querySelector(`#js--dropzone__previews-container_${categoryName}`),
+          previewsContainer: document.querySelector(dropzonePreviewsContainerClass),
           init: function () {
             this.on("error", function(file) {
               if (!file.accepted) {
