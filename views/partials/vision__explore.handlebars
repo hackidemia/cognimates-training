@@ -1,0 +1,148 @@
+<ul class="stepper">
+
+    <li class="stepper__step">
+        <span class="step__number">1</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__body">
+            <h2 class="step__title">What are your {{ serviceName }} keys?
+                <a href="#" class="step__help-open-button 
+                                    js--open-help" role="button">
+                    <i class="fas fa-question-circle"></i>
+                </a>
+            </h2>
+
+            <div class="step__description">
+                <div class="form-group ">
+                    <input type="text"
+                        class="form-control step__form-text"
+                        id=""
+                        aria-describedby=""
+                        placeholder="read key, like: 828gn21ng02n-gmffmn298fkskj-gsk2jg">
+                </div>
+                 <div class="form-group category__new-form-group">
+                    <input type="text"
+                        class="form-control step__form-text"
+                        id=""
+                        aria-describedby=""
+                        placeholder="write key, something like: 828gn21ng02n-gmffmn298fkskj-gsk2jg">
+                </div>
+
+                 <a href="{{ serviceUrl }}" class="step__link--get-key" target="_blank" >
+                       Sign up and get keys
+                 </a>
+
+                <div class="step__help 
+                            step__help--keys">
+                    <div class="step__help-info-detail">
+                        <div class="plyr__video-embed" id="js-classifier__video--clarifai">
+                            <iframe src="https://www.youtube.com/embed/YOrrROME2zc" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                                </iframe>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="step__number">2</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__body">
+            <h2 class="step__title">Select an existing project 
+                <a href="#" class="step__help-open-button 
+                                    js--open-help" role="button">
+                    <i class="fas fa-question-circle"></i>
+                </a>
+            </h2>
+
+            <div class="step__description">
+                <div class="step__help">
+                   <span>These are projects you have already trained. Unfortunately these cannot be modified once they are created.
+                    </span>
+                   
+                </div>
+                <div class="">
+                    <form class="category__new-form-container">
+                        <div class="category__new-form-group">
+                            <div class="dropdown">
+                              <a class="btn btn-primary dropdown-toggle" 
+                                  href="#" 
+                                  role="button" 
+                                  id="dropdownMenuLink" 
+                                  data-toggle="dropdown" 
+                                  aria-haspopup="true" 
+                                  aria-expanded="false">
+                                Choose Project
+                              </a>
+
+                              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <a class="dropdown-item" href="#">Flying Unicorns</a>
+                                <a class="dropdown-item" href="#">Sleeping Tigers</a>
+                                <a class="dropdown-item" href="#">Jumping Penguins</a>
+                              </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="step__number">3</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__body">
+            <h2 class="step__title">Upload an image to test your model</h2>
+            <div class="step__description">
+
+                <div class="category__container">
+                    <div class="category__box">
+                        <form action="/"
+                              id="js--dropzone-predict" 
+                              class="dropzone--predict">
+
+                            <div class="dropzone__header">
+                                <i class="fas fa-cloud-upload-alt dropzone__upload-icon"></i>
+                                <span class=" dropzone__label">Drop images here, or click to choose</span>
+                            </div>
+                            <div class="js--dropzone__previews-container--predict
+                                        dropzone-previews"></div>
+                        </form>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary"
+                    type="button">
+                    Predict
+                </button>
+            </div>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="step__number">4</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__body">
+            <h2 class="step__title">
+                <button class="btn btn-primary"
+                        type="button">
+                        Play
+                    </button>
+                 with the model in Codelab
+            </h2>
+            <div class="step__description">
+                
+            </div>
+        </div>
+    </li>
+</ul>

@@ -1,0 +1,346 @@
+@import '../../common/variables';
+@import '../../common/mq';
+@import '../../common/dropzone';
+
+.classifier__nav-tabs {
+	width: 100%;
+	margin: 4rem auto 0 auto;
+	justify-content: center;
+}
+
+.classifier__nav-item .nav-link {
+    margin: 1rem;
+    border:  0;
+
+    @include mq('md') {  
+        padding: 0.75rem 0.5rem;
+        border-top: 1px solid transparent;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
+        border-bottom: 0;
+        margin: 0 0.5rem;
+    }
+}
+
+.classifier__nav-link.active {
+    background-color: #f7f7f7 !important;
+}
+
+.classifier__nav-link h2 span {
+    color: #bebebe;
+}
+
+.classifier__nav-item--or {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-style: italic;
+
+    @include mq('md') {  
+      display: none;
+    }
+
+    h2 {
+        color: #aeaeae;  
+    } 
+}
+
+
+
+.classifier__nav-item h2 {
+	// left right mismatch accounts for the left side having an icon
+	padding: 0 1rem 0 0.65rem; 
+	font-size: 1.3rem;
+    letter-spacing: 0.3px;
+}
+
+.classifier__nav-item h2 i { 
+	color: $accent-color;
+	font-size: 1.1rem;
+	margin: 0 0.5rem;
+}
+
+.classifier__tab {
+	background-color: #f7f7f7;
+
+	@include mq('lg') {  
+		// override Bootstrap tab
+		display: flex !important;
+		align-items: center;
+		justify-content: center;
+	}
+}
+
+// adapted from https://codepen.io/lifeinchords/pen/wOyOEm
+ul.stepper {
+	position: relative;
+	padding: 2rem;
+	margin: 0;
+
+	@include mq('md') {  padding: 4rem 2rem; }
+	@include mq('lg') {  
+		padding: 5rem 0 0 0; 
+	    margin-left: -10rem;
+	}
+}
+
+li.stepper__step {
+	display: flex;
+	padding: 0;
+	border-bottom: 1px solid #dddddd;
+	flex-direction: column;
+	margin-bottom: 4rem;
+
+  	@include mq('md') {
+		display: flex;
+		flex-direction: row; 
+		line-height: 1;
+		padding: 0;
+		border-bottom: 0;
+		margin-bottom: 0;
+	}
+
+  	@include mq('lg') {
+		width: 800px;
+	}
+}
+
+.step__title {
+	margin: 0 0 1rem 0;
+}
+
+.step__form-text {
+	&::placeholder {
+		user-select: none !important;
+		color: lightgray;
+	}
+
+	&:focus::-webkit-input-placeholder {
+		color: transparent;
+	}
+}
+
+.step__number {
+	font-size: 1.25rem;
+    margin: 0.25rem 0;
+	user-select: none;
+	transition: all 0.1s ease-out;
+	color: #acacac; 
+
+  	@include mq('md') {
+		margin: 0 1rem;
+		font-family: 'Roboto', sans-serif;
+		font-size: 1.75rem;
+		border: 0;
+		text-align: right;
+	} 
+
+	@include mq('lg') {
+		flex: 0 0 150px;
+		margin: 0 50px 0 0;
+		font-size: 2rem;
+		text-align: right;
+		color: #acacac; 
+	} 
+}
+
+/* vertical line */
+.step__circle {
+	display: none;
+
+  	@include mq('md') {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		width: 50px;
+	    margin-top: 0.5rem;
+	}
+
+  	@include mq('lg') {
+	    margin-top: 0.7rem;
+	}
+}
+	
+.step__circle:before {
+	content: '';
+	position: absolute;
+	z-index: 2;
+	right: 0;
+	left: 0;
+	height: 100%;
+	width: 2px;
+	margin: auto;
+	background: #ccc;
+}
+
+.step__circle i {
+	position: relative;
+	display: inline-block;
+	z-index: 3;
+	width: 12px;
+	height: 12px;
+	background: #c5c5c5;
+	border-radius: 50%;
+	box-sizing: border-box;
+	transition: all 0.1s ease-out;
+}
+
+.stepper li:hover {
+	.step__number {
+		color: $main-color;
+	}
+
+	.step__circle {
+	    i {
+			background: $pink;
+			transform: scale(1.75);
+	    }
+	  }
+	  
+	  .step__description {
+	    color: $accent-color;
+	  }
+}
+
+.step__body {
+	padding-bottom: 1rem;
+	width: 100%;
+
+	@include mq('md') { 
+		margin-left: 25px;
+		padding-bottom: 100px;
+	}
+
+	@include mq('lg') { 
+		margin-left: 50px;
+	}
+}
+
+.step__description {
+	color: $text-gray;
+	line-height: 1.4;
+}
+
+.step__link--get-key {
+    display: inline-block;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+// these dropzone classes are new, not overrides
+.dropzone__upload-icon {
+  font-size: 2rem;
+  color: lightgray;
+  user-select: none; 
+}
+
+.dropzone__header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    pointer-events: none;
+    transition: 0.1s ease-in all; 
+    color: #b7b7b7;
+    margin-bottom: 0.2rem;
+}
+
+.dropzone__label {
+    margin: 0.35rem 0 0rem 0;
+}
+
+.category__dropzone {
+    align-items: center;
+    justify-content: center;
+}
+
+.category__container { 
+	position: relative;
+	border-radius: 1rem;
+	margin-bottom: 1rem;
+}
+
+.category__box {
+	border-radius: 1rem;
+	color: #ff0030;
+	border: 2px dashed #c5c5c5;
+	border-radius: 10px;
+	background-color: white;
+    cursor: pointer;
+    transition: 0.1s ease-out all;
+}
+
+.category__box:hover {
+	border: 2px dashed $pink;
+}
+
+.category__button--remove {
+	position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.1rem;
+    width: 1.1rem;
+    top: -0.5rem;
+    right: 0.7rem;
+    padding: 0;
+    font-size: 0.71rem;
+    font-weight: 700;
+    background: #c5c5c5;
+    color: white;
+    border-radius: 50%;
+    border: 0;
+}
+
+.category__box:nth-of-type(1){ background: lightblue; }
+
+.category__box:nth-of-type(2) { background: lightyellow; }
+
+.category__name {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: auto;
+	margin: 0 0.75rem 0.75rem 0.75rem;
+	padding: 0.75rem;
+	font-weight: 600;
+	line-height: 1;
+	border-bottom: 1px solid lightgray;
+	pointer-events: none;
+    color: #656565;
+}
+
+.category__new-form-container {
+	width: 100%;
+	margin: 0 0 2rem 0;
+}
+
+.category__new-form-group {
+	display: flex;
+}
+
+.category__button--create {
+	white-space: nowrap;
+}
+
+.step__help-open-button {
+    margin-left: 0.75rem;
+    font-size: 1.25rem;
+    vertical-align: middle;
+}
+
+.step__help {
+	display: none;
+	margin: 0 0 1rem 0;
+	transition: 0.1s all ease-in;
+	color: #6d6d6d;
+}
+
+.button--train {
+	margin-right: 0.75rem;
+}
+
+.button--play {
+    margin-right: 0.75rem;
+}
+

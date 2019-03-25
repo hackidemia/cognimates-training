@@ -1,0 +1,207 @@
+<ul class="stepper">
+    <li class="stepper__step">
+        <span class="step__number">1</span>
+        <div class="step__circle">
+            <i></i><!-- no dom here, gets made by css -->
+        </div>
+        <div class="step__body">
+            <h2 class="step__title">What is your project name?</h2>
+            <div class="step__description">
+                <form>
+                    <div class="form-group">
+                        <input type="text"
+                            class="form-control
+                                   step__form-text"
+                            id="input_projectName"
+                            autocomplete="off"
+                            aria-describedby=""
+                            placeholder="Unicorns vs Narhwals">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="step__number">2</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__body">
+            <h2 class="step__title">What are your {{ serviceName }} keys?
+                <a href="#" class="step__help-open-button
+                                    js--open-help" role="button">
+                    <i class="fas fa-question-circle"></i>
+                </a>
+            </h2>
+
+            <div class="step__description">
+                <div class="">
+                    <form class="category__new-form-container">
+                        <div class="category__new-form-group">
+                            <input type="text"
+                                class="form-control
+                                       no-radius--right
+                                       step__form-text
+                                       js--apikey__input"
+                                aria-describedby=""
+                                placeholder="Paste API Key here">
+                             <button class="category__button--create
+                                            d-inline-block
+                                            btn
+                                            btn-primary
+                                            no-radius--left
+                                            js--apikey__input--set"
+                                    id="button_categoryName"
+                                    type="button">
+                                    Set Key
+                                </button>
+                            <span class="step__description-secondary"></span>
+                        </div>
+                    </form>
+                </div>
+
+                <a href="{{ howToGuide }}" class="step__link--get-key" target="_blank" >
+                       How to get guide
+                 </a>
+                 <a href="{{ serviceUrl }}" class="step__link--get-key" target="_blank" >
+                       Sign up and get keys
+                 </a>
+
+                <div class="step__help
+                            step__help--keys">
+                    <div class="step__help-info-detail">
+                        <div class="plyr__video-embed" id="js-classifier__video--clarifai">
+                            <iframe src="https://www.youtube.com/embed/YOrrROME2zc"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                                </iframe>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="step__number">3</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__body">
+            <h2 class="step__title">What categories should your model have?
+                <a href="#" class="step__help-open-button
+                                    js--open-help" role="button">
+                    <i class="fas fa-question-circle"></i>
+                </a>
+            </h2>
+
+            <div class="step__description">
+                <div class="step__help">
+                   <span>Categories are groups of things your model wil try to tell the difference between.
+                   Remember, it can only learn what you give it! </span>
+                    <ul>
+                        <li><b>animals,</b>like <span> cats vs dogs</span></li>
+                        <li><b>objects</b>, like <span> cups vs jars</span></li>
+                        <li><b>expressions</b>, like <span> happy vs sad</span></li>
+                    </ul>
+                </div>
+                <div id="categoriesContainer"></div>
+                <div class="">
+                    <form class="category__new-form-container">
+                        <div class="category__new-form-group">
+                            <input type="text"
+                                class="form-control
+                                        no-radius--right
+                                        step__form-text"
+                                id="input_categoryName"
+                                aria-describedby=""
+                                placeholder="for example, cats">
+                             <button class="category__button--create
+                                            d-inline-block
+                                            btn
+                                            btn-primary
+                                            no-radius--left"
+                                    id="button_categoryName"
+                                    type="button">
+                                    Add Category
+                                </button>
+                            <span class="step__description-secondary"></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="step__number">4</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__body">
+            <h2 class="step__title">
+                <button id="button_train" class="btn btn-primary button--train"
+                        type="button">
+                    <span role="status"
+                            aria-hidden="true"></span>
+                    <span id="span_train_status">
+                     Train Model
+                   </span>
+                </button>
+            </h2>
+            <a href="" class="step__link--get-key" target="_blank">
+                Why is it taking forever?
+            </a>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="step__number">5</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__body">
+            <h2 class="step__title">Upload an image to test your model</h2>
+            <div class="step__description">
+
+                <div class="category__container">
+                    <div class="category__box">
+                        <form action="/"
+                              id="js--dropzone-predict"
+                              class="dropzone--predict">
+
+                            <div class="dropzone__header">
+                                <i class="fas fa-cloud-upload-alt dropzone__upload-icon"></i>
+                                <span class=" dropzone__label">Drag and drop one image</span>
+                            </div>
+                            <div class="js--dropzone__previews-container--predict
+                                        dropzone-previews"></div>
+                        </form>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary"
+                    type="button">
+                    Predict
+                </button>
+            </div>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="step__number">6</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__body">
+            <h2 class="step__title">
+                 Play with the model in Codelab
+            </h2>
+            <button class="btn btn-primary button--play"
+                    type="button ">
+                    Go!
+            </button>
+        </div>
+    </li>
+</ul>

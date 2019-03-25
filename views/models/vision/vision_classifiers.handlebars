@@ -1,0 +1,348 @@
+{{> header }}
+
+<ul class="nav
+          nav-tabs
+          classifier__nav-tabs"
+    id="classifier__tabs"
+    role="tablist">
+
+  <li class="nav-item classifier__nav-item ">
+    <a class="nav-link classifier__nav-link active"
+      id=""
+      data-toggle="tab"
+      href="#home"
+      role="tab"
+      aria-controls="home"
+      aria-selected="true">
+        <h2>
+          <i class="fas fa-plus"></i>
+          Create 
+          Model
+        </h2>
+    </a>
+  </li>
+
+  <li class="nav-item classifier__nav-item--or">
+    <h2>
+      &mdash; or  &mdash;
+    </h2>
+  </li>
+
+  <li class="nav-item classifier__nav-item">
+    <a class="nav-link classifier__nav-link"
+      id=""
+      data-toggle="tab"
+      href="#profile"
+      role="tab"
+      aria-controls="profile"
+      aria-selected="false">
+        <h2>
+          <i class="fas fa-eye"></i>
+          Explore Your
+          Models
+        </h2>
+    </a>
+  </li>
+</ul>
+
+<div class="tab-content " id="myTabContent" class="classifier__tabs">
+  <div class="tab-pane classifier__tab fade show active"
+      id="classifier__tab--create"
+      role="tabpanel"
+      aria-labelledby="home-tab">
+    {{> vision__create }}
+  </div>
+{{!--
+  <div class="tab-pane classifier__tab fade"
+        id="classifier__tab--explore"
+        role="tabpanel"
+        aria-labelledby="profile-tab">
+    {{> vision__explore }}
+  </div> --}}
+
+</div>
+
+{{> footer }}
+
+<!-- custom template for predict dropzone -->
+<div id="dropzonePredictTemplate">
+    <div class="dz-preview dz-file-preview">
+      <div class="dz-details">
+        <img data-dz-thumbnail />
+        <div class='dz-filename'><span data-dz-name></span></div>
+        <div class='dz-size' data-dz-size></div>
+      </div>
+
+      <div class="dz-progress">
+        <span class="dz-upload" data-dz-uploadprogress></span>
+        </div>
+
+      <div class="dz-success-mark">
+        <i class="fas fa-times"></i>
+      </div>
+      <div class="dz-error-mark">
+        <i class="fas fa-check"></i>
+        </div>
+      <div class="dz-error-message"><span data-dz-errormessage></span></div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+
+    /// set up info icon toggles
+    $('.js--open-help').on('click', function(e){
+        const section = $(e.target).closest('.step__body');
+        $(section).find('.step__help').toggle();
+        event.preventDefault(); // to keep from scrolling
+    });
+
+      /// set up video embeds
+    const player = new Plyr('#js-classifier__video--clarifai');
+
+    // set up page tabs
+    // Doesnt work? https://getbootstrap.com/docs/4.0/components/navs/#javascript-behavior
+    $('#classifier__tabs a').on('click', function (e) {
+      e.preventDefault()
+      $(this).tab('show')
+    })
+
+    // set up dropzone instances
+    // https://www.dropzonejs.com/#configuration
+    // Dropzone.autoDiscover = false;
+
+      /*
+      Why doesnt this doesnt work?
+      dropzoneCategories.on('error', function(file, errorMessage, xhr) {
+        document.querySelector('.dropzone__error-container').innerHtml = errorMessage;
+        console.log('error: ', errorMessage);
+      });
+      */
+
+      const dropzonePredictEl = "#js--dropzone-predict";
+      const dropzonePredict = new Dropzone(dropzonePredictEl, {
+          url: "/file/post1",
+          paramName: "prediction-image",
+          maxFiles: 1,
+          dictRemoveFile: "",
+          uploadMultiple: false,
+          acceptedFiles: "image/*",
+          addRemoveLinks: true, //  enable person to del file
+          thumbnailWidth: 80,
+          thumbnailHeight: 80,
+          previewsContainer: document.querySelector('.js--dropzone__previews-container--predict'),
+          previewTemplate: document.querySelector('#dropzonePredictTemplate').innerHTML // use a custom HTML template
+      });
+    });
+
+    $(document).ready(function init() {
+
+      window.labels = [];
+      window.dropZoneMap = {};
+
+      $('#input_projectName').on('input', function () {
+        if ($(this).val().length > 0) {
+          window.projectName = $(this).val();
+        }
+      });
+
+      $('.js--apikey__input--set').click(function () {
+        if ($('.js--apikey__input').val() == '') {
+          alert('API Key cannot be empty');
+          return;
+        }
+        window.apiKey = $('.js--apikey__input').val();
+        // loadUserClassifiers();
+      });
+
+      $('#button_categoryName').click(function () {
+        if ($('#input_categoryName').val() == '') {
+          alert('Category name cannot be empty');
+          return;
+        }
+
+        // TODO: Sanitize categoryName before further processing
+        var categoryName = $('#input_categoryName').val();
+        if (window.labels.includes(categoryName)) {
+          alert('Category already added');
+          return;
+        }
+        window.labels.push(categoryName);
+        createCategoryHTMLElement(categoryName);
+        $('#input_categoryName').val('');
+      });
+
+      $('#button_train').on('click', function () {
+          setTrainButtonState('training');
+      })
+
+
+    });
+
+    function loadUserClassifiers() {
+      $.ajax({
+           url: "/vision/classifiers",
+           type: "GET",
+           headers: { 'apiKey': window.apiKey },
+           success: function (data) {
+             if(data.error == null) {
+               window.userClassifiers = data.classifiers;
+             } else {
+               window.userClassifiers = [];
+             }
+             displayClassifiers();
+           },
+           error: function (data) {
+             console.log(data);
+             window.userClassifiers = [];
+           }
+        });
+    }
+
+    function createClassifier() {
+      if (window.labels == undefined || window.labels.length < 2) {
+        alert('Two or more categories are required to train');
+        return
+      }
+      var error = false
+      for (var idx = 0, label = window.labelListItems[idx]; idx < window.labelListItems.length; idx++) {
+        if (window.examples[label].length < 10) {
+          alert('10 or more examples required for each label');
+          error = true;
+          break;
+        }
+      }
+      if(error == true) {
+        return;
+      }
+      var requestData = {};
+      requestData.name = window.classifierName;
+      requestData.training_data = [];
+      window.labels.forEach((label) => {
+        label_items = [];
+        window.examples[label].forEach((example) => {
+          var image_file = example.split(',')[1];
+          label_items.push(image_file);
+        })
+        requestData.training_data.push({label: label, label_items: label_items});
+      })
+      $.ajax({
+        url: '/vision/classifier',
+        type: 'POST',
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(requestData),
+        headers: { apikey: window.apiKey },
+        success: function (data) {
+          if(data.error != null) {
+            alert(data.error);
+            return;
+          }
+        }
+      });
+    }
+
+    function classifyImage() {
+
+    }
+
+    function createCategoryHTMLElement(categoryName) {
+        const htmlStructure = `<div class="category__container
+                                           js--dropzone__category__container--${categoryName}">
+            <div class="category__box">
+                <form action="/"
+                       class="dropzone--categories
+                              js--dropzone__category--${categoryName}">
+                  <div class="category__name">
+                        ${categoryName}
+                    </div>
+
+                    <div class="dropzone__header">
+                        <i class="fas fa-cloud-upload-alt
+                                    dropzone__upload-icon"></i>
+                        <span class="dropzone__label">Drag and drop 10 or more images</span>
+                    </div>
+
+                    <!-- inject image previews here -->
+                    <div class="js--dropzone__previews-container dropzone-previews"
+                         id="js--dropzone__previews-container_${categoryName}">
+                    </div>
+
+                    <div class="dropzone__error-container"></div>
+                </form>
+            </div>
+
+            <a href="#" class="category__button--remove
+                               btn btn-primary
+                               js--dropzone__category__remove--${categoryName}">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>`;
+        const htmlElement = $(htmlStructure);
+        const categoriesContainerElement = $('#categoriesContainer');
+        categoriesContainerElement.append(htmlElement);
+        initDropZoneForClass(categoryName);
+    }
+
+    function initDropZoneForClass(categoryName) {
+      const dropzoneFormClass = `.js--dropzone__category--${categoryName}`;
+      const dropzonePreviewsContainerClass = `.js--dropzone__previews__container--${categoryName}`;
+      const dropzoneRemoveClass = `.js--dropzone__category__remove--${categoryName}`;
+      const dropzoneCategoryInstance = new Dropzone(dropzoneFormClass, {
+          url: "/file/post" ,
+          paramName: "category-image",
+          maxFilesize: 5, //  MB
+          maxFiles: 20,
+          autoProcessQueue: false,
+          dictRemoveFile: "",
+          acceptedFiles: ".jpg,.jpeg,.png",
+          addRemoveLinks: true, //  enable person to del file
+          thumbnailWidth: 80,
+          thumbnailHeight: 80,
+          previewsContainer: document.querySelector(dropzonePreviewsContainerClass),
+          init: function () {
+            this.on("error", function(file) {
+              if (!file.accepted) {
+                this.removeFile(file);
+              }
+            });
+          }
+      });
+      $(dropzoneRemoveClass).click((e) => {
+          e.preventDefault();
+          removeDropZoneByClass(categoryName);
+      });
+      window.dropZoneMap[categoryName] = dropzoneCategoryInstance;
+    }
+
+    function removeDropZoneByClass(categoryName) {
+        if (window.labels == undefined || !window.labels.includes(categoryName)) {
+            return;
+        }
+        const dropZoneCategoryClass = `.js--dropzone__category__container--${categoryName}`;
+        const dropzoneFormClass = `.js--dropzone__category--${categoryName}`;
+        const dropzonePreviewsContainerClass = `.js--dropzone__previews__container--${categoryName}`;
+        const dropzoneRemoveClass = `.js--dropzone__category__remove--${categoryName}`;
+        window.dropZoneMap[categoryName].disable();
+        window.dropZoneMap[categoryName] = undefined;
+        $(dropzoneRemoveClass).unbind();
+        $(dropZoneCategoryClass).remove();
+        window.labels[categoryName] = undefined;
+        if (window.examples != undefined && window.examples[categoryName] != undefined) {
+            window.examples[categoryName] = undefined;
+        }
+    }
+
+    function setTrainButtonState(state) {
+        if (state == 'normal') {
+            $('#button_train').removeAttr('disabled');
+            $('#span_train').removeClass('spinner-grow spinner-grow-sm');
+            $('#span_train_status').html('Train');
+        } else if (state == 'training') {
+            $('#button_train').attr('disabled', '');
+            $('#span_train').addClass('spinner-grow spinner-grow-sm');
+            $('#span_train_status').html('Training');
+        }
+    }
+
+</script>
