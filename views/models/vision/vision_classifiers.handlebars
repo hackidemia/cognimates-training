@@ -146,12 +146,12 @@
         }
       });
 
-      $('#button_apikey').click(function () {
-        if ($('#input_apikey').val() == '') {
+      $('.js--apikey__input--set').click(function () {
+        if ($('.js--apikey__input').val() == '') {
           alert('API Key cannot be empty');
           return;
         }
-        window.apiKey = $('#input_apikey').val();
+        window.apiKey = $('.js--apikey__input').val();
         // loadUserClassifiers();
       });
 
