@@ -200,49 +200,6 @@
         });
     }
 
-    function createClassifier() {
-      if (window.labels == undefined || window.labels.length < 2) {
-        alert('Two or more categories are required to train');
-        return
-      }
-      var error = false
-      for (var idx = 0, label = window.labelListItems[idx]; idx < window.labelListItems.length; idx++) {
-        if (window.examples[label].length < 10) {
-          alert('10 or more examples required for each label');
-          error = true;
-          break;
-        }
-      }
-      if(error == true) {
-        return;
-      }
-      var requestData = {};
-      requestData.name = window.classifierName;
-      requestData.training_data = [];
-      window.labels.forEach((label) => {
-        label_items = [];
-        window.examples[label].forEach((example) => {
-          var image_file = example.split(',')[1];
-          label_items.push(image_file);
-        })
-        requestData.training_data.push({label: label, label_items: label_items});
-      })
-      $.ajax({
-        url: '/vision/classifier',
-        type: 'POST',
-        dataType: 'json',
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(requestData),
-        headers: { apikey: window.apiKey },
-        success: function (data) {
-          if(data.error != null) {
-            alert(data.error);
-            return;
-          }
-        }
-      });
-    }
-
     function classifyImage() {
 
     }
@@ -347,9 +304,11 @@
     }
 
     async function preprocessTrainData() {
+        setTrainButtonState('training');
         try {
             validateTrainingData();
             await convertImagesIntoExamples();
+            createClassifier();
         } catch (error) {
             console.log(error);
             setTrainButtonState('normal');
@@ -404,6 +363,34 @@
             window.examples = {};
         }
         window.examples[className] = examples;
+    }
+
+    function createClassifier() {
+        var requestData = {};
+        requestData.name = window.projectName;
+        requestData.training_data = [];
+        window.labels.forEach((label) => {
+            label_items = [];
+            window.examples[label].forEach((example) => {
+                var image_file = example.split(',')[1];
+                label_items.push(image_file);
+            });
+            requestData.training_data.push({label: label, label_items: label_items});
+        })
+        $.ajax({
+            url: '/vision/classifier',
+            type: 'POST',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(requestData),
+            headers: { apikey: window.apiKey },
+            success: function (data) {
+                if(data.error != null) {
+                    alert(data.error);
+                    return;
+                }
+            }
+        });
     }
 
 </script>
