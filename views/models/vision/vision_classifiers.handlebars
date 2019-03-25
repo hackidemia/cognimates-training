@@ -247,10 +247,12 @@
     }
 
     function createCategoryHTMLElement(categoryName) {
-        const htmlStructure = `<div class="category__container">
+        const htmlStructure = `<div class="category__container
+                                           js--dropzone__category__container--${categoryName}">
             <div class="category__box">
                 <form action="/"
-                       class="dropzone--categories js--dropzone__category--${categoryName}">
+                       class="dropzone--categories
+                              js--dropzone__category--${categoryName}">
                   <div class="category__name">
                         ${categoryName}
                     </div>
@@ -270,7 +272,9 @@
                 </form>
             </div>
 
-            <a href="#" class="category__button--remove btn btn-primary js--dropzone__category__remove--${categoryName}">
+            <a href="#" class="category__button--remove
+                               btn btn-primary
+                               js--dropzone__category__remove--${categoryName}">
                 <i class="fas fa-times"></i>
             </a>
         </div>`;
@@ -304,7 +308,29 @@
             });
           }
       });
+      $(dropzoneRemoveClass).click((e) => {
+          e.preventDefault();
+          removeDropZoneByClass(categoryName);
+      });
       window.dropZoneMap[categoryName] = dropzoneCategoryInstance;
+    }
+
+    function removeDropZoneByClass(categoryName) {
+        if (window.labels == undefined || !window.labels.includes(categoryName)) {
+            return;
+        }
+        const dropZoneCategoryClass = `.js--dropzone__category__container--${categoryName}`;
+        const dropzoneFormClass = `.js--dropzone__category--${categoryName}`;
+        const dropzonePreviewsContainerClass = `.js--dropzone__previews__container--${categoryName}`;
+        const dropzoneRemoveClass = `.js--dropzone__category__remove--${categoryName}`;
+        window.dropZoneMap[categoryName].disable();
+        window.dropZoneMap[categoryName] = undefined;
+        $(dropzoneRemoveClass).unbind();
+        $(dropZoneCategoryClass).remove();
+        window.labels[categoryName] = undefined;
+        if (window.examples != undefined && window.examples[categoryName] != undefined) {
+            window.examples[categoryName] = undefined;
+        }
     }
 
     function setTrainButtonState(state) {
