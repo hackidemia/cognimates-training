@@ -13,8 +13,9 @@
                             class="form-control
                                    step__form-text"
                             id="input_projectName"
+                            autocomplete="off" 
                             aria-describedby=""
-                            placeholder="Use this same name in Codelab">
+                            placeholder="Unicorns vs Narhwals">
                     </div>
                 </form>
             </div>
@@ -42,14 +43,17 @@
                         aria-describedby=""
                         placeholder="read key, like: 828gn21ng02n-gmffmn298fkskj-gsk2jg">
                 </div>
-                 <div class="form-group category__new-form-group">
+                {{!--  <div class="form-group category__new-form-group">
                     <input type="text"
                         class="form-control step__form-text"
                         id=""
                         aria-describedby=""
                         placeholder="write key, something like: 828gn21ng02n-gmffmn298fkskj-gsk2jg">
-                </div>
+                </div> --}}
 
+                <a href="{{ howToGuide }}" class="step__link--get-key" target="_blank" >
+                       How to get guide
+                 </a>
                  <a href="{{ serviceUrl }}" class="step__link--get-key" target="_blank" >
                        Sign up and get keys
                  </a>
@@ -92,6 +96,7 @@
                         <li><b>expressions</b>, like <span> happy vs sad</span></li>
                     </ul>
                 </div>
+                <div id="categoriesContainer"></div>
                 <div class="">
                     <form class="category__new-form-container">
                         <div class="category__new-form-group">
@@ -109,15 +114,11 @@
                                             no-radius--left"
                                     id="button_categoryName"
                                     type="button">
-                                    Create Class
+                                    Add Category
                                 </button>
                             <span class="step__description-secondary"></span>
                         </div>
                     </form>
-                </div>
-
-                <div id="categoriesContainer">
-
                 </div>
             </div>
         </div>
@@ -131,21 +132,17 @@
         <div class="step__body">
             <h2 class="step__title">
                 <button id="button_train" class="btn btn-primary button--train"
-                    type="button">
-                    <span id="span_train" class=""
-                        role="status"
-                        aria-hidden="true"></span>
+                        type="button">
+                    <span role="status"
+                            aria-hidden="true"></span>
                     <span id="span_train_status">
-                     Train
+                     Train Model
                    </span>
                 </button>
-
-                <span>the model!</span>
             </h2>
-                 <a href="" class="step__link--get-key" target="_blank" >
-                       Why is it taking forever?
-                 </a>
-
+            <a href="" class="step__link--get-key" target="_blank">
+                Why is it taking forever?
+            </a>
         </div>
     </li>
 
@@ -166,7 +163,7 @@
 
                             <div class="dropzone__header">
                                 <i class="fas fa-cloud-upload-alt dropzone__upload-icon"></i>
-                                <span class=" dropzone__label">Click or Drag and drop to add images</span>
+                                <span class=" dropzone__label">Drag and drop one image</span>
                             </div>
                             <div class="js--dropzone__previews-container--predict
                                         dropzone-previews"></div>
@@ -189,15 +186,12 @@
         </div>
         <div class="step__body">
             <h2 class="step__title">
-                <button class="btn btn-primary button--play"
-                        type="button ">
-                        Play
-                    </button>
-                 with the model in Codelab
+                 Play with the model in Codelab
             </h2>
-            <div class="step__description">
-
-            </div>
+            <button class="btn btn-primary button--play"
+                    type="button ">
+                    Go!
+            </button>
         </div>
     </li>
 </ul>
