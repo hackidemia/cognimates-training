@@ -172,7 +172,7 @@
         $('#input_categoryName').val('');
       });
 
-      $('#button_train').on('click', function () {
+      $('.js--train__button').on('click', function () {
           setTrainButtonState('training');
       })
 
@@ -335,11 +335,11 @@
 
     function setTrainButtonState(state) {
         if (state == 'normal') {
-            $('#button_train').removeAttr('disabled');
+            $('.js--train__button').removeAttr('disabled');
             $('#span_train').removeClass('spinner-grow spinner-grow-sm');
             $('#span_train_status').html('Train');
         } else if (state == 'training') {
-            $('#button_train').attr('disabled', '');
+            $('.js--train__button').attr('disabled', '');
             $('#span_train').addClass('spinner-grow spinner-grow-sm');
             $('#span_train_status').html('Training');
         }
