@@ -13,7 +13,7 @@
                             class="form-control
                                    step__form-text"
                             id="input_projectName"
-                            autocomplete="off" 
+                            autocomplete="off"
                             aria-describedby=""
                             placeholder="Unicorns vs Narhwals">
                     </div>
@@ -35,14 +35,29 @@
                 </a>
             </h2>
             <div class="step__description">
-                <div class="form-group ">
-                    <input type="text"
-                        class="form-control step__form-text"
-                        aria-describedby=""
-                        placeholder="read key, like: 828gn21ng02n-gmffmn298fkskj-gsk2jg">
-                </div>
-                <a href="{{ howToGuide }}" class="step__link" target="_blank" >
-                       How to guide
+                <form class="category__new-form-container">
+                    <div class="category__new-form-group">
+                        <input type="text"
+                            class="form-control
+                                   no-radius--right
+                                   step__form-text
+                                   js--apikey__input"
+                            aria-describedby=""
+                            placeholder="Paste API Key here">
+                         <button class="category__button--create
+                                        d-inline-block
+                                        btn
+                                        btn-primary
+                                        no-radius--left
+                                        js--apikey__input--set"
+                                type="button">
+                                Set Key
+                            </button>
+                        <span class="step__description-secondary"></span>
+                    </div>
+                </form>
+                <a href="{{ howToGuide }}" class="step__link--get-key" target="_blank" >
+                       How to get guide
                  </a>
                  <a href="{{ serviceUrl }}" class="step__link step__link--get-key" target="_blank" >
                        Sign up and get keys
