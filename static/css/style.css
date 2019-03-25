@@ -824,9 +824,6 @@ ul.stepper {
     ul.stepper {
       padding: 5rem 0 0 0;
       margin-left: -10rem; } }
-  @media only screen and (min-width: 1200px) {
-    ul.stepper {
-      margin-left: -1rem; } }
 
 li.stepper__step {
   display: flex;

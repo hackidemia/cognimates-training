@@ -82,9 +82,6 @@ ul.stepper {
 		padding: 5rem 0 0 0; 
 	    margin-left: -10rem;
 	}
-	@include mq('xxl') {  
-	    margin-left: -1rem;
-	}
 }
 
 li.stepper__step {
