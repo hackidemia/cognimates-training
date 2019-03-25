@@ -120,18 +120,26 @@
       */
 
       const dropzonePredictEl = "#js--dropzone-predict";
-      const dropzonePredict = new Dropzone(dropzonePredictEl, {
-          url: "/file/post1",
+      window.dropzonePredict = new Dropzone(dropzonePredictEl, {
+          url: "/",
           paramName: "prediction-image",
           maxFiles: 1,
           dictRemoveFile: "",
+          autoProcessQueue: false,
           uploadMultiple: false,
-          acceptedFiles: "image/*",
+          acceptedFiles: ".jpg,.jpeg,.png",
           addRemoveLinks: true, //  enable person to del file
           thumbnailWidth: 80,
           thumbnailHeight: 80,
           previewsContainer: document.querySelector('.js--dropzone__previews-container--predict'),
-          previewTemplate: document.querySelector('#dropzonePredictTemplate').innerHTML // use a custom HTML template
+          previewTemplate: document.querySelector('#dropzonePredictTemplate').innerHTML, // use a custom HTML template
+          init: function () {
+            this.on("error", function(file) {
+              if (!file.accepted) {
+                this.removeFile(file);
+              }
+            });
+          }
       });
     });
 
@@ -177,7 +185,9 @@
           preprocessTrainData();
       })
 
-
+      $('.js--classifier__predict__button').on('click', function () {
+          preprocessPredictData();
+      })
     });
 
     function loadUserClassifiers() {
@@ -198,10 +208,6 @@
              window.userClassifiers = [];
            }
         });
-    }
-
-    function classifyImage() {
-
     }
 
     function createCategoryHTMLElement(categoryName) {
@@ -454,6 +460,83 @@
                  console.log(error);
              }
           });
+    }
+
+    async function preprocessPredictData() {
+        try {
+            validatePredictionData();
+            await loadPredictionImage();
+            classify();
+        } catch (error) {
+            console.log(error);
+            alert(error);
+        }
+    }
+
+    function validatePredictionData() {
+        if (window.dropzonePredict.files === undefined || window.dropzonePredict.files.length != 1) {
+            throw new Error('No image selected to perform classification');
+        }
+    }
+
+    function loadPredictionImage() {
+        var promise = new Promise((resolve, reject) => {
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                window.predictionImage = reader.result;
+                resolve(reader.result);
+            }
+            reader.readAsDataURL(window.dropzonePredict.files[0]);
+        });
+        return promise;
+    }
+
+    function classify() {
+        if(window.predictionImage == undefined) {
+          alert('No prediction image set');
+          return;
+        }
+        $.ajax({
+             url: "/vision/classify",
+             type: "POST",
+             headers: { 'apikey': window.apiKey },
+             data: { classifier_id: window.model_id,
+             image_data: window.predictionImage },
+             success: function (data) {
+                 if(data.error == null) {
+                    showClassification(data);
+                 } else {
+                    alert(data.error);
+                 }
+             },
+             error: function (error) {
+                 console.log(error);
+                 alert(error);
+             }
+        });
+        window.dropzonePredict.removeAllFiles();
+    }
+
+
+    function showClassification(response) {
+        if(response.length == 1) {
+            alert(`${response[0].class} with confidence ${response[0].score}`)
+        } else {
+            var classes = {}
+            var scores = []
+            for(var idx = 0; idx < response.length; idx++) {
+                let score = response[idx].score
+                let className = response[idx].class
+                classes[score] = className
+                scores.push(score)
+            }
+            scores.sort(function(a, b) {
+                return b - a;
+            })
+            let score = scores[0]
+            let className = classes[score]
+            alert(`${className} with confidence ${score}`)
+        }
     }
 
 </script>
