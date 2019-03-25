@@ -221,9 +221,19 @@ li.stepper__step {
 	line-height: 1.4;
 }
 
+.step__link {
+    display: inline-block;
+    color: $pink;
+    transition: 0.1s ease-in all; 
+}
+
+.step_link:hover {
+    opacity: 0.9
+}
+
 .step__link--get-key {
     display: inline-block;
-    margin: 0.5rem 0;
+    margin: 0 1rem;
     font-size: 0.9rem;
 }
 
@@ -240,9 +250,9 @@ li.stepper__step {
     justify-content: center;
     flex-direction: column;
     pointer-events: none;
-    transition: 0.1s ease-in all; 
     color: #b7b7b7;
     margin-bottom: 0.2rem;
+    transition: 0.1s ease-in all; 
 }
 
 .dropzone__label {
@@ -292,9 +302,12 @@ li.stepper__step {
     border: 0;
 }
 
-.category__box:nth-of-type(1){ background: lightblue; }
+.category__container:nth-child(1n) .category__box { background-color: $category--blue; }
+.category__container:nth-child(2n) .category__box { background-color: $category--yellow; }
+.category__container:nth-child(3n) .category__box { background-color: $category--pink; }
+.category__container:nth-child(4n) .category__box { background-color: $category--turqoise; }
 
-.category__box:nth-of-type(2) { background: lightyellow; }
+
 
 .category__name {
 	display: flex;

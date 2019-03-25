@@ -333,7 +333,7 @@ li.stepper__step {
   transition: all 0.1s ease-out; }
 
 .stepper li:hover .step__number {
-  color: #328EDE; }
+  color: #3b8dd9; }
 
 .stepper li:hover .step__circle i {
   background: #ff718b;
@@ -357,9 +357,17 @@ li.stepper__step {
   color: #a0a0a0;
   line-height: 1.4; }
 
+.step__link {
+  display: inline-block;
+  color: #ff718b;
+  transition: 0.1s ease-in all; }
+
+.step_link:hover {
+  opacity: 0.9; }
+
 .step__link--get-key {
   display: inline-block;
-  margin: 0.5rem 0;
+  margin: 0 1rem;
   font-size: 0.9rem; }
 
 .dropzone__upload-icon {
@@ -373,9 +381,9 @@ li.stepper__step {
   justify-content: center;
   flex-direction: column;
   pointer-events: none;
-  transition: 0.1s ease-in all;
   color: #b7b7b7;
-  margin-bottom: 0.2rem; }
+  margin-bottom: 0.2rem;
+  transition: 0.1s ease-in all; }
 
 .dropzone__label {
   margin: 0.35rem 0 0rem 0; }
@@ -418,11 +426,17 @@ li.stepper__step {
   border-radius: 50%;
   border: 0; }
 
-.category__box:nth-of-type(1) {
-  background: lightblue; }
+.category__container:nth-child(1n) .category__box {
+  background-color: rgba(59, 141, 217, 0.1); }
 
-.category__box:nth-of-type(2) {
-  background: lightyellow; }
+.category__container:nth-child(2n) .category__box {
+  background-color: rgba(251, 200, 93, 0.1); }
+
+.category__container:nth-child(3n) .category__box {
+  background-color: rgba(255, 113, 139, 0.1); }
+
+.category__container:nth-child(4n) .category__box {
+  background-color: rgba(116, 187, 214, 0.1); }
 
 .category__name {
   display: flex;
