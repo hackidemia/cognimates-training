@@ -8,21 +8,20 @@
 	</div>
 	<div class="row">
 		<div class="classifiers__card-wrapper col-12 col-md-6">
-			<div class="card classifiers__card">
+			<div class=" card classifiers__card">
 				<img src="/images/nlc_banner.png"
-					class="card-img-top classifiers__card-image"
+					class="js-classifiers__card--vision 
+							card-img-top 
+							classifiers__card-image"
 					alt="Train a Text Classifier">
 
 				<div class="card-body classifiers__card-body">
-					{{!-- <h5 class="classifiers__card-headline">Text </h5>
-					<p class="card-text classifiers__card-text">
-						Some quick example text to build on the
-						card title and make up the bulk of the card's content.
-					</p> --}}
-					<span class="classifiers__card-text--secondary">Train a </span>
-					<button class="btn btn-primary btn-lg btn-inline-block"
-						id="textClassifierButton">
-						Text Model
+					<button class="js-classifiers__card--vision 
+							btn 
+							btn-primary 
+							btn-lg 
+							btn-inline-block">
+						Train Vision
 					</button>
 				</div>
 
@@ -30,7 +29,8 @@
 					<li class="list-group-item text-center">
 						<a class="button--view-guide"
 							href="https://drive.google.com/uc?export=download&id=12m_d2NAI_eXpjZmIEkmwsgKVZv-gNptz">
-							View Guide</a>
+							View Guide
+						</a>
 					</li>
 				</ul>
 			</div>
@@ -39,17 +39,17 @@
 		<div class="classifiers__card-wrapper col-12 col-md-6">
 			<div class="card classifiers__card">
 				<img src="/images/vision_banner.png"
-					class="card-img-top classifiers__card-image"
+					class="js-classifiers__card--image 
+							card-img-top 
+							classifiers__card-image"
 					alt="Train a Text Classifier">
 				<div class="card-body classifiers__card-body">
-					{{!-- <h5 class="classifiers__card-headline">Vision </h5>
-					<p class="card-text classifiers__card-text">
-						Some quick example .
-					</p> --}}
-					<span class="classifiers__card-text--secondary">Train a </span>
-					<button class="btn btn-primary btn-lg btn-inline-block"
-						id="imageClassificationButton">
-						Vision model
+					<button class="js-classifiers__card--image 
+							btn 
+							btn-primary 
+							btn-lg 
+							btn-inline-block">
+						Train Vision
 					</button>
 				</div>
 				<ul class="list-group list-group-flush">
@@ -66,17 +66,17 @@
 
 			<div class="card classifiers__card">
 				<img src="/images/doodle_banner.png"
-					class="card-img-top classifiers__card-image"
+					class="js-classifiers__card--doodle 
+							card-img-top 
+							classifiers__card-image"
 					alt="Train a Text Classifier">
 				<div class="card-body classifiers__card-body">
-					{{!-- <h5 class="classifiers__card-headline">Text Classifier</h5>
-					<p class="card-text classifiers__card-text">
-						Some quick example text to build on the
-						card title and make up the bulk of the card's content.
-					</p> --}}
 					<span class="classifiers__card-text--secondary">Train a </span>
-					<button class="btn btn-primary btn-lg btn-inline-block"
-						id="doodleClassificationButton">
+					<button class="js-classifiers__card--doodle
+									btn 
+									btn-primary 
+									btn-lg 
+									btn-inline-block">
 						Doodle model
 					</button>
 				</div>
@@ -87,19 +87,19 @@
 
 <script>
 	$(document).ready(function() {
-		$("#textClassifierButton").click(function(evt) {
+		$(".js-classifiers__card--vision").click(function(evt) {
 			evt.preventDefault();
 			window.location.href = "/text_home";
 			return false;
 		});
 
-		$("#imageClassificationButton").click(function(evt) {
+		$(".js-classifiers__card--image").click(function(evt) {
 			evt.preventDefault();
 			window.location.href = "/vision_home";
 			return false;
 		});
 
-		$("#doodleClassificationButton").click(function(evt) {
+		$(".js-classifiers__card--doodle").click(function(evt) {
 			evt.preventDefault();
 			window.location.href = "/doodle";
 			return false;
