@@ -1,18 +1,18 @@
 {{> header }}
 
-<ul class="nav 
+<ul class="nav
           nav-tabs
-          classifier__nav-tabs" 
-    id="classifier__tabs" 
+          classifier__nav-tabs"
+    id="classifier__tabs"
     role="tablist">
 
   <li class="nav-item classifier__nav-item ">
-    <a class="nav-link classifier__nav-link active" 
-      id="" 
-      data-toggle="tab" 
-      href="#home" 
-      role="tab" 
-      aria-controls="home" 
+    <a class="nav-link classifier__nav-link active"
+      id=""
+      data-toggle="tab"
+      href="#home"
+      role="tab"
+      aria-controls="home"
       aria-selected="true">
         <h2>
           <i class="fas fa-plus"></i>
@@ -29,12 +29,12 @@
   </li>
 
   <li class="nav-item classifier__nav-item">
-    <a class="nav-link classifier__nav-link" 
-      id="" 
-      data-toggle="tab" 
-      href="#profile" 
-      role="tab" 
-      aria-controls="profile" 
+    <a class="nav-link classifier__nav-link"
+      id=""
+      data-toggle="tab"
+      href="#profile"
+      role="tab"
+      aria-controls="profile"
       aria-selected="false">
         <h2>
           <i class="fas fa-eye"></i>
@@ -46,20 +46,20 @@
 </ul>
 
 <div class="tab-content " id="myTabContent" class="classifier__tabs">
-  <div class="tab-pane classifier__tab fade show active" 
-      id="classifier__tab--create" 
-      role="tabpanel" 
+  <div class="tab-pane classifier__tab fade show active"
+      id="classifier__tab--create"
+      role="tabpanel"
       aria-labelledby="home-tab">
     {{> vision__create }}
   </div>
-{{!-- 
-  <div class="tab-pane classifier__tab fade" 
-        id="classifier__tab--explore" 
-        role="tabpanel" 
+{{!--
+  <div class="tab-pane classifier__tab fade"
+        id="classifier__tab--explore"
+        role="tabpanel"
         aria-labelledby="profile-tab">
     {{> vision__explore }}
   </div> --}}
-  
+
 </div>
 
 {{> footer }}
@@ -72,7 +72,7 @@
         <div class='dz-filename'><span data-dz-name></span></div>
         <div class='dz-size' data-dz-size></div>
       </div>
-      
+
       <div class="dz-progress">
         <span class="dz-upload" data-dz-uploadprogress></span>
         </div>
@@ -111,18 +111,6 @@
     // https://www.dropzonejs.com/#configuration
     // Dropzone.autoDiscover = false;
 
-    const dropzoneCategoriesEl = '#js--dropzone-categories';
-    const dropzoneCategories = new Dropzone(dropzoneCategoriesEl, { 
-        url: '/file/post' ,
-        paramName: 'category-image', 
-        dictRemoveFile: '', 
-        acceptedFiles: 'image/*',
-        addRemoveLinks: true, 
-        thumbnailWidth: 80,
-        thumbnailHeight: 80,
-        previewsContainer: document.querySelector('.js--dropzone__previews-container--categories')   
-    });
-
       /*
       Why doesnt this doesnt work?
       dropzoneCategories.on('error', function(file, errorMessage, xhr) {
@@ -132,11 +120,11 @@
       */
 
       const dropzonePredictEl = "#js--dropzone-predict";
-      const dropzonePredict = new Dropzone(dropzonePredictEl, { 
+      const dropzonePredict = new Dropzone(dropzonePredictEl, {
           url: "/file/post1",
-          paramName: "prediction-image", 
+          paramName: "prediction-image",
           maxFiles: 1,
-          dictRemoveFile: "", 
+          dictRemoveFile: "",
           uploadMultiple: false,
           acceptedFiles: "image/*",
           addRemoveLinks: true, //  enable person to del file
@@ -148,6 +136,16 @@
     });
 
     $(document).ready(function init() {
+
+      window.labels = [];
+      window.dropZoneMap = {};
+
+      $('#input_projectName').on('input', function () {
+        if ($(this).val().length > 0) {
+          window.projectName = $(this).val();
+        }
+      });
+
       $('#button_apikey').click(function () {
         if ($('#input_apikey').val() == '') {
           alert('API Key cannot be empty');
@@ -155,7 +153,30 @@
         }
         window.apiKey = $('#input_apikey').val();
         // loadUserClassifiers();
+      });
+
+      $('#button_categoryName').click(function () {
+        if ($('#input_categoryName').val() == '') {
+          alert('Category name cannot be empty');
+          return;
+        }
+
+        // TODO: Sanitize categoryName before further processing
+        var categoryName = $('#input_categoryName').val();
+        if (window.labels.includes(categoryName)) {
+          alert('Category already added');
+          return;
+        }
+        window.labels.push(categoryName);
+        createCategoryHTMLElement(categoryName);
+        $('#input_categoryName').val('');
+      });
+
+      $('#button_train').on('click', function () {
+          setTrainButtonState('training');
       })
+
+
     });
 
     function loadUserClassifiers() {
@@ -223,6 +244,78 @@
 
     function classifyImage() {
 
+    }
+
+    function createCategoryHTMLElement(categoryName) {
+        const htmlStructure = `<div class="category__container">
+            <div class="category__box">
+                <form action="/"
+                        id="js--dropzone-category_${categoryName}"
+                       class="dropzone--categories">
+                  <div class="category__name">
+                        ${categoryName}
+                    </div>
+
+                    <div class="dropzone__header">
+                        <i class="fas fa-cloud-upload-alt
+                                    dropzone__upload-icon"></i>
+                        <span class="dropzone__label">Drag and drop images</span>
+                    </div>
+
+                    <!-- inject image previews here -->
+                    <div class="js--dropzone__previews-container dropzone-previews"
+                         id="js--dropzone__previews-container_${categoryName}">
+                    </div>
+
+                    <div class="dropzone__error-container"></div>
+                </form>
+            </div>
+
+            <a href="#" class="category__button--remove btn btn-primary">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>`;
+        const htmlElement = $(htmlStructure);
+        const categoriesContainerElement = $('#categoriesContainer');
+        categoriesContainerElement.append(htmlElement);
+        initDropZoneForClass(categoryName);
+    }
+
+    function initDropZoneForClass(categoryName) {
+      const dropzoneElementId = `#js--dropzone-category_${categoryName}`;
+      const dropzoneCategoryInstance = new Dropzone(dropzoneElementId, {
+          url: "/file/post" ,
+          paramName: "category-image",
+          maxFilesize: 5, //  MB
+          maxFiles: 20,
+          autoProcessQueue: false,
+          dictRemoveFile: "",
+          acceptedFiles: ".jpg,.jpeg,.png",
+          addRemoveLinks: true, //  enable person to del file
+          thumbnailWidth: 80,
+          thumbnailHeight: 80,
+          previewsContainer: document.querySelector(`#js--dropzone__previews-container_${categoryName}`),
+          init: function () {
+            this.on("error", function(file) {
+              if (!file.accepted) {
+                this.removeFile(file);
+              }
+            });
+          }
+      });
+      window.dropZoneMap[categoryName] = dropzoneCategoryInstance;
+    }
+
+    function setTrainButtonState(state) {
+        if (state == 'normal') {
+            $('#button_train').removeAttr('disabled');
+            $('#span_train').removeClass('spinner-grow spinner-grow-sm');
+            $('#span_train_status').html('Train');
+        } else if (state == 'training') {
+            $('#button_train').attr('disabled', '');
+            $('#span_train').addClass('spinner-grow spinner-grow-sm');
+            $('#span_train_status').html('Training');
+        }
     }
 
 </script>
