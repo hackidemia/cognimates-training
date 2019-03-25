@@ -4,12 +4,22 @@ $light-weight: 300;
 $medium-weight: 400;
 $heavy-weight: 600;
 
-$main-color: #328EDE;
+$blue: #3b8dd9;
+$green: #66c675;
+$yellow: #fbc85d;
+$pink: #ff718b;
+$turqoise: #74bbd6;
+$gray: #979797;
+
+$main-color: $blue;
 $light-main-color: #ACC5DE;
 $light-transparent-main-color: rgba(172, 197, 222, 0.8);
 $accent-color: #3acefc;
-$gray: #979797;
-$pink: #ff718b;
 $text-gray: #a0a0a0;
 
 $header--height: 3.5rem;
+
+$category--blue: rgba($blue, 0.1);
+$category--yellow: rgba($yellow, 0.1);
+$category--pink: rgba($pink, 0.1);
+$category--turqoise: rgba($turqoise, 0.1);

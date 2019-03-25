@@ -34,30 +34,19 @@
                     <i class="fas fa-question-circle"></i>
                 </a>
             </h2>
-
             <div class="step__description">
                 <div class="form-group ">
                     <input type="text"
                         class="form-control step__form-text"
-                        id=""
                         aria-describedby=""
                         placeholder="read key, like: 828gn21ng02n-gmffmn298fkskj-gsk2jg">
                 </div>
-                {{!--  <div class="form-group category__new-form-group">
-                    <input type="text"
-                        class="form-control step__form-text"
-                        id=""
-                        aria-describedby=""
-                        placeholder="write key, something like: 828gn21ng02n-gmffmn298fkskj-gsk2jg">
-                </div> --}}
-
-                <a href="{{ howToGuide }}" class="step__link--get-key" target="_blank" >
-                       How to get guide
+                <a href="{{ howToGuide }}" class="step__link" target="_blank" >
+                       How to guide
                  </a>
-                 <a href="{{ serviceUrl }}" class="step__link--get-key" target="_blank" >
+                 <a href="{{ serviceUrl }}" class="step__link step__link--get-key" target="_blank" >
                        Sign up and get keys
                  </a>
-
                 <div class="step__help
                             step__help--keys">
                     <div class="step__help-info-detail">
@@ -65,7 +54,7 @@
                             <iframe src="https://www.youtube.com/embed/YOrrROME2zc"
                                     frameborder="0"
                                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-                                </iframe>
+                            </iframe>
                         </div>
                     </div>
                  </div>
@@ -85,7 +74,6 @@
                     <i class="fas fa-question-circle"></i>
                 </a>
             </h2>
-
             <div class="step__description">
                 <div class="step__help">
                    <span>Categories are groups of things your model wil try to tell the difference between.
@@ -106,7 +94,7 @@
                                         step__form-text"
                                 id="input_categoryName"
                                 aria-describedby=""
-                                placeholder="for example, cats">
+                                placeholder="Unicorns">
                              <button class="category__button--create
                                             d-inline-block
                                             btn
@@ -133,14 +121,14 @@
             <h2 class="step__title">
                 <button id="button_train" class="btn btn-primary button--train"
                         type="button">
-                    <span role="status"
+                    <span id="span_train" role="status"
                             aria-hidden="true"></span>
                     <span id="span_train_status">
                      Train Model
                    </span>
                 </button>
             </h2>
-            <a href="" class="step__link--get-key" target="_blank">
+            <a href="#" class="step__link--get-key" target="_blank">
                 Why is it taking forever?
             </a>
         </div>
@@ -154,13 +142,11 @@
         <div class="step__body">
             <h2 class="step__title">Upload an image to test your model</h2>
             <div class="step__description">
-
                 <div class="category__container">
                     <div class="category__box">
                         <form action="/"
                               id="js--dropzone-predict"
                               class="dropzone--predict">
-
                             <div class="dropzone__header">
                                 <i class="fas fa-cloud-upload-alt dropzone__upload-icon"></i>
                                 <span class=" dropzone__label">Drag and drop one image</span>
@@ -170,9 +156,8 @@
                         </form>
                     </div>
                 </div>
-
                 <button class="btn btn-primary"
-                    type="button">
+                        type="button">
                     Predict
                 </button>
             </div>
