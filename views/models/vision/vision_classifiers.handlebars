@@ -148,10 +148,20 @@
       window.labels = [];
       window.dropZoneMap = {};
 
+      $('form').submit(false);
+
       $('#input_projectName').on('input', function () {
         if ($(this).val().length > 0) {
           window.projectName = $(this).val();
         }
+      });
+
+      $('.js--apikey__input').keypress((e) => {
+          if (e.which == 13) {
+              $('.js--apikey__input--set').trigger('click');
+              e.preventDefault();
+              return false;
+          }
       });
 
       $('.js--apikey__input--set').click(function () {
@@ -161,6 +171,14 @@
         }
         window.apiKey = $('.js--apikey__input').val();
         // loadUserClassifiers();
+      });
+
+      $('#input_categoryName').keypress((e) => {
+          if (e.which == 13) {
+              $('#button_categoryName').trigger('click');
+              e.preventDefault();
+              return false;
+          }
       });
 
       $('#button_categoryName').click(function () {
@@ -288,12 +306,12 @@
         const dropzonePreviewsContainerClass = `.js--dropzone__previews__container--${categoryName}`;
         const dropzoneRemoveClass = `.js--dropzone__category__remove--${categoryName}`;
         window.dropZoneMap[categoryName].disable();
-        window.dropZoneMap[categoryName] = undefined;
+        delete window.dropZoneMap[categoryName];
         $(dropzoneRemoveClass).unbind();
         $(dropZoneCategoryClass).remove();
-        window.labels[categoryName] = undefined;
+        delete window.labels[categoryName];
         if (window.examples != undefined && window.examples[categoryName] != undefined) {
-            window.examples[categoryName] = undefined;
+            delete window.examples[categoryName];
         }
     }
 
@@ -318,6 +336,11 @@
         setTrainButtonState('training');
         try {
             validateTrainingData();
+            var userClassifiers = await loadUserClassifiers();
+            if (projectNameAlreadyUsed(userClassifiers)) {
+              throw new Error('You have an existing project with the same name.');
+              return;
+            }
             await convertImagesIntoExamples();
             await createClassifier();
             setTrainButtonState('finished');
@@ -344,6 +367,35 @@
                 throw new Error(`${className} category has less than 10 examples`);
             }
         }
+    }
+
+    function loadUserClassifiers() {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                 url: "/vision/classifiers",
+                 type: "GET",
+                 headers: { 'apiKey': window.apiKey },
+                 success: function (data) {
+                     if(data.error == null) {
+                         resolve(data.classifiers);
+                         return;
+                     }
+                     reject(new Error(data.error));
+                 },
+                 error: function (error) {
+                     reject(error);
+                 }
+            });
+        });
+    }
+
+    function projectNameAlreadyUsed(classifiers) {
+        if (classifiers == undefined || classifiers.length == 0) return false;
+        for (var index = 0; index < classifiers.length; index++) {
+            var classifier = classifiers[index];
+            if (classifier.name == window.projectName) return true;
+        }
+        return false;
     }
 
     async function convertImagesIntoExamples() {
@@ -408,6 +460,9 @@
                     window.model_id = data.classifier_id;
                     window.classifier_status = data.status;
                     resolve();
+                },
+                error: function (error) {
+                    reject(error);
                 }
             });
         });
