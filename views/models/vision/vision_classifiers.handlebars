@@ -179,10 +179,6 @@
 
     $(document).ready(function init() {
 
-    new Noty({
-        text: 'Some notification text'
-    }).show();
-
       window.labels = [];
       window.dropZoneMap = {};
 
@@ -212,7 +208,13 @@
 
       $('.js--apikey__input--set').click(function () {
         if ($('.js--apikey__input').val() == '') {
-          alert('API Key cannot be empty');
+          var n = makeNotification({
+            message: 'Enter an API Key',
+            type: 'warning',
+            closeOlderInstances: true,
+            stayOpenUntilClick: false
+          });
+          n.show();
           return;
         }
         window.apiKey = $('.js--apikey__input').val();
@@ -222,7 +224,13 @@
 
       $('.js--explore__apikey__input--set').click(function () {
         if ($('.js--explore__apikey__input').val() == '') {
-          alert('API Key cannot be empty');
+          var n = makeNotification({
+            message: 'Enter an API Key',
+            type: 'warning',
+            closeOlderInstances: true,
+            stayOpenUntilClick: false
+          });
+          n.show();
           return;
         }
         window.apiKey = $('.js--explore__apikey__input').val();
@@ -239,14 +247,26 @@
 
       $('#button_categoryName').click(function () {
         if ($('#input_categoryName').val() == '') {
-          alert('Category name cannot be empty');
+          var n = makeNotification({
+            message: 'Enter a category to train.',
+            type: 'warning',
+            closeOlderInstances: true,
+            stayOpenUntilClick: false
+          });
+          n.show();
           return;
         }
 
         // TODO: Sanitize categoryName before further processing
         var categoryName = $('#input_categoryName').val();
         if (window.labels.includes(categoryName)) {
-          alert('Category already added');
+          var n = makeNotification({
+            message: 'Enter a different category name, this one already exists',
+            type: 'warning',
+            closeOlderInstances: true,
+            stayOpenUntilClick: false
+          });
+          n.show();
           return;
         }
         window.labels.push(categoryName);
@@ -395,11 +415,11 @@
         if (state == 'normal') {
             $('.js--train__button').removeAttr('disabled');
             $('#span_train').removeClass('spinner-grow spinner-grow-sm');
-            $('#span_train_status').html('Train');
+            $('#span_train_status').html('Train Model');
         } else if (state == 'training') {
             $('.js--train__button').attr('disabled', '');
             $('#span_train').addClass('spinner-grow spinner-grow-sm');
-            $('#span_train_status').html('Training');
+            $('#span_train_status').html('Training Model');
         } else if (state == 'finished') {
             $('.js--train__button').removeAttr('disabled');
             $('#span_train').removeClass('spinner-grow spinner-grow-sm');
@@ -414,7 +434,14 @@
             validateTrainingData();
             var userClassifiers = await loadUserClassifiers();
             if (projectNameAlreadyUsed(userClassifiers)) {
-              throw new Error('You have an existing project with the same name.');
+              var n = makeNotification({
+                message: 'A project with this name already exists. Create one with a different name.',
+                type: 'warning',
+                closeOlderInstances: true,
+                stayOpenUntilClick: true
+              });
+              n.show();
+              throw new Error('A project with this name already exists. Create one with a different name.');
               return;
             }
             await convertImagesIntoExamples();
@@ -436,11 +463,26 @@
         //     throw new Error("API key not set");
         // }
         if (window.labels === undefined || window.labels.length < 2) {
-            throw new Error("At least 2 classes are required");
+            var n = makeNotification({
+              message: 'Create at least 2 classes.',
+              type: 'warning',
+              closeOlderInstances: true,
+              stayOpenUntilClick: true
+            });
+            n.show();
+
+            throw new Error("Create at least 2 classes.");
         }
         for (const className of Object.keys(window.dropZoneMap)) {
             if (window.dropZoneMap[className].files === undefined || window.dropZoneMap[className].files.length < 10) {
-                throw new Error(`${className} category has less than 10 examples`);
+              var n = makeNotification({
+                message: `${className} category needs at least 10 examples.`,
+                type: 'warning',
+                closeOlderInstances: true,
+                stayOpenUntilClick: true
+              });
+              n.show();
+              throw new Error(`${className} category has less than 10 examples`);
             }
         }
     }
@@ -476,7 +518,7 @@
 
     async function convertImagesIntoExamples() {
         if(window.dropZoneMap.length < 1) {
-            throw new Error("At least 2 classes are required");
+            throw new Error("Create at least 2 classes.");
         }
         for (const className of Object.keys(window.dropZoneMap)) {
             var promises = [];
@@ -529,7 +571,13 @@
                 headers: { apikey: window.apiKey },
                 success: function (data) {
                     if(data.error != null) {
-                        alert(data.error);
+                        var n = makeNotification({
+                          message: 'We couldn\'t save to Clarifai :( Some technical info: ' + data.error,
+                          type: 'error',
+                          closeOlderInstances: true,
+                          stayOpenUntilClick: false
+                        });
+                        n.show();
                         reject(new Error(data.error));
                         return;
                     }
@@ -583,7 +631,13 @@
                  if(data.error == null) {
                       window.classifier_status = data.status;
                  } else {
-                      alert(data.error);
+                      var n = makeNotification({
+                        message: 'We couldn\'t get the API key you entered :( Some more technical info: ' + data.error,
+                        type: 'error',
+                        closeOlderInstances: true,
+                        stayOpenUntilClick: true
+                      });
+                      n.show();
                  }
                  setClassifierStatus();
              },
@@ -599,14 +653,27 @@
             await loadPredictionImage();
             classify();
         } catch (error) {
+            var n = makeNotification({
+              message: error,
+              type: 'error',
+              closeOlderInstances: true,
+              stayOpenUntilClick: true
+            });
+            n.show();
             console.log(error);
-            alert(error);
         }
     }
 
     function validatePredictionData() {
         if (window.dropzonePredict.files === undefined || window.dropzonePredict.files.length != 1) {
-            throw new Error('No image selected to perform classification');
+              var n = makeNotification({
+              message: 'Add an image to predict.',
+              type: 'warning',
+              closeOlderInstances: true,
+              stayOpenUntilClick: true
+            });
+            n.show();
+            throw new Error('Add an image to predict.');
         }
     }
 
@@ -624,7 +691,13 @@
 
     function classify() {
         if(window.predictionImage == undefined) {
-          alert('No prediction image set');
+            var n = makeNotification({
+              message: 'Set prediction to run the model.',
+              type: 'warning',
+              closeOlderInstances: true,
+              stayOpenUntilClick: false
+            });
+            n.show();
           return;
         }
         $.ajax({
@@ -637,21 +710,37 @@
                  if(data.error == null) {
                     showClassification(data);
                  } else {
-                    alert(data.error);
+                    var n = makeNotification({
+                      message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + data.error,
+                      type: 'error',
+                      closeOlderInstances: true,
+                      stayOpenUntilClick: true
+                    });
+                    n.show();
                  }
              },
              error: function (error) {
-                 console.log(error);
-                 alert(error);
+                console.log(error);
+                var n = makeNotification({
+                  message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + error,
+                  type: 'error',
+                  closeOlderInstances: true,
+                  stayOpenUntilClick: true
+                });
+                n.show();
              }
         });
         window.dropzonePredict.removeAllFiles();
     }
 
-
     function showClassification(response) {
         if(response.length == 1) {
-            alert(`${response[0].class} with confidence ${response[0].score}`)
+            var n = makeNotification({
+              message: `The model says ${response[0].class}! with a confidence score of ${response[0].score}.`,
+              type: 'success',
+              closeOlderInstances: true,
+              stayOpenUntilClick: true
+            });
         } else {
             var classes = {}
             var scores = []
@@ -666,7 +755,12 @@
             })
             let score = scores[0]
             let className = classes[score]
-            alert(`${className} with confidence ${score}`)
+            var n = makeNotification({
+              message: `The model says ${className}! with a confidence score of ${score}.`,
+              type: 'success',
+              closeOlderInstances: true,
+              stayOpenUntilClick: true
+            });
         }
     }
 

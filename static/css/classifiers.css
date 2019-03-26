@@ -112,7 +112,7 @@
   bottom: 0;
   pointer-events: none;
   font-size: 2rem;
-  text-shadow: 4px 2px 0px #ff718b;
+  text-shadow: 4px 2px 0px #FF718B;
   color: white;
   cursor: pointer;
   display: none; }
@@ -153,8 +153,8 @@
   transition: 0.1s ease-in all; }
 
 .dz-remove:hover::after {
-  background-color: #3acefc;
-  border-color: #3acefc; }
+  background-color: #3ACEFC;
+  border-color: #3ACEFC; }
 
 /* Step 1: Common Properties: All required to make icons render reliably */
 .icon::before {
@@ -223,7 +223,7 @@
   letter-spacing: 0.3px; }
 
 .classifier__nav-item h2 i {
-  color: #3acefc;
+  color: #3ACEFC;
   font-size: 1.1rem;
   margin: 0 0.5rem; }
 
@@ -333,14 +333,14 @@ li.stepper__step {
   transition: all 0.1s ease-out; }
 
 .stepper li:hover .step__number {
-  color: #3b8dd9; }
+  color: #3B8DD9; }
 
 .stepper li:hover .step__circle i {
-  background: #ff718b;
+  background: #FF718B;
   transform: scale(1.75); }
 
 .stepper li:hover .step__description {
-  color: #3acefc; }
+  color: #3ACEFC; }
 
 .step__body {
   padding-bottom: 1rem;
@@ -354,12 +354,12 @@ li.stepper__step {
       margin-left: 50px; } }
 
 .step__description {
-  color: #a0a0a0;
+  color: #A0A0A0;
   line-height: 1.4; }
 
 .step__link {
   display: inline-block;
-  color: #ff718b;
+  color: #FF718B;
   transition: 0.1s ease-in all; }
 
 .step_link:hover {
@@ -407,7 +407,7 @@ li.stepper__step {
   transition: 0.1s ease-out all; }
 
 .category__box:hover {
-  border: 2px dashed #ff718b; }
+  border: 2px dashed #FF718B; }
 
 .category__button--remove {
   position: absolute;

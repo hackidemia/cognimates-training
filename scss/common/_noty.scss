@@ -1,0 +1,67 @@
+@import 'variables';
+
+.noty__icon {
+    position: relative;
+    top: 1px;
+    font-size: 1.3rem;
+    margin: 0 0.75rem 0 0.5rem;
+}
+
+.noty__text {
+    font-family: $font-family;
+    font-size: 1rem;
+    margin-right: 1rem;
+}
+
+#noty_layout__topRight {
+    // transform: translate(-50%, 0);
+    width: auto;
+    top: 5rem;
+    white-space: nowrap;
+}
+
+.noty_theme__light {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 1rem;
+}
+
+.noty_theme__light.noty_type__success {
+    background-color: $notification-bg-color--success;
+    border: 0;
+    box-shadow: $box-shadow--base;
+    color: $notification-text;
+    
+    .noty__icon, 
+    .noty__text { color: white; }
+}
+
+.noty_theme__light.noty_type__warning {
+    background-color: $notification-bg-color--warning;
+    border: 0;
+    box-shadow: $box-shadow--base;
+    color: $notification-text;
+    
+    .noty__icon { color: $pink; } 
+    .noty__text { color: $notification-text; }
+}
+
+.noty_theme__light.noty_type__info {
+    background-color: $notification-bg-color--info;
+    border: 0;
+    box-shadow: $box-shadow--base;
+    color: $notification-text !important;
+    
+    .noty__icon, 
+    .noty__text { color: white }
+}
+
+.noty_theme__light.noty_type__error {
+    background-color: $notification-bg-color--error;
+    border: 0;
+    box-shadow: $box-shadow--base;
+    color: white;
+    
+    .noty__icon, 
+    .noty__text { color: white; }
+}
