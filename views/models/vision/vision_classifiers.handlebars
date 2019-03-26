@@ -148,10 +148,20 @@
       window.labels = [];
       window.dropZoneMap = {};
 
+      $('form').submit(false);
+
       $('#input_projectName').on('input', function () {
         if ($(this).val().length > 0) {
           window.projectName = $(this).val();
         }
+      });
+
+      $('.js--apikey__input').keypress((e) => {
+          if (e.which == 13) {
+              $('.js--apikey__input--set').trigger('click');
+              e.preventDefault();
+              return false;
+          }
       });
 
       $('.js--apikey__input--set').click(function () {
@@ -161,6 +171,14 @@
         }
         window.apiKey = $('.js--apikey__input').val();
         // loadUserClassifiers();
+      });
+
+      $('#input_categoryName').keypress((e) => {
+          if (e.which == 13) {
+              $('#button_categoryName').trigger('click');
+              e.preventDefault();
+              return false;
+          }
       });
 
       $('#button_categoryName').click(function () {
