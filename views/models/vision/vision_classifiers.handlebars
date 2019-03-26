@@ -288,12 +288,12 @@
         const dropzonePreviewsContainerClass = `.js--dropzone__previews__container--${categoryName}`;
         const dropzoneRemoveClass = `.js--dropzone__category__remove--${categoryName}`;
         window.dropZoneMap[categoryName].disable();
-        window.dropZoneMap[categoryName] = undefined;
+        delete window.dropZoneMap[categoryName];
         $(dropzoneRemoveClass).unbind();
         $(dropZoneCategoryClass).remove();
-        window.labels[categoryName] = undefined;
+        delete window.labels[categoryName];
         if (window.examples != undefined && window.examples[categoryName] != undefined) {
-            window.examples[categoryName] = undefined;
+            delete window.examples[categoryName];
         }
     }
 
