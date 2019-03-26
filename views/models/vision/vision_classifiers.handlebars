@@ -6,9 +6,8 @@
     id="classifier__tabs"
     role="tablist">
 
-  <li class="nav-item classifier__nav-item ">
-    <a class="nav-link classifier__nav-link active"
-      id=""
+  <li class="nav-item classifier__nav-item">
+    <a class="js--nav__tab--create nav-link classifier__nav-link active"
       data-toggle="tab"
       href="#home"
       role="tab"
@@ -29,10 +28,10 @@
   </li>
 
   <li class="nav-item classifier__nav-item">
-    <a class="nav-link classifier__nav-link"
+    <a class="js--nav__tab--explore nav-link classifier__nav-link"
       id=""
       data-toggle="tab"
-      href="#profile"
+      href="#explore"
       role="tab"
       aria-controls="profile"
       aria-selected="false">
@@ -46,19 +45,18 @@
 </ul>
 
 <div class="tab-content " id="myTabContent" class="classifier__tabs">
-  <div class="tab-pane classifier__tab fade show active"
-      id="classifier__tab--create"
+  <div class="js--classifier__tab--create tab-pane classifier__tab fade show active"
       role="tabpanel"
       aria-labelledby="home-tab">
     {{> vision__create }}
   </div>
-{{!--
-  <div class="tab-pane classifier__tab fade"
-        id="classifier__tab--explore"
+
+  <div class="js--classifier__tab--explore tab-pane classifier__tab fade"
         role="tabpanel"
-        aria-labelledby="profile-tab">
+        aria-labelledby="profile-tab"
+        style="display: none !important">
     {{> vision__explore }}
-  </div> --}}
+  </div>
 
 </div>
 
@@ -104,8 +102,44 @@
     // Doesnt work? https://getbootstrap.com/docs/4.0/components/navs/#javascript-behavior
     $('#classifier__tabs a').on('click', function (e) {
       e.preventDefault()
-      $(this).tab('show')
+      // $(this).tab('show');
     })
+
+    $('.js--nav__tab--create').on('click', function (e) {
+        showCreateTab(true);
+        showExploreTab(false);
+    });
+
+    $('.js--nav__tab--explore').on('click', function (e) {
+        showCreateTab(false);
+        showExploreTab(true);
+    });
+
+    function showCreateTab(show) {
+        const tabContent = $('.js--classifier__tab--create');
+        if (show) {
+            tabContent.addClass('show active');
+            tabContent.show();
+            tabContent.attr('style', '')
+        } else {
+            tabContent.removeClass('show active');
+            tabContent.hide();
+            tabContent.attr('style', 'display:none !important');
+        }
+    }
+
+    function showExploreTab(show) {
+        const tabContent = $('.js--classifier__tab--explore');
+        if (show) {
+            tabContent.addClass('show active');
+            tabContent.show();
+            tabContent.attr('style', '')
+        } else {
+            tabContent.removeClass('show active');
+            tabContent.hide();
+            tabContent.attr('style', 'display:none !important');
+        }
+    }
 
     // set up dropzone instances
     // https://www.dropzonejs.com/#configuration
@@ -164,13 +198,31 @@
           }
       });
 
+      $('.js--explore__apikey__input').keypress((e) => {
+          if (e.which == 13) {
+              $('.js--explore__apikey__input--set').trigger('click');
+              e.preventDefault();
+              return false;
+          }
+      });
+
       $('.js--apikey__input--set').click(function () {
         if ($('.js--apikey__input').val() == '') {
           alert('API Key cannot be empty');
           return;
         }
         window.apiKey = $('.js--apikey__input').val();
-        // loadUserClassifiers();
+        $('.js--explore__apikey__input').val(window.apiKey);
+        setUserClassifiers();
+      });
+
+      $('.js--explore__apikey__input--set').click(function () {
+        if ($('.js--explore__apikey__input').val() == '') {
+          alert('API Key cannot be empty');
+          return;
+        }
+        window.apiKey = $('.js--explore__apikey__input').val();
+        setUserClassifiers();
       });
 
       $('#input_categoryName').keypress((e) => {
@@ -207,6 +259,26 @@
           preprocessPredictData();
       })
     });
+
+    function selectClassifier(model_id) {
+        window.model_id = model_id;
+        return false;
+    };
+
+    async function setUserClassifiers() {
+        var userClassifiers = await loadUserClassifiers();
+        addClassifiersToDropdown(userClassifiers);
+    }
+
+    function addClassifiersToDropdown(classifiers) {
+        const dropdownElement = $('.js--classifiers__dropdown');
+        dropdownElement.html('');
+        classifiers.forEach((classifier) => {
+            const dropdownItemStructure = `<a class="js--classifiers__dropdown__item dropdown-item" onclick="selectClassifier('${classifier.classifier_id}');">${classifier.name}</a>`;
+            const dropdownItem = $(dropdownItemStructure);
+            dropdownElement.append(dropdownItem);
+        });
+    }
 
     function loadUserClassifiers() {
       $.ajax({
