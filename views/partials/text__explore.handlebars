@@ -1,40 +1,18 @@
 <ul class="stepper">
-    <li class="stepper__step">
-        <span class="step__number">1</span>
-        <div class="step__circle">
-            <i></i><!-- no dom here, gets made by css -->
-        </div>
-        <div class="step__body">
-            <h2 class="step__title">What is your project name?</h2>
-            <div class="step__description">
-                <form>
-                    <div class="form-group">
-                        <input type="text"
-                            class="form-control
-                                   step__form-text"
-                            id="input_projectName"
-                            onkeydown="return (event.keyCode!=13);"
-                            autocomplete="off"
-                            aria-describedby=""
-                            placeholder="Emotions">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </li>
 
     <li class="stepper__step">
-        <span class="step__number">2</span>
+        <span class="step__number">1</span>
         <div class="step__circle">
             <i></i>
         </div>
         <div class="step__body">
             <h2 class="step__title">What are your {{ serviceName }} keys?
-                {{!-- <a href="#" class="step__help-open-button
+                <a href="#" class="step__help-open-button 
                                     js--open-help" role="button">
                     <i class="fas fa-question-circle"></i>
-                </a> --}}
+                </a>
             </h2>
+
             <div class="step__description">
                 <form class="category__new-form-container">
                     <div class="category__new-form-group">
@@ -101,24 +79,67 @@
                         <span class="step__description-secondary"></span>
                     </div>
                 </form>
+              <a href="{{ howToGuide }}" class="step__link--get-key" target="_blank" >
+                     How to get guide
+               </a>
+               <a href="{{ serviceUrl }}" class="step__link step__link--get-key" target="_blank" >
+                     Sign up and get keys
+               </a>
+               <div class="step__help
+                          step__help--keys">
+                  <div class="step__help-info-detail">
+                      <div class="plyr__video-embed" id="js-classifier__video--clarifai">
+                          <iframe src="https://www.youtube.com/embed/YOrrROME2zc"
+                                  frameborder="0"
+                                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                          </iframe>
+                      </div>
+                  </div>
+               </div>
+            </div>
+        </div>
+    </li>
 
-                <a href="{{ howToGuide }}" class="step__link--get-key" target="_blank" >
-                       How to get guide
-                 </a>
-                 <a href="{{ serviceUrl }}" class="step__link step__link--get-key" target="_blank" >
-                       Sign up and get keys
-                 </a>
-                <div class="step__help
-                            step__help--keys">
-                    <div class="step__help-info-detail">
-                        <div class="plyr__video-embed" id="js-classifier__video--clarifai">
-                            <iframe src="https://www.youtube.com/embed/YOrrROME2zc"
-                                    frameborder="0"
-                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-                            </iframe>
-                        </div>
-                    </div>
-                 </div>
+    <li class="stepper__step">
+        <span class="step__number">2</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__body">
+            <h2 class="step__title">Paste the name of an existing project
+                {{!-- <a href="#" class="step__help-open-button 
+                                    js--open-help" role="button">
+                    <i class="fas fa-question-circle"></i>
+                </a> --}}
+            </h2>
+
+            <div class="step__description">
+                {{!-- <div class="step__help">
+                   <span>These are projects you have already trained. Unfortunately these cannot be modified once they are created.
+                    </span>
+                   
+                </div> --}}
+                 <form class="category__new-form-container">
+                            <div class="category__new-form-group">
+                                <input type="text"
+                                    class="form-control
+                                            no-radius--right
+                                            step__form-text"
+                                    id="input_categoryName"
+                                    aria-describedby=""
+                                    placeholder="Emotions">
+                                <button class="category__button--create
+                                                d-inline-block
+                                                btn
+                                                btn-primary
+                                                no-radius--left"
+                                        id="button_categoryName"
+                                        type="button">
+                                        Select Project
+                                    </button>
+                                <span class="step__description-secondary"></span>
+                            </div>
+                 </form>
             </div>
         </div>
     </li>
@@ -129,92 +150,11 @@
             <i></i>
         </div>
         <div class="step__body">
-            <h2 class="step__title">What categories should your model have?
-                <a href="#" class="step__help-open-button
-                                    js--open-help" role="button">
-                    <i class="fas fa-question-circle"></i>
-                </a>
-            </h2>
-            <div class="step__description">
-                <div class="step__help">
-                   <span>Categories are groups of things your model wil try to tell the difference between.
-                   Remember, it can only learn what you give it! </span>
-                    <ul>
-                        <li><b>animals,</b>like <span> cats vs dogs</span></li>
-                        <li><b>objects</b>, like <span> cups vs jars</span></li>
-                        <li><b>expressions</b>, like <span> happy vs sad</span></li>
-                    </ul>
-                </div>
-                <div id="categoriesContainer"></div>
-                <div class="">
-                    <form class="category__new-form-container">
-                        <div class="category__new-form-group">
-                            <input type="text"
-                                class="form-control
-                                        no-radius--right
-                                        step__form-text"
-                                id="input_categoryName"
-                                aria-describedby=""
-                                placeholder="Happy">
-                             <button class="category__button--create
-                                            d-inline-block
-                                            btn
-                                            btn-primary
-                                            no-radius--left"
-                                    id="button_categoryName"
-                                    type="button">
-                                    Add Category
-                                </button>
-                            <span class="step__description-secondary"></span>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </li>
-
-    <li class="stepper__step">
-        <span class="step__number">4</span>
-        <div class="step__circle">
-            <i></i>
-        </div>
-        <div class="step__body">
-            <h2 class="step__title">
-                <button class="btn btn-primary button--train
-                               js--train__button"
-                        type="button">
-                    <span id="span_train" role="status"
-                            aria-hidden="true"></span>
-                    <span id="span_train_status">
-                     Train Model
-                   </span>
-                </button>
-            </h2>
-            <a href="#" class="step__link--get-key" target="_blank">
-                Why is it taking forever?
-            </a>
-
-            <br/>
-            <br/>
-            <div class="step__description">
-                <h5 class="js--classifier__name" style="display:none">Classifier Name: <span class="js--classifier__name--set">Cats vs. Dogs<span></h5>
-                <h5 class="js--classifier__status" style="display:none">Classifier Status: <span class="js--classifier__status--set">Model not ready<span></h5>
-                <i class="fas fa-spinner fa-spin
-                          js--classifier__status_spinner" style="display:none"></i>
-            </div>
-        </div>
-    </li>
-
-    <li class="stepper__step">
-        <span class="step__number">5</span>
-        <div class="step__circle">
-            <i></i>
-        </div>
-        <div class="step__body">
             <h2 class="step__title">Type in a phrase to test your model</h2>
             <div class="step__description">
+
                 <div class="category__container">
-                        <form class="category__new-form-container">
+                     <form class="category__new-form-container">
                             <div class="category__new-form-group">
                                 <input type="text"
                                     class="form-control
@@ -234,25 +174,33 @@
                                     </button>
                                 <span class="step__description-secondary"></span>
                             </div>
-                        </form>
+                     </form>
                 </div>
+
+                <button class="btn btn-primary"
+                    type="button">
+                    Predict
+                </button>
             </div>
         </div>
     </li>
 
     <li class="stepper__step">
-        <span class="step__number">6</span>
+        <span class="step__number">4</span>
         <div class="step__circle">
             <i></i>
         </div>
         <div class="step__body">
             <h2 class="step__title">
-                 Play with the model in Codelab
+                <button class="btn btn-primary"
+                        type="button">
+                        Play
+                    </button>
+                 with the model in Codelab
             </h2>
-            <button class="btn btn-primary button--play"
-                    type="button ">
-                    Go!
-            </button>
+            <div class="step__description">
+                
+            </div>
         </div>
     </li>
 </ul>
