@@ -14,36 +14,44 @@
             </h2>
 
             <div class="step__description">
-                <div class="form-group ">
-                    <input type="text"
-                        class="form-control step__form-text"
-                        id=""
-                        aria-describedby=""
-                        placeholder="read key, like: 828gn21ng02n-gmffmn298fkskj-gsk2jg">
-                </div>
-                 <div class="form-group category__new-form-group">
-                    <input type="text"
-                        class="form-control step__form-text"
-                        id=""
-                        aria-describedby=""
-                        placeholder="write key, something like: 828gn21ng02n-gmffmn298fkskj-gsk2jg">
-                </div>
-
-                 <a href="{{ serviceUrl }}" class="step__link--get-key" target="_blank" >
-                       Sign up and get keys
-                 </a>
-
-                <div class="step__help 
-                            step__help--keys">
-                    <div class="step__help-info-detail">
-                        <div class="plyr__video-embed" id="js-classifier__video--clarifai">
-                            <iframe src="https://www.youtube.com/embed/YOrrROME2zc" 
-                                    frameborder="0" 
-                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-                                </iframe>
-                        </div>
-                    </div>
-                 </div>
+              <form class="category__new-form-container">
+                  <div class="category__new-form-group">
+                      <input type="text"
+                          class="form-control
+                                 no-radius--right
+                                 step__form-text
+                                 js--apikey__input"
+                          aria-describedby=""
+                          placeholder="Paste API Key here">
+                       <button class="category__button--create
+                                      d-inline-block
+                                      btn
+                                      btn-primary
+                                      no-radius--left
+                                      js--apikey__input--set"
+                              type="button">
+                              Set Key
+                          </button>
+                      <span class="step__description-secondary"></span>
+                  </div>
+              </form>
+              <a href="{{ howToGuide }}" class="step__link--get-key" target="_blank" >
+                     How to get guide
+               </a>
+               <a href="{{ serviceUrl }}" class="step__link step__link--get-key" target="_blank" >
+                     Sign up and get keys
+               </a>
+               <div class="step__help
+                          step__help--keys">
+                  <div class="step__help-info-detail">
+                      <div class="plyr__video-embed" id="js-classifier__video--clarifai">
+                          <iframe src="https://www.youtube.com/embed/YOrrROME2zc"
+                                  frameborder="0"
+                                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                          </iframe>
+                      </div>
+                  </div>
+               </div>
             </div>
         </div>
     </li>
