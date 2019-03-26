@@ -206,7 +206,7 @@
         }
         window.apiKey = $('.js--apikey__input').val();
         $('.js--apikey__input').val(window.apiKey);
-        // loadUserClassifiers();
+        setUserClassifiers();
       });
 
       $('#input_categoryName').keypress((e) => {
@@ -243,6 +243,21 @@
           preprocessPredictData();
       })
     });
+
+    async function setUserClassifiers() {
+        var userClassifiers = await loadUserClassifiers();
+        addClassifiersToDropdown(userClassifiers);
+    }
+
+    function addClassifiersToDropdown(classifiers) {
+        const dropdownElement = $('.js--classifiers__dropdown');
+        dropdownElement.html('');
+        classifiers.forEach((classifier) => {
+            const dropdownItemStructure = `<a class="js--classifiers__dropdown__item dropdown-item" href="${classifier.classifier_id}">${classifier.name}</a>`;
+            const dropdownItem = $(dropdownItemStructure);
+            dropdownElement.append(dropdownItem);
+        });
+    }
 
     function loadUserClassifiers() {
       $.ajax({
