@@ -199,13 +199,30 @@
           }
       });
 
+      $('.js--explore__apikey__input').keypress((e) => {
+          if (e.which == 13) {
+              $('.js--explore__apikey__input--set').trigger('click');
+              e.preventDefault();
+              return false;
+          }
+      });
+
       $('.js--apikey__input--set').click(function () {
         if ($('.js--apikey__input').val() == '') {
           alert('API Key cannot be empty');
           return;
         }
         window.apiKey = $('.js--apikey__input').val();
-        $('.js--apikey__input').val(window.apiKey);
+        $('.js--explore__apikey__input').val(window.apiKey);
+        setUserClassifiers();
+      });
+
+      $('.js--explore__apikey__input--set').click(function () {
+        if ($('.js--explore__apikey__input').val() == '') {
+          alert('API Key cannot be empty');
+          return;
+        }
+        window.apiKey = $('.js--explore__apikey__input').val();
         setUserClassifiers();
       });
 
