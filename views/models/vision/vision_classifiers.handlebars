@@ -261,6 +261,11 @@
       })
     });
 
+    function selectClassifier(model_id) {
+        window.model_id = model_id;
+        return false;
+    };
+
     async function setUserClassifiers() {
         var userClassifiers = await loadUserClassifiers();
         addClassifiersToDropdown(userClassifiers);
@@ -270,7 +275,7 @@
         const dropdownElement = $('.js--classifiers__dropdown');
         dropdownElement.html('');
         classifiers.forEach((classifier) => {
-            const dropdownItemStructure = `<a class="js--classifiers__dropdown__item dropdown-item" href="${classifier.classifier_id}">${classifier.name}</a>`;
+            const dropdownItemStructure = `<a class="js--classifiers__dropdown__item dropdown-item" onclick="selectClassifier('${classifier.classifier_id}');">${classifier.name}</a>`;
             const dropdownItem = $(dropdownItemStructure);
             dropdownElement.append(dropdownItem);
         });
