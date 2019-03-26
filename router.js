@@ -9,9 +9,18 @@ router.get('/', function (req, res) {
     });
 });
 
+// router.get('/text_home', (req, res) => {
+//   res.render('models/text/text_home', {
+//       title: 'Cognimates, Train a text model, Home'
+//     })
+// })
+
 router.get('/text_home', (req, res) => {
-  res.render('models/text/text_home', {
-      title: 'Cognimates, Train a text model, Home'
+  res.render('models/text/text_classifiers', {
+      title: 'Cognimates, Train a text model, Home',
+      serviceName: 'Uclassify.com',
+      serviceUrl: 'https://www.uclassify.com/account/register',
+      howToGuide: 'xxx'
     })
 })
 
