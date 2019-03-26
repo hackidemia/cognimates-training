@@ -408,6 +408,9 @@
                     window.model_id = data.classifier_id;
                     window.classifier_status = data.status;
                     resolve();
+                },
+                error: function (error) {
+                    reject(error);
                 }
             });
         });
