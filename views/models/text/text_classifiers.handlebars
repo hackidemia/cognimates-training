@@ -682,69 +682,37 @@
           });
     }
 
-    async function preprocessPredictData() {
-        try {
-            validatePredictionData();
-            await loadPredictionImage();
-            classify();
-        } catch (error) {
-            var n = makeNotification({
-              message: error,
-              type: 'error',
-              closeOlderInstances: true,
-              stayOpenUntilClick: true
-            });
-            n.show();
-            console.log(error);
-        }
-    }
+    $('#input_predictText').keypress((e) => {
+          if (e.which == 13) {
+              $('#button_predictText').trigger('click');
+              e.preventDefault();
+              return false;
+          }
+      });
 
-    function validatePredictionData() {
-        if (window.dropzonePredict.files === undefined || window.dropzonePredict.files.length != 1) {
-              var n = makeNotification({
-              message: 'Add an image to predict.',
-              type: 'warning',
-              closeOlderInstances: true,
-              stayOpenUntilClick: true
-            });
-            n.show();
-            throw new Error('Add an image to predict.');
-        }
-    }
-
-    function loadPredictionImage() {
-        var promise = new Promise((resolve, reject) => {
-            var reader = new FileReader();
-            reader.onloadend = function() {
-                window.predictionImage = reader.result;
-                resolve(reader.result);
-            }
-            reader.readAsDataURL(window.dropzonePredict.files[0]);
-        });
-        return promise;
-    }
-
-    function classify() {
-        if(window.predictionImage == undefined) {
-            var n = makeNotification({
-              message: 'Set prediction to run the model.',
-              type: 'warning',
-              closeOlderInstances: true,
-              stayOpenUntilClick: false
-            });
-            n.show();
+      $('#button_predictText').click(function () {
+        if ($('#input_predictText').val() == '') {
+          var n = makeNotification({
+            message: 'Enter a phrase to predict.',
+            type: 'warning',
+            closeOlderInstances: true,
+            stayOpenUntilClick: false
+          });
+          n.show();
           return;
         }
+
+        // TODO: Sanitize categoryName before further processing
+        var phraseToPredict = $('#input_predictText').val();
         $.ajax({
-             url: "/vision/classify",
-             type: "POST",
-             headers: { 'apikey': window.apiKey },
-             data: { classifier_id: window.model_id,
-             image_data: window.predictionImage },
-             success: function (data) {
-                 if(data.error == null) {
+            url: "/text/classify",
+            type: "POST",
+            data: {classifier_id: window.projectName, classify_username: window.username,
+                    token: window.RapiKey, phrase: phraseToPredict},
+            success: function(data) {
+                if(data.error == null) {
                     showClassification(data);
-                 } else {
+                } else {
                     var n = makeNotification({
                       message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + data.error,
                       type: 'error',
@@ -752,9 +720,9 @@
                       stayOpenUntilClick: true
                     });
                     n.show();
-                 }
-             },
-             error: function (error) {
+                }
+            },
+            error: function (error) {
                 console.log(error);
                 var n = makeNotification({
                   message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + error,
@@ -764,11 +732,11 @@
                 });
                 n.show();
              }
-        });
-        window.dropzonePredict.removeAllFiles();
-    }
+        })
+      });
 
     function showClassification(response) {
+        console.log(response);
         if(response.length == 1) {
             var n = makeNotification({
               message: `The model says ${response[0].class}! with a confidence score of ${response[0].score}.`,
