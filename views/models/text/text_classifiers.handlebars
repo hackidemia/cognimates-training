@@ -122,8 +122,7 @@
 
     $(document).ready(function init() {
 
-      window.labels = [];
-      window.dropZoneMap = {};
+      window.training_data = {};
 
       $('form').submit(false);
 
@@ -294,7 +293,7 @@
 
         // TODO: Sanitize categoryName before further processing
         var categoryName = $('#input_categoryName').val();
-        if (window.labels.includes(categoryName)) {
+        if (window.training_data.hasOwnProperty(categoryName)) {
           var n = makeNotification({
             message: 'Enter a different category name, this one already exists',
             type: 'warning',
@@ -304,8 +303,9 @@
           n.show();
           return;
         }
-        window.labels.push(categoryName);
-        createCategoryHTMLElement(categoryName);
+        window.training_data[categoryName] = [];
+        console.log(window.training_data);
+        {{!-- createCategoryHTMLElement(categoryName); --}}
         $('#input_categoryName').val('');
       });
 
