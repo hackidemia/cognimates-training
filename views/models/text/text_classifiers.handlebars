@@ -375,8 +375,7 @@
     }
 
     function createCategoryHTMLElement(categoryName) {
-        const htmlStructure = `<h5>${categoryName}</h3><input type="text" class="category__tag-select-container
-                                                    js--textbox__category--${categoryName}"><br><br>`;
+        const htmlStructure = `<h5>${categoryName}</h5><input type="text" class="category__tag-select-container-${categoryName}"><br><br>`;
         const htmlElement = $(htmlStructure);
         const categoriesContainerElement = $('#categoriesContainer');
         categoriesContainerElement.append(htmlElement);
@@ -384,16 +383,26 @@
     }
 
     function initTextClass(categoryName) {
-      const textBoxFormClass = `.js--textbox__category--${categoryName}`;
+      const textBoxFormClass = `.category__tag-select-container-${categoryName}`;
       const textBoxPreviewsContainerClass = `.js--textbox__previews__container--${categoryName}`;
       const textBoxRemoveClass = `.js--textbox__category__remove--${categoryName}`;
 
       $(textBoxRemoveClass).click((e) => {
           e.preventDefault();
-          removeDropZoneByClass(categoryName);
+      });
+      
+      $(textBoxFormClass).selectize({
+        delimiter: ',',
+        persist: false,
+        placeholder: 'write text things here!',
+        create: function(input) {
+            return {
+                value: input,
+                text: input
+            }
+        }
       });
 
-      window.dropZoneMap[categoryName] = dropzoneCategoryInstance;
     }
 
     function setTrainButtonState(state) {
