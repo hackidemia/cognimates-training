@@ -1,5 +1,6 @@
 const request = require('request');
 const base_url = "https://api.uclassify.com/v1/";
+const async = require('async');
 
 function getClassifierInformation(req, res) {
     let read_token = req.body.read_token
@@ -193,6 +194,7 @@ function untrain(req, res){
 }
 
 function trainAll(req, res) {
+  console.log(req.body);
   var classifierName = req.body.classifier_name;
   var training_data = req.body.training_data;
   var writeAPIKey = req.headers.api_key;

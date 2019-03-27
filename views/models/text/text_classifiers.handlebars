@@ -463,7 +463,7 @@
                 dataType: 'json',
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify({training_data: window.training_data, classifier_name: window.projectName}),
-                headers: { apikey: window.WapiKey },
+                headers: { api_key: window.WapiKey },
                 success: function (data) {
                     if(data.error != null) {
                         var n = makeNotification({
@@ -476,8 +476,7 @@
                         reject(new Error(data.error));
                         return;
                     }
-                    window.model_id = data.classifier_id;
-                    window.classifier_status = data.status;
+                    window.classifier_status = 'successfully';
                     resolve();
                 },
                 error: function (error) {
@@ -491,7 +490,7 @@
         const classifierNameClass = ".js--classifier__name";
         const classifierStatusClass = ".js--classifier__status";
         const classifierRefreshSpinnerClass = ".js--classifier__status_spinner";
-        $(`${classifierNameClass}--set`).html(window.model_id);
+        $(`${classifierNameClass}--set`).html(window.projectName);
         $(`${classifierStatusClass}--set`).html(window.classifier_status);
         $(classifierNameClass).show();
         $(classifierStatusClass).show();
@@ -504,42 +503,16 @@
     }
 
     function setAutoRefreshStatus(autoRefresh) {
-        if (!autoRefresh) {
-            if (window.autoRefreshTimer != undefined) {
-                clearInterval(window.autoRefreshTimer);
-                window.autoRefreshTimer = undefined;
-            }
-        } else {
-            window.autoRefreshTimer = setInterval(() => {
-                loadUserClassifier(window.model_id);
-            }, 2000);
-        }
-    }
-
-    function loadUserClassifier(classifier_id) {
-        $.ajax({
-             url: "/vision/classifier",
-             type: "GET",
-             headers: { 'apikey': window.apiKey },
-             data: { classifier_id: classifier_id},
-             success: function (data) {
-                 if(data.error == null) {
-                      window.classifier_status = data.status;
-                 } else {
-                      var n = makeNotification({
-                        message: 'We couldn\'t get the API key you entered :( Some more technical info: ' + data.error,
-                        type: 'error',
-                        closeOlderInstances: true,
-                        stayOpenUntilClick: true
-                      });
-                      n.show();
-                 }
-                 setClassifierStatus();
-             },
-             error: function (error) {
-                 console.log(error);
-             }
-          });
+      if (!autoRefresh) {
+          if (window.autoRefreshTimer != undefined) {
+              clearInterval(window.autoRefreshTimer);
+              window.autoRefreshTimer = undefined;
+          }
+      } else {
+          window.autoRefreshTimer = setInterval(() => {
+              {{!-- loadUserClassifier(window.projectName); --}}
+          }, 2000);
+      }
     }
 
     //setting the explore project name 
