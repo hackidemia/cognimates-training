@@ -307,7 +307,7 @@
         }
 
         // TODO: Sanitize categoryName before further processing
-        var categoryName = $('#input_categoryName').val();
+        var categoryName = $('#input_categoryName').val().replace(/\s/g, '');;
         if (window.training_data.hasOwnProperty(categoryName)) {
           var n = makeNotification({
             message: 'Enter a different category name, this one already exists',
@@ -338,41 +338,6 @@
         window.model_id = model_id;
         return false;
     };
-
-    async function setUserClassifiers() {
-        var userClassifiers = await loadUserClassifiers();
-        addClassifiersToDropdown(userClassifiers);
-    }
-
-    function addClassifiersToDropdown(classifiers) {
-        const dropdownElement = $('.js--classifiers__dropdown');
-        dropdownElement.html('');
-        classifiers.forEach((classifier) => {
-            const dropdownItemStructure = `<a class="js--classifiers__dropdown__item dropdown-item" onclick="selectClassifier('${classifier.classifier_id}');">${classifier.name}</a>`;
-            const dropdownItem = $(dropdownItemStructure);
-            dropdownElement.append(dropdownItem);
-        });
-    }
-
-    function loadUserClassifiers() {
-      $.ajax({
-           url: "/vision/classifiers",
-           type: "GET",
-           headers: { 'apiKey': window.apiKey },
-           success: function (data) {
-             if(data.error == null) {
-               window.userClassifiers = data.classifiers;
-             } else {
-               window.userClassifiers = [];
-             }
-             displayClassifiers();
-           },
-           error: function (data) {
-             console.log(data);
-             window.userClassifiers = [];
-           }
-        });
-    }
                   
     function createCategoryHTMLElement(categoryName) {
         const htmlStructure = `<div class="category__container tag-contain-${categoryName}">
@@ -448,19 +413,6 @@
         setTrainButtonState('training');
         try {
             validateTrainingData();
-            var userClassifiers = await loadUserClassifiers();
-            if (projectNameAlreadyUsed(userClassifiers)) {
-              var n = makeNotification({
-                message: 'A project with this name already exists. Create one with a different name.',
-                type: 'warning',
-                closeOlderInstances: true,
-                stayOpenUntilClick: true
-              });
-              n.show();
-              throw new Error('A project with this name already exists. Create one with a different name.');
-              return;
-            }
-            await convertImagesIntoExamples();
             await createClassifier();
             setTrainButtonState('finished');
             setClassifierStatus();
@@ -503,88 +455,15 @@
         console.log(training_data);
     }
 
-    function loadUserClassifiers() {
-        return new Promise((resolve, reject) => {
-            $.ajax({
-                 url: "/vision/classifiers",
-                 type: "GET",
-                 headers: { 'apiKey': window.apiKey },
-                 success: function (data) {
-                     if(data.error == null) {
-                         resolve(data.classifiers);
-                         return;
-                     }
-                     reject(new Error(data.error));
-                 },
-                 error: function (error) {
-                     reject(error);
-                 }
-            });
-        });
-    }
-
-    function projectNameAlreadyUsed(classifiers) {
-        if (classifiers == undefined || classifiers.length == 0) return false;
-        for (var index = 0; index < classifiers.length; index++) {
-            var classifier = classifiers[index];
-            if (classifier.name == window.projectName) return true;
-        }
-        return false;
-    }
-
-    async function convertImagesIntoExamples() {
-        if(window.dropZoneMap.length < 1) {
-            throw new Error("Create at least 2 classes.");
-        }
-        for (const className of Object.keys(window.dropZoneMap)) {
-            var promises = [];
-            Array.from(window.dropZoneMap[className].files).forEach((file) => {
-                if(file == undefined) return;
-                var promise = new Promise((resolve, reject) => {
-                    var reader = new FileReader();
-                    reader.onloadend = function() {
-                        resolve(reader.result);
-                    }
-                    reader.readAsDataURL(file);
-                });
-                promises.push(promise);
-            });
-            base64Images = await Promise.all(promises);
-            try {
-                setBase64Examples(className, base64Images);
-            } catch (e) {
-                throw e;
-            }
-        }
-    }
-
-    function setBase64Examples(className, examples) {
-        if (window.examples == undefined) {
-            window.examples = {};
-        }
-        window.examples[className] = examples;
-    }
-
     function createClassifier() {
-        var requestData = {};
-        requestData.name = window.projectName;
-        requestData.training_data = [];
-        window.labels.forEach((label) => {
-            label_items = [];
-            window.examples[label].forEach((example) => {
-                var image_file = example.split(',')[1];
-                label_items.push(image_file);
-            });
-            requestData.training_data.push({label: label, label_items: label_items});
-        })
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: '/vision/classifier',
+                url: '/text/trainAll',
                 type: 'POST',
                 dataType: 'json',
                 contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(requestData),
-                headers: { apikey: window.apiKey },
+                data: JSON.stringify({training_data: window.training_data, classifier_name: window.projectName}),
+                headers: { apikey: window.WapiKey },
                 success: function (data) {
                     if(data.error != null) {
                         var n = makeNotification({

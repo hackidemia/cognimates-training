@@ -51,7 +51,7 @@ router.delete('/text/removeClass', textController.removeClass)
 router.post('/text/classify', textController.classifyText)
 router.post('/text/addExamples', textController.addExamples)
 router.post('/text/untrain', textController.untrain)
-
+router.post('/text/trainAll', textController.trainAll)
 ////////////////////
 // router.get('/vision_home', (req, res) => {
 //   res.render('models/vision/vision_home', {
