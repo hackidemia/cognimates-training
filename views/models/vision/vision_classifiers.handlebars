@@ -208,13 +208,7 @@
 
       $('.js--apikey__input--set').click(function () {
         if ($('.js--apikey__input').val() == '') {
-          var n = makeNotification({
-            message: 'Enter an API Key',
-            type: 'warning',
-            closeOlderInstances: true,
-            stayOpenUntilClick: false
-          });
-          n.show();
+          showWarningNotification('Enter an API Key', true, false);
           return;
         }
         window.apiKey = $('.js--apikey__input').val();
@@ -224,13 +218,7 @@
 
       $('.js--explore__apikey__input--set').click(function () {
         if ($('.js--explore__apikey__input').val() == '') {
-          var n = makeNotification({
-            message: 'Enter an API Key',
-            type: 'warning',
-            closeOlderInstances: true,
-            stayOpenUntilClick: false
-          });
-          n.show();
+          showWarningNotification('Enter an API Key', true, false);
           return;
         }
         window.apiKey = $('.js--explore__apikey__input').val();
@@ -247,26 +235,14 @@
 
       $('#button_categoryName').click(function () {
         if ($('#input_categoryName').val() == '') {
-          var n = makeNotification({
-            message: 'Enter a category to train.',
-            type: 'warning',
-            closeOlderInstances: true,
-            stayOpenUntilClick: false
-          });
-          n.show();
+          showWarningNotification('Enter a category to add.', true, false);
           return;
         }
 
         // TODO: Sanitize categoryName before further processing
         var categoryName = $('#input_categoryName').val();
         if (window.labels.includes(categoryName)) {
-          var n = makeNotification({
-            message: 'Enter a different category name, this one already exists',
-            type: 'warning',
-            closeOlderInstances: true,
-            stayOpenUntilClick: false
-          });
-          n.show();
+          showWarningNotification('Category already added', true, false);
           return;
         }
         window.labels.push(categoryName);
@@ -434,13 +410,6 @@
             validateTrainingData();
             var userClassifiers = await loadUserClassifiers();
             if (projectNameAlreadyUsed(userClassifiers)) {
-              var n = makeNotification({
-                message: 'A project with this name already exists. Create one with a different name.',
-                type: 'warning',
-                closeOlderInstances: true,
-                stayOpenUntilClick: true
-              });
-              n.show();
               throw new Error('A project with this name already exists. Create one with a different name.');
               return;
             }
@@ -450,7 +419,7 @@
             setClassifierStatus();
             setAutoRefreshStatus(true);
         } catch (error) {
-            console.log(error);
+            showErrorNotification(error.message, true, false);
             setTrainButtonState('normal');
         }
     }
@@ -463,25 +432,12 @@
         //     throw new Error("API key not set");
         // }
         if (window.labels === undefined || window.labels.length < 2) {
-            var n = makeNotification({
-              message: 'Create at least 2 classes.',
-              type: 'warning',
-              closeOlderInstances: true,
-              stayOpenUntilClick: true
-            });
-            n.show();
-
+            showWarningNotification('Add at least 2 categories to train.', true, true);
             throw new Error("Create at least 2 classes.");
         }
         for (const className of Object.keys(window.dropZoneMap)) {
             if (window.dropZoneMap[className].files === undefined || window.dropZoneMap[className].files.length < 10) {
-              var n = makeNotification({
-                message: `${className} category needs at least 10 examples.`,
-                type: 'warning',
-                closeOlderInstances: true,
-                stayOpenUntilClick: true
-              });
-              n.show();
+              showWarningNotification('`${className} category needs at least 10 examples.`', true, true);
               throw new Error(`${className} category has less than 10 examples`);
             }
         }
@@ -571,13 +527,6 @@
                 headers: { apikey: window.apiKey },
                 success: function (data) {
                     if(data.error != null) {
-                        var n = makeNotification({
-                          message: 'We couldn\'t save to Clarifai :( Some technical info: ' + data.error,
-                          type: 'error',
-                          closeOlderInstances: true,
-                          stayOpenUntilClick: false
-                        });
-                        n.show();
                         reject(new Error(data.error));
                         return;
                     }
@@ -631,18 +580,13 @@
                  if(data.error == null) {
                       window.classifier_status = data.status;
                  } else {
-                      var n = makeNotification({
-                        message: 'We couldn\'t get the API key you entered :( Some more technical info: ' + data.error,
-                        type: 'error',
-                        closeOlderInstances: true,
-                        stayOpenUntilClick: true
-                      });
-                      n.show();
+                      showWarningNotification(`We couldn\'t get the API key you entered :( Some more technical info: ${data.error}`, true, true);
+                      return;
                  }
                  setClassifierStatus();
              },
              error: function (error) {
-                 console.log(error);
+                 showErrorNotification(`Oops. ${error.message}`, false, false);
              }
           });
     }
@@ -653,26 +597,13 @@
             await loadPredictionImage();
             classify();
         } catch (error) {
-            var n = makeNotification({
-              message: error,
-              type: 'error',
-              closeOlderInstances: true,
-              stayOpenUntilClick: true
-            });
-            n.show();
+            showErrorNotification(`Oops. ${error.message}`, true, true);
             console.log(error);
         }
     }
 
     function validatePredictionData() {
         if (window.dropzonePredict.files === undefined || window.dropzonePredict.files.length != 1) {
-              var n = makeNotification({
-              message: 'Add an image to predict.',
-              type: 'warning',
-              closeOlderInstances: true,
-              stayOpenUntilClick: true
-            });
-            n.show();
             throw new Error('Add an image to predict.');
         }
     }
@@ -710,24 +641,13 @@
                  if(data.error == null) {
                     showClassification(data);
                  } else {
-                    var n = makeNotification({
-                      message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + data.error,
-                      type: 'error',
-                      closeOlderInstances: true,
-                      stayOpenUntilClick: true
-                    });
-                    n.show();
+                    throw new Error(data.error);
+                    return;
                  }
              },
              error: function (error) {
                 console.log(error);
-                var n = makeNotification({
-                  message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + error,
-                  type: 'error',
-                  closeOlderInstances: true,
-                  stayOpenUntilClick: true
-                });
-                n.show();
+                throw error;
              }
         });
         window.dropzonePredict.removeAllFiles();
@@ -735,12 +655,7 @@
 
     function showClassification(response) {
         if(response.length == 1) {
-            var n = makeNotification({
-              message: `The model says ${response[0].class}! with a confidence score of ${response[0].score}.`,
-              type: 'success',
-              closeOlderInstances: true,
-              stayOpenUntilClick: true
-            });
+            showSuccessNotification(`The model says ${response[0].class}! with a confidence score of ${response[0].score}.`, true, true);
         } else {
             var classes = {}
             var scores = []
@@ -755,12 +670,7 @@
             })
             let score = scores[0]
             let className = classes[score]
-            var n = makeNotification({
-              message: `The model says ${className}! with a confidence score of ${score}.`,
-              type: 'success',
-              closeOlderInstances: true,
-              stayOpenUntilClick: true
-            });
+            showSuccessNotification(`The model says ${className}! with a confidence score of ${score}.`, true, true);
         }
     }
 
