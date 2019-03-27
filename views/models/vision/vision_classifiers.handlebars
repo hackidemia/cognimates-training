@@ -577,12 +577,11 @@
              headers: { 'apikey': window.apiKey },
              data: { classifier_id: classifier_id},
              success: function (data) {
-                 if(data.error == null) {
-                      window.classifier_status = data.status;
-                 } else {
-                      showWarningNotification(`We couldn\'t get the API key you entered :( Some more technical info: ${data.error}`, true, true);
-                      return;
+                 if(data.error != undefined) {
+                     showWarningNotification(`Oops. ${JSON.stringify(data.error)}`, true, true);
+                     return;
                  }
+                 window.classifier_status = data.status;
                  setClassifierStatus();
              },
              error: function (error) {
@@ -605,6 +604,9 @@
     function validatePredictionData() {
         if (window.dropzonePredict.files === undefined || window.dropzonePredict.files.length != 1) {
             throw new Error('Add an image to predict.');
+        }
+        if (window.model_id === undefined) {
+            throw new Error('The model has to be trained before attempting to predict.');
         }
     }
 
@@ -641,7 +643,11 @@
                  if(data.error == null) {
                     showClassification(data);
                  } else {
-                    throw new Error(data.error);
+                    if (data.error.length != 0) {
+                      throw new Error(data.error);
+                      return;
+                    }
+                    throw new Error(`Oops. Our server did not respond.`);
                     return;
                  }
              },
