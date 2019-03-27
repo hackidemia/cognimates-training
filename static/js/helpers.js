@@ -75,6 +75,45 @@ function makeNotification(options){
             }
         }
     });
-
     return notification;
+}
+
+function showSuccessNotification(message, closeOlderInstances, stayOpenUntilClick) {
+    var n = makeNotification({
+      message: message,
+      type: 'success',
+      closeOlderInstances: closeOlderInstances,
+      stayOpenUntilClick: stayOpenUntilClick
+    });
+    n.show();
+}
+
+function showInfoNotification(message, closeOlderInstances, stayOpenUntilClick) {
+    var n = makeNotification({
+      message: message,
+      type: 'info',
+      closeOlderInstances: closeOlderInstances,
+      stayOpenUntilClick: stayOpenUntilClick
+    });
+    n.show();
+}
+
+function showWarningNotification(message, closeOlderInstances, stayOpenUntilClick) {
+    var n = makeNotification({
+      message: message,
+      type: 'warning',
+      closeOlderInstances: closeOlderInstances,
+      stayOpenUntilClick: stayOpenUntilClick
+    });
+    n.show();
+}
+
+function showErrorNotification(message, closeOlderInstances, stayOpenUntilClick) {
+    var n = makeNotification({
+      message: message,
+      type: 'error',
+      closeOlderInstances: closeOlderInstances,
+      stayOpenUntilClick: stayOpenUntilClick
+    });
+    n.show();
 }
