@@ -88,10 +88,25 @@
         showExploreTab(false);
     });
 
-    $('.js--nav__tab--explore').on('click', function (e) {
+    $('.js--nav__tab--exp lore').on('click', function (e) {
         showCreateTab(false);
         showExploreTab(true);
     });
+
+    // initialize the text classifier select area as a field for tags
+    // using the Selectivize library
+    $('.category__tag-select-container').selectize({
+        delimiter: ',',
+        persist: false,
+        placeholder: 'write text things here!',
+        create: function(input) {
+            return {
+                value: input,
+                text: input
+            }
+        }
+    });
+
 
     function showCreateTab(show) {
         const tabContent = $('.js--classifier__tab--create');
