@@ -320,7 +320,7 @@
         }
         window.training_data[categoryName] = [];
         console.log(window.training_data);
-        {{!-- createCategoryHTMLElement(categoryName); --}}
+        createCategoryHTMLElement(categoryName);
         $('#input_categoryName').val('');
       });
 
@@ -375,90 +375,25 @@
     }
 
     function createCategoryHTMLElement(categoryName) {
-        const htmlStructure = `<div class="category__container
-                                           js--dropzone__category__container--${categoryName}">
-            <div class="category__box">
-                <form action="/"
-                       class="dropzone--categories
-                              js--dropzone__category--${categoryName}">
-                  <div class="category__name">
-                        ${categoryName}
-                    </div>
-
-                    <div class="dropzone__header">
-                        <i class="fas fa-cloud-upload-alt
-                                    dropzone__upload-icon"></i>
-                        <span class="dropzone__label">Drag and drop 10 or more images</span>
-                    </div>
-
-                    <!-- inject image previews here -->
-                    <div class="js--dropzone__previews-container dropzone-previews"
-                         id="js--dropzone__previews-container_${categoryName}">
-                    </div>
-
-                    <div class="dropzone__error-container"></div>
-                </form>
-            </div>
-
-            <a href="#" class="category__button--remove
-                               btn btn-primary
-                               js--dropzone__category__remove--${categoryName}">
-                <i class="fas fa-times"></i>
-            </a>
-        </div>`;
+        const htmlStructure = `<h5>${categoryName}</h3><input type="text" class="category__tag-select-container
+                                                    js--textbox__category--${categoryName}"><br><br>`;
         const htmlElement = $(htmlStructure);
         const categoriesContainerElement = $('#categoriesContainer');
         categoriesContainerElement.append(htmlElement);
-        initDropZoneForClass(categoryName);
+        initTextClass(categoryName);
     }
 
-    function initDropZoneForClass(categoryName) {
-      const dropzoneFormClass = `.js--dropzone__category--${categoryName}`;
-      const dropzonePreviewsContainerClass = `.js--dropzone__previews__container--${categoryName}`;
-      const dropzoneRemoveClass = `.js--dropzone__category__remove--${categoryName}`;
-      const dropzoneCategoryInstance = new Dropzone(dropzoneFormClass, {
-          url: "/file/post" ,
-          paramName: "category-image",
-          maxFilesize: 5, //  MB
-          maxFiles: 20,
-          autoProcessQueue: false,
-          dictRemoveFile: "",
-          acceptedFiles: ".jpg,.jpeg,.png",
-          addRemoveLinks: true, //  enable person to del file
-          thumbnailWidth: 80,
-          thumbnailHeight: 80,
-          previewsContainer: document.querySelector(dropzonePreviewsContainerClass),
-          init: function () {
-            this.on("error", function(file) {
-              if (!file.accepted) {
-                this.removeFile(file);
-              }
-            });
-          }
-      });
-      $(dropzoneRemoveClass).click((e) => {
+    function initTextClass(categoryName) {
+      const textBoxFormClass = `.js--textbox__category--${categoryName}`;
+      const textBoxPreviewsContainerClass = `.js--textbox__previews__container--${categoryName}`;
+      const textBoxRemoveClass = `.js--textbox__category__remove--${categoryName}`;
+
+      $(textBoxRemoveClass).click((e) => {
           e.preventDefault();
           removeDropZoneByClass(categoryName);
       });
-      window.dropZoneMap[categoryName] = dropzoneCategoryInstance;
-    }
 
-    function removeDropZoneByClass(categoryName) {
-        if (window.labels == undefined || !window.labels.includes(categoryName)) {
-            return;
-        }
-        const dropZoneCategoryClass = `.js--dropzone__category__container--${categoryName}`;
-        const dropzoneFormClass = `.js--dropzone__category--${categoryName}`;
-        const dropzonePreviewsContainerClass = `.js--dropzone__previews__container--${categoryName}`;
-        const dropzoneRemoveClass = `.js--dropzone__category__remove--${categoryName}`;
-        window.dropZoneMap[categoryName].disable();
-        delete window.dropZoneMap[categoryName];
-        $(dropzoneRemoveClass).unbind();
-        $(dropZoneCategoryClass).remove();
-        delete window.labels[categoryName];
-        if (window.examples != undefined && window.examples[categoryName] != undefined) {
-            delete window.examples[categoryName];
-        }
+      window.dropZoneMap[categoryName] = dropzoneCategoryInstance;
     }
 
     function setTrainButtonState(state) {
@@ -506,12 +441,6 @@
     }
 
     function validateTrainingData() {
-        // if (window.projectName === undefined || window.projectName.length < 2) {
-        //     throw new Error("Project name is too short or empty");
-        // }
-        // if (window.apiKey === undefined || window.apiKey.length < 1) {
-        //     throw new Error("API key not set");
-        // }
         if (window.labels === undefined || window.labels.length < 2) {
             var n = makeNotification({
               message: 'Create at least 2 classes.',
@@ -697,6 +626,7 @@
           });
     }
 
+    //setting the explore project name 
     $('#input_exploreProjectName').keypress((e) => {
           if (e.which == 13) {
               $('#button_projectName').trigger('click');
@@ -719,6 +649,7 @@
         window.projectName = $('#input_exploreProjectName').val();
       });
 
+    //predicting text in create tab
     $('#input_predictText').keypress((e) => {
           if (e.which == 13) {
               $('#button_predictText').trigger('click');
@@ -773,6 +704,7 @@
         })
       });
 
+    //predicting in the explore tab
     $('#input_explore_predictText').keypress((e) => {
         if (e.which == 13) {
             $('#button_explore_predictText').trigger('click');
@@ -827,6 +759,7 @@
     })
     });
 
+    //helper functions for predicting 
     function showClassification(response) {
         var top_class = findTopClass(response);
         console.log(top_class);
