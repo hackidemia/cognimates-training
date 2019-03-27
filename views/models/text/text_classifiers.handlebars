@@ -95,7 +95,7 @@
 
     // initialize the text classifier select area as a field for tags
     // using the Selectivize library
-    $('.category__tag-select-container').selectize({
+    {{!-- $('.category__tag-select-container').selectize({
         delimiter: ',',
         persist: false,
         placeholder: 'write text things here!',
@@ -105,7 +105,7 @@
                 text: input
             }
         }
-    });
+    }); --}}
 
 
     function showCreateTab(show) {
@@ -376,7 +376,7 @@
                   
     function createCategoryHTMLElement(categoryName) {
         const htmlStructure = `<div class="category__container tag-contain-${categoryName}">
-        <h5>${categoryName}</h5><input type="text" class="category__tag-select-container-${categoryName}">
+        <h5>${categoryName}</h5><input type="text" id="${categoryName}" class="category__tag-select-container-${categoryName}">
                              <button class="js--textbox__category__remove--${categoryName}
                                             d-inline-block
                                             btn
@@ -395,7 +395,6 @@
     function initTextClass(categoryName) {
       const textBoxFormClass = `.category__tag-select-container-${categoryName}`;
       const textBoxRemoveClass = `.js--textbox__category__remove--${categoryName}`;
-
       $(textBoxRemoveClass).click((e) => {
           e.preventDefault();
           removeCategory(categoryName);
@@ -473,7 +472,7 @@
     }
 
     function validateTrainingData() {
-        if (window.labels === undefined || window.labels.length < 2) {
+        if (window.training_data === undefined || Object.keys(window.training_data).length < 2) {
             var n = makeNotification({
               message: 'Create at least 2 classes.',
               type: 'warning',
@@ -484,8 +483,10 @@
 
             throw new Error("Create at least 2 classes.");
         }
-        for (const className of Object.keys(window.dropZoneMap)) {
-            if (window.dropZoneMap[className].files === undefined || window.dropZoneMap[className].files.length < 10) {
+        for (const className of Object.keys(window.training_data)) {
+            var unparsed_result = $(`#${className}`).val();
+            var values = unparsed_result.split(","); 
+            if (values === undefined || values.length < 10) {
               var n = makeNotification({
                 message: `${className} category needs at least 10 examples.`,
                 type: 'warning',
@@ -494,8 +495,12 @@
               });
               n.show();
               throw new Error(`${className} category has less than 10 examples`);
+            } 
+            for(var i = 0; i < values.length; i++){
+              window.training_data[className].push(values[i]);
             }
         }
+        console.log(training_data);
     }
 
     function loadUserClassifiers() {
