@@ -373,9 +373,19 @@
            }
         });
     }
-
+                  
     function createCategoryHTMLElement(categoryName) {
-        const htmlStructure = `<h5>${categoryName}</h5><input type="text" class="category__tag-select-container-${categoryName}"><br><br>`;
+        const htmlStructure = `<div class="category__container tag-contain-${categoryName}">
+        <h5>${categoryName}</h5><input type="text" class="category__tag-select-container-${categoryName}">
+                             <button class="js--textbox__category__remove--${categoryName}
+                                            d-inline-block
+                                            btn
+                                            btn-primary
+                                            no-radius--left"
+                                    type="button">
+                                    Remove Category
+                                </button><br><br>
+                                </div>`;
         const htmlElement = $(htmlStructure);
         const categoriesContainerElement = $('#categoriesContainer');
         categoriesContainerElement.append(htmlElement);
@@ -384,11 +394,11 @@
 
     function initTextClass(categoryName) {
       const textBoxFormClass = `.category__tag-select-container-${categoryName}`;
-      const textBoxPreviewsContainerClass = `.js--textbox__previews__container--${categoryName}`;
       const textBoxRemoveClass = `.js--textbox__category__remove--${categoryName}`;
 
       $(textBoxRemoveClass).click((e) => {
           e.preventDefault();
+          removeCategory(categoryName);
       });
       
       $(textBoxFormClass).selectize({
@@ -403,6 +413,19 @@
         }
       });
 
+    }
+
+    function removeCategory(categoryName){
+       if (window.training_data == undefined || !window.training_data.hasOwnProperty(categoryName)) {
+            return;
+        }
+        const tagCategoryContain = `.tag-contain-${categoryName}`;
+        const tagBoxCategoryClass = `.category__tag-select-container-${categoryName}`;
+        const tagBoxRemoveClass = `.js--textbox__category__remove--${categoryName}`;
+        delete window.training_data[categoryName];
+        $(tagBoxRemoveClass).unbind();
+        $(tagBoxCategoryClass).remove();
+        $(tagCategoryContain).remove();
     }
 
     function setTrainButtonState(state) {
