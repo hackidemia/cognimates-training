@@ -375,7 +375,8 @@
     }
 
     function createCategoryHTMLElement(categoryName) {
-        const htmlStructure = `<h5>${categoryName}</h3><br><input type="text" class="category__tag-select-container">`;
+        const htmlStructure = `<h5>${categoryName}</h3><input type="text" class="category__tag-select-container
+                                                    js--textbox__category--${categoryName}"><br><br>`;
         const htmlElement = $(htmlStructure);
         const categoriesContainerElement = $('#categoriesContainer');
         categoriesContainerElement.append(htmlElement);
