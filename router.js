@@ -52,6 +52,22 @@ router.post('/nlc/classify', textController.classifyText)
 router.post('/nlc/addExamples', textController.addExamples)
 router.post('/nlc/untrain', textController.untrain)
 router.post('/nlc/trainAll', textController.trainAll)
+router.get('/nlc/extension/:read/:write/:username/:model', (req, res) => {
+    var read_api = req.params.read;
+    var write_api = req.params.write;
+    var username = req.params.username;
+    var classifier_id = req.params.model;
+
+    res.contentType('application/javascript');
+    res.charset = 'UTF-8';
+    res.render('models/text/extension', {
+      read_api: read_api,
+      write_api: write_api,
+      username: username,
+      classifier_id: classifier_id,
+      layout: false
+    });
+});
 ////////////////////
 // router.get('/vision_home', (req, res) => {
 //   res.render('models/vision/vision_home', {
@@ -92,6 +108,18 @@ router.post('/vision/classifier', visionController.createClassifier)
 router.get('/vision/classifier', visionController.getClassifierInformation)
 router.delete('/vision/classifier', visionController.deleteClassifier)
 router.post('/vision/classify', visionController.classifyImages)
+router.get("/vision/extension/:apikey/:modelid", (req, res) => {
+    var apikey = req.params.apikey;
+    var model_id = req.params.modelid;
+
+    res.contentType('application/javascript');
+    res.charset = 'UTF-8';
+    res.render('models/vision/extension', {
+      CLARIFAI_KEY: apikey,
+      MODEL_ID: model_id,
+      layout: false
+    });
+});
 
 router.get('/doodle', (req, res) => {
   res.render('models/doodle/doodle', {
