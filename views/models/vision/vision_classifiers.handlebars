@@ -248,8 +248,13 @@
           return;
         }
 
-        // TODO: Sanitize categoryName before further processing
+        var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
         var categoryName = $('#input_categoryName').val();
+        categoryName = categoryName.trim();
+        if (format.test(categoryName) != false) {
+            showWarningNotification('Category name cannot have spaces or special characters', true, false);
+            return;
+        }
         if (window.labels.includes(categoryName)) {
           showWarningNotification('A category with this name already exists. Enter a different name.', true, false);
           return;
@@ -260,6 +265,11 @@
       });
 
       $('.js--train__button').on('click', function () {
+          var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+          if (format.test(window.projectName) != false) {
+              showWarningNotification('Project name cannot have special characters', true, false);
+              return;
+          }
           setTrainButtonState('training');
           preprocessTrainData();
       })
