@@ -196,10 +196,6 @@ li.stepper__step {
 			transform: scale(1.75);
 	    }
 	  }
-	  
-	  .step__description {
-	    color: $accent-color;
-	  }
 }
 
 .step__body {
@@ -214,11 +210,6 @@ li.stepper__step {
 	@include mq('lg') { 
 		margin-left: 50px;
 	}
-}
-
-.step__description {
-	color: $text-gray;
-	line-height: 1.4;
 }
 
 .step__link {
