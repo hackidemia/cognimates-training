@@ -445,6 +445,8 @@
             setTrainButtonState('finished');
             setClassifierStatus();
             setAutoRefreshStatus(true);
+            $('#button_categoryName').attr('disabled', '');
+            $('#input_categoryName').unbind();
         } catch (error) {
             showErrorNotification(error.message, true, false);
             setTrainButtonState('normal');
