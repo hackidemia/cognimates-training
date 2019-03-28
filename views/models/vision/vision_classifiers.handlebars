@@ -275,6 +275,7 @@
 
     function selectClassifier(model_id) {
         $('.js--classifiers__dropdown--menu').html(model_id);
+        $('.js--explore__predict_button').attr('disabled', null);
         window.explore_model_id = model_id;
         return false;
     };
