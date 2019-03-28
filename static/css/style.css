@@ -428,7 +428,8 @@ nav ul {
   text-align: center; }
 
 .classifiers__card-image {
-  border-bottom: 1px solid #e8e8e8; }
+  border-bottom: 1px solid #e8e8e8;
+  cursor: pointer; }
 
 .classifiers__card-headline {
   color: --main-color; }
