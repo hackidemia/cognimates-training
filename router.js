@@ -43,15 +43,15 @@ router.get('/text', (req, res) => {
 })
 
 ////////////////////
-router.post('/text/classifier', textController.createClassifier)
-router.get('/text/classifier', textController.getClassifierInformation)
-router.delete('/text/classifier', textController.deleteClassifier)
-router.post('/text/createClass', textController.createClass)
-router.delete('/text/removeClass', textController.removeClass)
-router.post('/text/classify', textController.classifyText)
-router.post('/text/addExamples', textController.addExamples)
-router.post('/text/untrain', textController.untrain)
-router.post('/text/trainAll', textController.trainAll)
+router.post('/nlc/classifier', textController.createClassifier)
+router.get('/nlc/classifier', textController.getClassifierInformation)
+router.delete('/nlc/classifier', textController.deleteClassifier)
+router.post('/nlc/createClass', textController.createClass)
+router.delete('/nlc/removeClass', textController.removeClass)
+router.post('/nlc/classify', textController.classifyText)
+router.post('/nlc/addExamples', textController.addExamples)
+router.post('/nlc/untrain', textController.untrain)
+router.post('/nlc/trainAll', textController.trainAll)
 ////////////////////
 // router.get('/vision_home', (req, res) => {
 //   res.render('models/vision/vision_home', {

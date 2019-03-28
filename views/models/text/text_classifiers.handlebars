@@ -458,7 +458,7 @@
     function createClassifier() {
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: '/text/trainAll',
+                url: '/nlc/trainAll',
                 type: 'POST',
                 dataType: 'json',
                 contentType: "application/json; charset=utf-8",
@@ -563,7 +563,7 @@
         var phraseToPredict = $('#input_predictText').val();
         console.log('here');
         $.ajax({
-            url: "/text/classify",
+            url: "/nlc/classify",
             type: "POST",
             data: {classifier_id: window.projectName, classify_username: window.username,
                     token: window.RapiKey, phrase: phraseToPredict},
@@ -618,7 +618,7 @@
     var phraseToPredict = $('#input_explore_predictText').val();
     console.log('here');
     $.ajax({
-        url: "/text/classify",
+        url: "/ nlc/classify",
         type: "POST",
         data: {classifier_id: window.projectName, classify_username: window.username,
                 token: window.RapiKey, phrase: phraseToPredict},
