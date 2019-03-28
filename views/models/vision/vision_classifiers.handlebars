@@ -326,7 +326,8 @@
                         ${categoryName}
                     </div>
 
-                    <div class="dropzone__header">
+                    <div class="dropzone__header
+                                js--dropzone__header--${categoryName}">
                         <i class="fas fa-cloud-upload-alt
                                     dropzone__upload-icon"></i>
                         <span class="dropzone__label">Drag and drop 10 or more images</span>
@@ -374,6 +375,16 @@
               if (!file.accepted) {
                 this.removeFile(file);
               }
+            });
+            this.on("addedfile", (file) => {
+              if (this.getAcceptedFiles().length == 0) {
+                  $(`.js--dropzone__header--${categoryName}`).hide();
+              }
+            });
+            this.on("removedfile", (file) => {
+                if (this.getAcceptedFiles().length == 0) {
+                    $(`.js--dropzone__header--${categoryName}`).show();
+                }
             });
           }
       });
