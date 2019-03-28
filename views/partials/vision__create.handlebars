@@ -7,18 +7,14 @@
         <div class="step__body">
             <h2 class="step__title">What is your project name?</h2>
             <div class="step__description">
-                <form>
-                    <div class="form-group">
-                        <input type="text"
-                            class="form-control
-                                   step__form-text"
-                            id="input_projectName"
-                            onkeydown="return (event.keyCode!=13);"
-                            autocomplete="off"
-                            aria-describedby=""
-                            placeholder="Unicorns vs Narhwals">
-                    </div>
-                </form>
+                <input type="text"
+                    class="form-control
+                           step__form-text"
+                    id="input_projectName"
+                    onkeydown="return (event.keyCode!=13);"
+                    autocomplete="off"
+                    aria-describedby=""
+                    placeholder="Unicorns vs Narhwals">
             </div>
         </div>
     </li>
@@ -36,42 +32,37 @@
                 </a>
             </h2>
             <div class="step__description">
-                <form class="category__new-form-container">
-                    <div class="category__new-form-group">
-                        <input type="text"
-                            class="form-control
-                                   no-radius--right
-                                   step__form-text
-                                   js--apikey__input"
-                            aria-describedby=""
-                            placeholder="Paste API Key here">
-                         <button class="category__button--create
-                                        d-inline-block
-                                        btn
-                                        btn-primary
-                                        no-radius--left
-                                        js--apikey__input--set"
-                                type="button">
-                                Set Key
-                            </button>
-                        <span class="step__description-secondary"></span>
-                    </div>
-                </form>
-                <a href="{{ howToGuide }}" class="step__link--get-key" target="_blank" >
-                       How to get guide
+                <div class="category__new-form-wrapper">
+                    <input type="text"
+                        class="form-control
+                               no-radius--right
+                               step__form-text
+                               js--apikey__input"
+                        aria-describedby=""
+                        placeholder="Paste API Key here">
+                     <button class="category__button--create
+                                    d-inline-block
+                                    btn
+                                    btn-primary
+                                    no-radius--left
+                                    js--apikey__input--set"
+                            type="button">
+                            Set Key
+                    </button>
+                </div>
+                <a href="{{ howToGuide }}" class="step__link step__link--get-key" target="_blank" >
+                       How-to guide
                  </a>
                  <a href="{{ serviceUrl }}" class="step__link step__link--get-key" target="_blank" >
-                       Sign up and get keys
+                       Sign up &amp; get keys
                  </a>
                 <div class="step__help
                             step__help--keys">
-                    <div class="step__help-info-detail">
-                        <div class="plyr__video-embed" id="js-classifier__video--clarifai">
-                            <iframe src="https://www.youtube.com/embed/8Rz5KwpecbI"
-                                    frameborder="0"
-                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-                            </iframe>
-                        </div>
+                    <div class="plyr__video-embed" id="js-classifier__video--clarifai">
+                        <iframe src="https://www.youtube.com/embed/8Rz5KwpecbI"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                        </iframe>
                     </div>
                  </div>
             </div>
@@ -101,29 +92,24 @@
                     </ul>
                 </div>
                 <div id="categoriesContainer"></div>
-                <div class="">
-                    <form class="category__new-form-container">
-                        <div class="category__new-form-group">
-                            <input type="text"
-                                class="form-control
-                                        no-radius--right
-                                        step__form-text"
-                                id="input_categoryName"
-                                aria-describedby=""
-                                placeholder="Unicorns">
-                             <button class="category__button--create
-                                            d-inline-block
-                                            btn
-                                            btn-primary
-                                            no-radius--left"
-                                    id="button_categoryName"
-                                    type="button">
-                                    Add Category
-                                </button>
-                            <span class="step__description-secondary"></span>
-                        </div>
-                    </form>
-                </div>
+                    <div class="category__new-form-wrapper">
+                        <input type="text"
+                            class="form-control
+                                    no-radius--right
+                                    step__form-text"
+                            id="input_categoryName"
+                            aria-describedby=""
+                            placeholder="Unicorns">
+                         <button class="category__button--create
+                                        d-inline-block
+                                        btn
+                                        btn-primary
+                                        no-radius--left"
+                                id="button_categoryName"
+                                type="button">
+                            Add Category
+                        </button>
+                    </div>
             </div>
         </div>
     </li>

@@ -1126,12 +1126,9 @@ li.stepper__step {
   pointer-events: none;
   color: #656565; }
 
-.category__new-form-container {
-  width: 100%;
-  margin: 0 0 2rem 0; }
-
-.category__new-form-group {
-  display: flex; }
+.category__new-form-wrapper {
+  display: flex;
+  margin: 0 0 0.5rem 0; }
 
 .category__button--create {
   white-space: nowrap; }
@@ -1143,7 +1140,7 @@ li.stepper__step {
 
 .step__help {
   display: none;
-  margin: 0 0 1rem 0;
+  margin: 1.5rem 0 1rem 0;
   transition: 0.1s all ease-in;
   color: #6d6d6d; }
 
