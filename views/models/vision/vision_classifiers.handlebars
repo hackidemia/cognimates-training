@@ -624,7 +624,6 @@
             await loadPredictionImage();
             const results = await classify(window.model_id);
             showClassification(results);
-            window.dropzonePredict.removeAllFiles();
         } catch (error) {
             showErrorNotification(`Oops. ${error.message}`, true, true);
             console.log(error);
@@ -637,7 +636,6 @@
             await loadExplorePredictionImage();
             const results = await classify(window.explore_model_id);
             showClassification(results);
-            window.dropzoneExplorePredict.removeAllFiles();
         } catch (error) {
             showErrorNotification(`Oops. ${error.message}`, true, true);
             console.log(error);
