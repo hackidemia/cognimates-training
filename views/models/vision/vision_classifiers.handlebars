@@ -251,7 +251,7 @@
         // TODO: Sanitize categoryName before further processing
         var categoryName = $('#input_categoryName').val();
         if (window.labels.includes(categoryName)) {
-          showWarningNotification('A category with this name already exists. Enter a different name.').', true, false);
+          showWarningNotification('A category with this name already exists. Enter a different name.', true, false);
           return;
         }
         window.labels.push(categoryName);
