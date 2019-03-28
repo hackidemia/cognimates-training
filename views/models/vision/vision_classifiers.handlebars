@@ -177,6 +177,29 @@
       });
     });
 
+    const dropzoneExplorePredictEl = "#js--explore__dropzone-predict";
+    window.dropzoneExplorePredict = new Dropzone(dropzoneExplorePredictEl, {
+        url: "/",
+        paramName: "prediction-image",
+        maxFiles: 1,
+        dictRemoveFile: "",
+        autoProcessQueue: false,
+        uploadMultiple: false,
+        acceptedFiles: ".jpg,.jpeg,.png",
+        addRemoveLinks: true, //  enable person to del file
+        thumbnailWidth: 80,
+        thumbnailHeight: 80,
+        previewsContainer: document.querySelector('.js--explore__dropzone__previews-container--predict'),
+        previewTemplate: document.querySelector('#dropzonePredictTemplate').innerHTML, // use a custom HTML template
+        init: function () {
+            this.on("error", function(file) {
+                if (!file.accepted) {
+                    this.removeFile(file);
+                }
+            });
+        }
+    });
+
     $(document).ready(function init() {
 
       window.labels = [];
@@ -258,10 +281,15 @@
       $('.js--classifier__predict__button').on('click', function () {
           preprocessPredictData();
       })
+
+      $('.js--explore__predict_button').on('click', function () {
+          preprocessExplorePredictData();
+      })
     });
 
     function selectClassifier(model_id) {
-        window.model_id = model_id;
+        $('.js--classifiers__dropdown--menu').html(model_id);
+        window.explore_model_id = model_id;
         return false;
     };
 
@@ -271,6 +299,7 @@
     }
 
     function addClassifiersToDropdown(classifiers) {
+        if (classifiers === undefined) return;
         const dropdownElement = $('.js--classifiers__dropdown');
         dropdownElement.html('');
         classifiers.forEach((classifier) => {
@@ -594,10 +623,34 @@
         try {
             validatePredictionData();
             await loadPredictionImage();
-            classify();
+            const results = await classify(window.model_id);
+            showClassification(results);
+            window.dropzonePredict.removeAllFiles();
         } catch (error) {
             showErrorNotification(`Oops. ${error.message}`, true, true);
             console.log(error);
+        }
+    }
+
+    async function preprocessExplorePredictData() {
+        try {
+            validateExplorePredictionData();
+            await loadExplorePredictionImage();
+            const results = await classify(window.explore_model_id);
+            showClassification(results);
+            window.dropzoneExplorePredict.removeAllFiles();
+        } catch (error) {
+            showErrorNotification(`Oops. ${error.message}`, true, true);
+            console.log(error);
+        }
+    }
+
+    function validateExplorePredictionData() {
+        if (window.dropzoneExplorePredict.files === undefined || window.dropzoneExplorePredict.files.length != 1) {
+            throw new Error('Add an image to predict.');
+        }
+        if (window.explore_model_id === undefined) {
+            throw new Error('The model has to be trained before attempting to predict.');
         }
     }
 
@@ -622,41 +675,46 @@
         return promise;
     }
 
-    function classify() {
-        if(window.predictionImage == undefined) {
-            var n = makeNotification({
-              message: 'Set prediction to run the model.',
-              type: 'warning',
-              closeOlderInstances: true,
-              stayOpenUntilClick: false
-            });
-            n.show();
-          return;
-        }
-        $.ajax({
-             url: "/vision/classify",
-             type: "POST",
-             headers: { 'apikey': window.apiKey },
-             data: { classifier_id: window.model_id,
-             image_data: window.predictionImage },
-             success: function (data) {
-                 if(data.error == null) {
-                    showClassification(data);
-                 } else {
-                    if (data.error.length != 0) {
-                      throw new Error(data.error);
-                      return;
-                    }
-                    throw new Error(`Oops. Our server did not respond.`);
-                    return;
-                 }
-             },
-             error: function (error) {
-                console.log(error);
-                throw error;
-             }
+    function loadExplorePredictionImage() {
+        var promise = new Promise((resolve, reject) => {
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                window.predictionImage = reader.result;
+                resolve(reader.result);
+            }
+            reader.readAsDataURL(window.dropzoneExplorePredict.files[0]);
         });
-        window.dropzonePredict.removeAllFiles();
+        return promise;
+    }
+
+    function classify(model_id) {
+        return new Promise ((resolve, reject) => {
+            if(window.predictionImage == undefined) {
+                reject(new Error('Upload or select a picture to perform classification'));
+                return;
+            }
+            $.ajax({
+                 url: "/vision/classify",
+                 type: "POST",
+                 headers: { 'apikey': window.apiKey },
+                 data: { classifier_id: model_id,
+                 image_data: window.predictionImage },
+                 success: function (data) {
+                     if(data.error != null) {
+                       if (data.error.length != 0) {
+                         reject(new Error(data.error));
+                       } else {
+                         reject(new Error(`Oops. Our server did not respond.`));
+                       }
+                     }
+                     resolve(data);
+                 },
+                 error: function (error) {
+                    console.log(error);
+                    reject(error);
+                 }
+            });
+        });
     }
 
     function showClassification(response) {
