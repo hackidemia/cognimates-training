@@ -576,6 +576,7 @@
         $(classifierNameClass).show();
         $(classifierStatusClass).show();
         if (window.classifier_status.includes('successfully')) {
+            $('.js--classifier__predict__button').attr('disabled', null);
             $(classifierRefreshSpinnerClass).hide();
             setAutoRefreshStatus(false);
         } else {
