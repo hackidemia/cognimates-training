@@ -99,10 +99,8 @@
     const player = new Plyr('#js-classifier__video--clarifai');
 
     // set up page tabs
-    // Doesnt work? https://getbootstrap.com/docs/4.0/components/navs/#javascript-behavior
     $('#classifier__tabs a').on('click', function (e) {
       e.preventDefault()
-      // $(this).tab('show');
     })
 
     $('.js--nav__tab--create').on('click', function (e) {
@@ -140,18 +138,6 @@
             tabContent.attr('style', 'display:none !important');
         }
     }
-
-    // set up dropzone instances
-    // https://www.dropzonejs.com/#configuration
-    // Dropzone.autoDiscover = false;
-
-      /*
-      Why doesnt this doesnt work?
-      dropzoneCategories.on('error', function(file, errorMessage, xhr) {
-        document.querySelector('.dropzone__error-container').innerHtml = errorMessage;
-        console.log('error: ', errorMessage);
-      });
-      */
 
       const dropzonePredictEl = "#js--dropzone-predict";
       window.dropzonePredict = new Dropzone(dropzonePredictEl, {

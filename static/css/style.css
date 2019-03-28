@@ -216,7 +216,9 @@ body {
 .header__nav-item:hover,
 .header__sub-nav-item:hover {
   box-shadow: 0 4px 0 0 white;
-  text-decoration: none; }
+  text-decoration: none;
+  color: white;
+  opacity: 0.8; }
 
 .header__sub-nav {
   display: flex;
