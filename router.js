@@ -18,7 +18,7 @@ router.get('/', function (req, res) {
 router.get('/text_home', (req, res) => {
   res.render('models/text/text_classifiers', {
       title: 'Cognimates, Train a text model, Home',
-      serviceName: 'Uclassify.com',
+      serviceName: 'uClassify.com',
       serviceUrl: 'https://www.uclassify.com/account/register',
       howToGuide: 'xxx'
     })

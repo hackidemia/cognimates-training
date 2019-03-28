@@ -339,9 +339,6 @@ li.stepper__step {
   background: #FF718B;
   transform: scale(1.75); }
 
-.stepper li:hover .step__description {
-  color: #3ACEFC; }
-
 .step__body {
   padding-bottom: 1rem;
   width: 100%; }
@@ -352,10 +349,6 @@ li.stepper__step {
   @media only screen and (min-width: 860px) {
     .step__body {
       margin-left: 50px; } }
-
-.step__description {
-  color: #A0A0A0;
-  line-height: 1.4; }
 
 .step__link {
   display: inline-block;
