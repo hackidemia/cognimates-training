@@ -275,6 +275,7 @@
 
     function selectClassifier(model_id) {
         $('.js--classifiers__dropdown--menu').html(model_id);
+        $('.js--explore__predict_button').attr('disabled', null);
         window.explore_model_id = model_id;
         return false;
     };
@@ -326,7 +327,8 @@
                         ${categoryName}
                     </div>
 
-                    <div class="dropzone__header">
+                    <div class="dropzone__header
+                                js--dropzone__header--${categoryName}">
                         <i class="fas fa-cloud-upload-alt
                                     dropzone__upload-icon"></i>
                         <span class="dropzone__label">Drag and drop 10 or more images</span>
@@ -374,6 +376,16 @@
               if (!file.accepted) {
                 this.removeFile(file);
               }
+            });
+            this.on("addedfile", (file) => {
+              if (this.getAcceptedFiles().length == 0) {
+                  $(`.js--dropzone__header--${categoryName}`).hide();
+              }
+            });
+            this.on("removedfile", (file) => {
+                if (this.getAcceptedFiles().length == 0) {
+                    $(`.js--dropzone__header--${categoryName}`).show();
+                }
             });
           }
       });
@@ -565,6 +577,7 @@
         $(classifierNameClass).show();
         $(classifierStatusClass).show();
         if (window.classifier_status.includes('successfully')) {
+            $('.js--classifier__predict__button').attr('disabled', null);
             $(classifierRefreshSpinnerClass).hide();
             setAutoRefreshStatus(false);
         } else {
@@ -611,7 +624,6 @@
             await loadPredictionImage();
             const results = await classify(window.model_id);
             showClassification(results);
-            window.dropzonePredict.removeAllFiles();
         } catch (error) {
             showErrorNotification(`Oops. ${error.message}`, true, true);
             console.log(error);
@@ -624,7 +636,6 @@
             await loadExplorePredictionImage();
             const results = await classify(window.explore_model_id);
             showClassification(results);
-            window.dropzoneExplorePredict.removeAllFiles();
         } catch (error) {
             showErrorNotification(`Oops. ${error.message}`, true, true);
             console.log(error);
