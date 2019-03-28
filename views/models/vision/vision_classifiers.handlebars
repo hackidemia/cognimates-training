@@ -454,12 +454,12 @@
     }
 
     function validateTrainingData() {
-        // if (window.projectName === undefined || window.projectName.length < 2) {
-        //     throw new Error("Project name is too short or empty");
-        // }
-        // if (window.apiKey === undefined || window.apiKey.length < 1) {
-        //     throw new Error("API key not set");
-        // }
+        if (window.projectName === undefined || window.projectName.length < 2) {
+            throw new Error("Project name is too short or empty");
+        }
+        if (window.apiKey === undefined || window.apiKey.length < 1) {
+            throw new Error("API key not set");
+        }
         if (window.labels === undefined || window.labels.length < 2) {
             showWarningNotification('Add at least 2 categories to train.', true, true);
             throw new Error("Create at least 2 classes.");
