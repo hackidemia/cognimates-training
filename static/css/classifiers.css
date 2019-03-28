@@ -451,7 +451,7 @@ li.stepper__step {
   pointer-events: none;
   color: #656565; }
 
-.category__new-form-wrapper {
+.step__form-with-button {
   display: flex;
   margin: 0 0 0.5rem 0; }
 

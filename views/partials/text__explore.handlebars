@@ -14,86 +14,75 @@
             </h2>
 
             <div class="step__description">
-                <form class="category__new-form-container">
-                    <div class="category__new-form-group">
-                        <input type="text"
-                            class="form-control
-                                   no-radius--right
-                                   step__form-text
-                                   js--explore__Rapikey__input"
-                            aria-describedby=""
-                            placeholder="Paste Read API Key here">
-                         <button class="category__button--create
-                                        d-inline-block
-                                        btn
-                                        btn-primary
-                                        no-radius--left
-                                        js--explore__Rapikey__input--set"
-                                type="button">
-                                Set Key
-                            </button>
-                        <span class="step__description-secondary"></span>
-                    </div>
-                </form>
+                <div class="step__form-with-button">
+                    <input type="text"
+                        class="form-control
+                               no-radius--right
+                               step__form-text
+                               js--explore__Rapikey__input"
+                        aria-describedby=""
+                        placeholder="Paste Read API Key here">
+                     <button class="category__button--create
+                                    d-inline-block
+                                    btn
+                                    btn-primary
+                                    no-radius--left
+                                    js--explore__Rapikey__input--set"
+                            type="button">
+                        Set Key
+                    </button>
+                </div>
 
-                <form class="category__new-form-container">
-                    <div class="category__new-form-group">
-                        <input type="text"
-                            class="form-control
-                                   no-radius--right
-                                   step__form-text
-                                   js--explore__Wapikey__input"
-                            aria-describedby=""
-                            placeholder="Paste Write API Key here">
-                         <button class="category__button--create
-                                        d-inline-block
-                                        btn
-                                        btn-primary
-                                        no-radius--left
-                                        js--explore__Wapikey__input--set"
-                                type="button">
-                                Set Key
-                            </button>
-                        <span class="step__description-secondary"></span>
-                    </div>
-                </form>
+                <div class="step__form-with-button">
+                    <input type="text"
+                        class="form-control
+                               no-radius--right
+                               step__form-text
+                               js--explore__Wapikey__input"
+                        aria-describedby=""
+                        placeholder="Paste Write API Key here">
+                     <button class="category__button--create
+                                    d-inline-block
+                                    btn
+                                    btn-primary
+                                    no-radius--left
+                                    js--explore__Wapikey__input--set"
+                            type="button">
+                        Set Key
+                    </button>
+                </div>
 
-                <form class="category__new-form-container">
-                    <div class="category__new-form-group">
-                        <input type="text"
-                            class="form-control
-                                   no-radius--right
-                                   step__form-text
-                                   js--explore__username__input"
-                            aria-describedby=""
-                            placeholder="Paste Username here">
-                         <button class="category__button--create
-                                        d-inline-block
-                                        btn
-                                        btn-primary
-                                        no-radius--left
-                                        js--explore__username__input--set"
-                                type="button">
-                                Set Username
-                            </button>
-                        <span class="step__description-secondary"></span>
-                    </div>
-                </form>
-              <a href="{{ howToGuide }}" class="step__link--get-key" target="_blank" >
-                     How to get guide
+                <div class="step__form-with-button">
+                    <input type="text"
+                        class="form-control
+                               no-radius--right
+                               step__form-text
+                               js--explore__username__input"
+                        aria-describedby=""
+                        placeholder="Paste Username here">
+                     <button class="category__button--create
+                                    d-inline-block
+                                    btn
+                                    btn-primary
+                                    no-radius--left
+                                    js--explore__username__input--set"
+                            type="button">
+                        Set Username
+                    </button>
+                </div>
+              <a href="{{ howToGuide }}" class="step__link step__link--get-key" target="_blank" >
+                     How-to guide
                </a>
                <a href="{{ serviceUrl }}" class="step__link step__link--get-key" target="_blank" >
-                     Sign up and get keys
+                     Sign up &amp; get keys
                </a>
                <div class="step__help
                           step__help--keys">
-                  <div class="step__help-info-detail">
-                      <div class="plyr__video-embed" id="js-classifier__video--clarifai">
-                          <iframe src="https://www.youtube.com/embed/YOrrROME2zc"
-                                  frameborder="0"
-                                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-                          </iframe>
-                      </div>
+                  <div class="plyr__video-embed" id="js-classifier__video--clarifai">
+                      <iframe src="https://www.youtube.com/embed/YOrrROME2zc"
+                              frameborder="0"
+                              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                      </iframe>
                   </div>
                </div>
             </div>
@@ -119,27 +108,24 @@
                     </span>
                    
                 </div> --}}
-                 <form class="category__new-form-container">
-                            <div class="category__new-form-group">
-                                <input type="text"
-                                    class="form-control
-                                            no-radius--right
-                                            step__form-text"
-                                    id="input_exploreProjectName"
-                                    aria-describedby=""
-                                    placeholder="Happy vs. Sad">
-                                <button class="category__button--create
-                                                d-inline-block
-                                                btn
-                                                btn-primary
-                                                no-radius--left"
-                                        id="button_exploreProjectName"
-                                        type="button">
-                                        Select Project
-                                    </button>
-                                <span class="step__description-secondary"></span>
-                            </div>
-                 </form>
+                <div class="step__form-with-button">
+                    <input type="text"
+                        class="form-control
+                                no-radius--right
+                                step__form-text"
+                        id="input_exploreProjectName"
+                        aria-describedby=""
+                        placeholder="Happy vs. Sad">
+                    <button class="category__button--create
+                                    d-inline-block
+                                    btn
+                                    btn-primary
+                                    no-radius--left"
+                            id="button_exploreProjectName"
+                            type="button">
+                        Select Project
+                    </button>
+                </div>
             </div>
         </div>
     </li>
@@ -154,27 +140,24 @@
             <div class="step__description">
 
                 <div class="category__container">
-                     <form class="category__new-form-container">
-                            <div class="category__new-form-group">
-                                <input type="text"
-                                    class="form-control
-                                            no-radius--right
-                                            step__form-text"
-                                    id="input_explore_predictText"
-                                    aria-describedby=""
-                                    placeholder="I had a good day!">
-                                <button class="category__button--create
-                                                d-inline-block
-                                                btn
-                                                btn-primary
-                                                no-radius--left"
-                                        id="button_explore_predictText"
-                                        type="button">
-                                        Predict
-                                    </button>
-                                <span class="step__description-secondary"></span>
-                            </div>
-                     </form>
+                    <div class="step__form-with-button">
+                        <input type="text"
+                            class="form-control
+                                    no-radius--right
+                                    step__form-text"
+                            id="input_explore_predictText"
+                            aria-describedby=""
+                            placeholder="I had a good day!">
+                        <button class="category__button--create
+                                        d-inline-block
+                                        btn
+                                        btn-primary
+                                        no-radius--left"
+                                id="button_explore_predictText"
+                                type="button">
+                            Predict
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -193,9 +176,6 @@
                     </button>
                  with the model in Codelab
             </h2>
-            <div class="step__description">
-                
-            </div>
         </div>
     </li>
 </ul>

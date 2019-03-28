@@ -23,7 +23,7 @@
 
   <li class="nav-item classifier__nav-item--or">
     <h2>
-      &mdash; or  &mdash;
+      &mdash; or &mdash;
     </h2>
   </li>
 
@@ -61,7 +61,6 @@
 </div>
 
 {{> footer }}
-
 
 <script>
     $(function() {
@@ -308,7 +307,7 @@
         var categoryName = $('#input_categoryName').val().replace(/\s/g, '');;
         if (window.training_data.hasOwnProperty(categoryName)) {
           var n = makeNotification({
-            message: 'Enter a different category name, this one already exists',
+            message: 'A category with this name already exists. Enter a different name.',
             type: 'warning',
             closeOlderInstances: true,
             stayOpenUntilClick: false

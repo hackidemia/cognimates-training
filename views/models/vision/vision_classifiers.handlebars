@@ -217,7 +217,7 @@
 
       $('.js--apikey__input--set').click(function () {
         if ($('.js--apikey__input').val() == '') {
-          showWarningNotification('Enter an API Key', true, false);
+          showWarningNotification('Enter an API Key.', true, false);
           return;
         }
         window.apiKey = $('.js--apikey__input').val();
@@ -227,7 +227,7 @@
 
       $('.js--explore__apikey__input--set').click(function () {
         if ($('.js--explore__apikey__input').val() == '') {
-          showWarningNotification('Enter an API Key', true, false);
+          showWarningNotification('Enter an API Key.', true, false);
           return;
         }
         window.apiKey = $('.js--explore__apikey__input').val();
@@ -244,14 +244,14 @@
 
       $('#button_categoryName').click(function () {
         if ($('#input_categoryName').val() == '') {
-          showWarningNotification('Enter a category to add.', true, false);
+          showWarningNotification('Enter a category name.', true, false);
           return;
         }
 
         // TODO: Sanitize categoryName before further processing
         var categoryName = $('#input_categoryName').val();
         if (window.labels.includes(categoryName)) {
-          showWarningNotification('Category already added', true, false);
+          showWarningNotification('A category with this name already exists. Enter a different name.').', true, false);
           return;
         }
         window.labels.push(categoryName);
@@ -425,7 +425,7 @@
             validateTrainingData();
             var userClassifiers = await loadUserClassifiers();
             if (projectNameAlreadyUsed(userClassifiers)) {
-              throw new Error('A project with this name already exists. Create one with a different name.');
+              throw new Error('A project with this name already exists. Enter a different name.');
               return;
             }
             await convertImagesIntoExamples();
@@ -676,7 +676,7 @@
     function classify(model_id) {
         return new Promise ((resolve, reject) => {
             if(window.predictionImage == undefined) {
-                reject(new Error('Upload or select a picture to perform classification'));
+                reject(new Error('Upload or select an image to predict.'));
                 return;
             }
             $.ajax({
