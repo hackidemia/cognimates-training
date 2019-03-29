@@ -611,13 +611,12 @@
     }
 
     function setUploadProgress(progress) {
-        if ($('.js--classifier__upload_progress').attr('style') != '') {
-            $('.js--classifier__upload_progress').attr('style', '');
-        }
-        $('.js--classifier__upload__progress--set').html(`${progress}%`);
+        $('.js--classifier__upload_progress').show();
+        $('.js--classifier__upload__progress--set').html(`${Math.round(progress)}%`);
     }
 
     function setClassifierStatus() {
+        const classifierUploadProgressClass = ".js--classifier__upload_progress";
         const classifierNameClass = ".js--classifier__name";
         const classifierStatusClass = ".js--classifier__status";
         const classifierRefreshSpinnerClass = ".js--classifier__status_spinner";
@@ -625,6 +624,7 @@
         $(`${classifierStatusClass}--set`).html(window.classifier_status);
         $(classifierNameClass).show();
         $(classifierStatusClass).show();
+        $(classifierUploadProgressClass).hide();
         if (window.classifier_status.includes('successfully')) {
             $('.js--classifier__predict__button').attr('disabled', null);
             $(classifierRefreshSpinnerClass).hide();
