@@ -315,6 +315,13 @@
           n.show();
           return;
         }
+
+        var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+        if (format.test(categoryName) != false) {
+            showWarningNotification('Category name cannot have spaces or special characters', true, false);
+            return;
+        }
+
         window.training_data[categoryName] = [];
         console.log(window.training_data);
         createCategoryHTMLElement(categoryName);
@@ -322,6 +329,11 @@
       });
 
       $('.js--train__button').on('click', function () {
+          var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+          if (format.test(window.projectName) != false) {
+              showWarningNotification('Project name should have only letters and numbers.', true, false);
+              return;
+          }
           setTrainButtonState('training');
           preprocessTrainData();
       })
