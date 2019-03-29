@@ -271,7 +271,7 @@
       $('.js--train__button').on('click', function () {
           var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
           if (format.test(window.projectName) != false) {
-              showWarningNotification('Project name cannot have special characters', true, false);
+              showWarningNotification('Project name should have only letters and numbers.', true, false);
               return;
           }
           setTrainButtonState('training');
@@ -487,10 +487,10 @@
 
     function validateTrainingData() {
         if (window.projectName === undefined || window.projectName.length < 2) {
-            throw new Error("Project name is too short or empty");
+            throw new Error("Project name needs 3 or more letters/numbers.");
         }
         if (window.apiKey === undefined || window.apiKey.length < 1) {
-            throw new Error("API key not set");
+            throw new Error("API key needs to be set.");
         }
         if (window.labels === undefined || window.labels.length < 2) {
             showWarningNotification('Add at least 2 categories to train.', true, true);
