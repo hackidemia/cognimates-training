@@ -357,7 +357,7 @@
                     class="category__tag-select-container-${categoryName}">
               <a href="#" class="category--text__remove-button
                                btn btn-primary
-                               js--textbox__category__remove--${categoryName}"
+                               js--${categoryName}-category--text__remove"
                         role="button">
                 <i class="fas fa-times"></i>
             </a>
@@ -371,7 +371,7 @@
 
     function initTextClass(categoryName) {
       const textBoxFormClass = `.category__tag-select-container-${categoryName}`;
-      const textBoxRemoveClass = `.js--textbox__category__remove--${categoryName}`;
+      const textBoxRemoveClass = `.js--${categoryName}-category--text__remove`;
       $(textBoxRemoveClass).click((e) => {
           e.preventDefault();
           removeCategory(categoryName);
@@ -403,7 +403,7 @@
         }
         const tagCategoryContain = `.tag-contain-${categoryName}`;
         const tagBoxCategoryClass = `.category__tag-select-container-${categoryName}`;
-        const tagBoxRemoveClass = `.js--textbox__category__remove--${categoryName}`;
+        const tagBoxRemoveClass = `.js--${categoryName}-category--text__remove`;
         delete window.training_data[categoryName];
         $(tagBoxRemoveClass).unbind();
         $(tagBoxCategoryClass).remove();

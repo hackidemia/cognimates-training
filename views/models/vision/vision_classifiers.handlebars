@@ -367,9 +367,8 @@
             </div>
             <a href="#" class="category--vision__remove-button
                                btn btn-primary
-                               js--dropzone__category__remove--${categoryName}"
+                               js--${categoryName}-category--vision__remove"
                         role="button">
-
                 <i class="fas fa-times"></i>
             </a>
         </div>`;
@@ -382,7 +381,7 @@
     function initDropZoneForClass(categoryName) {
       const dropzoneFormClass = `.js--dropzone__category--${categoryName}`;
       const dropzonePreviewsContainerClass = `.js--dropzone__previews__container--${categoryName}`;
-      const dropzoneRemoveClass = `.js--dropzone__category__remove--${categoryName}`;
+      const dropzoneRemoveClass = `.js--${categoryName}-category--vision__remove`;
       const dropzoneCategoryInstance = new Dropzone(dropzoneFormClass, {
           url: "/file/post" ,
           paramName: "category-image",
