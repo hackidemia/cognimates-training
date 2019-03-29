@@ -93,7 +93,7 @@ function createClassifier(req, res) {
     data = inputs
     inputs = undefined
     if(errorFound == true) {
-      res.json({ error: errorMessage})
+      res.json({ error: errorMessage })
       return
     }
     saveImages()
@@ -106,6 +106,7 @@ function createClassifier(req, res) {
       },
       (err) => {
         console.log(err);
+        res.json({ error: err.message });
       }
     )
   }
@@ -124,7 +125,7 @@ function createClassifier(req, res) {
         train();
       },
       (err) => {
-        res.json({ error: err });
+        res.json({ error: err.message });
         console.log(error);
       }
     )
@@ -190,7 +191,7 @@ function classifyImage(req, res) {
   },
   (err) => {
     console.log(err)
-    res.json({ error: err });
+    res.json({ error: err.message });
   });
 }
 
