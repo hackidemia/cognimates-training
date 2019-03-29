@@ -14,7 +14,7 @@ function getClassifiersList(req, res) {
   (response) => {
     var models = [];
     if (parseInt(response.length) > 19) {
-      for (var index = 0; index < parseInt(response.length)-19; index++) {
+      for (var index = 0; index < parseInt(response.length); index++) {
         var item = response[index];
         var model = {};
         model.name = item.name;
