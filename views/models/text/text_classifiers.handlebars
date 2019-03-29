@@ -350,8 +350,10 @@
                   
     function createCategoryHTMLElement(categoryName) {
         const htmlStructure = `
-          <div class="category__container" tag-contain-${categoryName}">
-            <div class="category__box category__box--solid">
+          <div class="category__container tag-contain-${categoryName}">
+            <div class="category__box 
+                        category__box--solid
+                        category__box--text">
               <div class="category__name">${categoryName}</div>
               <input type="text" id="${categoryName}" 
                     class="category__tag-select-container-${categoryName}">
