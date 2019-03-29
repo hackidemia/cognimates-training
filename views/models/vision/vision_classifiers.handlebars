@@ -581,6 +581,18 @@
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(requestData),
                 headers: { apikey: window.apiKey },
+                xhr: function () {
+                    var xhr = $.ajaxSettings.xhr();
+                    xhr.upload.onprogress = function (e) {
+                        // For uploads
+                        if (e.lengthComputable) {
+                            setUploadProgress((e.loaded / e.total) * 100);
+                        } else {
+                            console.log('Length not computable');
+                        }
+                    };
+                    return xhr;
+                },
                 success: function (data) {
                     if(data.error != null) {
                         reject(new Error(data.error));
@@ -595,6 +607,13 @@
                 }
             });
         });
+    }
+
+    function setUploadProgress(progress) {
+        if ($('.js--classifier__upload_progress').attr('style') != '') {
+            $('.js--classifier__upload_progress').attr('style', '');
+        }
+        $('.js--classifier__upload__progress--set').html(`${progress}%`);
     }
 
     function setClassifierStatus() {
