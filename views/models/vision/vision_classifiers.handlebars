@@ -15,7 +15,7 @@
       aria-selected="true">
         <h2>
           <i class="fas fa-plus"></i>
-          Create 
+          Create
           Model
         </h2>
     </a>
@@ -248,8 +248,13 @@
           return;
         }
 
-        // TODO: Sanitize categoryName before further processing
+        var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
         var categoryName = $('#input_categoryName').val();
+        categoryName = categoryName.trim();
+        if (format.test(categoryName) != false) {
+            showWarningNotification('Category name cannot have spaces or special characters', true, false);
+            return;
+        }
         if (window.labels.includes(categoryName)) {
           showWarningNotification('A category with this name already exists. Enter a different name.', true, false);
           return;
@@ -260,6 +265,11 @@
       });
 
       $('.js--train__button').on('click', function () {
+          var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+          if (format.test(window.projectName) != false) {
+              showWarningNotification('Project name cannot have special characters', true, false);
+              return;
+          }
           setTrainButtonState('training');
           preprocessTrainData();
       })
@@ -277,6 +287,13 @@
         $('.js--classifiers__dropdown--menu').html(model_id);
         $('.js--explore__predict_button').attr('disabled', null);
         window.explore_model_id = model_id;
+        var extensionUrl = `?url=http://localhost:2634/vision/extension/${window.apiKey}/${window.explore_model_id}`;
+        // extensionUrl = "https://hackidemia.github.io/cognimates-gui/" + extensionUrl;
+        extensionUrl = "http://localhost:8601/" + extensionUrl;
+        $('.js--explore__open__codelab').attr('disabled', null);
+        $('.js--explore__open__codelab').click((e) => {
+            window.open(extensionUrl);
+        });
         return false;
     };
 
@@ -449,6 +466,14 @@
             setAutoRefreshStatus(true);
             $('#button_categoryName').attr('disabled', '');
             $('#input_categoryName').unbind();
+            // var extensionUrl = `?url=https://cognimate.me:2635/vision/extension/${window.apiKey}/${window.model_id}`;
+            var extensionUrl = `?url=http://localhost:2634/vision/extension/${window.apiKey}/${window.model_id}`;
+            // extensionUrl = "https://hackidemia.github.io/cognimates-gui/" + extensionUrl;
+            extensionUrl = "http://localhost:8601/" + extensionUrl;
+            $('.js--classifier__open__codelab').attr('disabled', null);
+            $('.js--classifier__open__codelab').click((e) => {
+                window.open(extensionUrl);
+            });
         } catch (error) {
             showErrorNotification(error.message, true, false);
             setTrainButtonState('normal');
