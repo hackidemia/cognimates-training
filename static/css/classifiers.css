@@ -403,7 +403,7 @@ li.stepper__step {
 .category__box--vision {
   cursor: pointer; }
 
-.category__box--vision:hover .dropzone__header {
+.category__box:hover .dropzone__header {
   transform: scale(1.05); }
 
 .category__box--dashed {

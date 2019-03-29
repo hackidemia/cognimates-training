@@ -46,8 +46,6 @@
     } 
 }
 
-
-
 .classifier__nav-item h2 {
 	// left right mismatch accounts for the left side having an icon
 	padding: 0 1rem 0 0.65rem; 
@@ -257,9 +255,7 @@ li.stepper__step {
     cursor: pointer; 
 }
 
-.category__box--vision:hover .dropzone__header {
-    transform: scale(1.05);
-}
+.category__box:hover .dropzone__header { transform: scale(1.05); }
 
 .category__box--dashed { border: 2px dashed #dbdbdb; }
 .category__box--dashed:hover { border: 2px dashed $pink; }
