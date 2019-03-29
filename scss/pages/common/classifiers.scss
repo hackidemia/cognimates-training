@@ -1,6 +1,7 @@
 @import '../../common/variables';
 @import '../../common/mq';
 @import '../../common/dropzone';
+@import '../../common/mixins';
 
 .classifier__nav-tabs {
 	width: 100%;
@@ -228,6 +229,70 @@ li.stepper__step {
     font-size: 0.9rem;
 }
 
+.category__dropzone {
+    align-items: center;
+    justify-content: center;
+}
+
+.category__container { 
+	position: relative;
+	border-radius: 1rem;
+	margin-bottom: 1rem;
+}
+
+.category__container:nth-child(1n) .category__box { background-color: $category--blue; }
+.category__container:nth-child(2n) .category__box { background-color: $category--yellow; }
+.category__container:nth-child(3n) .category__box { background-color: $category--pink; }
+.category__container:nth-child(4n) .category__box { background-color: $category--turqoise; }
+
+.category__box {
+    padding: 0.5rem;
+    border-radius: 10px;
+	color: #ff0030;
+	background-color: white;
+    transition: 0.1s ease-out all;
+}
+
+.category__box--vision {
+    cursor: pointer; 
+}
+
+.category__box--vision:hover .dropzone__header {
+    transform: scale(1.05);
+}
+
+.category__box--dashed { border: 2px dashed #dbdbdb; }
+.category__box--dashed:hover { border: 2px dashed $pink; }
+.category__box--solid { border: 2px solid #dbdbdb; }
+
+.category--vision__remove-button {
+    position: absolute;
+    top: -0.5rem;
+    right: 0.7rem;
+
+    @include icon--remove;
+}
+
+.category--text__remove-button {
+    position: absolute;
+    top: -0.5rem;
+    right: 0.7rem;
+
+    @include icon--remove;
+}
+
+.category__name {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: auto;
+	margin: 0.5rem 0 0.25rem 0;
+	font-weight: 600;
+	line-height: 1;
+	pointer-events: none;
+    color: #656565;
+}
+
 // these dropzone classes are new, not overrides
 .dropzone__upload-icon {
   font-size: 2rem;
@@ -242,74 +307,12 @@ li.stepper__step {
     flex-direction: column;
     pointer-events: none;
     color: #b7b7b7;
-    margin-bottom: 0.2rem;
+    margin: 1rem 0 0 0;
     transition: 0.1s ease-in all; 
 }
 
 .dropzone__label {
     margin: 0.35rem 0 0rem 0;
-}
-
-.category__dropzone {
-    align-items: center;
-    justify-content: center;
-}
-
-.category__container { 
-	position: relative;
-	border-radius: 1rem;
-	margin-bottom: 1rem;
-}
-
-.category__box {
-	border-radius: 1rem;
-	color: #ff0030;
-	border: 2px dashed #c5c5c5;
-	border-radius: 10px;
-	background-color: white;
-    cursor: pointer;
-    transition: 0.1s ease-out all;
-}
-
-.category__box:hover {
-	border: 2px dashed $pink;
-}
-
-.category__button--remove {
-	position: absolute;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 1.1rem;
-    width: 1.1rem;
-    top: -0.5rem;
-    right: 0.7rem;
-    padding: 0;
-    font-size: 0.71rem;
-    font-weight: 700;
-    background: #c5c5c5;
-    color: white;
-    border-radius: 50%;
-    border: 0;
-}
-
-.category__container:nth-child(1n) .category__box { background-color: $category--blue; }
-.category__container:nth-child(2n) .category__box { background-color: $category--yellow; }
-.category__container:nth-child(3n) .category__box { background-color: $category--pink; }
-.category__container:nth-child(4n) .category__box { background-color: $category--turqoise; }
-
-.category__name {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: auto;
-	margin: 0 0.75rem 0.75rem 0.75rem;
-	padding: 0.75rem;
-	font-weight: 600;
-	line-height: 1;
-	border-bottom: 1px solid lightgray;
-	pointer-events: none;
-    color: #656565;
 }
 
 .step__form-with-button {
@@ -334,10 +337,95 @@ li.stepper__step {
 	color: #6d6d6d;
 }
 
-.button--train {
-	margin-right: 0.75rem;
+.button--train { margin-right: 0.75rem; }
+.button--play { margin-right: 0.75rem; }
+
+.selectize-control { 
+    padding: 0.5rem 0.5rem 0 0.5rem !important;
 }
 
-.button--play {
-    margin-right: 0.75rem;
+.selectize-input {
+    display: flex;
+    flex-direction: column-reverse;
+
+    background: transparent;
+    box-shadow: none;
+    border: 0;
+    padding: 0 0 0.5rem 0 !important;
+    font-size: 0.9rem;
 }
+
+.selectize-input.dropdown-active:before {
+    border: 0 !important;
+    box-shadow: 0 !important;
+    height: 0 !important;
+    background-color: transparent !important;
+    outline: 0 !important;
+}
+
+.selectize-input input {
+    font-size: 0.9rem;
+}
+
+.selectize-input.input-active,
+.selectize-input.dropdown-active { 
+    border: 0;
+    box-shadow: none !important; 
+}
+
+.selectize-input .item,
+.selectize-input .item.item-active {
+    margin: 0.3rem 0.3rem 0 0 !important;
+    padding: 0.4rem 0.2rem 0.4rem 0.6rem !important;
+    font-size: 1.1rem!important;
+    box-shadow: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    color: $blue !important;
+    text-shadow: none !important;
+    text-align: center;
+    border: 0 !important;
+    border-radius: 0 !important;
+    transition: 0.1s all ease-in !important;
+    cursor: default !important;
+    user-select: none !important;
+}
+
+.selectize-control.multi .selectize-input.has-items {
+    padding: 0;
+}
+
+.selectize-input .item:before {
+    content: "\f00d";
+    font-family: "Font Awesome 5 Free";
+    position: absolute;
+
+    @include icon--remove;
+
+    // override the mixin
+    background-color: transparent;
+    color: $blue;
+    right: 0;
+    visibility: hidden;
+}
+
+.selectize-input .item:hover:before {
+    visibility: visible;
+}
+
+.selectize-input:hover .item:before:hover {
+    background-color: $blue;
+    color: white;
+}
+
+.selectize-input input {
+    border-bottom: 1px solid rgb(197, 197, 197) !important;
+    margin: 0 0 1rem 0px !important;
+    width: 100% !important;
+    height: 2.5rem !important;
+    position: relative !important;
+    left: 0 !important;
+    opacity: 1 !important;
+    text-align: center !important;
+}
+
