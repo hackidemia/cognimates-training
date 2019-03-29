@@ -26,10 +26,6 @@
         </div>
         <div class="step__body">
             <h2 class="step__title">What are your {{ serviceName }} keys?
-                {{!-- <a href="#" class="step__help-open-button
-                                    js--open-help" role="button">
-                    <i class="fas fa-question-circle"></i>
-                </a> --}}
             </h2>
             <div class="step__form-with-button">
                 <input type="text"
@@ -39,15 +35,6 @@
                            js--Rapikey__input"
                     aria-describedby=""
                     placeholder="Paste Read API Key here">
-                 <button class="category__button--create
-                                d-inline-block
-                                btn
-                                btn-primary
-                                no-radius--left
-                                js--Rapikey__input--set"
-                        type="button">
-                    Set Key
-                </button>
             </div>
 
             <div class="step__form-with-button">
@@ -58,15 +45,6 @@
                            js--Wapikey__input"
                     aria-describedby=""
                     placeholder="Paste Write API Key here">
-                 <button class="category__button--create
-                                d-inline-block
-                                btn
-                                btn-primary
-                                no-radius--left
-                                js--Wapikey__input--set"
-                        type="button">
-                    Set Key
-                </button>
             </div>
 
             <div class="step__form-with-button">
@@ -77,16 +55,13 @@
                            js--username__input"
                     aria-describedby=""
                     placeholder="Paste Username here">
-                 <button class="category__button--create
-                                d-inline-block
-                                btn
-                                btn-primary
-                                no-radius--left
-                                js--username__input--set"
-                        type="button">
-                    Set Username
-                </button>
             </div>
+            <button class="btn btn-primary button--train
+                               js--Wapikey__input--set js--Rapikey__input--set
+                               js--username__input--set"
+                        type="button">
+                     Set Credentials
+            </button>
 
             <a href="{{ howToGuide }}" class="step__link step__link--get-key" target="_blank" >
                    How-to guide
