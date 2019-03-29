@@ -337,17 +337,20 @@
     };
                   
     function createCategoryHTMLElement(categoryName) {
-        const htmlStructure = `<div class="category__container tag-contain-${categoryName}">
-        <h5>${categoryName}</h5><input type="text" id="${categoryName}" class="category__tag-select-container-${categoryName}">
-                             <button class="js--textbox__category__remove--${categoryName}
-                                            d-inline-block
-                                            btn
-                                            btn-primary
-                                            no-radius--left"
-                                    type="button">
-                                    Remove Category
-                                </button><br><br>
-                                </div>`;
+        const htmlStructure = `
+          <div class="category__container" tag-contain-${categoryName}">
+            <div class="category__box category__box--solid">
+              <div class="category__name">${categoryName}</div>
+              <input type="text" id="${categoryName}" 
+                    class="category__tag-select-container-${categoryName}">
+              <a href="#" class="category--text__remove-button
+                               btn btn-primary
+                               js--textbox__category__remove--${categoryName}"
+                        role="button">
+                <i class="fas fa-times"></i>
+            </a>
+            
+          </div>`;
         const htmlElement = $(htmlStructure);
         const categoriesContainerElement = $('#categoriesContainer');
         categoriesContainerElement.append(htmlElement);
@@ -365,12 +368,18 @@
       $(textBoxFormClass).selectize({
         delimiter: ',',
         persist: false,
-        placeholder: 'write text things here!',
+        highlight: false,
+        openOnFocus: false,
+        hideSelected: false,
+        placeholder: 'Enter 10 words for ' + categoryName,
         create: function(input) {
             return {
                 value: input,
                 text: input
             }
+        },
+        onDropdownOpen: function(dropdown) {
+          dropdown.remove();
         }
       });
 

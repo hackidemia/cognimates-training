@@ -1,5 +1,6 @@
 @import 'variables';
 @import 'mq';
+@import 'mixins';
 
 .dropzone {
     border: 0;
@@ -125,12 +126,13 @@
 
 .dz-preview .dz-success-mark, 
 .dz-preview .dz-error-mark {
-
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    top: -1rem; // offset from the preview details to keep it centered vertically
+
+    // offset from the preview details to keep it centered vertically
+    top: -1rem; 
     left: 0;
     right: 0;
     bottom: 0;
@@ -164,22 +166,11 @@
 .dz-remove::after {
     content: "\f00d";
     font-family: "Font Awesome 5 Free";
-    font-size: 0.71rem;
-    font-weight: 700;
     position: absolute;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 1.1rem;
-    width: 1.1rem;
     top: -0.25rem;
     right: -0.4rem;
-    padding: 0;
-    background: #c5c5c5;
-    color: white;
-    border-radius: 50%;
-    border: 0;
-    transition: 0.1s ease-in all;
+
+    @include icon--remove;
 }
 
 .dz-remove:hover::after {

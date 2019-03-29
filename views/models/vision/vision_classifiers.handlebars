@@ -319,7 +319,9 @@
     function createCategoryHTMLElement(categoryName) {
         const htmlStructure = `<div class="category__container
                                            js--dropzone__category__container--${categoryName}">
-            <div class="category__box">
+            <div class="category__box
+                        category__box--dashed
+                        category__box--vision">
                 <form action="/"
                        class="dropzone--categories
                               js--dropzone__category--${categoryName}">
@@ -338,14 +340,14 @@
                     <div class="js--dropzone__previews-container dropzone-previews"
                          id="js--dropzone__previews-container_${categoryName}">
                     </div>
-
                     <div class="dropzone__error-container"></div>
                 </form>
             </div>
-
-            <a href="#" class="category__button--remove
+            <a href="#" class="category--vision__remove-button
                                btn btn-primary
-                               js--dropzone__category__remove--${categoryName}">
+                               js--dropzone__category__remove--${categoryName}"
+                        role="button">
+                
                 <i class="fas fa-times"></i>
             </a>
         </div>`;
