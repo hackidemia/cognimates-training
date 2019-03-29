@@ -222,6 +222,8 @@
         }
         window.apiKey = $('.js--apikey__input').val();
         $('.js--explore__apikey__input').val(window.apiKey);
+        $('.js--classifier_current_apikey').html(window.apiKey);
+        $('.js--classifier_current_apikey').show();
         setUserClassifiers();
       });
 
@@ -231,6 +233,8 @@
           return;
         }
         window.apiKey = $('.js--explore__apikey__input').val();
+        $('.js--explore_current_apikey').html(window.apiKey);
+        $('.js--explore_current_apikey').show();
         setUserClassifiers();
       });
 
