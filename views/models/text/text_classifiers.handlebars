@@ -446,14 +446,14 @@
     function validateTrainingData() {
         if (window.training_data === undefined || Object.keys(window.training_data).length < 2) {
             var n = makeNotification({
-              message: 'Create at least 2 classes.',
+              message: 'Create at least 2 categories.',
               type: 'warning',
               closeOlderInstances: true,
               stayOpenUntilClick: true
             });
             n.show();
 
-            throw new Error("Create at least 2 classes.");
+            throw new Error("Create at least 2 categories.");
         }
         for (const className of Object.keys(window.training_data)) {
             var unparsed_result = $(`#${className}`).val();
