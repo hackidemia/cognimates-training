@@ -350,14 +350,16 @@
                   
     function createCategoryHTMLElement(categoryName) {
         const htmlStructure = `
-          <div class="category__container" tag-contain-${categoryName}">
-            <div class="category__box category__box--solid box_outline-${categoryName}">
-              <div class="category__name category-header-${categoryName}">${categoryName}</div>
+          <div class="category__container tag-contain-${categoryName}">
+            <div class="category__box 
+                        category__box--solid
+                        category__box--text">
+              <div class="category__name">${categoryName}</div>
               <input type="text" id="${categoryName}" 
                     class="category__tag-select-container-${categoryName}">
               <a href="#" class="category--text__remove-button
                                btn btn-primary
-                               js--textbox__category__remove--${categoryName}"
+                               js--${categoryName}-category--text__remove"
                         role="button">
                 <i class="fas fa-times"></i>
             </a>
@@ -371,7 +373,7 @@
 
     function initTextClass(categoryName) {
       const textBoxFormClass = `.category__tag-select-container-${categoryName}`;
-      const textBoxRemoveClass = `.js--textbox__category__remove--${categoryName}`;
+      const textBoxRemoveClass = `.js--${categoryName}-category--text__remove`;
       $(textBoxRemoveClass).click((e) => {
           e.preventDefault();
           removeCategory(categoryName);
@@ -403,9 +405,9 @@
         }
         const tagCategoryContain = `.tag-contain-${categoryName}`;
         const tagBoxCategoryClass = `.category__tag-select-container-${categoryName}`;
-        const tagBoxRemoveClass = `.js--textbox__category__remove--${categoryName}`;
         const tagBoxName = `.category-header-${categoryName}`;
         const boxOutline = `.box_outline-${categoryName}`;
+        const tagBoxRemoveClass = `.js--${categoryName}-category--text__remove`;
         delete window.training_data[categoryName];
         $(tagBoxRemoveClass).unbind();
         $(tagBoxCategoryClass).remove();
@@ -449,14 +451,14 @@
     function validateTrainingData() {
         if (window.training_data === undefined || Object.keys(window.training_data).length < 2) {
             var n = makeNotification({
-              message: 'Create at least 2 classes.',
+              message: 'Create at least 2 categories.',
               type: 'warning',
               closeOlderInstances: true,
               stayOpenUntilClick: true
             });
             n.show();
 
-            throw new Error("Create at least 2 classes.");
+            throw new Error("Create at least 2 categories.");
         }
         for (const className of Object.keys(window.training_data)) {
             var unparsed_result = $(`#${className}`).val();

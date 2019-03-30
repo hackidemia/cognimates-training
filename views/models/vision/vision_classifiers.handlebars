@@ -367,9 +367,8 @@
             </div>
             <a href="#" class="category--vision__remove-button
                                btn btn-primary
-                               js--dropzone__category__remove--${categoryName}"
+                               js--${categoryName}-category--vision__remove"
                         role="button">
-
                 <i class="fas fa-times"></i>
             </a>
         </div>`;
@@ -382,7 +381,7 @@
     function initDropZoneForClass(categoryName) {
       const dropzoneFormClass = `.js--dropzone__category--${categoryName}`;
       const dropzonePreviewsContainerClass = `.js--dropzone__previews__container--${categoryName}`;
-      const dropzoneRemoveClass = `.js--dropzone__category__remove--${categoryName}`;
+      const dropzoneRemoveClass = `.js--${categoryName}-category--vision__remove`;
       const dropzoneCategoryInstance = new Dropzone(dropzoneFormClass, {
           url: "/file/post" ,
           paramName: "category-image",
@@ -494,7 +493,7 @@
         }
         if (window.labels === undefined || window.labels.length < 2) {
             showWarningNotification('Add at least 2 categories to train.', true, true);
-            throw new Error("Create at least 2 classes.");
+            throw new Error("Create at least 2 categories.");
         }
         for (const className of Object.keys(window.dropZoneMap)) {
             if (window.dropZoneMap[className].files === undefined || window.dropZoneMap[className].files.length < 10) {
@@ -535,7 +534,7 @@
 
     async function convertImagesIntoExamples() {
         if(window.dropZoneMap.length < 1) {
-            throw new Error("Create at least 2 classes.");
+            throw new Error("Create at least 2 categories.");
         }
         for (const className of Object.keys(window.dropZoneMap)) {
             var promises = [];
