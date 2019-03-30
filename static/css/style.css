@@ -1272,34 +1272,87 @@ li.stepper__step {
   outline: 0 !important; }
 
 .selectize-input input {
-  font-size: 0.9rem; }
+  font-size: 0.9rem;
+  border-bottom: 1px solid #c5c5c5 !important;
+  margin: 0 0 1rem 0px !important;
+  width: 100% !important;
+  height: 2.5rem !important;
+  position: relative !important;
+  left: 0 !important;
+  opacity: 1 !important;
+  text-align: center !important; }
+
+.selectize-input.focus {
+  box-shadow: none !important; }
+
+.selectize-input input::placeholder {
+  color: #aaa; }
 
 .selectize-input.input-active,
 .selectize-input.dropdown-active {
   border: 0;
   box-shadow: none !important; }
 
+.selectize-control.multi .selectize-input.has-items {
+  padding: 0; }
+
 .selectize-input .item,
 .selectize-input .item.item-active {
+  display: flex !important;
   margin: 0.3rem 0.3rem 0 0 !important;
-  padding: 0.4rem 0.2rem 0.4rem 0.6rem !important;
+  padding: 0 !important;
   font-size: 1.1rem !important;
   box-shadow: none !important;
   background-image: none !important;
   background-color: transparent !important;
   color: #3B8DD9 !important;
   text-shadow: none !important;
-  text-align: center;
+  text-align: center !important;
   border: 0 !important;
   border-radius: 0 !important;
   transition: 0.1s all ease-in !important;
   cursor: default !important;
-  user-select: none !important; }
+  user-select: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important; }
 
-.selectize-control.multi .selectize-input.has-items {
-  padding: 0; }
+.selectize-control.multi .selectize-input [data-value] {
+  padding: 0 !important;
+  margin: 0 0 1rem 0 !important;
+  border-bottom: 1px solid gainsboro !important;
+  padding: 0 0 1rem 0 !important; }
 
-.selectize-input .item:before {
+.selectize-input .item .label {
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 100%; }
+
+.selectize-input .item .remove {
+  color: #3B8DD9 !important;
+  font-size: 0.8rem !important;
+  border-left: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  text-indent: -9999px !important;
+  display: block !important;
+  background: transparent !important;
+  position: relative !important;
+  text-align: center !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  transition: all 0.1s ease-out !important;
+  visibility: hidden !important; }
+
+.selectize-input .item:hover .remove {
+  visibility: visible !important; }
+
+.selectize-input .item .remove:before {
   content: "\f00d";
   font-family: "Font Awesome 5 Free";
   position: absolute;
@@ -1320,32 +1373,20 @@ li.stepper__step {
   cursor: pointer;
   user-select: none;
   text-decoration: none;
-  background-color: transparent;
-  color: #3B8DD9;
-  right: 0;
-  visibility: hidden; }
-  .selectize-input .item:before:hover {
+  height: 1rem !important;
+  width: 1rem  !important;
+  color: #3B8DD9 !important;
+  top: 0 !important;
+  left: 5000px !important; }
+  .selectize-input .item .remove:before:hover {
     text-decoration: none;
     color: white;
     background-color: #3B8DD9;
     border-color: #3ACEFC; }
 
-.selectize-input .item:hover:before {
-  visibility: visible; }
-
-.selectize-input:hover .item:before:hover {
-  background-color: #3B8DD9;
-  color: white; }
-
-.selectize-input input {
-  border-bottom: 1px solid #c5c5c5 !important;
-  margin: 0 0 1rem 0px !important;
-  width: 100% !important;
-  height: 2.5rem !important;
-  position: relative !important;
-  left: 0 !important;
-  opacity: 1 !important;
-  text-align: center !important; }
+.selectize-control.plugin-remove_button [data-value] .remove:hover {
+  background: #d4d4d4 !important;
+  border-radius: 50% !important; }
 
 .classifier__name {
   display: none;
