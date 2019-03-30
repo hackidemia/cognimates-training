@@ -351,8 +351,8 @@
     function createCategoryHTMLElement(categoryName) {
         const htmlStructure = `
           <div class="category__container" tag-contain-${categoryName}">
-            <div class="category__box category__box--solid">
-              <div class="category__name">${categoryName}</div>
+            <div class="category__box category__box--solid box_outline-${categoryName}">
+              <div class="category__name category-header-${categoryName}">${categoryName}</div>
               <input type="text" id="${categoryName}" 
                     class="category__tag-select-container-${categoryName}">
               <a href="#" class="category--text__remove-button
@@ -361,7 +361,7 @@
                         role="button">
                 <i class="fas fa-times"></i>
             </a>
-            
+          </div>
           </div>`;
         const htmlElement = $(htmlStructure);
         const categoriesContainerElement = $('#categoriesContainer');
@@ -404,10 +404,15 @@
         const tagCategoryContain = `.tag-contain-${categoryName}`;
         const tagBoxCategoryClass = `.category__tag-select-container-${categoryName}`;
         const tagBoxRemoveClass = `.js--textbox__category__remove--${categoryName}`;
+        const tagBoxName = `.category-header-${categoryName}`;
+        const boxOutline = `.box_outline-${categoryName}`;
         delete window.training_data[categoryName];
         $(tagBoxRemoveClass).unbind();
         $(tagBoxCategoryClass).remove();
         $(tagCategoryContain).remove();
+        $(tagBoxName).remove();
+        $(boxOutline).remove();
+        $(tagBoxRemoveClass).remove();
     }
 
     function setTrainButtonState(state) {
