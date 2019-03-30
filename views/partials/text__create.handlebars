@@ -6,7 +6,7 @@
         </div>
         <div class="step__body">
             <h2 class="step__title">What is your project name?</h2>
-            <div class="step__form-with-button">
+            <div class="step__form-with-button" id="set__username__input">
                 <input type="text"
                         class="form-control
                                step__form-text
@@ -21,12 +21,12 @@
                                 btn
                                 btn-primary
                                 no-radius--left"
-                        type="button">
+                        type="button" id="button_set_project_name">
                         Set
                 </button>
             </div>
-            <div class="project-name__result-row">
-                <span class="project-name__value">Happy vs. Sad</span>
+            <div class="project-name__result-row" id='project-name__show' style="display: none;">
+                <span class="project-name__value" id="project-name__value__result">Happy vs. Sad</span>
                 <a href="#" class="project-name__remove-button
                                     btn btn-primary"
                             role="button">
@@ -44,7 +44,7 @@
         <div class="step__body">
             <h2 class="step__title">What are your {{ serviceName }} keys?
             </h2>
-            <div class="step__form-with-button">
+            <div class="step__form-with-button" id="set_read_api">
                 <input type="text"
                     class="form-control
                            no-radius--right
@@ -54,7 +54,7 @@
                     placeholder="Paste Read API Key here">
             </div>
 
-            <div class="step__form-with-button">
+            <div class="step__form-with-button" id="set_write_api">
                 <input type="text"
                     class="form-control
                            no-radius--right
@@ -64,7 +64,7 @@
                     placeholder="Paste Write API Key here">
             </div>
 
-            <div class="step__form-with-button">
+            <div class="step__form-with-button" id="set_username__Form">
                 <input type="text"
                     class="form-control
                            no-radius--right
@@ -73,14 +73,14 @@
                     aria-describedby=""
                     placeholder="Paste Username here">
             </div>
-            <div class="api-key__result-row">
-                <span class="api-key__value">8c529910925e45c3932343e56cf58</span>
+            <div class="api-key__result-row" style="display: none;" id="Rapikey__show">
+                <span class="api-key__value" id="js--Rapikey__result">8c529910925e45c3932343e56cf58</span>
             </div>
-            <div class="api-key__result-row">
-                <span class="api-key__value">8c529910925e45c3932343e56cf58</span>
+            <div class="api-key__result-row" style="display: none;" id="Wapikey__show">
+                <span class="api-key__value" id="js--Wapikey__result">8c529910925e45c3932343e56cf58</span>
             </div>
-            <div class="api-key__result-row">
-                <span class="api-key__value">unicorn5432</span>
+            <div class="api-key__result-row" style="display: none;" id="username__show">
+                <span class="api-key__value" id="js--username__result">unicorn5432</span>
             </div>
             <button class="btn btn-primary button--train
                                js--Wapikey__input--set js--Rapikey__input--set
