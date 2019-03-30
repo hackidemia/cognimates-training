@@ -7,14 +7,14 @@
         </div>
         <div class="step__body">
             <h2 class="step__title">What are your {{ serviceName }} keys?
-                <a href="#" class="step__help-open-button 
+                {{!-- <a href="#" class="step__help-open-button 
                                     js--open-help" role="button">
                     <i class="fas fa-question-circle"></i>
-                </a>
+                </a> --}}
             </h2>
 
             <div>
-                <div class="step__form-with-button">
+                <div class="step__form-with-button" id="explore_set_read_api">
                     <input type="text"
                         class="form-control
                                no-radius--right
@@ -24,7 +24,7 @@
                         placeholder="Paste Read API Key here">
                 </div>
 
-                <div class="step__form-with-button">
+                <div class="step__form-with-button" id="explore_set_write_api">
                     <input type="text"
                         class="form-control
                                no-radius--right
@@ -34,7 +34,7 @@
                         placeholder="Paste Write API Key here">
                 </div>
 
-                <div class="step__form-with-button">
+                <div class="step__form-with-button" id="explore_set_username_api">
                     <input type="text"
                         class="form-control
                                no-radius--right
@@ -43,14 +43,14 @@
                         aria-describedby=""
                         placeholder="Paste Username here">
                 </div>
-                <div class="api-key__result-row">
-                    <span class="api-key__value">8c529910925e45c3932343e56cf58</span>
+                <div class="api-key__result-row" style="display: none;" id="explore_Rapikey__show" >
+                    <span class="api-key__value" id="explore-js--Rapikey__result">8c529910925e45c3932343e56cf58</span>
                 </div>
-                <div class="api-key__result-row">
-                    <span class="api-key__value">8c529910925e45c3932343e56cf58</span>
+                <div class="api-key__result-row" style="display: none;" id="explore_Wapikey__show"> 
+                    <span class="api-key__value" id="explore-js--Wapikey__result">8c529910925e45c3932343e56cf58</span>
                 </div>
-                <div class="api-key__result-row">
-                    <span class="api-key__value">unicorn5432</span>
+                <div class="api-key__result-row" style="display: none;" id="explore_username__show">
+                    <span class="api-key__value" id="explore-js--username__result">unicorn5432</span>
                 </div>
                 <button class="btn btn-primary
                                 js--explore__username__input--set
@@ -97,7 +97,7 @@
                     </span>
                    
                 </div> --}}
-                <div class="step__form-with-button">
+                <div class="step__form-with-button" id="explore-set-project-name">
                     <input type="text"
                         class="form-control
                                 no-radius--right
@@ -115,6 +115,15 @@
                         Select Project
                     </button>
                 </div>
+            </div>
+            <div class="project-name__result-row" id='explore-project-name__show' style="display: none;">
+                <span class="project-name__value" id="explore-project-name__value__result">Happy vs. Sad</span>
+                <a href="#" class="project-name__remove-button
+                                    explore-project-name__remove-button
+                                    btn btn-primary"
+                            role="button">
+                    <i class="fas fa-times"></i>
+                </a>
             </div>
         </div>
     </li>
@@ -139,9 +148,10 @@
                                     d-inline-block
                                     btn
                                     btn-primary
-                                    no-radius--left"
+                                    no-radius--left
+                                    js--explore__predict_button"
                             id="button_explore_predictText"
-                            type="button">
+                            type="button" disabled>
                         Predict
                     </button>
                 </div>

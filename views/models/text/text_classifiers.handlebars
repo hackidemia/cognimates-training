@@ -151,7 +151,16 @@
         var y = document.getElementById('project-name__show');
         y.style.display = 'none';
       })
-        //read api key inputs
+
+      $('.explore-project-name__remove-button').click(function(){
+        window.projectName = '';
+        var x = document.getElementById("explore-set-project-name");
+        x.style.display = 'flex';
+        var y = document.getElementById('explore-project-name__show');
+        y.style.display = 'none';
+      })
+
+      //read api key inputs
       $('.js--Rapikey__input').keypress((e) => {
           if (e.which == 13) {
               $('.js--Rapikey__input--set').trigger('click');
@@ -200,6 +209,11 @@
           return;
         }
         window.RapiKey = $('.js--explore__Rapikey__input').val();
+        var x = document.getElementById("explore_set_read_api");
+        x.style.display = "none";
+        $('#explore-js--Rapikey__result').text(window.RapiKey);
+        var y = document.getElementById('explore_Rapikey__show');
+        y.style.display = 'block';
       });
 
     //write api key inputs
@@ -251,6 +265,11 @@
           return;
         }
         window.WapiKey = $('.js--explore__Wapikey__input').val();
+        var x = document.getElementById("explore_set_write_api");
+        x.style.display = "none";
+        $('#explore-js--Wapikey__result').text(window.WapiKey);
+        var y = document.getElementById('explore_Wapikey__show');
+        y.style.display = 'block';
       });
 
     //set username stuff
@@ -302,6 +321,11 @@
           return;
         }
         window.username = $('.js--explore__username__input').val();
+        var x = document.getElementById("explore_set_username_api");
+        x.style.display = "none";
+        $('#explore-js--username__result').text(window.username);
+        var y = document.getElementById('explore_username__show');
+        y.style.display = 'block';
       });
       
     //setting project name stuff
@@ -395,6 +419,16 @@
 
     function selectClassifier(model_id) {
         window.model_id = model_id;
+        $('.js--explore__predict_button').attr('disabled', null);
+        window.explore_model_id = model_id;
+        //var extensionUrl = `?url=http://cognimates.:2634/vision/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.explore_model_id}`;
+        //extensionUrl = "https://hackidemia.github.io/cognimates-gui/" + extensionUrl;
+        var extensionUrl = `?url=http://localhost:2634/vision/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.explore_model_id}`;
+        extensionUrl = "http://localhost:8601/" + extensionUrl;
+        $('.js--explore__open__codelab').attr('disabled', null);
+        $('.js--explore__open__codelab').click((e) => {
+            window.open(extensionUrl);
+        });
         return false;
     };
                   
@@ -611,6 +645,11 @@
             return;
         }
         window.projectName = $('#input_exploreProjectName').val();
+        $('#explore-project-name__value__result').text(window.projectName);
+        var y = document.getElementById('explore-set-project-name');
+        y.style.display = 'none';
+        var x = document.getElementById('explore-project-name__show');
+        x.style.display = 'block';
       });
 
     //predicting text in create tab
