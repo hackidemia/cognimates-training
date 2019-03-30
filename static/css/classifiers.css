@@ -601,6 +601,9 @@ li.stepper__step {
 .selectize-input input {
   font-size: 0.9rem; }
 
+.selectize-input input::placeholder {
+  color: #aaa; }
+
 .selectize-input.input-active,
 .selectize-input.dropdown-active {
   border: 0;
