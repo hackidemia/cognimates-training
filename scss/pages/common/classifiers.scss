@@ -413,27 +413,73 @@ li.stepper__step {
 
 .selectize-input .item,
 .selectize-input .item.item-active {
+    display: flex !important;
     margin: 0.3rem 0.3rem 0 0 !important;
-    padding: 0.4rem 0.2rem 0.4rem 0.6rem !important;
+    padding: 0 !important;
     font-size: 1.1rem!important;
     box-shadow: none !important;
     background-image: none !important;
     background-color: transparent !important;
     color: $blue !important;
     text-shadow: none !important;
-    text-align: center;
+    text-align: center !important;
     border: 0 !important;
     border-radius: 0 !important;
     transition: 0.1s all ease-in !important;
     cursor: default !important;
     user-select: none !important;
+    align-items: center!important;
+    justify-content: center!important;
+    width: 100%!important;
+}
+.selectize-control.multi .selectize-input [data-value] {
+    padding: 0 !important;
+    margin: 0 0 1rem 0 !important;
+    border-bottom: 1px solid gainsboro !important;
+    padding: 0 0 1rem 0 !important;
 }
 
 .selectize-control.multi .selectize-input.has-items {
     padding: 0;
 }
 
-.selectize-input .item:before {
+.selectize-input .item .label {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    width: 100%;
+}
+
+// hide the regular icon
+// use ours
+// https://stackoverflow.com/questions/14049423/in-css-use-displaynone-on-the-element-but-keep-its-after
+// https://jsfiddle.net/2jgj2/2/
+.selectize-input .item .remove {
+    color: $blue !important;
+    font-size: 0.8rem !important;
+    border-left: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 1rem !important;
+    height: 1rem !important;
+    text-indent: -9999px !important;
+    display: block !important;
+    background: transparent !important;
+    position: relative !important;
+    text-align: center !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transition: all 0.1s ease-out !important;
+    visibility: hidden !important;
+}
+
+.selectize-input .item:hover .remove {
+    visibility: visible !important
+}
+
+.selectize-input .item .remove:before {
     content: "\f00d";
     font-family: "Font Awesome 5 Free";
     position: absolute;
@@ -441,19 +487,26 @@ li.stepper__step {
     @include icon--remove;
 
     // override the mixin
-    background-color: transparent;
-    color: $blue;
-    right: 0;
-    visibility: hidden;
+    height: 1rem !important;
+    width: 1rem  !important;
+    color: $blue !important;
+    top: 0 !important;
+    left: 5000px !important;
 }
 
-.selectize-input .item:hover:before {
-    visibility: visible;
+
+.selectize-control.plugin-remove_button [data-value] .remove:hover {
+    background: #d4d4d4 !important;
+    border-radius: 50% !important;
 }
 
-.selectize-input:hover .item:before:hover {
-    background-color: $blue;
-    color: white;
+.selectize-input .item .remove:hover:before {
+    background-color: $accent-color;
+    border-color: $accent-color;
+}
+
+.selectize-input.focus {
+    box-shadow: none !important;
 }
 
 .selectize-input input {

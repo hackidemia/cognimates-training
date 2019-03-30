@@ -412,8 +412,8 @@
                                js--${categoryName}-category--text__remove"
                         role="button">
                 <i class="fas fa-times"></i>
-            </a>
-          </div>
+              </a>
+            </div>
           </div>`;
         const htmlElement = $(htmlStructure);
         const categoriesContainerElement = $('#categoriesContainer');
@@ -433,9 +433,18 @@
         delimiter: ',',
         persist: false,
         highlight: false,
+        plugins: ['remove_button'],
         openOnFocus: false,
         hideSelected: false,
         placeholder: 'Enter 10 words for ' + categoryName,
+        render: {
+            item: function(data, escape) {
+              return `
+              <div class='item'>
+                <div class='label'>${escape(data.text)}</div>
+            </div>`;
+            }
+          },
         create: function(input) {
             return {
                 value: input,
