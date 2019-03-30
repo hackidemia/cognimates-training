@@ -168,11 +168,30 @@
                    </span>
                 </button>
             </h2>
-            <div>
-                <h5 class="js--classifier__name" style="display:none">Classifier Name: <span class="js--classifier__name--set">Cats vs. Dogs<span></h5>
-                <h5 class="js--classifier__status" style="display:none">Classifier Status: <span class="js--classifier__status--set">Model not ready<span></h5>
-                <i class="fas fa-spinner fa-spin
-                          js--classifier__status_spinner" style="display:none"></i>
+            <div class="classifier__train-results">
+                <div class="classifier__upload_progress
+                            js--classifier__upload_progress">
+                    Uploading: 
+                    <span class="js--classifier__upload__progress--set"><span>
+                </div>
+                <div class="classifier__name 
+                            js--classifier__name">
+                    <span class="classifier__name-label">Model Name: </span>
+                    <span class="classifier__name-value
+                                js--classifier__name--set">Cats vs. Dogs</span>
+                </div>
+                <div class="classifier__status
+                            js--classifier__status">
+                    <span class="classifier__status-label">Model Status: </span> 
+                    <span class="classifier__status-value
+                                 js--classifier__status--set">Model not ready</span>
+                </div>
+                <div class="spinner-grow 
+                            js--classifier__status_spinner" 
+                      style="display:none"
+                      role="status">
+                    <span class="sr-only"></span>
+                </div>
             </div>
         </div>
     </li>

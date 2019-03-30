@@ -658,3 +658,28 @@ li.stepper__step {
   left: 0 !important;
   opacity: 1 !important;
   text-align: center !important; }
+
+.classifier__name {
+  display: none;
+  margin: 0.8rem 0; }
+
+.classifier__status {
+  display: none; }
+
+.classifier__upload_progress {
+  display: none;
+  font-size: 1rem;
+  color: #8a8a8a; }
+
+.classifier__name-label,
+.classifier__status-label {
+  font-size: 1.2rem;
+  color: #bbb; }
+
+.classifier__name-value,
+.classifier__status-value {
+  font-size: 1.2rem;
+  color: #717171; }
+
+.classifier__train-results {
+  margin: 2rem 0; }
