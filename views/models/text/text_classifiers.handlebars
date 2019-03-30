@@ -143,6 +143,14 @@
           window.projectName = $(this).val();
         }
       });
+
+      $('.project-name__remove-button').click(function(){
+        window.projectName = '';
+        var x = document.getElementById("set__username__input");
+        x.style.display = 'flex';
+        var y = document.getElementById('project-name__show');
+        y.style.display = 'none';
+      })
         //read api key inputs
       $('.js--Rapikey__input').keypress((e) => {
           if (e.which == 13) {
@@ -173,6 +181,11 @@
         }
         window.RapiKey = $('.js--Rapikey__input').val();
         $('.js--explore__Rapikey__input').val(window.RapiKey);
+        var x = document.getElementById("set_read_api");
+        x.style.display = "none";
+        $('#js--Rapikey__result').text(window.RapiKey);
+        var y = document.getElementById('Rapikey__show');
+        y.style.display = 'block';
       });
 
       $('.js--explore__Rapikey__input--set').click(function () {
@@ -219,6 +232,11 @@
         }
         window.WapiKey = $('.js--Wapikey__input').val();
         $('.js--explore__Wapikey__input').val(window.WapiKey);
+        var x = document.getElementById("set_write_api");
+        x.style.display = "none";
+        $('#js--Wapikey__result').text(window.WapiKey);
+        var y = document.getElementById('Wapikey__show');
+        y.style.display = 'block';
       });
 
       $('.js--explore__Wapikey__input--set').click(function () {
@@ -265,6 +283,11 @@
         }
         window.username = $('.js--username__input').val();
         $('.js--explore__username__input').val(window.username);
+        var x = document.getElementById("set_username__Form");
+        x.style.display = "none";
+        $('#js--username__result').text(window.username);
+        var y = document.getElementById('username__show');
+        y.style.display = 'block';
       });
 
       $('.js--explore__username__input--set').click(function () {
@@ -280,7 +303,34 @@
         }
         window.username = $('.js--explore__username__input').val();
       });
+      
+    //setting project name stuff
+    $('#input_projectName').keypress((e) => {
+          if (e.which == 13) {
+              $('#input_projectName').trigger('click');
+              e.preventDefault();
+              return false;
+          }
+    });
 
+    $('#button_set_project_name').click(function () {
+      if ($('#input_projectName').val() == '') {
+        var n = makeNotification({
+          message: 'Enter a project name.',
+          type: 'warning',
+          closeOlderInstances: true,
+          stayOpenUntilClick: false
+        });
+        n.show();
+        return;
+      }
+      window.projectName = $('#input_projectName').val();
+      var x = document.getElementById("set__username__input");
+      x.style.display = 'none';
+      var y = document.getElementById('project-name__show');
+      $('#project-name__value__result').text(window.projectName);
+      y.style.display = 'block';
+    });
 
     //category name stuff
       $('#input_categoryName').keypress((e) => {
