@@ -6,15 +6,33 @@
         </div>
         <div class="step__body">
             <h2 class="step__title">What is your project name?</h2>
-            <input type="text"
-                class="form-control
-                       step__form-text
-                       step__project-name"
-                id="input_projectName"
-                onkeydown="return (event.keyCode!=13);"
-                autocomplete="off"
-                aria-describedby=""
-                placeholder="Unicorns vs Narhwals">
+            <div class="step__form-with-button
+                        project-name__form">
+                <input type="text"
+                        class="form-control
+                               step__form-text
+                               no-radius--right"
+                        id="input_projectName"
+                        onkeydown="return (event.keyCode!=13);"
+                        autocomplete="off"
+                        aria-describedby=""
+                        placeholder="Unicorns vs Narhwals">
+                <button class="d-inline-block
+                                btn
+                                btn-primary
+                                no-radius--left"
+                        type="button">
+                        Set
+                </button>
+            </div>
+            <div class="project-name__result-row">
+                <span class="project-name__value">Elephants vs Rhinos</span>
+                <a href="#" class="project-name__remove-button
+                                    btn btn-primary"
+                            role="button">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
         </div>
     </li>
 
@@ -24,7 +42,7 @@
             <i></i>
         </div>
         <div class="step__body">
-            <h2 class="step__title">What are your {{ serviceName }} keys?
+            <h2 class="step__title">What is your {{ serviceName }} key?
                 <a href="#" class="step__help-open-button
                                     js--open-help" role="button">
                     <i class="fas fa-question-circle"></i>
@@ -38,7 +56,7 @@
                            js--apikey__input"
                     aria-describedby=""
                     placeholder="Paste API Key here">
-                 <button class="category__button--create
+                 <button class="button--create
                                 d-inline-block
                                 btn
                                 btn-primary
@@ -48,7 +66,15 @@
                         Set Key
                 </button>
             </div>
-            <h5 class="js--classifier_current_apikey" style="display:none"><h5>
+            <div class="api-key__result-row">
+                <span class="api-key__value">8c529910925e45535eha4d9693e56cf58</span>
+                <a href="#" class="api-key__remove-button
+                                    btn btn-primary"
+                            role="button">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
+            {{!-- <h5 class="js--classifier_current_apikey" style="display:none"><h5> --}}
             <a href="{{ howToGuide }}" class="step__link step__link--get-key" target="_blank" >
                    How-to guide
             </a>
@@ -97,7 +123,7 @@
                     id="input_categoryName"
                     aria-describedby=""
                     placeholder="Unicorns">
-                 <button class="category__button--create
+                 <button class="button--create
                                 d-inline-block
                                 btn
                                 btn-primary

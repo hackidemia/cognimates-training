@@ -108,6 +108,35 @@ li.stepper__step {
 	margin: 0 0 1rem 0;
 }
 
+.step__form-with-button {
+    display: flex;
+    margin: 0 0 0.5rem 0;
+}
+
+.project-name__result-row,
+.api-key__result-row {
+    display: flex;
+    align-items: flex-end;
+}
+
+.api-key__result-row {
+    margin: 1rem 0;
+    padding: 0 0 1rem 0;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.api-key__value,
+.project-name__value {
+    font-size: 1.2rem;
+    color: #717171;
+    margin: 0.5rem 1rem 0 1rem;
+}
+
+.api-key__remove-button,
+.project-name__remove-button {
+    @include icon--remove;
+}
+
 .step__form-text {
 	&::placeholder {
 		user-select: none !important;
@@ -142,6 +171,7 @@ li.stepper__step {
 		color: #acacac; 
 	} 
 }
+
 
 /* vertical line */
 .step__circle {
@@ -311,12 +341,7 @@ li.stepper__step {
     margin: 0.35rem 0 0rem 0;
 }
 
-.step__form-with-button {
-	display: flex;
-    margin: 0 0 0.5rem 0;
-}
-
-.category__button--create {
+.button--create {
 	white-space: nowrap;
 }
 

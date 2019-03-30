@@ -8,13 +8,30 @@
             <h2 class="step__title">What is your project name?</h2>
             <div class="step__form-with-button">
                 <input type="text"
-                    class="form-control
-                           step__form-text"
-                    id="input_projectName"
-                    onkeydown="return (event.keyCode!=13);"
-                    autocomplete="off"
-                    aria-describedby=""
-                    placeholder="Happy vs. Sad">
+                        class="form-control
+                               step__form-text
+                               no-radius--right"
+                        id="input_projectName"
+                        onkeydown="return (event.keyCode!=13);"
+                        autocomplete="off"
+                        aria-describedby=""
+                        placeholder="Happy vs. Sad">
+                <button class="button--create
+                                d-inline-block
+                                btn
+                                btn-primary
+                                no-radius--left"
+                        type="button">
+                        Set
+                </button>
+            </div>
+            <div class="project-name__result-row">
+                <span class="project-name__value">Happy vs. Sad</span>
+                <a href="#" class="project-name__remove-button
+                                    btn btn-primary"
+                            role="button">
+                    <i class="fas fa-times"></i>
+                </a>
             </div>
         </div>
     </li>
@@ -55,6 +72,15 @@
                            js--username__input"
                     aria-describedby=""
                     placeholder="Paste Username here">
+            </div>
+            <div class="api-key__result-row">
+                <span class="api-key__value">8c529910925e45c3932343e56cf58</span>
+            </div>
+            <div class="api-key__result-row">
+                <span class="api-key__value">8c529910925e45c3932343e56cf58</span>
+            </div>
+            <div class="api-key__result-row">
+                <span class="api-key__value">unicorn5432</span>
             </div>
             <button class="btn btn-primary button--train
                                js--Wapikey__input--set js--Rapikey__input--set
@@ -112,7 +138,7 @@
                     id="input_categoryName"
                     aria-describedby=""
                     placeholder="Happy">
-                <button class="category__button--create
+                <button class="button--create
                                 d-inline-block
                                 btn
                                 btn-primary
@@ -166,7 +192,7 @@
                     id="input_predictText"
                     aria-describedby=""
                     placeholder="I had a good day!">
-                <button class="category__button--create
+                <button class="button--create
                                 d-inline-block
                                 btn
                                 btn-primary

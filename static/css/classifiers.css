@@ -277,6 +277,52 @@ li.stepper__step {
 .step__title {
   margin: 0 0 1rem 0; }
 
+.step__form-with-button {
+  display: flex;
+  margin: 0 0 0.5rem 0; }
+
+.project-name__result-row,
+.api-key__result-row {
+  display: flex;
+  align-items: flex-end; }
+
+.api-key__result-row {
+  margin: 1rem 0;
+  padding: 0 0 1rem 0;
+  border-bottom: 1px solid #e7e7e7; }
+
+.api-key__value,
+.project-name__value {
+  font-size: 1.2rem;
+  color: #717171;
+  margin: 0.5rem 1rem 0 1rem; }
+
+.api-key__remove-button,
+.project-name__remove-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  height: 1.1rem;
+  width: 1.1rem;
+  padding: 0;
+  font-size: 0.71rem;
+  font-weight: 700;
+  background-color: #c5c5c5;
+  color: white;
+  border-radius: 50%;
+  border: 0;
+  transition: 0.1s ease-in all;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none; }
+  .api-key__remove-button:hover,
+  .project-name__remove-button:hover {
+    text-decoration: none;
+    color: white;
+    background-color: #3B8DD9;
+    border-color: #3ACEFC; }
+
 .step__form-text::placeholder {
   user-select: none !important;
   color: lightgray; }
@@ -498,11 +544,7 @@ li.stepper__step {
 .dropzone__label {
   margin: 0.35rem 0 0rem 0; }
 
-.step__form-with-button {
-  display: flex;
-  margin: 0 0 0.5rem 0; }
-
-.category__button--create {
+.button--create {
   white-space: nowrap; }
 
 .step__help-open-button {
