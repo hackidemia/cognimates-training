@@ -732,6 +732,9 @@
     }
 
     async function preprocessPredictData() {
+        $('.js--classifier__predict__button').attr('disabled', '');
+        $('.js--classifier__predict-results__name').hide();
+        $('.js--classifier__predict-results__status_spinner').show();
         try {
             validatePredictionData();
             const predictionURL = $('.js--classifier__predict-url').val();
@@ -742,15 +745,20 @@
             } else {
                 results = await classifyByURL(window.model_id, predictionURL);
             }
-            showClassification(results);
+            showClassification(results, true);
             $('.js--classifier__predict-url').val('');
         } catch (error) {
             showErrorNotification(`Oops. ${error.message}`, true, true);
+            $('.js--classifier__predict__button').attr('disabled', null);
+            $('.js--classifier__predict-results__status_spinner').hide();
             console.log(error);
         }
     }
 
     async function preprocessExplorePredictData() {
+        $('.js--explore__predict__button').attr('disabled', '');
+        $('.js--explore__predict-results__name').hide();
+        $('.js--explore__predict-results__status_spinner').show();
         try {
             validateExplorePredictionData();
             const predictionURL = $('.js--explore__predict-url').val();
@@ -761,10 +769,12 @@
             } else {
               results = await classifyByURL(window.explore_model_id, predictionURL);
             }
-            showClassification(results);
+            showClassification(results, false);
             $('.js--explore__predict-url').val('');
         } catch (error) {
             showErrorNotification(`Oops. ${error.message}`, true, true);
+            $('.js--explore__predict__button').attr('disabled', null);
+            $('.js--explore__predict-results__status_spinner').hide();
             console.log(error);
         }
     }
@@ -875,9 +885,12 @@
         });
     }
 
-    function showClassification(response) {
+    function showClassification(response, createTab) {
+        var resultLabel;
+        var resultConfidence;
         if(response.length == 1) {
-            // showSuccessNotification(`The model says ${response[0].class}! with a confidence score of ${response[0].score}.`, true, true);
+            resultLabel = response[0].class;
+            resultConfidence = response[0].score;
         } else {
             var classes = {}
             var scores = []
@@ -890,9 +903,23 @@
             scores.sort(function(a, b) {
                 return b - a;
             })
-            let score = scores[0]
-            let className = classes[score]
-            // showSuccessNotification(`The model says ${className}! with a confidence score of ${score}.`, true, true);
+            resultConfidence = scores[0];
+            resultLabel = classes[resultConfidence];
+        }
+        resultConfidence = resultConfidence * 100;
+        resultConfidence = resultConfidence.toFixed(2);
+        if (createTab) {
+              $('.js--classifier__predict__button').attr('disabled', null);
+              $('.js--classifier__results--category').html(resultLabel);
+              $('.js--classifier__results--confidence').html(`${resultConfidence}%`);
+              $('.js--classifier__predict-results__name').show();
+              $('.js--classifier__predict-results__status_spinner').hide();
+        } else {
+              $('.js--explore__predict__button').attr('disabled', null);
+              $('.js--explore__results--category').html(resultLabel);
+              $('.js--explore__results--confidence').html(`${resultConfidence}%`);
+              $('.js--explore__predict-results__name').show();
+              $('.js--explore__predict-results__status_spinner').hide();
         }
     }
 
