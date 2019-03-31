@@ -775,7 +775,7 @@
                 token: window.RapiKey, phrase: phraseToPredict},
         success: function(data) {
             if(data.error == null) {
-                $(predictRefreshSpinnerClass).hide();
+                window.predict_done = 'success';
                 showClassification(data);
             } else {
                 var n = makeNotification({
