@@ -200,14 +200,22 @@
           n.show();
           return;
         }
-        window.RapiKey = $('.js--Rapikey__input').val();
-        $('.js--explore__Rapikey__input').val(window.RapiKey);
-        var x = document.getElementById("set_read_api");
-        x.style.display = "none";
-        $('#js--Rapikey__result').text(window.RapiKey);
-        var y = document.getElementById('Rapikey__show');
-        y.style.display = 'block';
-        showSuccessNotification('Read API key set!', true, true);
+        if($('.js--set-creds').html() != 'Remove Credentials'){
+          window.RapiKey = $('.js--Rapikey__input').val();
+          $('.js--explore__Rapikey__input').val(window.RapiKey);
+          var x = document.getElementById("set_read_api");
+          x.style.display = "none";
+          $('#js--Rapikey__result').text(window.RapiKey);
+          var y = document.getElementById('Rapikey__show');
+          y.style.display = 'block';
+          showSuccessNotification('Read API key set!', true, true);
+        } else {
+          var x = document.getElementById("set_read_api");
+          x.style.display = "flex";
+          $('#js--Rapikey__result').text(window.RapiKey);
+          var y = document.getElementById('Rapikey__show');
+          y.style.display = 'none';
+        }
       });
 
       $('.js--explore__Rapikey__input--set').click(function () {
@@ -221,12 +229,20 @@
           n.show();
           return;
         }
-        window.RapiKey = $('.js--explore__Rapikey__input').val();
-        var x = document.getElementById("explore_set_read_api");
-        x.style.display = "none";
-        $('#explore-js--Rapikey__result').text(window.RapiKey);
-        var y = document.getElementById('explore_Rapikey__show');
-        y.style.display = 'block';
+        if($('.js--set-creds').html() != 'Remove Credentials'){
+          window.RapiKey = $('.js--explore__Rapikey__input').val();
+          var x = document.getElementById("explore_set_read_api");
+          x.style.display = "none";
+          $('#explore-js--Rapikey__result').text(window.RapiKey);
+          var y = document.getElementById('explore_Rapikey__show');
+          y.style.display = 'block';
+        } else {
+          var x = document.getElementById("explore_set_read_api");
+          x.style.display = "flex";
+          $('#explore-js--Rapikey__result').text(window.RapiKey);
+          var y = document.getElementById('explore_Rapikey__show');
+          y.style.display = 'none';
+        }
       });
 
     //write api key inputs
@@ -257,14 +273,22 @@
           n.show();
           return;
         }
-        window.WapiKey = $('.js--Wapikey__input').val();
-        $('.js--explore__Wapikey__input').val(window.WapiKey);
-        var x = document.getElementById("set_write_api");
-        x.style.display = "none";
-        $('#js--Wapikey__result').text(window.WapiKey);
-        var y = document.getElementById('Wapikey__show');
-        y.style.display = 'block';
-        showSuccessNotification('Write API key set!', true, true);
+        if($('.js--set-creds').html() != "Remove Credentials"){
+          window.WapiKey = $('.js--Wapikey__input').val();
+          $('.js--explore__Wapikey__input').val(window.WapiKey);
+          var x = document.getElementById("set_write_api");
+          x.style.display = "none";
+          $('#js--Wapikey__result').text(window.WapiKey);
+          var y = document.getElementById('Wapikey__show');
+          y.style.display = 'block';
+          showSuccessNotification('Write API key set!', true, true);
+        } else {
+          var x = document.getElementById("set_write_api");
+          x.style.display = "flex";
+          $('#js--Wapikey__result').text(window.WapiKey);
+          var y = document.getElementById('Wapikey__show');
+          y.style.display = 'none';
+        }
       });
 
       $('.js--explore__Wapikey__input--set').click(function () {
@@ -278,12 +302,20 @@
           n.show();
           return;
         }
-        window.WapiKey = $('.js--explore__Wapikey__input').val();
-        var x = document.getElementById("explore_set_write_api");
-        x.style.display = "none";
-        $('#explore-js--Wapikey__result').text(window.WapiKey);
-        var y = document.getElementById('explore_Wapikey__show');
-        y.style.display = 'block';
+        if($('.js--set-creds').html() != "Remove Credentials"){
+          window.WapiKey = $('.js--explore__Wapikey__input').val();
+          var x = document.getElementById("explore_set_write_api");
+          x.style.display = "none";
+          $('#explore-js--Wapikey__result').text(window.WapiKey);
+          var y = document.getElementById('explore_Wapikey__show');
+          y.style.display = 'block';
+        } else {
+          var x = document.getElementById("explore_set_write_api");
+          x.style.display = "flex";
+          $('#explore-js--Wapikey__result').text(window.WapiKey);
+          var y = document.getElementById('explore_Wapikey__show');
+          y.style.display = 'none';
+        }
       });
 
     //set username stuff
@@ -314,15 +346,24 @@
           n.show();
           return;
         }
-        window.username = $('.js--username__input').val();
-        $('.js--explore__username__input').val(window.username);
-        var x = document.getElementById("set_username__Form");
-        x.style.display = "none";
-        $('#js--username__result').text(window.username);
-        var y = document.getElementById('username__show');
-        y.style.display = 'block';
-        showSuccessNotification('Credentials set!', true, true);
-
+        if($('.js--set-creds').html() != 'Remove Credentials'){
+          window.username = $('.js--username__input').val();
+          $('.js--explore__username__input').val(window.username);
+          var x = document.getElementById("set_username__Form");
+          x.style.display = "none";
+          $('#js--username__result').text(window.username);
+          var y = document.getElementById('username__show');
+          y.style.display = 'block';
+          showSuccessNotification('Credentials set!', true, true);
+          $('.js--set-creds').html('Remove Credentials');
+        } else {
+          var x = document.getElementById("set_username__Form");
+          x.style.display = "flex";
+          $('#js--username__result').text(window.username);
+          var y = document.getElementById('username__show');
+          y.style.display = 'none';
+          $('.js--set-creds').html('Set Credentials');
+        }
       });
 
       $('.js--explore__username__input--set').click(function () {
@@ -336,12 +377,22 @@
           n.show();
           return;
         }
-        window.username = $('.js--explore__username__input').val();
-        var x = document.getElementById("explore_set_username_api");
-        x.style.display = "none";
-        $('#explore-js--username__result').text(window.username);
-        var y = document.getElementById('explore_username__show');
-        y.style.display = 'block';
+        if($('.js--set-creds').html() != 'Remove Credentials'){
+          window.username = $('.js--explore__username__input').val();
+          var x = document.getElementById("explore_set_username_api");
+          x.style.display = "none";
+          $('#explore-js--username__result').text(window.username);
+          var y = document.getElementById('explore_username__show');
+          y.style.display = 'block';
+          $('.js--set-creds').html('Remove Credentials');
+        } else {
+          var x = document.getElementById("explore_set_username_api");
+          x.style.display = "flex";
+          $('#explore-js--username__result').text(window.username);
+          var y = document.getElementById('explore_username__show');
+          y.style.display = 'none';
+          $('.js--set-creds').html('Set Credentials');
+        }
       });
       
     //setting project name stuff
