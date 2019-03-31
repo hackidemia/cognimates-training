@@ -351,7 +351,7 @@
         $('.js--classifiers__dropdown--menu').html(model_id);
         $('.js--explore__predict_button').attr('disabled', null);
         window.explore_model_id = model_id;
-        var extensionUrl = `?url=https://cognimate.me:2635/vision/extension/${window.apiKey}/${window.model_id}`;
+        var extensionUrl = `?url=http://cognimate.me:2634/vision/extension/${window.apiKey}/${window.model_id}`;
         extensionUrl = "https://hackidemia.github.io/cognimates-gui/" + extensionUrl;
         // var extensionUrl = `?url=http://localhost:2634/vision/extension/${window.apiKey}/${window.explore_model_id}`;
         // extensionUrl = "http://localhost:8601/" + extensionUrl;
@@ -533,7 +533,7 @@
             setAutoRefreshStatus(true);
             $('#button_categoryName').attr('disabled', '');
             $('#input_categoryName').unbind();
-            var extensionUrl = `?url=https://cognimate.me:2635/vision/extension/${window.apiKey}/${window.model_id}`;
+            var extensionUrl = `?url=http://cognimate.me:2634/vision/extension/${window.apiKey}/${window.model_id}`;
             extensionUrl = "https://hackidemia.github.io/cognimates-gui/" + extensionUrl;
             // var extensionUrl = `?url=http://localhost:2634/vision/extension/${window.apiKey}/${window.model_id}`;
             // extensionUrl = "http://localhost:8601/" + extensionUrl;
