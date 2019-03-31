@@ -207,6 +207,7 @@
         $('#js--Rapikey__result').text(window.RapiKey);
         var y = document.getElementById('Rapikey__show');
         y.style.display = 'block';
+        showSuccessNotification('Read API key set!', true, true);
       });
 
       $('.js--explore__Rapikey__input--set').click(function () {
@@ -263,6 +264,7 @@
         $('#js--Wapikey__result').text(window.WapiKey);
         var y = document.getElementById('Wapikey__show');
         y.style.display = 'block';
+        showSuccessNotification('Write API key set!', true, true);
       });
 
       $('.js--explore__Wapikey__input--set').click(function () {
@@ -319,6 +321,8 @@
         $('#js--username__result').text(window.username);
         var y = document.getElementById('username__show');
         y.style.display = 'block';
+        showSuccessNotification('Credentials set!', true, true);
+
       });
 
       $('.js--explore__username__input--set').click(function () {
@@ -624,13 +628,15 @@
     }
 
     function setClassifierStatus() {
-        const classifierNameClass = ".js--results__name";
-        const classifierStatusClass = ".js--results__status";
-        const classifierRefreshSpinnerClass = ".js--results__status_spinner";
+        const classifierUploadProgressClass = ".js--train-results__upload_progress";
+        const classifierNameClass = ".js--train-results__name";
+        const classifierStatusClass = ".js--train-results__status";
+        const classifierRefreshSpinnerClass = ".js--train-results__status_spinner";
         $(`${classifierNameClass}--set`).html(window.projectName);
         $(`${classifierStatusClass}--set`).html(window.classifier_status);
         $(classifierNameClass).show();
         $(classifierStatusClass).show();
+        $(classifierUploadProgressClass).hide();
         if (window.classifier_status.includes('successfully')) {
             $(classifierRefreshSpinnerClass).hide();
             setAutoRefreshStatus(false);
