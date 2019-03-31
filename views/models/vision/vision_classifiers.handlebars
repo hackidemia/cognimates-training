@@ -216,14 +216,16 @@
               e.preventDefault();
               return false;
           }
-        if ($(this).val().length > 0) {
-          window.projectName = $(this).val();
-        }
       });
 
       $('.js--project--name__button').click(function (e) {
           if ($('#input_projectName').val().length == 0) return;
           const name = $('#input_projectName').val().trim();
+
+          if (name.length == 0) {
+              showWarningNotification('Project name cannot be empty', true, false);
+              return;
+          }
 
           var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
           if (format.test(name) != false) {
