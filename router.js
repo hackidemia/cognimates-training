@@ -9,9 +9,18 @@ router.get('/', function (req, res) {
     });
 });
 
+// router.get('/text_home', (req, res) => {
+//   res.render('models/text/text_home', {
+//       title: 'Cognimates, Train a text model, Home'
+//     })
+// })
+
 router.get('/text_home', (req, res) => {
-  res.render('models/text/text_home', {
-      title: 'Cognimates, Train a text model, Home'
+  res.render('models/text/text_classifiers', {
+      title: 'Cognimates, Train a text model, Home',
+      serviceName: 'uClassify.com',
+      serviceUrl: 'https://www.uclassify.com/account/register',
+      howToGuide: 'xxx'
     })
 })
 
@@ -34,15 +43,31 @@ router.get('/text', (req, res) => {
 })
 
 ////////////////////
-router.post('/text/classifier', textController.createClassifier)
-router.get('/text/classifier', textController.getClassifierInformation)
-router.delete('/text/classifier', textController.deleteClassifier)
-router.post('/text/createClass', textController.createClass)
-router.delete('/text/removeClass', textController.removeClass)
-router.post('/text/classify', textController.classifyText)
-router.post('/text/addExamples', textController.addExamples)
-router.post('/text/untrain', textController.untrain)
+router.post('/nlc/classifier', textController.createClassifier)
+router.get('/nlc/classifier', textController.getClassifierInformation)
+router.delete('/nlc/classifier', textController.deleteClassifier)
+router.post('/nlc/createClass', textController.createClass)
+router.delete('/nlc/removeClass', textController.removeClass)
+router.post('/nlc/classify', textController.classifyText)
+router.post('/nlc/addExamples', textController.addExamples)
+router.post('/nlc/untrain', textController.untrain)
+router.post('/nlc/trainAll', textController.trainAll)
+router.get('/nlc/extension/:read/:write/:username/:model', (req, res) => {
+    var read_api = req.params.read;
+    var write_api = req.params.write;
+    var username = req.params.username;
+    var classifier_id = req.params.model;
 
+    res.contentType('application/javascript');
+    res.charset = 'UTF-8';
+    res.render('models/text/extension', {
+      read_api: read_api,
+      write_api: write_api,
+      username: username,
+      classifier_id: classifier_id,
+      layout: false
+    });
+});
 ////////////////////
 // router.get('/vision_home', (req, res) => {
 //   res.render('models/vision/vision_home', {
@@ -83,6 +108,20 @@ router.post('/vision/classifier', visionController.createClassifier)
 router.get('/vision/classifier', visionController.getClassifierInformation)
 router.delete('/vision/classifier', visionController.deleteClassifier)
 router.post('/vision/classify', visionController.classifyImages)
+router.post('/vision/classifyURLImage', visionController.classifyURLImage)
+router.post('/vision/updateClassifier', visionController.updateClassifier)
+router.get("/vision/extension/:apikey/:modelid", (req, res) => {
+    var apikey = req.params.apikey;
+    var model_id = req.params.modelid;
+
+    res.contentType('application/javascript');
+    res.charset = 'UTF-8';
+    res.render('models/vision/extension', {
+      CLARIFAI_KEY: apikey,
+      MODEL_ID: model_id,
+      layout: false
+    });
+});
 
 router.get('/doodle', (req, res) => {
   res.render('models/doodle/doodle', {

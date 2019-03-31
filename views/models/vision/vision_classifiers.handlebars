@@ -15,7 +15,7 @@
       aria-selected="true">
         <h2>
           <i class="fas fa-plus"></i>
-          Create 
+          Create
           Model
         </h2>
     </a>
@@ -99,10 +99,8 @@
     const player = new Plyr('#js-classifier__video--clarifai');
 
     // set up page tabs
-    // Doesnt work? https://getbootstrap.com/docs/4.0/components/navs/#javascript-behavior
     $('#classifier__tabs a').on('click', function (e) {
       e.preventDefault()
-      // $(this).tab('show');
     })
 
     $('.js--nav__tab--create').on('click', function (e) {
@@ -141,18 +139,6 @@
         }
     }
 
-    // set up dropzone instances
-    // https://www.dropzonejs.com/#configuration
-    // Dropzone.autoDiscover = false;
-
-      /*
-      Why doesnt this doesnt work?
-      dropzoneCategories.on('error', function(file, errorMessage, xhr) {
-        document.querySelector('.dropzone__error-container').innerHtml = errorMessage;
-        console.log('error: ', errorMessage);
-      });
-      */
-
       const dropzonePredictEl = "#js--dropzone-predict";
       window.dropzonePredict = new Dropzone(dropzonePredictEl, {
           url: "/",
@@ -177,6 +163,29 @@
       });
     });
 
+    const dropzoneExplorePredictEl = "#js--explore__dropzone-predict";
+    window.dropzoneExplorePredict = new Dropzone(dropzoneExplorePredictEl, {
+        url: "/",
+        paramName: "prediction-image",
+        maxFiles: 1,
+        dictRemoveFile: "",
+        autoProcessQueue: false,
+        uploadMultiple: false,
+        acceptedFiles: ".jpg,.jpeg,.png",
+        addRemoveLinks: true, //  enable person to del file
+        thumbnailWidth: 80,
+        thumbnailHeight: 80,
+        previewsContainer: document.querySelector('.js--explore__dropzone__previews-container--predict'),
+        previewTemplate: document.querySelector('#dropzonePredictTemplate').innerHTML, // use a custom HTML template
+        init: function () {
+            this.on("error", function(file) {
+                if (!file.accepted) {
+                    this.removeFile(file);
+                }
+            });
+        }
+    });
+
     $(document).ready(function init() {
 
       window.labels = [];
@@ -184,11 +193,39 @@
 
       $('form').submit(false);
 
-      $('#input_projectName').on('input', function () {
+      $('#input_projectName').keypress(function (e) {
+          if (e.which == 13) {
+              $('.js--project--name__button').trigger('click');
+              e.preventDefault();
+              return false;
+          }
         if ($(this).val().length > 0) {
           window.projectName = $(this).val();
         }
       });
+
+      $('.js--project--name__button').click(function (e) {
+          if ($('#input_projectName').val().length == 0) return;
+          const name = $('#input_projectName').val().trim();
+
+          var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+          if (format.test(name) != false) {
+              showWarningNotification('Project name should have only letters and numbers.', true, false);
+              return;
+          }
+
+          $('.js--project-name__value--set').html(name);
+          $('.project-name__result-row').show();
+          window.projectName = name;
+          showSuccessNotification('Project name set', false , false);
+      });
+
+      $('.project-name__remove-button').click(function (e) {
+          window.projectName = undefined;
+          $('#input_projectName').val('');
+          $('.project-name__result-row').hide();
+          showWarningNotification('Project name unset', true, false);
+      })
 
       $('.js--apikey__input').keypress((e) => {
           if (e.which == 13) {
@@ -207,22 +244,36 @@
       });
 
       $('.js--apikey__input--set').click(function () {
-        if ($('.js--apikey__input').val() == '') {
-          alert('API Key cannot be empty');
-          return;
-        }
-        window.apiKey = $('.js--apikey__input').val();
-        $('.js--explore__apikey__input').val(window.apiKey);
-        setUserClassifiers();
+          if ($('.js--apikey__input').val() == '') {
+              showWarningNotification('Enter an API Key.', true, false);
+              return;
+          }
+          window.apiKey = $('.js--apikey__input').val();
+          $('.js--explore__apikey__input').val(window.apiKey);
+          $('.js--api-key__value').html(window.apiKey);
+          $('.api-key__result-row').show();
+          showSuccessNotification('API key set', false , false);
+          setUserClassifiers();
       });
 
       $('.js--explore__apikey__input--set').click(function () {
-        if ($('.js--explore__apikey__input').val() == '') {
-          alert('API Key cannot be empty');
-          return;
-        }
-        window.apiKey = $('.js--explore__apikey__input').val();
-        setUserClassifiers();
+          if ($('.js--explore__apikey__input').val() == '') {
+              showWarningNotification('Enter an API Key.', true, false);
+              return;
+          }
+          window.apiKey = $('.js--explore__apikey__input').val();
+          $('.js--apikey__input').val(window.apiKey);
+          $('.js--api-key__value').html(window.apiKey);
+          $('.api-key__result-row').show();
+          showSuccessNotification('API key set', false , false);
+          setUserClassifiers();
+      });
+
+      $('.api-key__remove-button').click(function (e) {
+          $('.api-key__result-row').hide();
+          $('.js--explore__apikey__input').val('');
+          $('.js--apikey__input').val('');
+          showWarningNotification('API key unset', true, false);
       });
 
       $('#input_categoryName').keypress((e) => {
@@ -235,14 +286,19 @@
 
       $('#button_categoryName').click(function () {
         if ($('#input_categoryName').val() == '') {
-          alert('Category name cannot be empty');
+          showWarningNotification('Enter a category name.', true, false);
           return;
         }
 
-        // TODO: Sanitize categoryName before further processing
+        var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
         var categoryName = $('#input_categoryName').val();
+        categoryName = categoryName.trim();
+        if (format.test(categoryName) != false) {
+            showWarningNotification('Category name cannot have spaces or special characters', true, false);
+            return;
+        }
         if (window.labels.includes(categoryName)) {
-          alert('Category already added');
+          showWarningNotification('A category with this name already exists. Enter a different name.', true, false);
           return;
         }
         window.labels.push(categoryName);
@@ -251,6 +307,11 @@
       });
 
       $('.js--train__button').on('click', function () {
+          var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+          if (format.test(window.projectName) != false) {
+              showWarningNotification('Project name should have only letters and numbers.', true, false);
+              return;
+          }
           setTrainButtonState('training');
           preprocessTrainData();
       })
@@ -258,10 +319,24 @@
       $('.js--classifier__predict__button').on('click', function () {
           preprocessPredictData();
       })
+
+      $('.js--explore__predict_button').on('click', function () {
+          preprocessExplorePredictData();
+      })
     });
 
     function selectClassifier(model_id) {
-        window.model_id = model_id;
+        $('.js--classifiers__dropdown--menu').html(model_id);
+        $('.js--explore__predict_button').attr('disabled', null);
+        window.explore_model_id = model_id;
+        var extensionUrl = `?url=http://cognimates.:2634/vision/extension/${window.apiKey}/${window.explore_model_id}`;
+        extensionUrl = "https://hackidemia.github.io/cognimates-gui/" + extensionUrl;
+        // var extensionUrl = `?url=http://localhost:2634/vision/extension/${window.apiKey}/${window.explore_model_id}`;
+        // extensionUrl = "http://localhost:8601/" + extensionUrl;
+        $('.js--explore__open__codelab').attr('disabled', null);
+        $('.js--explore__open__codelab').click((e) => {
+            window.open(extensionUrl);
+        });
         return false;
     };
 
@@ -271,6 +346,7 @@
     }
 
     function addClassifiersToDropdown(classifiers) {
+        if (classifiers === undefined) return;
         const dropdownElement = $('.js--classifiers__dropdown');
         dropdownElement.html('');
         classifiers.forEach((classifier) => {
@@ -303,7 +379,9 @@
     function createCategoryHTMLElement(categoryName) {
         const htmlStructure = `<div class="category__container
                                            js--dropzone__category__container--${categoryName}">
-            <div class="category__box">
+            <div class="category__box
+                        category__box--dashed
+                        category__box--vision">
                 <form action="/"
                        class="dropzone--categories
                               js--dropzone__category--${categoryName}">
@@ -311,7 +389,8 @@
                         ${categoryName}
                     </div>
 
-                    <div class="dropzone__header">
+                    <div class="dropzone__header
+                                js--dropzone__header--${categoryName}">
                         <i class="fas fa-cloud-upload-alt
                                     dropzone__upload-icon"></i>
                         <span class="dropzone__label">Drag and drop 10 or more images</span>
@@ -321,14 +400,13 @@
                     <div class="js--dropzone__previews-container dropzone-previews"
                          id="js--dropzone__previews-container_${categoryName}">
                     </div>
-
                     <div class="dropzone__error-container"></div>
                 </form>
             </div>
-
-            <a href="#" class="category__button--remove
+            <a href="#" class="category--vision__remove-button
                                btn btn-primary
-                               js--dropzone__category__remove--${categoryName}">
+                               js--${categoryName}-category--vision__remove"
+                        role="button">
                 <i class="fas fa-times"></i>
             </a>
         </div>`;
@@ -341,7 +419,7 @@
     function initDropZoneForClass(categoryName) {
       const dropzoneFormClass = `.js--dropzone__category--${categoryName}`;
       const dropzonePreviewsContainerClass = `.js--dropzone__previews__container--${categoryName}`;
-      const dropzoneRemoveClass = `.js--dropzone__category__remove--${categoryName}`;
+      const dropzoneRemoveClass = `.js--${categoryName}-category--vision__remove`;
       const dropzoneCategoryInstance = new Dropzone(dropzoneFormClass, {
           url: "/file/post" ,
           paramName: "category-image",
@@ -359,6 +437,16 @@
               if (!file.accepted) {
                 this.removeFile(file);
               }
+            });
+            this.on("addedfile", (file) => {
+              if (this.getAcceptedFiles().length == 0) {
+                  $(`.js--dropzone__header--${categoryName}`).hide();
+              }
+            });
+            this.on("removedfile", (file) => {
+                if (this.getAcceptedFiles().length == 0) {
+                    $(`.js--dropzone__header--${categoryName}`).show();
+                }
             });
           }
       });
@@ -391,11 +479,11 @@
         if (state == 'normal') {
             $('.js--train__button').removeAttr('disabled');
             $('#span_train').removeClass('spinner-grow spinner-grow-sm');
-            $('#span_train_status').html('Train');
+            $('#span_train_status').html('Train Model');
         } else if (state == 'training') {
             $('.js--train__button').attr('disabled', '');
             $('#span_train').addClass('spinner-grow spinner-grow-sm');
-            $('#span_train_status').html('Training');
+            $('#span_train_status').html('Training Model');
         } else if (state == 'finished') {
             $('.js--train__button').removeAttr('disabled');
             $('#span_train').removeClass('spinner-grow spinner-grow-sm');
@@ -410,7 +498,7 @@
             validateTrainingData();
             var userClassifiers = await loadUserClassifiers();
             if (projectNameAlreadyUsed(userClassifiers)) {
-              throw new Error('You have an existing project with the same name.');
+              throw new Error('A project with this name already exists. Enter a different name.');
               return;
             }
             await convertImagesIntoExamples();
@@ -418,25 +506,40 @@
             setTrainButtonState('finished');
             setClassifierStatus();
             setAutoRefreshStatus(true);
+            $('#button_categoryName').attr('disabled', '');
+            $('#input_categoryName').unbind();
+            var extensionUrl = `?url=https://cognimate.me:2635/vision/extension/${window.apiKey}/${window.model_id}`;
+            extensionUrl = "https://hackidemia.github.io/cognimates-gui/" + extensionUrl;
+            // var extensionUrl = `?url=http://localhost:2634/vision/extension/${window.apiKey}/${window.model_id}`;
+            // extensionUrl = "http://localhost:8601/" + extensionUrl;
+            $('.js--classifier__open__codelab').attr('disabled', null);
+            $('.js--classifier__open__codelab').click((e) => {
+                window.open(extensionUrl);
+            });
         } catch (error) {
             console.log(error);
+            showErrorNotification(error.message, true, false);
             setTrainButtonState('normal');
+            const classifierUploadProgressClass = ".js--classifier__upload_progress";
+            $(classifierUploadProgressClass).hide();
         }
     }
 
     function validateTrainingData() {
-        // if (window.projectName === undefined || window.projectName.length < 2) {
-        //     throw new Error("Project name is too short or empty");
-        // }
-        // if (window.apiKey === undefined || window.apiKey.length < 1) {
-        //     throw new Error("API key not set");
-        // }
+        if (window.projectName === undefined || window.projectName.length < 2) {
+            throw new Error("Project name needs 3 or more letters/numbers.");
+        }
+        if (window.apiKey === undefined || window.apiKey.length < 1) {
+            throw new Error("API key needs to be set.");
+        }
         if (window.labels === undefined || window.labels.length < 2) {
-            throw new Error("At least 2 classes are required");
+            showWarningNotification('Add at least 2 categories to train.', true, true);
+            throw new Error("Create at least 2 categories.");
         }
         for (const className of Object.keys(window.dropZoneMap)) {
             if (window.dropZoneMap[className].files === undefined || window.dropZoneMap[className].files.length < 10) {
-                throw new Error(`${className} category has less than 10 examples`);
+              showWarningNotification('`${className} category needs at least 10 examples.`', true, true);
+              throw new Error(`${className} category has less than 10 examples`);
             }
         }
     }
@@ -472,7 +575,7 @@
 
     async function convertImagesIntoExamples() {
         if(window.dropZoneMap.length < 1) {
-            throw new Error("At least 2 classes are required");
+            throw new Error("Create at least 2 categories.");
         }
         for (const className of Object.keys(window.dropZoneMap)) {
             var promises = [];
@@ -523,10 +626,25 @@
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(requestData),
                 headers: { apikey: window.apiKey },
+                xhr: function () {
+                    var xhr = $.ajaxSettings.xhr();
+                    xhr.upload.onprogress = function (e) {
+                        // For uploads
+                        if (e.lengthComputable) {
+                            setUploadProgress((e.loaded / e.total) * 100);
+                        } else {
+                            console.log('Length not computable');
+                        }
+                    };
+                    return xhr;
+                },
                 success: function (data) {
                     if(data.error != null) {
-                        alert(data.error);
                         reject(new Error(data.error));
+                        return;
+                    }
+                    if (data.classifier_id == undefined) {
+                        reject(new Error('Failed to create classifier.'));
                         return;
                     }
                     window.model_id = data.classifier_id;
@@ -540,7 +658,13 @@
         });
     }
 
+    function setUploadProgress(progress) {
+        $('.js--classifier__upload_progress').show();
+        $('.js--classifier__upload__progress--set').html(`${Math.round(progress)}%`);
+    }
+
     function setClassifierStatus() {
+        const classifierUploadProgressClass = ".js--classifier__upload_progress";
         const classifierNameClass = ".js--classifier__name";
         const classifierStatusClass = ".js--classifier__status";
         const classifierRefreshSpinnerClass = ".js--classifier__status_spinner";
@@ -548,7 +672,9 @@
         $(`${classifierStatusClass}--set`).html(window.classifier_status);
         $(classifierNameClass).show();
         $(classifierStatusClass).show();
+        $(classifierUploadProgressClass).hide();
         if (window.classifier_status.includes('successfully')) {
+            $('.js--classifier__predict__button').attr('disabled', null);
             $(classifierRefreshSpinnerClass).hide();
             setAutoRefreshStatus(false);
         } else {
@@ -576,15 +702,15 @@
              headers: { 'apikey': window.apiKey },
              data: { classifier_id: classifier_id},
              success: function (data) {
-                 if(data.error == null) {
-                      window.classifier_status = data.status;
-                 } else {
-                      alert(data.error);
+                 if(data.error != undefined) {
+                     showWarningNotification(`Oops. ${JSON.stringify(data.error)}`, true, true);
+                     return;
                  }
+                 window.classifier_status = data.status;
                  setClassifierStatus();
              },
              error: function (error) {
-                 console.log(error);
+                 showErrorNotification(`Oops. ${error.message}`, false, false);
              }
           });
     }
@@ -592,17 +718,58 @@
     async function preprocessPredictData() {
         try {
             validatePredictionData();
-            await loadPredictionImage();
-            classify();
+            const predictionURL = $('.js--classifier__predict-url').val();
+            var results = undefined;
+            if (predictionURL.length == 0) {
+                await loadPredictionImage();
+                results = await classify(window.model_id);
+            } else {
+                results = await classifyByURL(window.model_id, predictionURL);
+            }
+            showClassification(results);
+            $('.js--classifier__predict-url').val('');
         } catch (error) {
+            showErrorNotification(`Oops. ${error.message}`, true, true);
             console.log(error);
-            alert(error);
+        }
+    }
+
+    async function preprocessExplorePredictData() {
+        try {
+            validateExplorePredictionData();
+            const predictionURL = $('.js--explore__predict-url').val();
+            var results = undefined;
+            if (predictionURL.length == 0) {
+              await loadExplorePredictionImage();
+              results = await classify(window.explore_model_id);
+            } else {
+              results = await classifyByURL(window.explore_model_id, predictionURL);
+            }
+            showClassification(results);
+            $('.js--explore__predict-url').val('');
+        } catch (error) {
+            showErrorNotification(`Oops. ${error.message}`, true, true);
+            console.log(error);
+        }
+    }
+
+    function validateExplorePredictionData() {
+        const predictionURL = $('.js--explore__predict-url').val();
+        if ((window.dropzoneExplorePredict.files === undefined || window.dropzoneExplorePredict.files.length != 1) && predictionURL.length == 0) {
+            throw new Error('Provide an image or URL to predict.');
+        }
+        if (window.explore_model_id === undefined) {
+            throw new Error('The model has to be trained before attempting to predict.');
         }
     }
 
     function validatePredictionData() {
-        if (window.dropzonePredict.files === undefined || window.dropzonePredict.files.length != 1) {
-            throw new Error('No image selected to perform classification');
+        const predictionURL = $('.js--classifier__predict-url').val();
+        if ((window.dropzonePredict.files === undefined || window.dropzonePredict.files.length != 1) && predictionURL.length == 0) {
+            throw new Error('Provide an image or URL to predict.');
+        }
+        if (window.model_id === undefined) {
+            throw new Error('The model has to be trained before attempting to predict.');
         }
     }
 
@@ -618,36 +785,83 @@
         return promise;
     }
 
-    function classify() {
-        if(window.predictionImage == undefined) {
-          alert('No prediction image set');
-          return;
-        }
-        $.ajax({
-             url: "/vision/classify",
-             type: "POST",
-             headers: { 'apikey': window.apiKey },
-             data: { classifier_id: window.model_id,
-             image_data: window.predictionImage },
-             success: function (data) {
-                 if(data.error == null) {
-                    showClassification(data);
-                 } else {
-                    alert(data.error);
-                 }
-             },
-             error: function (error) {
-                 console.log(error);
-                 alert(error);
-             }
+    function loadExplorePredictionImage() {
+        var promise = new Promise((resolve, reject) => {
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                window.predictionImage = reader.result;
+                resolve(reader.result);
+            }
+            reader.readAsDataURL(window.dropzoneExplorePredict.files[0]);
         });
-        window.dropzonePredict.removeAllFiles();
+        return promise;
     }
 
+    function classify(model_id) {
+        return new Promise ((resolve, reject) => {
+            if(window.predictionImage == undefined) {
+                reject(new Error('Upload or select an image to predict.'));
+                return;
+            }
+            $.ajax({
+                 url: "/vision/classify",
+                 type: "POST",
+                 headers: { 'apikey': window.apiKey },
+                 data: { classifier_id: model_id,
+                 image_data: window.predictionImage },
+                 success: function (data) {
+                     if(data.error != null) {
+                       if (data.error.length != 0) {
+                         reject(new Error(data.error));
+                       } else {
+                         reject(new Error(`Oops. Our server did not respond.`));
+                       }
+                     }
+                     resolve(data);
+                 },
+                 error: function (error) {
+                    console.log(error);
+                    reject(error);
+                 }
+            });
+        });
+    }
+
+    function classifyByURL(model_id, url) {
+        return new Promise ((resolve, reject) => {
+            if(url == undefined) {
+                reject(new Error('Upload or select an image to predict.'));
+                return;
+            }
+            $.ajax({
+                 url: "/vision/classifyURLImage",
+                 type: "POST",
+                 data: {
+                   apikey: window.apiKey,
+                   classifier_id: model_id,
+                   image_url: url
+                 },
+                 success: function (data) {
+                     if(data.error != null) {
+                       if (data.error.length != 0) {
+                         reject(new Error(data.error));
+                       } else {
+                         reject(new Error(`Oops. Our server did not respond.`));
+                       }
+                     }
+                     resolve(data);
+                 },
+                 error: function (error) {
+                    console.log(error);
+                    reject(error);
+                 }
+            });
+        });
+    }
 
     function showClassification(response) {
         if(response.length == 1) {
-            alert(`${response[0].class} with confidence ${response[0].score}`)
+            showSuccessNotification(`The model says ${response[0].class}! with a confidence score of ${response[0].score}.`, true, true);
         } else {
             var classes = {}
             var scores = []
@@ -662,7 +876,7 @@
             })
             let score = scores[0]
             let className = classes[score]
-            alert(`${className} with confidence ${score}`)
+            showSuccessNotification(`The model says ${className}! with a confidence score of ${score}.`, true, true);
         }
     }
 

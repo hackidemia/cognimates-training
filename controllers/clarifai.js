@@ -14,8 +14,9 @@ function getClassifiersList(req, res) {
   (response) => {
     var models = [];
     if (parseInt(response.length) > 19) {
-      for (var index = 0; index < parseInt(response.length)-19; index++) {
+      for (var index = 0; index < parseInt(response.length); index++) {
         var item = response[index];
+        if (item.name.includes('nsfw')) continue;
         var model = {};
         model.name = item.name;
         model.classifier_id = item.id;
@@ -93,7 +94,7 @@ function createClassifier(req, res) {
     data = inputs
     inputs = undefined
     if(errorFound == true) {
-      res.json({ error: errorMessage})
+      res.json({ error: errorMessage })
       return
     }
     saveImages()
@@ -106,6 +107,7 @@ function createClassifier(req, res) {
       },
       (err) => {
         console.log(err);
+        res.json({ error: err.message });
       }
     )
   }
@@ -124,8 +126,8 @@ function createClassifier(req, res) {
         train();
       },
       (err) => {
-        res.json({ error: err });
-        console.log(error);
+        console.log(err.data);
+        res.json({ error: err.data.status.details });
       }
     )
   }
@@ -172,26 +174,152 @@ function classifyImage(req, res) {
   }
   const model_id = req.body.classifier_id;
   const app = init(apiKey);
-  app.models.predict(model_id, { base64: image_data }).then(
-  (response) => {
-    if (response.status.code == 10000) {
-      var output = response.outputs[0].data.concepts;
-      var results = [];
-      for (var index = 0; index < output.length; index++) {
-        var result = {};
-        result.class = output[index].name;
-        result.score = output[index].value;
-        results.push(result);
+  if (model_id === 'general1234') {
+    app.models.predict(Clarifai.GENERAL_MODEL, { base64: image_data }).then(
+    (response) => {
+      if (response.status.code == 10000) {
+        var output = response.outputs[0].data.concepts;
+        var results = [];
+        for (var index = 0; index < output.length; index++) {
+          var result = {};
+          result.class = output[index].name;
+          result.score = output[index].value;
+          results.push(result);
+        }
+        res.json(results)
+      } else {
+        if (response.status.description != undefined) {
+          res.json({error: response.status.description});
+        } else {
+          res.json({ error: 'Could not classify the image' });
+        }
       }
-      res.json(results)
-    } else {
-      res.json({ error: 'Could not classify the image' });
+    },
+    (err) => {
+      console.log(err)
+      res.json({ error: err });
+    });
+  } else {
+    app.models.predict(model_id, { base64: image_data }).then(
+    (response) => {
+      if (response.status.code == 10000) {
+        var output = response.outputs[0].data.concepts;
+        var results = [];
+        for (var index = 0; index < output.length; index++) {
+          var result = {};
+          result.class = output[index].name;
+          result.score = output[index].value;
+          results.push(result);
+        }
+        res.json(results)
+      } else {
+        if (response.status.description != undefined) {
+          res.json({error: response.status.description});
+        } else {
+          res.json({ error: 'Could not classify the image' });
+        }
+      }
+    },
+    (err) => {
+      console.log(err.data);
+      if (err.data.status.details != undefined) {
+        res.json({ error: err.data.status.details });
+      } else if (err.data.status.description) {
+        res.json({ error: err.data.status.description });
+      } else {
+        res.json({ error: 'Could not classify the image' });
+      }
+    });
+  }
+}
+
+function classifyURLImage(req, res){
+  const apiKey = req.body.apikey;
+  var image_link = req.body.image_url;
+  const model_id = req.body.classifier_id;
+  const app = init(apiKey);
+  console.log('here');
+  app.models.predict(model_id, { url: image_link }).then(
+    (response) =>{
+      if(parseInt(response.status.code) == 10000) {
+        var output = response.outputs[0].data.concepts;
+        var results = [];
+        for(var index = 0; index < output.length; index++){
+          var result = {};
+          result.class = output[index].name;
+          result.score = output[index].value;
+          results.push(result);
+        }
+        res.json(results);
+      } else {
+        if (response.status.description != undefined) {
+          res.json({error: response.status.description});
+        } else {
+          res.json({ error: 'Could not classify the image' });
+        }
+      }
+    },
+    (err) => {
+      console.log(err.data);
+      if (err.data.status.details != undefined) {
+        res.json({ error: err.data.status.details });
+      } else if (err.data.status.description) {
+        res.json({ error: err.data.status.description });
+      } else {
+        res.json({ error: 'Could not classify the image' });
+      }
     }
-  },
-  (err) => {
-    console.log(err)
-    res.json({ error: err });
-  });
+  )
+}
+
+function updateClassifier(req, res){
+  //info needed for both
+  const apiKey = req.headers.apikey;
+  const app = init(apiKey);
+  const model_id = req.body.classifier_id;
+  const images = req.body.images;
+  const concept = req.body.class;
+  let type;
+  //get type to know whether image is url or regular image
+  if(images[0].substring(0,4) === 'data'){
+    type = 'base64';
+  } else{
+    type = 'url';
+  }
+  //go through each image and turn it into an input
+  for (var i = 0; i < images.length; i++) {
+    image_data = images[i];
+    if(type == 'base64'){
+      if (image_data != undefined) {
+        if (image_data.length == 0) {
+          res.json({ error: 'Send a valid image in base64 format'});
+          return;
+        }
+        if (image_data.indexOf(',') != -1) {
+          image_data = image_data.split(',').pop();
+        }
+      } else {
+        res.json({ error: 'Send a valid image in base64 format'});
+        return;
+      }
+      //create image as an input
+      app.inputs.create({base64: image_data, concepts: [{id: concept, value: true}]});
+    } else {
+      //create url image as input
+      app.inputs.create({url: image_data, concepts: [{id: concept, value: true}]});
+    }
+  }
+
+  //train the specified model
+  app.models.train(model_id, true).then(
+    (response) => {
+      res.json("Training finished successfully..");
+    },
+    (err) => {
+      console.log(err);
+      res.json({error: err});
+    }
+  );
 }
 
 module.exports = {
@@ -199,5 +327,7 @@ module.exports = {
   getClassifiersList : getClassifiersList,
   getClassifierInformation : getClassifierInformation,
   classifyImages : classifyImage,
-  deleteClassifier : deleteClassifier
+  deleteClassifier : deleteClassifier,
+  classifyURLImage: classifyURLImage,
+  updateClassifier: updateClassifier
 };

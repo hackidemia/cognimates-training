@@ -1,5 +1,6 @@
 const request = require('request');
 const base_url = "https://api.uclassify.com/v1/";
+const async = require('async');
 
 function getClassifierInformation(req, res) {
     let read_token = req.body.read_token
@@ -192,6 +193,90 @@ function untrain(req, res){
   });
 }
 
+function trainAll(req, res) {
+  console.log(req.body);
+  var classifierName = req.body.classifier_name;
+  var training_data = req.body.training_data;
+  var writeAPIKey = req.headers.api_key;
+  var functionsToExecute = [];
+  functionsToExecute.push(getCreateClassifierFunction(writeAPIKey, classifierName));
+  Object.keys(training_data).forEach((key) => {
+    functionsToExecute.push(getTrainLabelFunction(writeAPIKey, classifierName, key, training_data[key]));
+  });
+  
+  async.series(functionsToExecute, (err, results) => {
+    if (err) {
+      var errorMessages = [];
+      results.forEach((result) => {
+        if (result != null) {
+          errorMessages.push(result.message);
+        }
+      });
+      res.json({ error: "Failed to train classifier", errorDetails: errorMessages });
+      return;
+    }
+  });
+
+  res.json('Training completed successfully');
+}
+
+function getCreateClassifierFunction(writeAPIKey, classifierName) {
+  return function (callback) {
+    var create_url = base_url + "me/";
+    let token_text = 'Token ' + writeAPIKey;
+    request.post({
+      url:create_url,
+      headers: {'Content-Type': 'application/json', 'Authorization': token_text},
+      body: {classifierName: classifierName}, json: true}, 
+      function(err, body){
+        if(err){
+          callback(err, body);
+          return;
+        } else {
+          callback(null, true);
+        } 
+    });
+  };
+}
+
+
+function getTrainLabelFunction(writeAPIKey, classifierName, label, labelData) {
+  return function (callback) {  
+    let class_name = label;
+    var create_url = base_url + "me/" + classifierName + "/addClass";
+    let token_text = 'Token ' + writeAPIKey;
+    let training_data = labelData;
+
+    //first create the class
+    request.post({
+      url:create_url,
+      headers: {'Content-Type': 'application/json', 'Authorization': token_text},
+      body: {className: class_name}, json: true}, 
+      function(err, body){
+        if(err){
+          callback(err, body);
+          return;
+        } 
+    });
+    
+    train_url = base_url + "me/" + classifierName + "/" + class_name + "/train"; 
+    //train the label by adding examples
+    request.post({
+      url:train_url,
+      headers: {'Content-Type': 'application/json', 'Authorization': token_text},
+      body: {texts: training_data}, json: true}, 
+      function(err, body){
+        if(err){
+          callback(err, body);
+          return;
+        } else {
+          callback(null, true);
+        } 
+    });
+
+  }
+}
+
 
 module.exports = {
   getClassifierInformation: getClassifierInformation,
@@ -201,5 +286,6 @@ module.exports = {
   addExamples: addExamples,
   createClass: createClass,
   removeClass: removeClass,
-  untrain: untrain
+  untrain: untrain,
+  trainAll: trainAll
 }

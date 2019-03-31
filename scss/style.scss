@@ -3,10 +3,13 @@
 // common
 @import 'common/variables';
 @import 'common/base';
+@import 'common/mixins';
 @import 'common/mq';
 @import 'common/mq-debugger';
 @import 'common/header';
 @import 'common/footer';
+
+@import 'common/noty';
 
 @import 'pages/index';
 @import 'pages/doodle';

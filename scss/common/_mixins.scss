@@ -1,0 +1,26 @@
+@mixin icon--remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    height: 1.1rem;
+    width: 1.1rem;
+    padding: 0;
+    font-size: 0.71rem;
+    font-weight: 700;
+    background-color: #c5c5c5;
+    color: white;
+    border-radius: 50%;
+    border: 0;
+    transition: 0.1s ease-in all;
+    cursor: pointer;
+    user-select: none;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: none;
+        color: white;
+        background-color: $main-color;
+        border-color: $accent-color;
+    }
+}

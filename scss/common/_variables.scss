@@ -4,22 +4,37 @@ $light-weight: 300;
 $medium-weight: 400;
 $heavy-weight: 600;
 
-$blue: #3b8dd9;
-$green: #66c675;
-$yellow: #fbc85d;
-$pink: #ff718b;
-$turqoise: #74bbd6;
+$blue: #3B8DD9;
+$green: #66C675;
+$yellow: #FBC85D;
+$pink: #FF718B;
+$turquoise: #74BBD6;
 $gray: #979797;
+$light-yellow: #FFE4AC;
+
+$pastel--blue: rgba($blue, 0.1);
+$pastel--yellow: rgba($yellow, 0.1);
+$pastel--pink: rgba($pink, 0.1);
+$pastel--turquoise: rgba($turquoise, 0.1);
 
 $main-color: $blue;
 $light-main-color: #ACC5DE;
 $light-transparent-main-color: rgba(172, 197, 222, 0.8);
-$accent-color: #3acefc;
-$text-gray: #a0a0a0;
+$accent-color: #3ACEFC;
+$text-gray: #A0A0A0;
+
+$notification-text: #7C7C7C;
+$notification-bg-color--warning: $light-yellow;
+$notification-bg-color--info: $blue;
+$notification-bg-color--success: $green;
+$notification-bg-color--error: $pink;
+
+$category--blue: $pastel--blue;
+$category--yellow: $pastel--yellow;
+$category--pink: $pastel--pink;
+$category--turqoise: $pastel--turquoise;
 
 $header--height: 3.5rem;
 
-$category--blue: rgba($blue, 0.1);
-$category--yellow: rgba($yellow, 0.1);
-$category--pink: rgba($pink, 0.1);
-$category--turqoise: rgba($turqoise, 0.1);
+$box-shadow--base: 4px 4px 0px 0px rgba(0,0,0,0.16);
+
