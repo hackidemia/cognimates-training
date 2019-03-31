@@ -717,12 +717,10 @@
                     token: window.RapiKey, phrase: phraseToPredict},
             success: function(data) {
                 if(data.error == null) {
+                    window.predict_done = 'success';
                     showClassification(data);
-                    $('.results__name-label').text(window.top_class[0])
-                    $('.results__name-value').text(window.top_class[1])
-                    var x = document.getElementById("predict__classifier__results");
-                    x.style.display = 'block';
                 } else {
+                    window.predict_done = 'fail';
                     var n = makeNotification({
                       message: 'Oops. ' + data.error,
                       type: 'error',
@@ -813,6 +811,16 @@
             stayOpenUntilClick: true
         });
         n.show(); --}}
+
+        if(window.predict_done === 'success'){
+          console.log('somewhere here?');
+          const resultsLabel = ".js--predict--label-results";
+          const resultsScore = ".js--predict--confidence-results";
+          const resultsShow = ".js--predict-results__name"
+          $(resultsLabel).html(window.top_class[0]);
+          $(resultsScore).html(window.top_class[1]);
+          $(resultsShow).show();
+        }
     }
 
     function findTopClass(data) {

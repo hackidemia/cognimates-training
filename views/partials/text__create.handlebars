@@ -211,21 +211,18 @@
                     id="input_predictText"
                     aria-describedby=""
                     placeholder="I had a good day!">
-                <button class="button--create
-                                d-inline-block
-                                btn
-                                btn-primary
-                                no-radius--left"
-                        id="button_predictText"
-                        type="button">
-                    Predict
-                </button>
             </div>
+            <button class="btn btn-primary"
+                    type="button" id="button_predictText">
+                Predict
+            </button>
             <div class="classifier__results">
                 <div class="results__name 
                             js--predict-results__name">
-                    <span class="results__name-label">Confidence score:</span>
-                    <span class="results__name-value">85.02%</span>
+                    <span class ="results__name-value">Class: </span>
+                    <span class="results__name-value js--predict--label-results">Confidence score:</span>
+                    <span class="results__name-label">Confidence Score:</span>
+                    <span class="results__name-label js--predict--confidence-results">85.02%</span>
                 </div>
                 <div class="spinner-grow 
                             js--predict-results__status_spinner" 
