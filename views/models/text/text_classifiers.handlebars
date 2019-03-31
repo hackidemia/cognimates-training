@@ -144,6 +144,7 @@
     $(document).ready(function init() {
 
       window.training_data = {};
+      window.top_class = [];
 
       $('form').submit(false);
 
@@ -206,6 +207,7 @@
         $('#js--Rapikey__result').text(window.RapiKey);
         var y = document.getElementById('Rapikey__show');
         y.style.display = 'block';
+        showSuccessNotification('Read API key set!', true, true);
       });
 
       $('.js--explore__Rapikey__input--set').click(function () {
@@ -262,6 +264,7 @@
         $('#js--Wapikey__result').text(window.WapiKey);
         var y = document.getElementById('Wapikey__show');
         y.style.display = 'block';
+        showSuccessNotification('Write API key set!', true, true);
       });
 
       $('.js--explore__Wapikey__input--set').click(function () {
@@ -318,6 +321,8 @@
         $('#js--username__result').text(window.username);
         var y = document.getElementById('username__show');
         y.style.display = 'block';
+        showSuccessNotification('Credentials set!', true, true);
+
       });
 
       $('.js--explore__username__input--set').click(function () {
@@ -421,10 +426,6 @@
           }
           setTrainButtonState('training');
           preprocessTrainData();
-      })
-
-      $('.js--classifier__predict__button').on('click', function () {
-          preprocessPredictData();
       })
     });
 
@@ -627,13 +628,15 @@
     }
 
     function setClassifierStatus() {
-        const classifierNameClass = ".js--results__name";
-        const classifierStatusClass = ".js--results__status";
-        const classifierRefreshSpinnerClass = ".js--results__status_spinner";
+        const classifierUploadProgressClass = ".js--train-results__upload_progress";
+        const classifierNameClass = ".js--train-results__name";
+        const classifierStatusClass = ".js--train-results__status";
+        const classifierRefreshSpinnerClass = ".js--train-results__status_spinner";
         $(`${classifierNameClass}--set`).html(window.projectName);
         $(`${classifierStatusClass}--set`).html(window.classifier_status);
         $(classifierNameClass).show();
         $(classifierStatusClass).show();
+        $(classifierUploadProgressClass).hide();
         if (window.classifier_status.includes('successfully')) {
             $(classifierRefreshSpinnerClass).hide();
             setAutoRefreshStatus(false);
@@ -715,6 +718,10 @@
             success: function(data) {
                 if(data.error == null) {
                     showClassification(data);
+                    $('.results__name-label').text(window.top_class[0])
+                    $('.results__name-value').text(window.top_class[1])
+                    var x = document.getElementById("predict__classifier__results");
+                    x.style.display = 'block';
                 } else {
                     var n = makeNotification({
                       message: 'Oops. ' + data.error,
@@ -761,7 +768,8 @@
 
     // TODO: Sanitize categoryName before further processing
     var phraseToPredict = $('#input_explore_predictText').val();
-    console.log('here');
+    const predictRefreshSpinnerClass = ".js--results__status_spinner";
+    $(predictRefreshSpinnerClass).show();
     $.ajax({
         url: "/nlc/classify",
         type: "POST",
@@ -769,6 +777,7 @@
                 token: window.RapiKey, phrase: phraseToPredict},
         success: function(data) {
             if(data.error == null) {
+                $(predictRefreshSpinnerClass).hide();
                 showClassification(data);
             } else {
                 var n = makeNotification({
@@ -795,15 +804,15 @@
 
     //helper functions for predicting 
     function showClassification(response) {
-        var top_class = findTopClass(response);
+        window.top_class = findTopClass(response);
         console.log(top_class);
-        var n = makeNotification({
+        {{!-- var n = makeNotification({
             // message: `The model says \"${top_class[0]}\"! with a confidence score of ${top_class[1]}.`,
             type: 'success',
             closeOlderInstances: true,
             stayOpenUntilClick: true
         });
-        n.show();
+        n.show(); --}}
     }
 
     function findTopClass(data) {
