@@ -208,13 +208,11 @@ body {
       padding: 0 0.75rem;
       font-size: 1rem; } }
 
-.header__nav-item.active,
-.header__sub-nav-item.active {
+.header__nav-item.active {
   font-weight: 400;
   box-shadow: 0 4px 0 0 white; }
 
-.header__nav-item:hover,
-.header__sub-nav-item:hover {
+.header__nav-item:hover {
   box-shadow: 0 4px 0 0 white;
   text-decoration: none;
   color: white;
@@ -233,24 +231,6 @@ body {
       margin-left: auto;
       border: none;
       padding-right: 0.5rem; } }
-
-.header__sub-nav-item {
-  align-self: stretch;
-  display: flex;
-  align-items: center;
-  padding: 0 0.5rem;
-  color: white;
-  white-space: nowrap;
-  text-decoration: none;
-  font-family: "Roboto", sans-serif;
-  font-size: 0.8rem;
-  font-weight: 300;
-  transition: 0.1s all ease-in;
-  user-select: none; }
-  @media only screen and (min-width: 1030px) {
-    .header__sub-nav-item {
-      padding: 0 0.75rem;
-      font-size: 0.9rem; } }
 
 nav ul {
   display: flex;
