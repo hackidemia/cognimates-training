@@ -109,6 +109,7 @@ router.get('/vision/classifier', visionController.getClassifierInformation)
 router.delete('/vision/classifier', visionController.deleteClassifier)
 router.post('/vision/classify', visionController.classifyImages)
 router.post('/vision/classifyURLImage', visionController.classifyURLImage)
+router.post('/vision/updateClassifier', visionController.updateClassifier)
 router.get("/vision/extension/:apikey/:modelid", (req, res) => {
     var apikey = req.params.apikey;
     var model_id = req.params.modelid;
