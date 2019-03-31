@@ -217,6 +217,7 @@
           $('.js--project-name__value--set').html(name);
           $('.project-name__result-row').show();
           window.projectName = name;
+          $('.project-name__form').hide();
           showSuccessNotification('Project name set', false , false);
       });
 
@@ -224,6 +225,7 @@
           window.projectName = undefined;
           $('#input_projectName').val('');
           $('.project-name__result-row').hide();
+          $('.project-name__form').show();
           showWarningNotification('Project name unset', true, false);
       })
 
