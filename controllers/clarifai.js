@@ -186,13 +186,62 @@ function classifyImage(req, res) {
       }
       res.json(results)
     } else {
-      res.json({ error: 'Could not classify the image' });
+      if (response.status.description != undefined) {
+        res.json({error: response.status.description});
+      } else {
+        res.json({ error: 'Could not classify the image' });
+      }
     }
   },
   (err) => {
-    console.log(err)
-    res.json({ error: err.message });
+    console.log(err.data);
+    if (err.data.status.details != undefined) {
+      res.json({ error: err.data.status.details });
+    } else if (err.data.status.description) {
+      res.json({ error: err.data.status.description });
+    } else {
+      res.json({ error: 'Could not classify the image' });
+    }
   });
+}
+
+function classifyURLImage(req, res){
+  const apiKey = req.body.apikey;
+  var image_link = req.body.image_url;
+  const model_id = req.body.classifier_id;
+  const app = init(apiKey);
+  console.log('here');
+  app.models.predict(model_id, { url: image_link }).then(
+    (response) =>{
+      if(parseInt(response.status.code) == 10000) {
+        var output = response.outputs[0].data.concepts;
+        var results = [];
+        for(var index = 0; index < output.length; index++){
+          var result = {};
+          result.class = output[index].name;
+          result.score = output[index].value;
+          results.push(result);
+        }
+        res.json(results);
+      } else {
+        if (response.status.description != undefined) {
+          res.json({error: response.status.description});
+        } else {
+          res.json({ error: 'Could not classify the image' });
+        }
+      }
+    },
+    (err) => {
+      console.log(err.data);
+      if (err.data.status.details != undefined) {
+        res.json({ error: err.data.status.details });
+      } else if (err.data.status.description) {
+        res.json({ error: err.data.status.description });
+      } else {
+        res.json({ error: 'Could not classify the image' });
+      }
+    }
+  )
 }
 
 module.exports = {
@@ -200,5 +249,6 @@ module.exports = {
   getClassifiersList : getClassifiersList,
   getClassifierInformation : getClassifierInformation,
   classifyImages : classifyImage,
-  deleteClassifier : deleteClassifier
+  deleteClassifier : deleteClassifier,
+  classifyURLImage: classifyURLImage
 };
