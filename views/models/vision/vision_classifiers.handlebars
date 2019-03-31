@@ -877,7 +877,7 @@
 
     function showClassification(response) {
         if(response.length == 1) {
-            showSuccessNotification(`The model says ${response[0].class}! with a confidence score of ${response[0].score}.`, true, true);
+            // showSuccessNotification(`The model says ${response[0].class}! with a confidence score of ${response[0].score}.`, true, true);
         } else {
             var classes = {}
             var scores = []
@@ -892,7 +892,7 @@
             })
             let score = scores[0]
             let className = classes[score]
-            showSuccessNotification(`The model says ${className}! with a confidence score of ${score}.`, true, true);
+            // showSuccessNotification(`The model says ${className}! with a confidence score of ${score}.`, true, true);
         }
     }
 
