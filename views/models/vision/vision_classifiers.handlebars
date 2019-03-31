@@ -217,12 +217,14 @@
           $('.js--project-name__value--set').html(name);
           $('.project-name__result-row').show();
           window.projectName = name;
+          showSuccessNotification('Project name set', false , false);
       });
 
       $('.project-name__remove-button').click(function (e) {
           window.projectName = undefined;
           $('#input_projectName').val('');
           $('.project-name__result-row').hide();
+          showWarningNotification('Project name unset', true, false);
       })
 
       $('.js--apikey__input').keypress((e) => {
@@ -250,6 +252,7 @@
           $('.js--explore__apikey__input').val(window.apiKey);
           $('.js--api-key__value').html(window.apiKey);
           $('.api-key__result-row').show();
+          showSuccessNotification('API key set', false , false);
           setUserClassifiers();
       });
 
@@ -259,8 +262,10 @@
               return;
           }
           window.apiKey = $('.js--explore__apikey__input').val();
+          $('.js--apikey__input').val(window.apiKey);
           $('.js--api-key__value').html(window.apiKey);
           $('.api-key__result-row').show();
+          showSuccessNotification('API key set', false , false);
           setUserClassifiers();
       });
 
@@ -268,6 +273,7 @@
           $('.api-key__result-row').hide();
           $('.js--explore__apikey__input').val('');
           $('.js--apikey__input').val('');
+          showWarningNotification('API key unset', true, false);
       });
 
       $('#input_categoryName').keypress((e) => {
