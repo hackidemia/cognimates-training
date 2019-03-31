@@ -517,8 +517,11 @@
                 window.open(extensionUrl);
             });
         } catch (error) {
+            console.log(error);
             showErrorNotification(error.message, true, false);
             setTrainButtonState('normal');
+            const classifierUploadProgressClass = ".js--classifier__upload_progress";
+            $(classifierUploadProgressClass).hide();
         }
     }
 
@@ -638,6 +641,10 @@
                 success: function (data) {
                     if(data.error != null) {
                         reject(new Error(data.error));
+                        return;
+                    }
+                    if (data.classifier_id == undefined) {
+                        reject(new Error('Failed to create classifier.'));
                         return;
                     }
                     window.model_id = data.classifier_id;

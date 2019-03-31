@@ -125,8 +125,8 @@ function createClassifier(req, res) {
         train();
       },
       (err) => {
-        res.json({ error: err.message });
-        console.log(error);
+        console.log(err.data);
+        res.json({ error: err.data.status.details });
       }
     )
   }
