@@ -249,6 +249,7 @@
               return;
           }
           window.apiKey = $('.js--apikey__input').val();
+          $('.js--apikey__form').hide();
           $('.js--explore__apikey__input').val(window.apiKey);
           $('.js--api-key__value').html(window.apiKey);
           $('.api-key__result-row').show();
@@ -262,6 +263,7 @@
               return;
           }
           window.apiKey = $('.js--explore__apikey__input').val();
+          $('.js--apikey__form').hide();
           $('.js--apikey__input').val(window.apiKey);
           $('.js--api-key__value').html(window.apiKey);
           $('.api-key__result-row').show();
@@ -270,6 +272,7 @@
       });
 
       $('.api-key__remove-button').click(function (e) {
+          $('.js--apikey__form').show();
           $('.api-key__result-row').hide();
           $('.js--explore__apikey__input').val('');
           $('.js--apikey__input').val('');
