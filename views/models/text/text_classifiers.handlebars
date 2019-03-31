@@ -191,7 +191,7 @@
       $('.js--Rapikey__input--set').click(function () {
         if ($('.js--Rapikey__input').val() == '') {
           var n = makeNotification({
-            message: 'Enter an API Key',
+            message: 'Enter an API Key.',
             type: 'warning',
             closeOlderInstances: true,
             stayOpenUntilClick: false
@@ -211,7 +211,7 @@
       $('.js--explore__Rapikey__input--set').click(function () {
         if ($('.js--explore__Rapikey__input').val() == '') {
           var n = makeNotification({
-            message: 'Enter an API Key',
+            message: 'Enter an API Key.',
             type: 'warning',
             closeOlderInstances: true,
             stayOpenUntilClick: false
@@ -247,7 +247,7 @@
       $('.js--Wapikey__input--set').click(function () {
         if ($('.js--Wapikey__input').val() == '') {
           var n = makeNotification({
-            message: 'Enter an API Key',
+            message: 'Enter an API Key.',
             type: 'warning',
             closeOlderInstances: true,
             stayOpenUntilClick: false
@@ -267,7 +267,7 @@
       $('.js--explore__Wapikey__input--set').click(function () {
         if ($('.js--explore__Wapikey__input').val() == '') {
           var n = makeNotification({
-            message: 'Enter an API Key',
+            message: 'Enter an API Key.',
             type: 'warning',
             closeOlderInstances: true,
             stayOpenUntilClick: false
@@ -303,7 +303,7 @@
       $('.js--username__input--set').click(function () {
         if ($('.js--username__input').val() == '') {
           var n = makeNotification({
-            message: 'Enter a Username',
+            message: 'Enter a Username.',
             type: 'warning',
             closeOlderInstances: true,
             stayOpenUntilClick: false
@@ -323,7 +323,7 @@
       $('.js--explore__username__input--set').click(function () {
         if ($('.js--explore__username__input').val() == '') {
           var n = makeNotification({
-            message: 'Enter a Username',
+            message: 'Enter a Username.',
             type: 'warning',
             closeOlderInstances: true,
             stayOpenUntilClick: false
@@ -403,7 +403,7 @@
 
         var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
         if (format.test(categoryName) != false) {
-            showWarningNotification('Category name cannot have spaces or special characters', true, false);
+            showWarningNotification('Category name should have only letters and numbers.', true, false);
             return;
         }
 
@@ -437,7 +437,7 @@
           //extensionUrl = "http://localhost:8601/" + extensionUrl;
           window.open(extensionUrl);
         } else {
-          showWarningNotification('Must have a trained project with a username and both api keys set.', true, false);
+          showWarningNotification('We need a trained project with a username and both api keys set.', true, false);
         }
     })
 
@@ -450,7 +450,7 @@
         //extensionUrl = "http://localhost:8601/" + extensionUrl;
         window.open(extensionUrl);
       } else {
-        showWarningNotification('Must have a trained project with a username and both api keys set.', true, false);
+        showWarningNotification('We need a trained project with a username and both api keys set.', true, false);
       }
     });
                   
@@ -580,13 +580,13 @@
             var values = unparsed_result.split(","); 
             if (values === undefined || values.length < 10) {
               var n = makeNotification({
-                message: `${className} category needs at least 10 examples.`,
+                message: `Create at least 10 examples for ${className} category.`,
                 type: 'warning',
                 closeOlderInstances: true,
                 stayOpenUntilClick: true
               });
               n.show();
-              throw new Error(`${className} category has less than 10 examples`);
+              throw new Error(`Create at least 10 examples for ${className} category.`);
             } 
             for(var i = 0; i < values.length; i++){
               window.training_data[className].push(values[i]);
@@ -607,7 +607,7 @@
                 success: function (data) {
                     if(data.error != null) {
                         var n = makeNotification({
-                          message: 'We couldn\'t save to Clarifai :( Some technical info: ' + data.error,
+                          message: 'Oops. ' + data.error,
                           type: 'error',
                           closeOlderInstances: true,
                           stayOpenUntilClick: false
@@ -667,7 +667,7 @@
       $('#button_exploreProjectName').click(function () {
         if ($('#input_exploreProjectName').val() == '') {
             var n = makeNotification({
-                message: 'Enter a project name to use.',
+                message: 'Enter a project name.',
                 type: 'warning',
                 closeOlderInstances: true,
                 stayOpenUntilClick: false
@@ -717,7 +717,7 @@
                     showClassification(data);
                 } else {
                     var n = makeNotification({
-                      message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + data.error,
+                      message: 'Oops. ' + data.error,
                       type: 'error',
                       closeOlderInstances: true,
                       stayOpenUntilClick: true
@@ -728,7 +728,7 @@
             error: function (error) {
                 console.log(error);
                 var n = makeNotification({
-                  message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + error,
+                  message: 'Oops. ' + error,
                   type: 'error',
                   closeOlderInstances: true,
                   stayOpenUntilClick: true
@@ -772,7 +772,7 @@
                 showClassification(data);
             } else {
                 var n = makeNotification({
-                    message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + data.error,
+                    message: 'Oops. ' + data.error,
                     type: 'error',
                     closeOlderInstances: true,
                     stayOpenUntilClick: true
@@ -783,7 +783,7 @@
         error: function (error) {
             console.log(error);
             var n = makeNotification({
-                message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + error,
+                message: 'Oops. ' + error,
                 type: 'error',
                 closeOlderInstances: true,
                 stayOpenUntilClick: true
