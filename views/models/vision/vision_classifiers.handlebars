@@ -536,7 +536,7 @@
             console.log(error);
             showErrorNotification(error.message, true, false);
             setTrainButtonState('normal');
-            const classifierUploadProgressClass = ".js--classifier__upload_progress";
+            const classifierUploadProgressClass = ".js--results__upload_progress";
             $(classifierUploadProgressClass).hide();
         }
     }
@@ -675,15 +675,15 @@
     }
 
     function setUploadProgress(progress) {
-        $('.js--classifier__upload_progress').show();
-        $('.js--classifier__upload__progress--set').html(`${Math.round(progress)}%`);
+        $('.js--results__upload_progress').show();
+        $('.js--results__upload__progress--set').html(`${Math.round(progress)}%`);
     }
 
     function setClassifierStatus() {
-        const classifierUploadProgressClass = ".js--classifier__upload_progress";
-        const classifierNameClass = ".js--classifier__name";
-        const classifierStatusClass = ".js--classifier__status";
-        const classifierRefreshSpinnerClass = ".js--classifier__status_spinner";
+        const classifierUploadProgressClass = ".js--results__upload_progress";
+        const classifierNameClass = ".js--results__name";
+        const classifierStatusClass = ".js--results__status";
+        const classifierRefreshSpinnerClass = ".js--results__status_spinner";
         $(`${classifierNameClass}--set`).html(window.model_id);
         $(`${classifierStatusClass}--set`).html(window.classifier_status);
         $(classifierNameClass).show();

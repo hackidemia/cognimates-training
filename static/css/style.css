@@ -1388,27 +1388,28 @@ li.stepper__step {
   background: #d4d4d4 !important;
   border-radius: 50% !important; }
 
-.classifier__name {
-  display: none;
-  margin: 0.8rem 0; }
+.classifier__results {
+  margin: 2rem 0; }
 
-.classifier__status {
+.results__name {
+  display: none;
+  margin: 0.5rem 0; }
+
+.results__status {
   display: none; }
 
-.classifier__upload_progress {
+.results__upload-progress {
   display: none;
   font-size: 1rem;
   color: #8a8a8a; }
 
-.classifier__name-label,
-.classifier__status-label {
+.results__name-label,
+.results__status-label {
   font-size: 1.2rem;
-  color: #bbb; }
+  color: #bbb;
+  line-height: 1.3rem; }
 
-.classifier__name-value,
-.classifier__status-value {
+.results__name-value,
+.results__status-value {
   font-size: 1.2rem;
   color: #717171; }
-
-.classifier__train-results {
-  margin: 2rem 0; }

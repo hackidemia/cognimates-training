@@ -618,9 +618,9 @@
     }
 
     function setClassifierStatus() {
-        const classifierNameClass = ".js--classifier__name";
-        const classifierStatusClass = ".js--classifier__status";
-        const classifierRefreshSpinnerClass = ".js--classifier__status_spinner";
+        const classifierNameClass = ".js--results__name";
+        const classifierStatusClass = ".js--results__status";
+        const classifierRefreshSpinnerClass = ".js--results__status_spinner";
         $(`${classifierNameClass}--set`).html(window.projectName);
         $(`${classifierStatusClass}--set`).html(window.classifier_status);
         $(classifierNameClass).show();
