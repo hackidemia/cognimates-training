@@ -1,180 +1,193 @@
 <ul class="stepper">
 
-    <li class="stepper__step">
-        <span class="step__number">1</span>
-        <div class="step__circle">
-            <i></i>
-        </div>
-        <div class="step__body">
-            <h2 class="step__title">What are your {{ serviceName }} keys?
-                {{!-- <a href="#" class="step__help-open-button 
-                                    js--open-help" role="button">
-                    <i class="fas fa-question-circle"></i>
-                </a> --}}
-            </h2>
+	<li class="stepper__step">
+		<span class="step__number">1</span>
+		<div class="step__circle">
+			<i></i>
+		</div>
+		<div class="step__body">
+			<h2 class="step__title">What are your {{ serviceName }} keys?
+				{{!-- <a href="#" class="step__help-open-button 
+									js--open-help" role="button">
+					<i class="fas fa-question-circle"></i>
+				</a> --}}
+			</h2>
 
-            <div>
-                <div class="step__form-with-button" id="explore_set_read_api">
-                    <input type="text"
-                        class="form-control
-                               no-radius--right
-                               step__form-text
-                               js--explore__Rapikey__input"
-                        aria-describedby=""
-                        placeholder="Paste Read API Key here">
-                </div>
+			<div>
+				<div class="step__form-with-button" id="explore_set_read_api">
+					<input type="text"
+						class="form-control
+							   no-radius--right
+							   step__form-text
+							   js--explore__Rapikey__input"
+						aria-describedby=""
+						placeholder="Paste Read API Key here">
+				</div>
 
-                <div class="step__form-with-button" id="explore_set_write_api">
-                    <input type="text"
-                        class="form-control
-                               no-radius--right
-                               step__form-text
-                               js--explore__Wapikey__input"
-                        aria-describedby=""
-                        placeholder="Paste Write API Key here">
-                </div>
+				<div class="step__form-with-button" id="explore_set_write_api">
+					<input type="text"
+						class="form-control
+							   no-radius--right
+							   step__form-text
+							   js--explore__Wapikey__input"
+						aria-describedby=""
+						placeholder="Paste Write API Key here">
+				</div>
 
-                <div class="step__form-with-button" id="explore_set_username_api">
-                    <input type="text"
-                        class="form-control
-                               no-radius--right
-                               step__form-text
-                               js--explore__username__input"
-                        aria-describedby=""
-                        placeholder="Paste Username here">
-                </div>
-                <div class="api-key__result-row" style="display: none;" id="explore_Rapikey__show" >
-                    <span class="api-key__value" id="explore-js--Rapikey__result">8c529910925e45c3932343e56cf58</span>
-                </div>
-                <div class="api-key__result-row" style="display: none;" id="explore_Wapikey__show"> 
-                    <span class="api-key__value" id="explore-js--Wapikey__result">8c529910925e45c3932343e56cf58</span>
-                </div>
-                <div class="api-key__result-row" style="display: none;" id="explore_username__show">
-                    <span class="api-key__value" id="explore-js--username__result">unicorn5432</span>
-                </div>
-                <button class="btn btn-primary
-                                js--explore__username__input--set
-                                js--explore__Wapikey__input--set
-                                js--explore__Rapikey__input--set"
-                        type="button">
-                        Set Credentials
-                </button>
-              <a href="{{ howToGuide }}" class="step__link step__link--get-key" target="_blank" >
-                     How-to guide
-               </a>
-               <a href="{{ serviceUrl }}" class="step__link step__link--get-key" target="_blank" >
-                     Sign up &amp; get keys
-               </a>
-               <div class="step__help
-                          step__help--keys">
-                  <div class="plyr__video-embed" id="js-classifier__video--clarifai">
-                      <iframe src="https://www.youtube.com/embed/YOrrROME2zc"
-                              frameborder="0"
-                              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-                      </iframe>
-                  </div>
-               </div>
-            </div>
-        </div>
-    </li>
+				<div class="step__form-with-button" id="explore_set_username_api">
+					<input type="text"
+						class="form-control
+							   no-radius--right
+							   step__form-text
+							   js--explore__username__input"
+						aria-describedby=""
+						placeholder="Paste Username here">
+				</div>
+				<div class="api-key__result-row" style="display: none;" id="explore_Rapikey__show" >
+					<span class="api-key__value" id="explore-js--Rapikey__result">8c529910925e45c3932343e56cf58</span>
+				</div>
+				<div class="api-key__result-row" style="display: none;" id="explore_Wapikey__show"> 
+					<span class="api-key__value" id="explore-js--Wapikey__result">8c529910925e45c3932343e56cf58</span>
+				</div>
+				<div class="api-key__result-row" style="display: none;" id="explore_username__show">
+					<span class="api-key__value" id="explore-js--username__result">unicorn5432</span>
+				</div>
+				<button class="btn btn-primary
+								js--explore__username__input--set
+								js--explore__Wapikey__input--set
+								js--explore__Rapikey__input--set"
+						type="button">
+						Set Credentials
+				</button>
+			    <a href="{{ howToGuide }}" class="step__link step__link--get-key" target="_blank" >
+					How-to guide
+			    </a>
+			    <a href="{{ serviceUrl }}" class="step__link step__link--get-key" target="_blank" >
+					Sign up &amp; get keys
+			    </a>
+			    <div class="step__help
+						    step__help--keys">
+				    <div class="plyr__video-embed" id="js-classifier__video--clarifai">
+					    <iframe src="https://www.youtube.com/embed/YOrrROME2zc"
+							  frameborder="0"
+							  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+					    </iframe>
+				    </div>
+			    </div>
+			</div>
+		</div>
+	</li>
 
-    <li class="stepper__step">
-        <span class="step__number">2</span>
-        <div class="step__circle">
-            <i></i>
-        </div>
-        <div class="step__body">
-            <h2 class="step__title">Paste the name of an existing project
-                {{!-- <a href="#" class="step__help-open-button 
-                                    js--open-help" role="button">
-                    <i class="fas fa-question-circle"></i>
-                </a> --}}
-            </h2>
+	<li class="stepper__step">
+		<span class="step__number">2</span>
+		<div class="step__circle">
+			<i></i>
+		</div>
+		<div class="step__body">
+			<h2 class="step__title">Paste the name of an existing project
+				{{!-- <a href="#" class="step__help-open-button 
+									js--open-help" role="button">
+					<i class="fas fa-question-circle"></i>
+				</a> --}}
+			</h2>
 
-            <div>
-                {{!-- <div class="step__help">
-                   <span>These are projects you have already trained. Unfortunately these cannot be modified once they are created.
-                    </span>
-                   
-                </div> --}}
-                <div class="step__form-with-button" id="explore-set-project-name">
-                    <input type="text"
-                        class="form-control
-                                no-radius--right
-                                step__form-text"
-                        id="input_exploreProjectName"
-                        aria-describedby=""
-                        placeholder="Happy vs. Sad">
-                    <button class="button--create
-                                    d-inline-block
-                                    btn
-                                    btn-primary
-                                    no-radius--left"
-                            id="button_exploreProjectName"
-                            type="button">
-                        Select Project
-                    </button>
-                </div>
-            </div>
-            <div class="project-name__result-row" id='explore-project-name__show' style="display: none;">
-                <span class="project-name__value" id="explore-project-name__value__result">Happy vs. Sad</span>
-                <a href="#" class="project-name__remove-button
-                                    explore-project-name__remove-button
-                                    btn btn-primary"
-                            role="button">
-                    <i class="fas fa-times"></i>
-                </a>
-            </div>
-        </div>
-    </li>
+			<div>
+				{{!-- <div class="step__help">
+				   <span>These are projects you have already trained. Unfortunately these cannot be modified once they are created.
+					</span>
+				   
+				</div> --}}
+				<div class="step__form-with-button" id="explore-set-project-name">
+					<input type="text"
+						class="form-control
+								no-radius--right
+								step__form-text"
+						id="input_exploreProjectName"
+						aria-describedby=""
+						placeholder="Happy vs. Sad">
+					<button class="button--create
+									d-inline-block
+									btn
+									btn-primary
+									no-radius--left"
+							id="button_exploreProjectName"
+							type="button">
+						Select Project
+					</button>
+				</div>
+			</div>
+			<div class="project-name__result-row" id='explore-project-name__show' style="display: none;">
+				<span class="project-name__value" id="explore-project-name__value__result">Happy vs. Sad</span>
+				<a href="#" class="project-name__remove-button
+									explore-project-name__remove-button
+									btn btn-primary"
+							role="button">
+					<i class="fas fa-times"></i>
+				</a>
+			</div>
+		</div>
+	</li>
 
-    <li class="stepper__step">
-        <span class="step__number">3</span>
-        <div class="step__circle">
-            <i></i>
-        </div>
-        <div class="step__body">
-            <h2 class="step__title">Type in a phrase to test your model</h2>
-            <div class="category__container">
-                <div class="step__form-with-button">
-                    <input type="text"
-                        class="form-control
-                                no-radius--right
-                                step__form-text"
-                        id="input_explore_predictText"
-                        aria-describedby=""
-                        placeholder="I had a good day!">
-                    <button class="button--create
-                                    d-inline-block
-                                    btn
-                                    btn-primary
-                                    no-radius--left
-                                    js--explore__predict_button"
-                            id="button_explore_predictText"
-                            type="button">
-                        Predict
-                    </button>
-                </div>
-            </div>
-        </div>
-    </li>
+	<li class="stepper__step">
+		<span class="step__number">3</span>
+		<div class="step__circle">
+			<i></i>
+		</div>
+		<div class="step__body">
+		    <h2 class="step__title">Type in a phrase to test your model</h2>
+		    <div class="category__container">
+			    <div class="step__form-with-button">
+				    <input type="text"
+					  class="form-control
+							  no-radius--right
+							  step__form-text"
+					  id="input_explore_predictText"
+					  aria-describedby=""
+					  placeholder="I had a good day!">
+				    <button class="button--create
+								  d-inline-block
+								  btn
+								  btn-primary
+								  no-radius--left
+								  js--explore__predict_button"
+						    id="button_explore_predictText"
+						    type="button">
+					  Predict
+				    </button>
+			    </div>
+			</div>
+		    <div class="classifier__results">
+				<div class="results__name 
+							js--predict-results__name">
+					<span class="results__name-label">Confidence score:</span>
+					<span class="results__name-value">85.02%</span>
+				</div>
+				<div class="spinner-grow 
+							js--predict-results__status_spinner" 
+					  style="display:none"
+					  role="status">
+					<span class="sr-only"></span>
+				</div>
+			<div>
+		</div>
+	</li>
 
-    <li class="stepper__step">
-        <span class="step__number">4</span>
-        <div class="step__circle">
-            <i></i>
-        </div>
-        <div class="step__body">
-          <h2 class="step__title">
-               Play with the model in Codelab
-          </h2>
-          <button class="btn 
-                          btn-primary 
-                          button--play
-                          js--explore__open__codelab"
-                  type="button">
-                  Go!
-          </button>
-        </div>
-    </li>
+	<li class="stepper__step">
+		<span class="step__number">4</span>
+		<div class="step__circle">
+			<i></i>
+		</div>
+		<div class="step__body">
+		    <h2 class="step__title">
+			   Play with the model in Codelab
+		    </h2>
+		    <button class="btn 
+						  btn-primary 
+						  button--play
+						  js--explore__open__codelab"
+				  type="button">
+				  Go!
+		    </button>
+		</div>
+	</li>
 </ul>
