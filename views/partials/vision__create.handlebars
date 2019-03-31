@@ -13,20 +13,21 @@
                                step__form-text
                                no-radius--right"
                         id="input_projectName"
-                        onkeydown="return (event.keyCode!=13);"
                         autocomplete="off"
                         aria-describedby=""
                         placeholder="Unicorns vs Narhwals">
                 <button class="d-inline-block
                                 btn
                                 btn-primary
-                                no-radius--left"
+                                no-radius--left
+                                js--project--name__button"
                         type="button">
                         Set
                 </button>
             </div>
-            <div class="project-name__result-row">
-                <span class="project-name__value">Elephants vs Rhinos</span>
+            <div class="project-name__result-row" style="display:none;">
+                <span class="project-name__value
+                             js--project-name__value--set"></span>
                 <a href="#" class="project-name__remove-button
                                     btn btn-primary"
                             role="button">

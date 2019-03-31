@@ -193,11 +193,37 @@
 
       $('form').submit(false);
 
-      $('#input_projectName').on('input', function () {
+      $('#input_projectName').keypress(function (e) {
+          if (e.which == 13) {
+              $('.js--project--name__button').trigger('click');
+              e.preventDefault();
+              return false;
+          }
         if ($(this).val().length > 0) {
           window.projectName = $(this).val();
         }
       });
+
+      $('.js--project--name__button').click(function (e) {
+          if ($('#input_projectName').val().length == 0) return;
+          const name = $('#input_projectName').val().trim();
+
+          var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+          if (format.test(name) != false) {
+              showWarningNotification('Project name should have only letters and numbers.', true, false);
+              return;
+          }
+
+          $('.js--project-name__value--set').html(name);
+          $('.project-name__result-row').show();
+          window.projectName = name;
+      });
+
+      $('.project-name__remove-button').click(function (e) {
+          window.projectName = undefined;
+          $('#input_projectName').val('');
+          $('.project-name__result-row').hide();
+      })
 
       $('.js--apikey__input').keypress((e) => {
           if (e.which == 13) {
