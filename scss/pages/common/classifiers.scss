@@ -1,0 +1,553 @@
+@import '../../common/variables';
+@import '../../common/mq';
+@import '../../common/dropzone';
+@import '../../common/mixins';
+
+.classifier__nav-tabs {
+	width: 100%;
+	margin: 4rem auto 0 auto;
+	justify-content: center;
+}
+
+.classifier__nav-item .nav-link {
+    margin: 1rem;
+    border:  0;
+
+    @include mq('md') {  
+        padding: 0.75rem 0.5rem;
+        border-top: 1px solid transparent;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
+        border-bottom: 0;
+        margin: 0 0.5rem;
+    }
+}
+
+.classifier__nav-link.active {
+    background-color: #f7f7f7 !important;
+}
+
+.classifier__nav-link h2 span {
+    color: #bebebe;
+}
+
+.classifier__nav-item--or {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-style: italic;
+
+    @include mq('md') {  
+      display: none;
+    }
+
+    h2 {
+        color: #aeaeae;  
+    } 
+}
+
+.classifier__train-or {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-style: italic;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.75rem;
+    padding: 0;
+    margin: 0;
+    color: #aeaeae;
+}
+
+.classifier__train-url {
+    margin: 0.5rem 0 1rem 0;
+}
+
+.classifier__nav-item h2 {
+	// left right mismatch accounts for the left side having an icon
+	padding: 0 1rem 0 0.65rem; 
+	font-size: 1.3rem;
+    letter-spacing: 0.3px;
+}
+
+.classifier__nav-item h2 i { 
+	color: $accent-color;
+	font-size: 1.1rem;
+	margin: 0 0.5rem;
+}
+
+.classifier__tab {
+	background-color: #f7f7f7;
+
+	@include mq('lg') {  
+		// override Bootstrap tab
+		display: flex !important;
+		align-items: center;
+		justify-content: center;
+	}
+}
+
+// adapted from https://codepen.io/lifeinchords/pen/wOyOEm
+ul.stepper {
+	position: relative;
+	padding: 2rem;
+	margin: 0;
+
+	@include mq('md') {  padding: 4rem 2rem; }
+	@include mq('lg') {  
+		padding: 5rem 0 0 0; 
+	    margin-left: -10rem;
+	}
+}
+
+li.stepper__step {
+	display: flex;
+	padding: 0;
+	border-bottom: 1px solid #dddddd;
+	flex-direction: column;
+	margin-bottom: 4rem;
+
+  	@include mq('md') {
+		display: flex;
+		flex-direction: row; 
+		line-height: 1;
+		padding: 0;
+		border-bottom: 0;
+		margin-bottom: 0;
+	}
+
+  	@include mq('lg') {
+		width: 800px;
+	}
+}
+
+.step__title {
+	margin: 0 0 1rem 0;
+}
+
+.step__form-with-button {
+    display: flex;
+    margin: 0 0 0.5rem 0;
+}
+
+.project-name__result-row,
+.api-key__result-row {
+    display: flex;
+    align-items: flex-end;
+}
+
+.api-key__result-row {
+    margin: 1rem 0;
+    padding: 0 0 1rem 0;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.api-key__value,
+.project-name__value {
+    font-size: 1.2rem;
+    color: #717171;
+    margin: 0.5rem 1rem 0 1rem;
+}
+
+.api-key__remove-button,
+.project-name__remove-button {
+    @include icon--remove;
+}
+
+.step__form-text {
+	&::placeholder {
+		user-select: none !important;
+		color: lightgray;
+	}
+
+	&:focus::-webkit-input-placeholder {
+		color: transparent;
+	}
+}
+
+.step__number {
+	font-size: 1.25rem;
+    margin: 0.25rem 0;
+	user-select: none;
+	transition: all 0.1s ease-out;
+	color: #acacac; 
+
+  	@include mq('md') {
+		margin: 0 1rem;
+		font-family: 'Roboto', sans-serif;
+		font-size: 1.75rem;
+		border: 0;
+		text-align: right;
+	} 
+
+	@include mq('lg') {
+		flex: 0 0 150px;
+		margin: 0 50px 0 0;
+		font-size: 2rem;
+		text-align: right;
+		color: #acacac; 
+	} 
+}
+
+
+/* vertical line */
+.step__circle {
+	display: none;
+
+  	@include mq('md') {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		width: 50px;
+	    margin-top: 0.5rem;
+	}
+
+  	@include mq('lg') {
+	    margin-top: 0.7rem;
+	}
+}
+	
+.step__circle:before {
+	content: '';
+	position: absolute;
+	z-index: 2;
+	right: 0;
+	left: 0;
+	height: 100%;
+	width: 2px;
+	margin: auto;
+	background: #ccc;
+}
+
+.step__circle i {
+	position: relative;
+	display: inline-block;
+	z-index: 3;
+	width: 12px;
+	height: 12px;
+	background: #c5c5c5;
+	border-radius: 50%;
+	box-sizing: border-box;
+	transition: all 0.1s ease-out;
+}
+
+.stepper li:hover {
+	.step__number {
+		color: $main-color;
+	}
+
+	.step__circle {
+	    i {
+			background: $pink;
+			transform: scale(1.75);
+	    }
+	  }
+}
+
+.step__body {
+	padding-bottom: 1rem;
+	width: 100%;
+
+	@include mq('md') { 
+		margin-left: 25px;
+		padding-bottom: 100px;
+	}
+
+	@include mq('lg') { 
+		margin-left: 50px;
+	}
+}
+
+.step__link {
+    display: inline-block;
+    color: $pink;
+    transition: 0.1s ease-in all; 
+}
+
+.step_link:hover {
+    opacity: 0.9
+}
+
+.step__link--get-key {
+    display: inline-block;
+    margin: 0 1rem;
+    font-size: 0.9rem;
+}
+
+.category__dropzone {
+    align-items: center;
+    justify-content: center;
+}
+
+.category__container { 
+	position: relative;
+	border-radius: 1rem;
+	margin-bottom: 1rem;
+}
+
+.category__container:nth-child(1n) .category__box { background-color: $category--blue; }
+.category__container:nth-child(2n) .category__box { background-color: $category--yellow; }
+.category__container:nth-child(3n) .category__box { background-color: $category--pink; }
+.category__container:nth-child(4n) .category__box { background-color: $category--turqoise; }
+
+.category__box {
+    padding: 0.5rem;
+    border-radius: 10px;
+	color: #ff0030;
+	background-color: white;
+    transition: 0.1s ease-out all;
+}
+
+.category__box--vision {
+    cursor: pointer; 
+}
+
+.category__box:hover .dropzone__header { transform: scale(1.05); }
+
+.category__box--dashed { border: 2px dashed #dbdbdb; }
+.category__box--dashed:hover { border: 2px dashed $pink; }
+.category__box--solid { border: 2px solid #dbdbdb; }
+
+.category--vision__remove-button {
+    position: absolute;
+    top: -0.5rem;
+    right: 0.7rem;
+
+    @include icon--remove;
+}
+
+.category--text__remove-button {
+    position: absolute;
+    top: -0.5rem;
+    right: 0.7rem;
+
+    @include icon--remove;
+}
+
+.category__name {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: auto;
+	margin: 0.5rem 0 0.25rem 0;
+	font-weight: 600;
+	line-height: 1;
+	pointer-events: none;
+    color: #656565;
+}
+
+// these dropzone classes are new, not overrides
+.dropzone__upload-icon {
+  font-size: 2rem;
+  color: lightgray;
+  user-select: none; 
+}
+
+.dropzone__header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    pointer-events: none;
+    color: #b7b7b7;
+    margin: 1rem 0 0 0;
+    transition: 0.1s ease-in all; 
+}
+
+.dropzone__label {
+    margin: 0.35rem 0 0rem 0;
+}
+
+.button--create {
+	white-space: nowrap;
+}
+
+.step__help-open-button {
+    margin-left: 0.75rem;
+    font-size: 1.25rem;
+    vertical-align: middle;
+}
+
+.step__help {
+	display: none;
+	margin: 1.5rem 0 1rem 0;
+	transition: 0.1s all ease-in;
+	color: #6d6d6d;
+}
+
+.button--train { margin-right: 0.75rem; }
+.button--play { margin-right: 0.75rem; }
+
+
+// .selectize-input and .selectize-control both refer to the same
+// DOM element. We'll need to use both to override styling
+.selectize-control { 
+    padding: 0.5rem 0.5rem 0 0.5rem !important;
+}
+
+.selectize-input {
+    display: flex;
+    flex-direction: column-reverse;
+
+    background: transparent;
+    box-shadow: none;
+    border: 0;
+    padding: 0 0 0.5rem 0 !important;
+    font-size: 0.9rem;
+}
+
+.selectize-input.dropdown-active:before {
+    border: 0 !important;
+    box-shadow: 0 !important;
+    height: 0 !important;
+    background-color: transparent !important;
+    outline: 0 !important;
+}
+
+.selectize-input input {
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgb(197, 197, 197) !important;
+    margin: 0 0 1rem 0px !important;
+    width: 100% !important;
+    height: 2.5rem !important;
+    position: relative !important;
+    left: 0 !important;
+    opacity: 1 !important;
+    text-align: center !important;
+}
+
+.selectize-input.focus {
+    box-shadow: none !important;
+}
+
+.selectize-input input::placeholder {
+    color: #aaa;
+}
+
+.selectize-input.input-active,
+.selectize-input.dropdown-active { 
+    border: 0;
+    box-shadow: none !important; 
+}
+
+.selectize-control.multi .selectize-input.has-items {
+    padding: 0;
+}
+
+.selectize-input .item,
+.selectize-input .item.item-active {
+    display: flex !important;
+    margin: 0.3rem 0.3rem 0 0 !important;
+    padding: 0 !important;
+    font-size: 1.1rem!important;
+    box-shadow: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    color: $blue !important;
+    text-shadow: none !important;
+    text-align: center !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    transition: 0.1s all ease-in !important;
+    cursor: default !important;
+    user-select: none !important;
+    align-items: center!important;
+    justify-content: center!important;
+    width: 100%!important;
+}
+
+.selectize-control.multi .selectize-input [data-value] {
+    padding: 0 !important;
+    margin: 0 0 1rem 0 !important;
+    border-bottom: 1px solid gainsboro !important;
+    padding: 0 0 1rem 0 !important;
+}
+
+.selectize-input .item .label {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    width: 100%;
+}
+
+// hide the regular icon
+// use ours
+// https://stackoverflow.com/questions/14049423/in-css-use-displaynone-on-the-element-but-keep-its-after
+// https://jsfiddle.net/2jgj2/2/
+.selectize-input .item .remove {
+    color: $blue !important;
+    font-size: 0.8rem !important;
+    border-left: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 1rem !important;
+    height: 1rem !important;
+    text-indent: -9999px !important;
+    display: block !important;
+    background: transparent !important;
+    position: relative !important;
+    text-align: center !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transition: all 0.1s ease-out !important;
+    visibility: hidden !important;
+}
+
+.selectize-input .item:hover .remove {
+    visibility: visible !important
+}
+
+.selectize-input .item .remove:before {
+    content: "\f00d";
+    font-family: "Font Awesome 5 Free";
+    position: absolute;
+
+    @include icon--remove;
+
+    // override the mixin
+    height: 1rem !important;
+    width: 1rem  !important;
+    color: $blue !important;
+    top: 0 !important;
+    left: 5000px !important;
+}
+
+.selectize-control.plugin-remove_button [data-value] .remove:hover {
+    background: #d4d4d4 !important;
+    border-radius: 50% !important;
+}
+
+.classifier__name {
+    display: none;
+    margin: 0.8rem 0;
+}
+
+.classifier__status {
+    display: none;
+}
+
+.classifier__upload_progress {
+    display: none;
+    font-size: 1rem;
+    color: #8a8a8a;
+}
+
+.classifier__name-label,
+.classifier__status-label {
+    font-size: 1.2rem;
+    color: #bbb;
+}
+
+.classifier__name-value,
+.classifier__status-value {
+    font-size: 1.2rem;
+    color: #717171;
+}
+
+.classifier__train-results {
+    margin: 2rem 0;
+}
+
+

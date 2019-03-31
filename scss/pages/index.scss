@@ -1,0 +1,35 @@
+@import '../common/variables';
+@import '../common/mq';
+
+.classifier__page-header {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+}
+
+.classifiers__card {
+    padding: 0;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.classifiers__card-image {
+    border-bottom: 1px solid #e8e8e8;
+    cursor: pointer;
+}
+
+.classifiers__card-headline {
+    color: --main-color;
+}
+
+.classifiers__card-body {
+    margin: 0;
+    padding: 1rem;
+}
+
+.classifiers__card-text { 
+    line-height: 1.3rem;
+}
+
+.classifiers__card-wrapper {
+    padding: 1rem;
+}

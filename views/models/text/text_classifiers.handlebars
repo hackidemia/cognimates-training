@@ -1,0 +1,812 @@
+{{> header }}
+
+<ul class="nav
+          nav-tabs
+          classifier__nav-tabs"
+    id="classifier__tabs"
+    role="tablist">
+
+  <li class="nav-item classifier__nav-item">
+    <a class="js--nav__tab--create nav-link classifier__nav-link active"
+      data-toggle="tab"
+      href="#home"
+      role="tab"
+      aria-controls="home"
+      aria-selected="true">
+        <h2>
+          <i class="fas fa-plus"></i>
+          Create 
+          Model
+        </h2>
+    </a>
+  </li>
+
+  <li class="nav-item classifier__nav-item--or">
+    <h2>
+      &mdash; or &mdash;
+    </h2>
+  </li>
+
+  <li class="nav-item classifier__nav-item">
+    <a class="js--nav__tab--explore nav-link classifier__nav-link"
+      id=""
+      data-toggle="tab"
+      href="#explore"
+      role="tab"
+      aria-controls="profile"
+      aria-selected="false">
+        <h2>
+          <i class="fas fa-eye"></i>
+          Explore Your
+          Models
+        </h2>
+    </a>
+  </li>
+</ul>
+
+<div class="tab-content " id="myTabContent" class="classifier__tabs">
+  <div class="js--classifier__tab--create tab-pane classifier__tab fade show active"
+      role="tabpanel"
+      aria-labelledby="home-tab">
+    {{> text__create }}
+  </div>
+
+  <div class="js--classifier__tab--explore tab-pane classifier__tab fade"
+        role="tabpanel"
+        aria-labelledby="profile-tab"
+        style="display: none !important">
+    {{> text__explore }}
+  </div>
+
+</div>
+
+{{> footer }}
+
+<script>
+    $(function() {
+
+    /// set up info icon toggles
+    $('.js--open-help').on('click', function(e){
+        const section = $(e.target).closest('.step__body');
+        $(section).find('.step__help').toggle();
+        event.preventDefault(); // to keep from scrolling
+    });
+
+      /// set up video embeds
+    const player = new Plyr('#js-classifier__video--clarifai');
+
+    // set up page tabs
+    $('#classifier__tabs a').on('click', function (e) {
+      e.preventDefault()
+    })
+
+    $('.js--nav__tab--create').on('click', function (e) {
+        showCreateTab(true);
+        showExploreTab(false);
+    });
+
+    $('.js--nav__tab--explore').on('click', function (e) {
+        showCreateTab(false);
+        showExploreTab(true);
+    });
+
+    // initialize the text classifier select area as a field for tags
+    // using the Selectivize library
+    {{!-- $('.category__tag-select-container').selectize({
+        delimiter: ',',
+        persist: false,
+        placeholder: 'write text things here!',
+        create: function(input) {
+            return {
+                value: input,
+                text: input
+            }
+        }
+    }); --}}
+
+
+    function showCreateTab(show) {
+        const tabContent = $('.js--classifier__tab--create');
+        if (show) {
+            tabContent.addClass('show active');
+            tabContent.show();
+            tabContent.attr('style', '')
+        } else {
+            tabContent.removeClass('show active');
+            tabContent.hide();
+            tabContent.attr('style', 'display:none !important');
+        }
+    }
+
+    function showExploreTab(show) {
+        const tabContent = $('.js--classifier__tab--explore');
+        if (show) {
+            tabContent.addClass('show active');
+            tabContent.show();
+            tabContent.attr('style', '')
+        } else {
+            tabContent.removeClass('show active');
+            tabContent.hide();
+            tabContent.attr('style', 'display:none !important');
+        }
+    }
+    });
+
+    $(document).ready(function init() {
+
+      window.training_data = {};
+
+      $('form').submit(false);
+
+      $('#input_projectName').on('input', function () {
+        if ($(this).val().length > 0) {
+          window.projectName = $(this).val();
+        }
+      });
+
+      $('.project-name__remove-button').click(function(){
+        window.projectName = '';
+        var x = document.getElementById("set__username__input");
+        x.style.display = 'flex';
+        var y = document.getElementById('project-name__show');
+        y.style.display = 'none';
+      })
+
+      //set explore project name
+      $('.explore-project-name__remove-button').click(function(){
+        window.projectName = '';
+        var x = document.getElementById("explore-set-project-name");
+        x.style.display = 'flex';
+        var y = document.getElementById('explore-project-name__show');
+        y.style.display = 'none';
+        selectClassifier();
+      })
+
+      //read api key inputs
+      $('.js--Rapikey__input').keypress((e) => {
+          if (e.which == 13) {
+              $('.js--Rapikey__input--set').trigger('click');
+              e.preventDefault();
+              return false;
+          }
+      });
+
+      $('.js--explore__Rapikey__input').keypress((e) => {
+          if (e.which == 13) {
+              $('.js--explore__Rapikey__input--set').trigger('click');
+              e.preventDefault();
+              return false;
+          }
+      });
+
+      $('.js--Rapikey__input--set').click(function () {
+        if ($('.js--Rapikey__input').val() == '') {
+          var n = makeNotification({
+            message: 'Enter an API Key',
+            type: 'warning',
+            closeOlderInstances: true,
+            stayOpenUntilClick: false
+          });
+          n.show();
+          return;
+        }
+        window.RapiKey = $('.js--Rapikey__input').val();
+        $('.js--explore__Rapikey__input').val(window.RapiKey);
+        var x = document.getElementById("set_read_api");
+        x.style.display = "none";
+        $('#js--Rapikey__result').text(window.RapiKey);
+        var y = document.getElementById('Rapikey__show');
+        y.style.display = 'block';
+      });
+
+      $('.js--explore__Rapikey__input--set').click(function () {
+        if ($('.js--explore__Rapikey__input').val() == '') {
+          var n = makeNotification({
+            message: 'Enter an API Key',
+            type: 'warning',
+            closeOlderInstances: true,
+            stayOpenUntilClick: false
+          });
+          n.show();
+          return;
+        }
+        window.RapiKey = $('.js--explore__Rapikey__input').val();
+        var x = document.getElementById("explore_set_read_api");
+        x.style.display = "none";
+        $('#explore-js--Rapikey__result').text(window.RapiKey);
+        var y = document.getElementById('explore_Rapikey__show');
+        y.style.display = 'block';
+      });
+
+    //write api key inputs
+      $('.js--Wapikey__input').keypress((e) => {
+          if (e.which == 13) {
+              $('.js--Wapikey__input--set').trigger('click');
+              e.preventDefault();
+              return false;
+          }
+      });
+
+      $('.js--explore__Wapikey__input').keypress((e) => {
+          if (e.which == 13) {
+              $('.js--explore__Wapikey__input--set').trigger('click');
+              e.preventDefault();
+              return false;
+          }
+      });
+
+      $('.js--Wapikey__input--set').click(function () {
+        if ($('.js--Wapikey__input').val() == '') {
+          var n = makeNotification({
+            message: 'Enter an API Key',
+            type: 'warning',
+            closeOlderInstances: true,
+            stayOpenUntilClick: false
+          });
+          n.show();
+          return;
+        }
+        window.WapiKey = $('.js--Wapikey__input').val();
+        $('.js--explore__Wapikey__input').val(window.WapiKey);
+        var x = document.getElementById("set_write_api");
+        x.style.display = "none";
+        $('#js--Wapikey__result').text(window.WapiKey);
+        var y = document.getElementById('Wapikey__show');
+        y.style.display = 'block';
+      });
+
+      $('.js--explore__Wapikey__input--set').click(function () {
+        if ($('.js--explore__Wapikey__input').val() == '') {
+          var n = makeNotification({
+            message: 'Enter an API Key',
+            type: 'warning',
+            closeOlderInstances: true,
+            stayOpenUntilClick: false
+          });
+          n.show();
+          return;
+        }
+        window.WapiKey = $('.js--explore__Wapikey__input').val();
+        var x = document.getElementById("explore_set_write_api");
+        x.style.display = "none";
+        $('#explore-js--Wapikey__result').text(window.WapiKey);
+        var y = document.getElementById('explore_Wapikey__show');
+        y.style.display = 'block';
+      });
+
+    //set username stuff
+      $('.js--username__input').keypress((e) => {
+          if (e.which == 13) {
+              $('.js--username__input--set').trigger('click');
+              e.preventDefault();
+              return false;
+          }
+      });
+
+      $('.js--explore__username__input').keypress((e) => {
+          if (e.which == 13) {
+              $('.js--explore__username__input--set').trigger('click');
+              e.preventDefault();
+              return false;
+          }
+      });
+
+      $('.js--username__input--set').click(function () {
+        if ($('.js--username__input').val() == '') {
+          var n = makeNotification({
+            message: 'Enter a Username',
+            type: 'warning',
+            closeOlderInstances: true,
+            stayOpenUntilClick: false
+          });
+          n.show();
+          return;
+        }
+        window.username = $('.js--username__input').val();
+        $('.js--explore__username__input').val(window.username);
+        var x = document.getElementById("set_username__Form");
+        x.style.display = "none";
+        $('#js--username__result').text(window.username);
+        var y = document.getElementById('username__show');
+        y.style.display = 'block';
+      });
+
+      $('.js--explore__username__input--set').click(function () {
+        if ($('.js--explore__username__input').val() == '') {
+          var n = makeNotification({
+            message: 'Enter a Username',
+            type: 'warning',
+            closeOlderInstances: true,
+            stayOpenUntilClick: false
+          });
+          n.show();
+          return;
+        }
+        window.username = $('.js--explore__username__input').val();
+        var x = document.getElementById("explore_set_username_api");
+        x.style.display = "none";
+        $('#explore-js--username__result').text(window.username);
+        var y = document.getElementById('explore_username__show');
+        y.style.display = 'block';
+      });
+      
+    //setting project name stuff
+    $('#input_projectName').keypress((e) => {
+          if (e.which == 13) {
+              $('#input_projectName').trigger('click');
+              e.preventDefault();
+              return false;
+          }
+    });
+
+    $('#button_set_project_name').click(function () {
+      if ($('#input_projectName').val() == '') {
+        var n = makeNotification({
+          message: 'Enter a project name.',
+          type: 'warning',
+          closeOlderInstances: true,
+          stayOpenUntilClick: false
+        });
+        n.show();
+        return;
+      }
+      window.projectName = $('#input_projectName').val();
+      var x = document.getElementById("set__username__input");
+      x.style.display = 'none';
+      var y = document.getElementById('project-name__show');
+      $('#project-name__value__result').text(window.projectName);
+      y.style.display = 'block';
+    });
+
+    //category name stuff
+      $('#input_categoryName').keypress((e) => {
+          if (e.which == 13) {
+              $('#button_categoryName').trigger('click');
+              e.preventDefault();
+              return false;
+          }
+      });
+
+      $('#button_categoryName').click(function () {
+        if ($('#input_categoryName').val() == '') {
+          var n = makeNotification({
+            message: 'Enter a category to train.',
+            type: 'warning',
+            closeOlderInstances: true,
+            stayOpenUntilClick: false
+          });
+          n.show();
+          return;
+        }
+
+        // TODO: Sanitize categoryName before further processing
+        var categoryName = $('#input_categoryName').val().replace(/\s/g, '');;
+        if (window.training_data.hasOwnProperty(categoryName)) {
+          var n = makeNotification({
+            message: 'A category with this name already exists. Enter a different name.',
+            type: 'warning',
+            closeOlderInstances: true,
+            stayOpenUntilClick: false
+          });
+          n.show();
+          return;
+        }
+
+        var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+        if (format.test(categoryName) != false) {
+            showWarningNotification('Category name cannot have spaces or special characters', true, false);
+            return;
+        }
+
+        window.training_data[categoryName] = [];
+        console.log(window.training_data);
+        createCategoryHTMLElement(categoryName);
+        $('#input_categoryName').val('');
+      });
+
+      $('.js--train__button').on('click', function () {
+          var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+          if (format.test(window.projectName) != false) {
+              showWarningNotification('Project name should have only letters and numbers.', true, false);
+              return;
+          }
+          setTrainButtonState('training');
+          preprocessTrainData();
+      })
+
+      $('.js--classifier__predict__button').on('click', function () {
+          preprocessPredictData();
+      })
+    });
+
+    //create extension url in create tab
+    $('.js--classifier__open__codelab').on('click', function(){
+        if(window.RapiKey != '' && window.WapiKey != '' && window.username != '' && window.projectName != ''){
+          var extensionUrl = `?url=https://cognimates.:2634/nlc/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.projectName}`;
+          extensionUrl = "https://hackidemia.github.io/cognimates-gui/" + extensionUrl;
+          //var extensionUrl = `?url=http://localhost:2634/nlc/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.projectName}`;
+          //extensionUrl = "http://localhost:8601/" + extensionUrl;
+          window.open(extensionUrl);
+        } else {
+          showWarningNotification('Must have a trained project with a username and both api keys set.', true, false);
+        }
+    })
+
+    //create extension url in explore tab
+    $('.js--explore__open__codelab').on('click', function() {
+      if(window.RapiKey != '' && window.WapiKey != '' && window.username != '' && window.projectName != ''){
+        var extensionUrl = `?url=https://cognimates.:2634/vision/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.projectName}`;
+        extensionUrl = "https://hackidemia.github.io/cognimates-gui/" + extensionUrl;
+        //var extensionUrl = `?url=http://localhost:2634/nlc/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.projectName}`;
+        //extensionUrl = "http://localhost:8601/" + extensionUrl;
+        window.open(extensionUrl);
+      } else {
+        showWarningNotification('Must have a trained project with a username and both api keys set.', true, false);
+      }
+    });
+                  
+    function createCategoryHTMLElement(categoryName) {
+        const htmlStructure = `
+          <div class="category__container tag-contain-${categoryName}">
+            <div class="category__box 
+                        category__box--solid
+                        category__box--text">
+              <div class="category__name">${categoryName}</div>
+              <input type="text" id="${categoryName}" 
+                    class="category__tag-select-container-${categoryName}">
+              <a href="#" class="category--text__remove-button
+                               btn btn-primary
+                               js--${categoryName}-category--text__remove"
+                        role="button">
+                <i class="fas fa-times"></i>
+              </a>
+            </div>
+          </div>`;
+        const htmlElement = $(htmlStructure);
+        const categoriesContainerElement = $('#categoriesContainer');
+        categoriesContainerElement.append(htmlElement);
+        initTextClass(categoryName);
+    }
+
+    function initTextClass(categoryName) {
+      const textBoxFormClass = `.category__tag-select-container-${categoryName}`;
+      const textBoxRemoveClass = `.js--${categoryName}-category--text__remove`;
+      $(textBoxRemoveClass).click((e) => {
+          e.preventDefault();
+          removeCategory(categoryName);
+      });
+      
+      $(textBoxFormClass).selectize({
+        delimiter: ',',
+        persist: false,
+        highlight: false,
+        plugins: ['remove_button'],
+        openOnFocus: false,
+        hideSelected: false,
+        placeholder: 'Enter 10 words for ' + categoryName,
+        render: {
+            item: function(data, escape) {
+              return `
+              <div class='item'>
+                <div class='label'>${escape(data.text)}</div>
+            </div>`;
+            }
+          },
+        create: function(input) {
+            return {
+                value: input,
+                text: input
+            }
+        },
+        onDropdownOpen: function(dropdown) {
+          dropdown.remove();
+        }
+      });
+
+    }
+
+    function removeCategory(categoryName){
+       if (window.training_data == undefined || !window.training_data.hasOwnProperty(categoryName)) {
+            return;
+        }
+        const tagCategoryContain = `.tag-contain-${categoryName}`;
+        const tagBoxCategoryClass = `.category__tag-select-container-${categoryName}`;
+        const tagBoxName = `.category-header-${categoryName}`;
+        const boxOutline = `.box_outline-${categoryName}`;
+        const tagBoxRemoveClass = `.js--${categoryName}-category--text__remove`;
+        delete window.training_data[categoryName];
+        $(tagBoxRemoveClass).unbind();
+        $(tagBoxCategoryClass).remove();
+        $(tagCategoryContain).remove();
+        $(tagBoxName).remove();
+        $(boxOutline).remove();
+        $(tagBoxRemoveClass).remove();
+    }
+
+    function setTrainButtonState(state) {
+        if (state == 'normal') {
+            $('.js--train__button').removeAttr('disabled');
+            $('#span_train').removeClass('spinner-grow spinner-grow-sm');
+            $('#span_train_status').html('Train Model');
+        } else if (state == 'training') {
+            $('.js--train__button').attr('disabled', '');
+            $('#span_train').addClass('spinner-grow spinner-grow-sm');
+            $('#span_train_status').html('Training Model');
+        } else if (state == 'finished') {
+            $('.js--train__button').removeAttr('disabled');
+            $('#span_train').removeClass('spinner-grow spinner-grow-sm');
+            $('#span_train_status').html('Done');
+            $('.js--train__button').unbind();
+        }
+    }
+
+    async function preprocessTrainData() {
+        setTrainButtonState('training');
+        try {
+            validateTrainingData();
+            await createClassifier();
+            setTrainButtonState('finished');
+            setClassifierStatus();
+            setAutoRefreshStatus(true);
+        } catch (error) {
+            console.log(error);
+            setTrainButtonState('normal');
+        }
+    }
+
+    function validateTrainingData() {
+        if (window.training_data === undefined || Object.keys(window.training_data).length < 2) {
+            var n = makeNotification({
+              message: 'Create at least 2 categories.',
+              type: 'warning',
+              closeOlderInstances: true,
+              stayOpenUntilClick: true
+            });
+            n.show();
+
+            throw new Error("Create at least 2 categories.");
+        }
+        for (const className of Object.keys(window.training_data)) {
+            var unparsed_result = $(`#${className}`).val();
+            var values = unparsed_result.split(","); 
+            if (values === undefined || values.length < 10) {
+              var n = makeNotification({
+                message: `${className} category needs at least 10 examples.`,
+                type: 'warning',
+                closeOlderInstances: true,
+                stayOpenUntilClick: true
+              });
+              n.show();
+              throw new Error(`${className} category has less than 10 examples`);
+            } 
+            for(var i = 0; i < values.length; i++){
+              window.training_data[className].push(values[i]);
+            }
+        }
+        console.log(training_data);
+    }
+
+    function createClassifier() {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: '/nlc/trainAll',
+                type: 'POST',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({training_data: window.training_data, classifier_name: window.projectName}),
+                headers: { api_key: window.WapiKey },
+                success: function (data) {
+                    if(data.error != null) {
+                        var n = makeNotification({
+                          message: 'We couldn\'t save to Clarifai :( Some technical info: ' + data.error,
+                          type: 'error',
+                          closeOlderInstances: true,
+                          stayOpenUntilClick: false
+                        });
+                        n.show();
+                        reject(new Error(data.error));
+                        return;
+                    }
+                    window.classifier_status = 'successfully';
+                    resolve();
+                },
+                error: function (error) {
+                    reject(error);
+                }
+            });
+        });
+    }
+
+    function setClassifierStatus() {
+        const classifierNameClass = ".js--classifier__name";
+        const classifierStatusClass = ".js--classifier__status";
+        const classifierRefreshSpinnerClass = ".js--classifier__status_spinner";
+        $(`${classifierNameClass}--set`).html(window.projectName);
+        $(`${classifierStatusClass}--set`).html(window.classifier_status);
+        $(classifierNameClass).show();
+        $(classifierStatusClass).show();
+        if (window.classifier_status.includes('successfully')) {
+            $(classifierRefreshSpinnerClass).hide();
+            setAutoRefreshStatus(false);
+        } else {
+            $(classifierRefreshSpinnerClass).show();
+        }
+    }
+
+    function setAutoRefreshStatus(autoRefresh) {
+      if (!autoRefresh) {
+          if (window.autoRefreshTimer != undefined) {
+              clearInterval(window.autoRefreshTimer);
+              window.autoRefreshTimer = undefined;
+          }
+      } else {
+          window.autoRefreshTimer = setInterval(() => {
+              {{!-- loadUserClassifier(window.projectName); --}}
+          }, 2000);
+      }
+    }
+
+    //setting the explore project name 
+    $('#input_exploreProjectName').keypress((e) => {
+          if (e.which == 13) {
+              $('#button_projectName').trigger('click');
+              e.preventDefault();
+              return false;
+          }
+      });
+
+      $('#button_exploreProjectName').click(function () {
+        if ($('#input_exploreProjectName').val() == '') {
+            var n = makeNotification({
+                message: 'Enter a project name to use.',
+                type: 'warning',
+                closeOlderInstances: true,
+                stayOpenUntilClick: false
+            });
+            n.show();
+            return;
+        }
+        window.projectName = $('#input_exploreProjectName').val();
+        $('#explore-project-name__value__result').text(window.projectName);
+        var y = document.getElementById('explore-set-project-name');
+        y.style.display = 'none';
+        var x = document.getElementById('explore-project-name__show');
+        x.style.display = 'block';
+      });
+
+    //predicting text in create tab
+    $('#input_predictText').keypress((e) => {
+          if (e.which == 13) {
+              $('#button_predictText').trigger('click');
+              e.preventDefault();
+              return false;
+          }
+      });
+
+      $('#button_predictText').click(function () {
+        if ($('#input_predictText').val() == '') {
+          var n = makeNotification({
+            message: 'Enter a phrase to predict.',
+            type: 'warning',
+            closeOlderInstances: true,
+            stayOpenUntilClick: false
+          });
+          n.show();
+          return;
+        }
+
+        // TODO: Sanitize categoryName before further processing
+        var phraseToPredict = $('#input_predictText').val();
+        console.log('here');
+        $.ajax({
+            url: "/nlc/classify",
+            type: "POST",
+            data: {classifier_id: window.projectName, classify_username: window.username,
+                    token: window.RapiKey, phrase: phraseToPredict},
+            success: function(data) {
+                if(data.error == null) {
+                    showClassification(data);
+                } else {
+                    var n = makeNotification({
+                      message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + data.error,
+                      type: 'error',
+                      closeOlderInstances: true,
+                      stayOpenUntilClick: true
+                    });
+                    n.show();
+                }
+            },
+            error: function (error) {
+                console.log(error);
+                var n = makeNotification({
+                  message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + error,
+                  type: 'error',
+                  closeOlderInstances: true,
+                  stayOpenUntilClick: true
+                });
+                n.show();
+             }
+        })
+      });
+
+    //predicting in the explore tab
+    $('#input_explore_predictText').keypress((e) => {
+        if (e.which == 13) {
+            $('#button_explore_predictText').trigger('click');
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    $('#button_explore_predictText').click(function () {
+    if ($('#input_explore_predictText').val() == '') {
+        var n = makeNotification({
+        message: 'Enter a phrase to predict.',
+        type: 'warning',
+        closeOlderInstances: true,
+        stayOpenUntilClick: false
+        });
+        n.show();
+        return;
+    }
+
+    // TODO: Sanitize categoryName before further processing
+    var phraseToPredict = $('#input_explore_predictText').val();
+    console.log('here');
+    $.ajax({
+        url: "/nlc/classify",
+        type: "POST",
+        data: {classifier_id: window.projectName, classify_username: window.username,
+                token: window.RapiKey, phrase: phraseToPredict},
+        success: function(data) {
+            if(data.error == null) {
+                showClassification(data);
+            } else {
+                var n = makeNotification({
+                    message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + data.error,
+                    type: 'error',
+                    closeOlderInstances: true,
+                    stayOpenUntilClick: true
+                });
+                n.show();
+            }
+        },
+        error: function (error) {
+            console.log(error);
+            var n = makeNotification({
+                message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + error,
+                type: 'error',
+                closeOlderInstances: true,
+                stayOpenUntilClick: true
+            });
+            n.show();
+            }
+    })
+    });
+
+    //helper functions for predicting 
+    function showClassification(response) {
+        var top_class = findTopClass(response);
+        console.log(top_class);
+        var n = makeNotification({
+            message: `The model says \"${top_class[0]}\"! with a confidence score of ${top_class[1]}.`,
+            type: 'success',
+            closeOlderInstances: true,
+            stayOpenUntilClick: true
+        });
+        n.show();
+    }
+
+    function findTopClass(data) {
+        var max = 0;
+        var top;
+        Object.keys(data).forEach(function(key) {
+        if (data[key]["p"] > max) {
+            max = data[key]["p"]
+            top = data[key]["className"]
+        }
+        });
+        return [top, max];
+    }
+
+</script>

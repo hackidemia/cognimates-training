@@ -1,0 +1,19 @@
+// node middleware needs this exact filename, not sure why
+
+// common
+@import 'common/variables';
+@import 'common/base';
+@import 'common/mixins';
+@import 'common/mq';
+@import 'common/mq-debugger';
+@import 'common/header';
+@import 'common/footer';
+
+@import 'common/noty';
+
+@import 'pages/index';
+@import 'pages/doodle';
+@import 'pages/vision';
+@import 'pages/text';
+@import 'pages/common/examples';
+@import 'pages/common/classifiers';

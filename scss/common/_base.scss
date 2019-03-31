@@ -1,0 +1,117 @@
+@import 'mq';
+@import 'variables';
+
+*,
+*:after,
+*:before {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: $font-family;
+	margin: 0;
+	padding: 0;
+
+	h1 {
+		font-size: 2rem;
+		line-height: 1;
+
+		@include mq('md') {
+			font-size: 2.5rem;
+		}
+
+		@include mq('lg') {
+			font-size: 2.75rem;
+			letter-spacing: -1px;
+		}
+	}
+	
+	h2 {
+		font-size: 1.25rem;
+		font-weight: $heavy-weight;
+		line-height: 1.75rem;
+		color: $main-color;
+		padding: 0;
+		margin: 0;
+
+		@include mq('lg') {
+			font-size: 1.6rem;
+			line-height: 2.1rem;
+		}
+	}
+
+	h3 {
+		font-size: 1.5rem;
+		font-weight: $heavy-weight;
+		color: $main-color;
+		margin: 0;
+		padding: 0;
+	}
+
+	p {
+		padding: 0;
+		margin: 0;
+		line-height: 1.2rem;
+	}
+
+	a {
+		color: $accent-color;
+		text-decoration: none;
+		padding-bottom: 2px;
+		transition: 0.1s all ease-in;
+	}
+
+	a:hover {
+		color: $main-color;
+	}
+}
+
+.btn {
+	transition: 0.1s all ease-in;
+	padding-right: 2rem;
+    padding-left: 2rem;
+    border: 0;
+}
+
+.btn-primary {
+	background-color: $main-color;
+    border: 0;
+}
+
+.btn-primary:hover {
+    background-color: $accent-color;
+    border-color: $accent-color;
+}
+
+.btn-danger {
+    background-color: $accent-color;
+    border-color: $accent-color;
+}
+
+.btn-success {
+    background-color: $light-main-color;
+    border-color: $light-main-color;
+}
+
+.btn-success:hover {
+    background-color: $accent-color;
+    border-color: $accent-color;
+}
+
+.no-radius--right {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.no-radius--left {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.btn-primary.disabled,  
+.btn-primary:disabled {  
+	background: #a8a8a8;
+    border: 0;
+}
+
+

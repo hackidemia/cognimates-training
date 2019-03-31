@@ -1,19 +1,6 @@
-const User = require('../models/User')
-const auth = require('../controllers/auth')
-const UserClassifier = require('../models/UserClassifier')
-const config = require('../config')
-const path = require('path')
-var csv = require('csv')
-const fs = require('fs')
 const request = require('request');
 const base_url = "https://api.uclassify.com/v1/";
-const async = require('async')
-
-
-String.prototype.toObjectId = function() {
-  var ObjectId = (require('mongoose').Types.ObjectId);
-  return new ObjectId(this.toString());
-};
+const async = require('async');
 
 function getClassifierInformation(req, res) {
     let read_token = req.body.read_token
@@ -22,7 +9,7 @@ function getClassifierInformation(req, res) {
     get_classifier_url = base_url + username + "/" + classifier_id;
     token_text = "Token " + read_token;
     request.get({
-      url:get_classifier_url, 
+      url:get_classifier_url,
       headers: {'Content-Type': 'application/json', 'Authorization': token_text}},
       function(err,httpResponse){
         if(err){
@@ -31,7 +18,7 @@ function getClassifierInformation(req, res) {
         } else {
           res.json(JSON.parse(httpResponse.body));
           return;
-        } 
+        }
     });
 }
 
@@ -44,12 +31,12 @@ function addExamples(req, res) {
   let classifier_name = req.body.classifier_name;
   let class_name = req.body.class_name;
   let training_data = req.body.texts;
-  var create_url = base_url + "me/" + classifier_name + "/" + class_name + "/train";
+  var create_url = base_url + "me/" + classifier_name + "/" + class_name + "/text_train";
   let token_text = 'Token ' + write_token;
   request.post({
     url:create_url,
     headers: {'Content-Type': 'application/json', 'Authorization': token_text},
-    body: {texts: training_data}, json: true}, 
+    body: {texts: training_data}, json: true},
     function(err, httpResponse){
       if(err){
         res.json({error: err.message});
@@ -58,7 +45,7 @@ function addExamples(req, res) {
         console.log(httpResponse);
         res.json();
         return;
-      } 
+      }
   });
 }
 
@@ -71,7 +58,7 @@ function createClass(req, res) {
   request.post({
     url:create_url,
     headers: {'Content-Type': 'application/json', 'Authorization': token_text},
-    body: {className: class_name}, json: true}, 
+    body: {className: class_name}, json: true},
     function(err, httpResponse){
       if(err){
         res.json({error: err.message});
@@ -80,7 +67,7 @@ function createClass(req, res) {
         console.log(httpResponse);
         res.json();
         return;
-      } 
+      }
   });
 }
 
@@ -98,7 +85,7 @@ function createClassifier(req, res) {
   request.post({
     url:create_url,
     headers: {'Content-Type': 'application/json', 'Authorization': token_text},
-    body: {classifierName: classifier_name}, json: true}, 
+    body: {classifierName: classifier_name}, json: true},
     function(err, httpResponse){
       if(err){
         res.json({error: err.message});
@@ -107,7 +94,7 @@ function createClassifier(req, res) {
         console.log(httpResponse);
         res.json();
         return;
-      } 
+      }
   });
 }
 
@@ -117,7 +104,7 @@ function delClassifier(req, res) {
   var del_url = base_url + "me/" + classifier_id;
   let token_text = 'Token ' + write_token;
   request.delete({
-    url:del_url, 
+    url:del_url,
     headers: {'Content-Type': 'application/json', 'Authorization': token_text}},
     function(err,httpResponse){
       if(err){
@@ -127,7 +114,7 @@ function delClassifier(req, res) {
         // console.log(httpResponse);
         res.json();
         return;
-      } 
+      }
     });
 }
 
@@ -144,15 +131,15 @@ function classify(req, res) {
   let token_text = 'Token ' + token;
 
   request.post({
-    url:classifyURL, 
+    url:classifyURL,
     headers: {'Content-Type': 'application/json', 'Authorization': token_text},
-    body: {texts: [phrase]}, json: true}, 
+    body: {texts: [phrase]}, json: true},
     function(err,httpResponse, body){
        if(err){
          console.log("error here!!");
          res.json({error: err.message});
          return;
-       } 
+       }
        if(httpResponse.statusCode === 200){
          res.json(body[0].classification);
          return;
@@ -168,9 +155,9 @@ function removeClass(req, res){
   let class_name = req.body.class_name;
   let write_token = req.body.write_token;
   var del_url = base_url + "me/" + classifier_id + "/" + class_name;
-  let token_text = 'Token ' + write_token; 
+  let token_text = 'Token ' + write_token;
   request.delete({
-    url: del_url, 
+    url: del_url,
     headers: {'Content-Type': 'application/json', 'Authorization': token_text}},
     function(err,httpResponse){
       if(err){
@@ -179,7 +166,7 @@ function removeClass(req, res){
       } else {
         res.json();
         return;
-      } 
+      }
     });
 }
 
@@ -193,7 +180,7 @@ function untrain(req, res){
   request.post({
     url: untrain_url,
     headers: {'Content-Type': 'application/json', 'Authorization': token_text},
-    body: {texts: training_data}, json: true}, 
+    body: {texts: training_data}, json: true},
     function(err, httpResponse){
       if(err){
         res.json({error: err.message});
@@ -202,19 +189,20 @@ function untrain(req, res){
         console.log(httpResponse);
         res.json();
         return;
-      } 
+      }
   });
 }
 
 function trainAll(req, res) {
+  console.log(req.body);
   var classifierName = req.body.classifier_name;
   var training_data = req.body.training_data;
   var writeAPIKey = req.headers.api_key;
   var functionsToExecute = [];
-	functionsToExecute.push(getCreateClassifierFunction(writeAPIKey, classifierName));
-	Object.keys(training_data).forEach((key) => {
-		functionsToExecute.push(getTrainLabelFunction(writeAPIKey, classifierName, key, training_data[key]));
-	});
+  functionsToExecute.push(getCreateClassifierFunction(writeAPIKey, classifierName));
+  Object.keys(training_data).forEach((key) => {
+    functionsToExecute.push(getTrainLabelFunction(writeAPIKey, classifierName, key, training_data[key]));
+  });
   
   async.series(functionsToExecute, (err, results) => {
     if (err) {
@@ -233,7 +221,7 @@ function trainAll(req, res) {
 }
 
 function getCreateClassifierFunction(writeAPIKey, classifierName) {
-	return function (callback) {
+  return function (callback) {
     var create_url = base_url + "me/";
     let token_text = 'Token ' + writeAPIKey;
     request.post({
@@ -288,6 +276,7 @@ function getTrainLabelFunction(writeAPIKey, classifierName, label, labelData) {
 
   }
 }
+
 
 module.exports = {
   getClassifierInformation: getClassifierInformation,

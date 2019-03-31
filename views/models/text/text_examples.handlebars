@@ -1,0 +1,195 @@
+{{> header }}
+
+<header class="main-header">
+  <h1 id="labelName"></h1>
+  <h2>Add examples to your bucket. Try to add at least five!</h2><br>
+  <div class="btn btn-success btn-lg" id="goBack">
+        Return to your project
+   </div>
+   <div class="btn btn-success btn-lg" id="confirm">
+        Train on your examples
+   </div>
+</header>
+<div class="example-box">
+<section class="example-insert">
+  <input style= "color:#000" type="text" name="task" placeholder="Add your examples here" id="exampleInput">
+</section>
+
+<section class="example-list">
+  <ul></ul>
+</section>
+</div>
+
+<script>
+  var labelName = null;
+	(function() {
+	var  app = {
+		init: function() {
+      if (window.localStorage.getItem('token_expiry') != 'null') {
+          if (parseInt(window.localStorage.getItem('token_expiry')) < new Date().getTime()) {
+            window.localStorage.setItem('access_token', null)
+            window.localStorage.setItem('token_expiry', null)
+            window.location.replace("/");
+          } else {
+
+            if(window.localStorage.getItem('temp_classifierName') == 'null') {
+              window.location.replace("/text_home");
+              return
+            }
+            window.access_token = window.localStorage.getItem('access_token')
+            window.labelName = window.localStorage.getItem('temp_labelName');
+            window.classifierName = window.localStorage.getItem('classifierName')
+            $('#labelName').html(window.labelName)
+          }
+        } else {
+          window.location.replace("/");
+          return
+        }
+			// Load list
+			app.storage('get');
+
+      var color = getColor()
+      $('.example-box').attr('style', 'background-color: '+color)
+      $('#labelName').attr('style', 'color:' + color)
+      $('input').attr('placeholder', 'Add your ' + window.labelName + ' examples here')
+			// Add label
+			document.querySelector('.example-insert input').addEventListener('keyup', function(e) {
+				if ( e.which === 13 && this.value !== '' ) {
+					app.addExample(this.value);
+					app.storage('update');
+					this.value = '';
+				}
+			}, false);
+
+			document.querySelector('.example-list').addEventListener('click', function(e) {
+				// Remove label
+				if ( e.target.classList.contains('remove-example') ) {
+					app.removeExample(e.target.parentNode);
+				}
+			}, false);
+
+      document.querySelector('#goBack').addEventListener('click', function(e) {
+        window.location.replace('/text_train')
+      }, false);
+
+      document.querySelector('#confirm').addEventListener('click', function(e) {
+        addExamples()
+      }, false);
+		},
+
+		addExample: function (example) {
+      var new_example = document.createElement('li');
+        new_example.setAttribute('class', 'example');
+        new_example.innerHTML = example + '<a href="javascript:;" class="remove-example">remove</a>';
+
+      var exampleInput = $('#exampleInput').val()
+      var label = window.labelName
+      if(label == undefined) return;
+      var examples = JSON.parse(window.localStorage.getItem(classifierName+"_examples"))
+      console.log('examples',examples)
+      if(examples == null) {
+        examples = {}
+      }
+      if(examples[label] == undefined) {
+        examples[label] = []
+      }
+
+      if(exampleInput != null && exampleInput.length > 0) {
+
+        if(example == undefined || example.length == 0) return;
+        if(label == undefined || examples[label] == undefined) return;
+        if(examples[label].includes(exampleInput) == true) {
+          alert('example already exists')
+          return
+        }
+        var $list = document.querySelector('.example-list ul');
+        $list.appendChild(new_example);
+        examples[label].push(exampleInput)
+      }
+      console.log(examples)
+      window.localStorage.setItem(classifierName+'_examples', JSON.stringify(examples))
+      return false;
+		},
+
+		removeExample: function (example) {
+			example.style.opacity = 0;
+			setTimeout(function() {
+				example.remove();
+				app.storage('update');
+			}, 400);
+			var ex = example.innerHTML
+      ex = ex.slice(0, ex.indexOf('<a href'))
+      var label = window.labelName
+      var examples = JSON.parse(window.localStorage.getItem(classifierName+'_examples'))
+      var idx = examples[label].indexOf(ex)
+      if(idx > -1) {
+        examples[label].splice(idx, 1)
+      }
+      window.localStorage.setItem(classifierName+'_examples', JSON.stringify(examples))
+		},
+
+		storage: function(type) {
+      var name = window.classifierName+ '_' + window.labelName + '_examples'
+      console.log(name)
+			if ( type === 'get' ) {
+        console.log("get")
+				if ( localStorage.getItem(name+"_html") != null ) {
+					document.querySelector('.example-list').innerHTML = localStorage.getItem(name+"_html");
+          console.log("get",localStorage.getItem(name+"_html"))
+				}
+			} else if ( type === 'update' ) {
+				var str = document.querySelector('.example-list').innerHTML;
+				localStorage.setItem(name+"_html", str);
+        console.log(localStorage.getItem(name+"_html"))
+			}
+		}
+	};
+	app.init();
+})()
+
+  function addExampleItem(example, label, examples, new_example) {
+  }
+
+  function addExamples() {
+    var examples = JSON.parse(window.localStorage.getItem(classifierName+'_examples'))
+    console.log(examples[window.labelName])
+    requestData = {"write_token": window.localStorage.getItem("text_writeapiKey"),
+                    "classifier_name": window.localStorage.getItem('temp_classifierName'),
+                    "class_name": window.labelName,
+                    "texts": examples[window.labelName]
+                  }
+    $.ajax({
+      url: '/text/addExamples',
+      type: 'POST',
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(requestData),
+      success: function(data) {
+        if(data.error != null) {
+          alert(data.error);
+        }
+      },
+      error: function(data) {
+        if (data.status == 200 && data.error == undefined) {
+          alert("The class has been trained")
+          window.location.replace('/text_train')
+        }
+      }
+
+    })
+  }
+
+  function loadExampleItems (label){
+    clearExampleItems()
+    if(window.examples == undefined) return
+    if(window.label == undefined || window.examples[label] == undefined) return;
+    window.examples[label].forEach((example) => {
+      addExampleItem(example)
+    })
+  }
+
+  function getColor() {
+    var label = window.localStorage.getItem('temp_labelName')
+    var color = window.localStorage.getItem(label+"_color")
+    return color
+  }
+</script>

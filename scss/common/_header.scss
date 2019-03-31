@@ -1,0 +1,152 @@
+@import 'variables';
+@import 'mq';
+
+.header {
+	position: sticky;
+	top: 0;
+
+	// so nav selected lines display above the banner image, and video section
+	z-index: 10;
+	will-change: transform;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+
+	width: 100%;
+	background-color: $main-color;
+	min-height: $header--height;
+
+	@include mq('lg') {
+		margin-left: auto;
+		justify-content: flex-start;
+	}    
+}
+
+.header__logo-link {
+	// stretch the height to fill the nav 
+	align-self: stretch;
+
+	// use flexbox to vertically center the text
+  	display: flex;
+	align-items: center;
+
+	user-select: none;
+}
+
+.header__logo-image {
+	height: 1.6rem;
+	margin: 0 1rem;
+}
+
+.header__logo-image:hover {
+	opacity: 0.9;
+}
+
+.header__nav {
+	display: flex;
+	height: $header--height;
+	width: 100%;
+    justify-content: center;
+
+	@include mq('lg') {
+    	justify-content: flex-start;
+		width: auto;
+	}
+}
+
+.header__nav-item {
+	// stretch the height to fill the nav 
+	align-self: stretch;
+
+	// use flexbox to vertically center the text
+  	display: flex;
+	align-items: center;
+
+	padding: 0 0.5rem;
+	color: white;
+	white-space: nowrap;
+	text-decoration: none;
+	font-family: $font-family;
+	font-size: 0.9rem;
+	font-weight: 400;
+	transition: 0.1s all ease-in;
+	user-select: none;
+
+	@include mq('xl') {
+		padding: 0 0.75rem;
+    	font-size: 1rem;
+	} 
+}
+
+.header__nav-item.active,
+.header__sub-nav-item.active {
+	// border bottom, so it falls outside the container
+	font-weight: 400;
+	box-shadow: 0 4px 0 0 white; 
+}
+
+.header__nav-item:hover,
+.header__sub-nav-item:hover {
+	// border bottom, so it falls outside the container
+	box-shadow: 0 4px 0 0 white;
+	text-decoration: none;
+	color: white;
+	opacity: 0.8;
+}
+
+.header__sub-nav {
+	display: flex;
+	height: $header--height;
+	width: 100%;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #47a1ec;
+
+	@include mq('lg') {
+		width: auto;
+		margin-left: auto;
+		border: none;
+		padding-right: 0.5rem;
+	}
+}
+
+.header__sub-nav-item {
+	// stretch the height to fill the nav 
+	align-self: stretch;
+
+	// use flexbox to vertically center the text
+  	display: flex;
+	align-items: center;
+
+	padding: 0 0.5rem;
+	color: white;
+	white-space: nowrap;
+	text-decoration: none;
+	font-family: $font-family;
+	font-size: 0.8rem;
+	font-weight: 300;
+	transition: 0.1s all ease-in;
+	user-select: none;
+
+	@include mq('xl') {
+		padding: 0 0.75rem;
+    	font-size: 0.9rem;
+	}   
+}
+
+
+
+nav ul {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+/* Remove the navbar's default margin-bottom and rounded borders */
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+

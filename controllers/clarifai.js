@@ -1,8 +1,3 @@
-const path = require('path');
-const fs = require('fs');
-const paths = require('../paths');
-const mkdirp = require('mkdirp');
-const utils = require('../utils');
 const Clarifai = require('clarifai');
 
 function init(api_key) {
@@ -19,8 +14,9 @@ function getClassifiersList(req, res) {
   (response) => {
     var models = [];
     if (parseInt(response.length) > 19) {
-      for (var index = 0; index < parseInt(response.length)-19; index++) {
+      for (var index = 0; index < parseInt(response.length); index++) {
         var item = response[index];
+        if (item.name.includes('nsfw')) continue;
         var model = {};
         model.name = item.name;
         model.classifier_id = item.id;
@@ -98,7 +94,7 @@ function createClassifier(req, res) {
     data = inputs
     inputs = undefined
     if(errorFound == true) {
-      res.json({ error: errorMessage})
+      res.json({ error: errorMessage })
       return
     }
     saveImages()
@@ -111,6 +107,7 @@ function createClassifier(req, res) {
       },
       (err) => {
         console.log(err);
+        res.json({ error: err.message });
       }
     )
   }
@@ -129,8 +126,8 @@ function createClassifier(req, res) {
         train();
       },
       (err) => {
-        res.json({ error: err });
-        console.log(error);
+        console.log(err.data);
+        res.json({ error: err.data.status.details });
       }
     )
   }
@@ -176,8 +173,8 @@ function classifyImage(req, res) {
     return;
   }
   const model_id = req.body.classifier_id;
-  if(model_id === 'general1234'){
-    const app = init(apiKey);
+  const app = init(apiKey);
+  if (model_id === 'general1234') {
     app.models.predict(Clarifai.GENERAL_MODEL, { base64: image_data }).then(
     (response) => {
       if (response.status.code == 10000) {
@@ -191,70 +188,60 @@ function classifyImage(req, res) {
         }
         res.json(results)
       } else {
-        res.json({ error: 'Could not classify the image' });
+        if (response.status.description != undefined) {
+          res.json({error: response.status.description});
+        } else {
+          res.json({ error: 'Could not classify the image' });
+        }
       }
     },
     (err) => {
       console.log(err)
       res.json({ error: err });
     });
-  }
-  const app = init(apiKey);
-  app.models.predict(model_id, { base64: image_data }).then(
-  (response) => {
-    if (response.status.code == 10000) {
-      var output = response.outputs[0].data.concepts;
-      var results = [];
-      for (var index = 0; index < output.length; index++) {
-        var result = {};
-        result.class = output[index].name;
-        result.score = output[index].value;
-        results.push(result);
+  } else {
+    app.models.predict(model_id, { base64: image_data }).then(
+    (response) => {
+      if (response.status.code == 10000) {
+        var output = response.outputs[0].data.concepts;
+        var results = [];
+        for (var index = 0; index < output.length; index++) {
+          var result = {};
+          result.class = output[index].name;
+          result.score = output[index].value;
+          results.push(result);
+        }
+        res.json(results)
+      } else {
+        if (response.status.description != undefined) {
+          res.json({error: response.status.description});
+        } else {
+          res.json({ error: 'Could not classify the image' });
+        }
       }
-      res.json(results)
-    } else {
-      res.json({ error: 'Could not classify the image' });
-    }
-  },
-  (err) => {
-    console.log(err)
-    res.json({ error: err });
-  });
+    },
+    (err) => {
+      console.log(err.data);
+      if (err.data.status.details != undefined) {
+        res.json({ error: err.data.status.details });
+      } else if (err.data.status.description) {
+        res.json({ error: err.data.status.description });
+      } else {
+        res.json({ error: 'Could not classify the image' });
+      }
+    });
+  }
 }
 
 function classifyURLImage(req, res){
-  const apiKey = req.headers.apikey;
-  var image_link = req.body.image_data;
+  const apiKey = req.body.apikey;
+  var image_link = req.body.image_url;
   const model_id = req.body.classifier_id;
-  if(model_id === 'general1234'){  
-    const app = init(apiKey);
-    app.models.predict(Clarifai.GENERAL_MODEL, { url: image_link }).then(
-      (response) =>{
-        if(response.status.code == 10000) {
-          var output = response.outputs[0].data.concepts;
-          var results = [];
-          for(var index = 0; index < output.length; index++){
-            var result = {};
-            result.class = output[index].name;
-            result.score = output[index].value;
-            results.push(result);
-          }
-          res.json(results);
-        } else {
-          res.json({error: 'Could not classify image'});
-        }
-      },
-      (err) => {
-        console.log(err);
-        res.json({error: err});
-      }
-    )
-  }
   const app = init(apiKey);
-  console.log(req.body);
+  console.log('here');
   app.models.predict(model_id, { url: image_link }).then(
     (response) =>{
-      if(response.status.code == 10000) {
+      if(parseInt(response.status.code) == 10000) {
         var output = response.outputs[0].data.concepts;
         var results = [];
         for(var index = 0; index < output.length; index++){
@@ -265,12 +252,22 @@ function classifyURLImage(req, res){
         }
         res.json(results);
       } else {
-        res.json({error: 'Could not classify image'});
+        if (response.status.description != undefined) {
+          res.json({error: response.status.description});
+        } else {
+          res.json({ error: 'Could not classify the image' });
+        }
       }
     },
     (err) => {
-      console.log(err);
-      res.json({error: err});
+      console.log(err.data);
+      if (err.data.status.details != undefined) {
+        res.json({ error: err.data.status.details });
+      } else if (err.data.status.description) {
+        res.json({ error: err.data.status.description });
+      } else {
+        res.json({ error: 'Could not classify the image' });
+      }
     }
   )
 }
