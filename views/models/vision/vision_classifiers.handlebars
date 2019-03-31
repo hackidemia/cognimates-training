@@ -242,26 +242,32 @@
       });
 
       $('.js--apikey__input--set').click(function () {
-        if ($('.js--apikey__input').val() == '') {
-          showWarningNotification('Enter an API Key.', true, false);
-          return;
-        }
-        window.apiKey = $('.js--apikey__input').val();
-        $('.js--explore__apikey__input').val(window.apiKey);
-        $('.js--classifier_current_apikey').html(window.apiKey);
-        $('.js--classifier_current_apikey').show();
-        setUserClassifiers();
+          if ($('.js--apikey__input').val() == '') {
+              showWarningNotification('Enter an API Key.', true, false);
+              return;
+          }
+          window.apiKey = $('.js--apikey__input').val();
+          $('.js--explore__apikey__input').val(window.apiKey);
+          $('.js--api-key__value').html(window.apiKey);
+          $('.api-key__result-row').show();
+          setUserClassifiers();
       });
 
       $('.js--explore__apikey__input--set').click(function () {
-        if ($('.js--explore__apikey__input').val() == '') {
-          showWarningNotification('Enter an API Key.', true, false);
-          return;
-        }
-        window.apiKey = $('.js--explore__apikey__input').val();
-        $('.js--explore_current_apikey').html(window.apiKey);
-        $('.js--explore_current_apikey').show();
-        setUserClassifiers();
+          if ($('.js--explore__apikey__input').val() == '') {
+              showWarningNotification('Enter an API Key.', true, false);
+              return;
+          }
+          window.apiKey = $('.js--explore__apikey__input').val();
+          $('.js--api-key__value').html(window.apiKey);
+          $('.api-key__result-row').show();
+          setUserClassifiers();
+      });
+
+      $('.api-key__remove-button').click(function (e) {
+          $('.api-key__result-row').hide();
+          $('.js--explore__apikey__input').val('');
+          $('.js--apikey__input').val('');
       });
 
       $('#input_categoryName').keypress((e) => {
