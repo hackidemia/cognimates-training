@@ -244,11 +244,62 @@ function classifyURLImage(req, res){
   )
 }
 
+function updateClassifier(req, res){
+  //info needed for both
+  const apiKey = req.headers.apikey;
+  const app = init(apiKey);
+  const model_id = req.body.classifier_id;
+  const images = req.body.images;
+  const concept = req.body.class;
+  let type;
+  //get type to know whether image is url or regular image
+  if(images[0].substring(0,4) === 'data'){
+    type = 'base64';
+  } else{
+    type = 'url';
+  }
+  //go through each image and turn it into an input
+  for (var i = 0; i < images.length; i++) {
+    image_data = images[i];
+    if(type == 'base64'){
+      if (image_data != undefined) {
+        if (image_data.length == 0) {
+          res.json({ error: 'Send a valid image in base64 format'});
+          return;
+        }
+        if (image_data.indexOf(',') != -1) {
+          image_data = image_data.split(',').pop();
+        }
+      } else {
+        res.json({ error: 'Send a valid image in base64 format'});
+        return;
+      }
+      //create image as an input
+      app.inputs.create({base64: image_data, concepts: [{id: concept, value: true}]});
+    } else {
+      //create url image as input
+      app.inputs.create({url: image_data, concepts: [{id: concept, value: true}]});
+    }
+  }
+
+  //train the specified model
+  app.models.train(model_id, true).then(
+    (response) => {
+      res.json("Training finished successfully..");
+    },
+    (err) => {
+      console.log(err);
+      res.json({error: err});
+    }
+  );
+}
+
 module.exports = {
   createClassifier : createClassifier,
   getClassifiersList : getClassifiersList,
   getClassifierInformation : getClassifierInformation,
   classifyImages : classifyImage,
   deleteClassifier : deleteClassifier,
-  classifyURLImage: classifyURLImage
+  classifyURLImage: classifyURLImage,
+  updateClassifier: updateClassifier
 };
