@@ -135,6 +135,7 @@
     $(document).ready(function init() {
 
       window.training_data = {};
+      window.top_class = [];
 
       $('form').submit(false);
 
@@ -412,10 +413,6 @@
           }
           setTrainButtonState('training');
           preprocessTrainData();
-      })
-
-      $('.js--classifier__predict__button').on('click', function () {
-          preprocessPredictData();
       })
     });
 
@@ -706,6 +703,10 @@
             success: function(data) {
                 if(data.error == null) {
                     showClassification(data);
+                    $('.results__name-label').text(window.top_class[0])
+                    $('.results__name-value').text(window.top_class[1])
+                    var x = document.getElementById("predict__classifier__results");
+                    x.style.display = 'block';
                 } else {
                     var n = makeNotification({
                       message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + data.error,
@@ -752,7 +753,8 @@
 
     // TODO: Sanitize categoryName before further processing
     var phraseToPredict = $('#input_explore_predictText').val();
-    console.log('here');
+    const predictRefreshSpinnerClass = ".js--results__status_spinner";
+    $(predictRefreshSpinnerClass).show();
     $.ajax({
         url: "/nlc/classify",
         type: "POST",
@@ -760,6 +762,7 @@
                 token: window.RapiKey, phrase: phraseToPredict},
         success: function(data) {
             if(data.error == null) {
+                $(predictRefreshSpinnerClass).hide();
                 showClassification(data);
             } else {
                 var n = makeNotification({
@@ -786,15 +789,15 @@
 
     //helper functions for predicting 
     function showClassification(response) {
-        var top_class = findTopClass(response);
+        window.top_class = findTopClass(response);
         console.log(top_class);
-        var n = makeNotification({
+        {{!-- var n = makeNotification({
             // message: `The model says \"${top_class[0]}\"! with a confidence score of ${top_class[1]}.`,
             type: 'success',
             closeOlderInstances: true,
             stayOpenUntilClick: true
         });
-        n.show();
+        n.show(); --}}
     }
 
     function findTopClass(data) {
