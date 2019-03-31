@@ -16,6 +16,7 @@ function getClassifiersList(req, res) {
     if (parseInt(response.length) > 19) {
       for (var index = 0; index < parseInt(response.length); index++) {
         var item = response[index];
+        if (item.name.includes('nsfw')) continue;
         var model = {};
         model.name = item.name;
         model.classifier_id = item.id;
