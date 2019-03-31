@@ -192,10 +192,23 @@
   opacity: 0;
   height: 0; }
 
+.classifier__banner-image-container {
+  display: flex;
+  justify-content: center; }
+
+.classifier__banner-image-container--text {
+  background-color: #fdaf41; }
+
+.classifier__banner-image {
+  height: 260px;
+  width: auto !important;
+  border-bottom: none;
+  margin: 1rem 0; }
+
 .classifier__nav-tabs {
   width: 100%;
-  margin: 4rem auto 0 auto;
-  justify-content: center; }
+  justify-content: center;
+  margin-top: 3rem; }
 
 .classifier__nav-item .nav-link {
   margin: 1rem;
