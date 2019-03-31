@@ -143,6 +143,7 @@
       window.dropzonePredict = new Dropzone(dropzonePredictEl, {
           url: "/",
           paramName: "prediction-image",
+          maxFilesize: 5,
           maxFiles: 1,
           dictRemoveFile: "",
           autoProcessQueue: false,
@@ -157,6 +158,9 @@
             this.on("error", function(file) {
               if (!file.accepted) {
                 this.removeFile(file);
+                if ((file.size/1048576) >= 1) {
+                    showWarningNotification('File size cannot be larger than 5MB.');
+                }
               }
             });
           }
@@ -167,6 +171,7 @@
     window.dropzoneExplorePredict = new Dropzone(dropzoneExplorePredictEl, {
         url: "/",
         paramName: "prediction-image",
+        maxFilesize: 5,
         maxFiles: 1,
         dictRemoveFile: "",
         autoProcessQueue: false,
@@ -181,6 +186,9 @@
             this.on("error", function(file) {
                 if (!file.accepted) {
                     this.removeFile(file);
+                    if ((file.size/1048576) >= 1) {
+                        showWarningNotification('File size cannot be larger than 5MB.');
+                    }
                 }
             });
         }
@@ -441,6 +449,9 @@
             this.on("error", function(file) {
               if (!file.accepted) {
                 this.removeFile(file);
+                if ((file.size/1048576) >= 1) {
+                    showWarningNotification('File size cannot be larger than 5MB.');
+                }
               }
             });
             this.on("addedfile", (file) => {
