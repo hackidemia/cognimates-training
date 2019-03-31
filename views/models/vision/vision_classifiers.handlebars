@@ -168,7 +168,7 @@
               if (!file.accepted) {
                 this.removeFile(file);
                 if ((file.size/1048576) >= 1) {
-                    showWarningNotification('File size cannot be larger than 5MB.');
+                    showWarningNotification('Add an image less than 5MB.');
                 }
               }
             });
@@ -196,7 +196,7 @@
                 if (!file.accepted) {
                     this.removeFile(file);
                     if ((file.size/1048576) >= 1) {
-                        showWarningNotification('File size cannot be larger than 5MB.');
+                        showWarningNotification('Add an image less than 5MB.');
                     }
                 }
             });
@@ -316,7 +316,7 @@
         var categoryName = $('#input_categoryName').val();
         categoryName = categoryName.trim();
         if (format.test(categoryName) != false) {
-            showWarningNotification('Category name cannot have spaces or special characters', true, false);
+            showWarningNotification('Category name should have only letters and numbers.', true, false);
             return;
         }
         if (window.labels.includes(categoryName)) {
@@ -459,7 +459,7 @@
               if (!file.accepted) {
                 this.removeFile(file);
                 if ((file.size/1048576) >= 1) {
-                    showWarningNotification('File size cannot be larger than 5MB.');
+                    showWarningNotification('Add an image less than 5MB.');
                 }
               }
             });
@@ -563,8 +563,8 @@
         }
         for (const className of Object.keys(window.dropZoneMap)) {
             if (window.dropZoneMap[className].files === undefined || window.dropZoneMap[className].files.length < 10) {
-              showWarningNotification('`${className} category needs at least 10 examples.`', true, true);
-              throw new Error(`${className} category has less than 10 examples`);
+              showWarningNotification('`Create at least 10 examples for ${className} category.`', true, true);
+              throw new Error(`Create at least 10 examples for ${className} category.`);
             }
         }
     }
