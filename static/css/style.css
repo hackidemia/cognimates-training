@@ -86,7 +86,7 @@ body {
   border: 0; }
 
 .breakpoint {
-  display: block;
+  display: none;
   position: fixed;
   z-index: 1000000;
   right: 0;
