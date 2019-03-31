@@ -6,7 +6,7 @@
             <i></i>
         </div>
         <div class="step__body">
-          <h2 class="step__title">What is your {{ serviceName }} key?
+          <h2 class="step__title">What is your Clarifai key?
               <a href="#" class="step__help-open-button 
                                   js--open-help" role="button">
                   <i class="fas fa-question-circle"></i>
@@ -41,10 +41,10 @@
               </a>
           </div>
 
-          <a href="{{ howToGuide }}" class="step__link step__link--get-key" target="_blank" >
+          <a href="#" class="step__link step__link--get-key" target="_blank" >
                  How-to guide
            </a>
-           <a href="{{ serviceUrl }}" class="step__link step__link--get-key" target="_blank" >
+           <a href="https://clarifai.com/signup" class="step__link step__link--get-key" target="_blank" >
                  Sign up &amp; get keys
            </a>
            <div class="step__help
@@ -136,18 +136,22 @@
               Predict
           </button>
           <div class="classifier__results">
-            <div class="results__name 
-                        js--predict-results__name">
-                <span class="results__name-label">Confidence score:</span>
-                <span class="results__name-value">85.02%</span>
+              <div class="results__name
+                          js--explore__predict-results__name" style="display:none;">
+                  <span class="results__name-label">Category:</span>
+                  <span class="results__name-value
+                               js--explore__results--category"></span>
+                  <br>
+                  <span class="results__name-label">Confidence score:</span>
+                  <span class="results__name-value
+                               js--explore__results--confidence"></span>
               </div>
-              <div class="spinner-grow 
-                          js--predict-results__status_spinner" 
+              <div class="spinner-grow
+                          js--explore__predict-results__status_spinner"
                     style="display:none"
                     role="status">
                   <span class="sr-only"></span>
               </div>
-            </div>
           </div>
     </li>
 
