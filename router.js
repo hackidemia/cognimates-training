@@ -23,10 +23,7 @@ router.get('/home', function (req, res) {
 
 router.get('/text_home', (req, res) => {
   res.render('models/text/text_classifiers', {
-      title: 'Cognimates, Train a text model, Home',
-      serviceName: 'uClassify.com',
-      serviceUrl: 'https://www.uclassify.com/account/register',
-      howToGuide: 'xxx'
+      title: 'Cognimates, Train a text model, Home'
     })
 })
 
@@ -83,10 +80,7 @@ router.get('/nlc/extension/:read/:write/:username/:model', (req, res) => {
 
 router.get('/vision_home', (req, res) => {
   res.render('models/vision/vision_classifiers', {
-      title: 'Cognimates, Train a vision model, Home',
-      serviceName: 'Clarifai.com',
-      serviceUrl: 'https://clarifai.com/signup',
-      howToGuide: 'xxx'
+      title: 'Cognimates, Train a vision model, Home'
     })
 })
 
@@ -131,7 +125,8 @@ router.get("/vision/extension/:apikey/:modelid", (req, res) => {
 
 router.get('/doodle', (req, res) => {
   res.render('models/doodle/doodle', {
-      title: 'Cognimates, Doodle Classifier'
+      title: 'Cognimates, Doodle Model',
+      layout: 'doodle'
     })
 })
 
