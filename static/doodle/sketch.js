@@ -4,7 +4,7 @@ let model;
 let cnv;
 
 async function loadMyModel() {
-  model = await tf.loadLayersModel('model/model.json');
+  model = await tf.loadLayersModel('doodle/model/model.json');
 }
 
 function setup() {
