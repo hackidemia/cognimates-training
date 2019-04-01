@@ -9,6 +9,12 @@ router.get('/', function (req, res) {
     });
 });
 
+router.get('/home', function (req, res) {
+    res.render('index', {
+      title: 'Cognimates, Home'
+    });
+});
+
 // router.get('/text_home', (req, res) => {
 //   res.render('models/text/text_home', {
 //       title: 'Cognimates, Train a text model, Home'
