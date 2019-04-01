@@ -496,7 +496,7 @@
         delete window.dropZoneMap[categoryName];
         $(dropzoneRemoveClass).unbind();
         $(dropZoneCategoryClass).remove();
-        delete window.labels[categoryName];
+        window.labels.splice(window.labels.indexOf(categoryName), 1);
         if (window.examples != undefined && window.examples[categoryName] != undefined) {
             delete window.examples[categoryName];
         }
