@@ -28,14 +28,8 @@
   		<script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js" type="text/javascript"></script>
   		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js" type="text/javascript"></script>
   		<script src="https://cdn.plyr.io/3.5.2/plyr.js"></script>
-		<!-- vendor js, for Google Doodle
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/addons/p5.dom.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.2"></script>
-		 -->
 
-		<!-- application js -->
-		<script src="/doodle/sketch.js"></script>
+  		<!-- app js -->
 		<script src="js/helpers.js"></script>
 
 		<!-- application css, declared last because it overrides other library/vendor css -->
@@ -45,5 +39,6 @@
 	<body>
 		<div class="breakpoint"></div>
 		{{{ body }}}
+		{{> google_analytics }}
 	</body>
 </html>

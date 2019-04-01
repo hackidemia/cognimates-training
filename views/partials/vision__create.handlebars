@@ -43,13 +43,14 @@
             <i></i>
         </div>
         <div class="step__body">
-            <h2 class="step__title">What is your {{ serviceName }} key?
+            <h2 class="step__title">What is your Clarifai key?
                 <a href="#" class="step__help-open-button
                                     js--open-help" role="button">
                     <i class="fas fa-question-circle"></i>
                 </a>
             </h2>
-            <div class="step__form-with-button">
+            <div class="step__form-with-button
+                        js--apikey__form">
                 <input type="text"
                     class="form-control
                            no-radius--right
@@ -77,10 +78,10 @@
                 </a>
             </div>
 
-            <a href="{{ howToGuide }}" class="step__link step__link--get-key" target="_blank" >
+            <a href="https://docs.google.com/document/d/1q8Cj9QhwjUXM51Qqtj3V3jYMFA44SiAAIZzVck7Efdc/view#heading=h.4jovbu2htq86" class="step__link step__link--get-key" target="_blank" >
                    How-to guide
             </a>
-            <a href="{{ serviceUrl }}" class="step__link step__link--get-key" target="_blank" >
+            <a href="https://clarifai.com/signup" class="step__link step__link--get-key" target="_blank" >
                    Sign up &amp; get keys
             </a>
             <div class="step__help
@@ -155,26 +156,26 @@
                    </span>
                 </button>
             </h2>
-            <div class="classifier__train-results">
-                <div class="classifier__upload_progress
-                            js--classifier__upload_progress">
+            <div class="classifier__results">
+                <div class="results__upload-progress
+                            js--train-results__upload_progress">
                     Uploading: 
-                    <span class="js--classifier__upload__progress--set"><span>
+                    <span class="js--train-results__upload__progress--set"><span>
                 </div>
-                <div class="classifier__name 
-                            js--classifier__name">
-                    <span class="classifier__name-label">Model Name: </span>
-                    <span class="classifier__name-value
-                                js--classifier__name--set"></span>
+                <div class="results__name 
+                            js--train-results__name">
+                    <span class="results__name-label">Model Name: </span>
+                    <span class="results__name-value
+                                js--train-results__name--set"></span>
                 </div>
-                <div class="classifier__status
-                            js--classifier__status">
-                    <span class="classifier__status-label">Model Status: </span> 
-                    <span class="classifier__status-value
-                                 js--classifier__status--set"></span>
+                <div class="results__status
+                            js--train-results__status">
+                    <span class="results__status-label">Model Status: </span> 
+                    <span class="results__status-value
+                                 js--train-results__status--set"></span>
                 </div>
                 <div class="spinner-grow 
-                            js--classifier__status_spinner" 
+                            js--train-results__status_spinner" 
                       style="display:none"
                       role="status">
                     <span class="sr-only"></span>
@@ -219,9 +220,27 @@
                     placeholder="Enter an image URL">
             <button class="btn btn-primary
                            js--classifier__predict__button"
-                    type="button disabled">
+                    type="button" disabled>
                 Predict
             </button>
+            <div class="classifier__results">
+                <div class="results__name
+                            js--classifier__predict-results__name" style="display:none;">
+                    <span class="results__name-label">Category:</span>
+                    <span class="results__name-value
+                                 js--classifier__results--category"></span>
+                    <br>
+                    <span class="results__name-label">Confidence score:</span>
+                    <span class="results__name-value
+                                 js--classifier__results--confidence"></span>
+                </div>
+                <div class="spinner-grow
+                            js--classifier__predict-results__status_spinner"
+                      style="display:none"
+                      role="status">
+                    <span class="sr-only"></span>
+                </div>
+            </div>
         </div>
     </li>
 

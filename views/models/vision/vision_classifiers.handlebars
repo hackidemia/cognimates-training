@@ -1,5 +1,14 @@
 {{> header }}
 
+<div class="classifier__banner-image-container
+            classifier__banner-image-container--vision ">
+  <img src="/images/vision_banner.png"
+        class="js-classifiers__card--image classifier__banner-image
+            card-img-top
+            classifiers__card-image"
+        alt="Train a Text Classifier">
+</div>
+
 <ul class="nav
           nav-tabs
           classifier__nav-tabs"
@@ -143,6 +152,7 @@
       window.dropzonePredict = new Dropzone(dropzonePredictEl, {
           url: "/",
           paramName: "prediction-image",
+          maxFilesize: 5,
           maxFiles: 1,
           dictRemoveFile: "",
           autoProcessQueue: false,
@@ -157,6 +167,9 @@
             this.on("error", function(file) {
               if (!file.accepted) {
                 this.removeFile(file);
+                if ((file.size/1048576) >= 1) {
+                    showWarningNotification('Add an image less than 5MB.');
+                }
               }
             });
           }
@@ -167,6 +180,7 @@
     window.dropzoneExplorePredict = new Dropzone(dropzoneExplorePredictEl, {
         url: "/",
         paramName: "prediction-image",
+        maxFilesize: 5,
         maxFiles: 1,
         dictRemoveFile: "",
         autoProcessQueue: false,
@@ -181,6 +195,9 @@
             this.on("error", function(file) {
                 if (!file.accepted) {
                     this.removeFile(file);
+                    if ((file.size/1048576) >= 1) {
+                        showWarningNotification('Add an image less than 5MB.');
+                    }
                 }
             });
         }
@@ -199,14 +216,16 @@
               e.preventDefault();
               return false;
           }
-        if ($(this).val().length > 0) {
-          window.projectName = $(this).val();
-        }
       });
 
       $('.js--project--name__button').click(function (e) {
           if ($('#input_projectName').val().length == 0) return;
           const name = $('#input_projectName').val().trim();
+
+          if (name.length == 0) {
+              showWarningNotification('Project name cannot be empty', true, false);
+              return;
+          }
 
           var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
           if (format.test(name) != false) {
@@ -217,6 +236,7 @@
           $('.js--project-name__value--set').html(name);
           $('.project-name__result-row').show();
           window.projectName = name;
+          $('.project-name__form').hide();
           showSuccessNotification('Project name set', false , false);
       });
 
@@ -224,6 +244,7 @@
           window.projectName = undefined;
           $('#input_projectName').val('');
           $('.project-name__result-row').hide();
+          $('.project-name__form').show();
           showWarningNotification('Project name unset', true, false);
       })
 
@@ -249,6 +270,7 @@
               return;
           }
           window.apiKey = $('.js--apikey__input').val();
+          $('.js--apikey__form').hide();
           $('.js--explore__apikey__input').val(window.apiKey);
           $('.js--api-key__value').html(window.apiKey);
           $('.api-key__result-row').show();
@@ -262,6 +284,7 @@
               return;
           }
           window.apiKey = $('.js--explore__apikey__input').val();
+          $('.js--apikey__form').hide();
           $('.js--apikey__input').val(window.apiKey);
           $('.js--api-key__value').html(window.apiKey);
           $('.api-key__result-row').show();
@@ -270,6 +293,7 @@
       });
 
       $('.api-key__remove-button').click(function (e) {
+          $('.js--apikey__form').show();
           $('.api-key__result-row').hide();
           $('.js--explore__apikey__input').val('');
           $('.js--apikey__input').val('');
@@ -294,7 +318,7 @@
         var categoryName = $('#input_categoryName').val();
         categoryName = categoryName.trim();
         if (format.test(categoryName) != false) {
-            showWarningNotification('Category name cannot have spaces or special characters', true, false);
+            showWarningNotification('Category name should have only letters and numbers.', true, false);
             return;
         }
         if (window.labels.includes(categoryName)) {
@@ -329,7 +353,7 @@
         $('.js--classifiers__dropdown--menu').html(model_id);
         $('.js--explore__predict_button').attr('disabled', null);
         window.explore_model_id = model_id;
-        var extensionUrl = `?url=http://cognimates.:2634/vision/extension/${window.apiKey}/${window.explore_model_id}`;
+        var extensionUrl = `?url=https://cognimate.me:2635/vision/extension/${window.apiKey}/${window.explore_model_id}`;
         extensionUrl = "https://hackidemia.github.io/cognimates-gui/" + extensionUrl;
         // var extensionUrl = `?url=http://localhost:2634/vision/extension/${window.apiKey}/${window.explore_model_id}`;
         // extensionUrl = "http://localhost:8601/" + extensionUrl;
@@ -436,6 +460,9 @@
             this.on("error", function(file) {
               if (!file.accepted) {
                 this.removeFile(file);
+                if ((file.size/1048576) >= 1) {
+                    showWarningNotification('Add an image less than 5MB.');
+                }
               }
             });
             this.on("addedfile", (file) => {
@@ -469,7 +496,7 @@
         delete window.dropZoneMap[categoryName];
         $(dropzoneRemoveClass).unbind();
         $(dropZoneCategoryClass).remove();
-        delete window.labels[categoryName];
+        window.labels.splice(window.labels.indexOf(categoryName), 1);
         if (window.examples != undefined && window.examples[categoryName] != undefined) {
             delete window.examples[categoryName];
         }
@@ -520,7 +547,7 @@
             console.log(error);
             showErrorNotification(error.message, true, false);
             setTrainButtonState('normal');
-            const classifierUploadProgressClass = ".js--classifier__upload_progress";
+            const classifierUploadProgressClass = ".js--train-results__upload_progress";
             $(classifierUploadProgressClass).hide();
         }
     }
@@ -538,8 +565,8 @@
         }
         for (const className of Object.keys(window.dropZoneMap)) {
             if (window.dropZoneMap[className].files === undefined || window.dropZoneMap[className].files.length < 10) {
-              showWarningNotification('`${className} category needs at least 10 examples.`', true, true);
-              throw new Error(`${className} category has less than 10 examples`);
+              showWarningNotification('`Create at least 10 examples for ${className} category.`', true, true);
+              throw new Error(`Create at least 10 examples for ${className} category.`);
             }
         }
     }
@@ -659,15 +686,15 @@
     }
 
     function setUploadProgress(progress) {
-        $('.js--classifier__upload_progress').show();
-        $('.js--classifier__upload__progress--set').html(`${Math.round(progress)}%`);
+        $('.js--train-results__upload_progress').show();
+        $('.js--train-results__upload__progress--set').html(`${Math.round(progress)}%`);
     }
 
     function setClassifierStatus() {
-        const classifierUploadProgressClass = ".js--classifier__upload_progress";
-        const classifierNameClass = ".js--classifier__name";
-        const classifierStatusClass = ".js--classifier__status";
-        const classifierRefreshSpinnerClass = ".js--classifier__status_spinner";
+        const classifierUploadProgressClass = ".js--train-results__upload_progress";
+        const classifierNameClass = ".js--train-results__name";
+        const classifierStatusClass = ".js--train-results__status";
+        const classifierRefreshSpinnerClass = ".js--train-results__status_spinner";
         $(`${classifierNameClass}--set`).html(window.model_id);
         $(`${classifierStatusClass}--set`).html(window.classifier_status);
         $(classifierNameClass).show();
@@ -677,6 +704,7 @@
             $('.js--classifier__predict__button').attr('disabled', null);
             $(classifierRefreshSpinnerClass).hide();
             setAutoRefreshStatus(false);
+            setUserClassifiers();
         } else {
             $(classifierRefreshSpinnerClass).show();
         }
@@ -691,7 +719,7 @@
         } else {
             window.autoRefreshTimer = setInterval(() => {
                 loadUserClassifier(window.model_id);
-            }, 2000);
+            }, 3000);
         }
     }
 
@@ -716,6 +744,9 @@
     }
 
     async function preprocessPredictData() {
+        $('.js--classifier__predict__button').attr('disabled', '');
+        $('.js--classifier__predict-results__name').hide();
+        $('.js--classifier__predict-results__status_spinner').show();
         try {
             validatePredictionData();
             const predictionURL = $('.js--classifier__predict-url').val();
@@ -726,15 +757,20 @@
             } else {
                 results = await classifyByURL(window.model_id, predictionURL);
             }
-            showClassification(results);
+            showClassification(results, true);
             $('.js--classifier__predict-url').val('');
         } catch (error) {
             showErrorNotification(`Oops. ${error.message}`, true, true);
+            $('.js--classifier__predict__button').attr('disabled', null);
+            $('.js--classifier__predict-results__status_spinner').hide();
             console.log(error);
         }
     }
 
     async function preprocessExplorePredictData() {
+        $('.js--explore__predict__button').attr('disabled', '');
+        $('.js--explore__predict-results__name').hide();
+        $('.js--explore__predict-results__status_spinner').show();
         try {
             validateExplorePredictionData();
             const predictionURL = $('.js--explore__predict-url').val();
@@ -745,10 +781,12 @@
             } else {
               results = await classifyByURL(window.explore_model_id, predictionURL);
             }
-            showClassification(results);
+            showClassification(results, false);
             $('.js--explore__predict-url').val('');
         } catch (error) {
             showErrorNotification(`Oops. ${error.message}`, true, true);
+            $('.js--explore__predict__button').attr('disabled', null);
+            $('.js--explore__predict-results__status_spinner').hide();
             console.log(error);
         }
     }
@@ -859,9 +897,12 @@
         });
     }
 
-    function showClassification(response) {
+    function showClassification(response, createTab) {
+        var resultLabel;
+        var resultConfidence;
         if(response.length == 1) {
-            showSuccessNotification(`The model says ${response[0].class}! with a confidence score of ${response[0].score}.`, true, true);
+            resultLabel = response[0].class;
+            resultConfidence = response[0].score;
         } else {
             var classes = {}
             var scores = []
@@ -874,9 +915,23 @@
             scores.sort(function(a, b) {
                 return b - a;
             })
-            let score = scores[0]
-            let className = classes[score]
-            showSuccessNotification(`The model says ${className}! with a confidence score of ${score}.`, true, true);
+            resultConfidence = scores[0];
+            resultLabel = classes[resultConfidence];
+        }
+        resultConfidence = resultConfidence * 100;
+        resultConfidence = resultConfidence.toFixed(2);
+        if (createTab) {
+              $('.js--classifier__predict__button').attr('disabled', null);
+              $('.js--classifier__results--category').html(resultLabel);
+              $('.js--classifier__results--confidence').html(`${resultConfidence}%`);
+              $('.js--classifier__predict-results__name').show();
+              $('.js--classifier__predict-results__status_spinner').hide();
+        } else {
+              $('.js--explore__predict__button').attr('disabled', null);
+              $('.js--explore__results--category').html(resultLabel);
+              $('.js--explore__results--confidence').html(`${resultConfidence}%`);
+              $('.js--explore__predict-results__name').show();
+              $('.js--explore__predict-results__status_spinner').hide();
         }
     }
 

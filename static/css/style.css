@@ -86,7 +86,7 @@ body {
   border: 0; }
 
 .breakpoint {
-  display: block;
+  display: none;
   position: fixed;
   z-index: 1000000;
   right: 0;
@@ -208,13 +208,11 @@ body {
       padding: 0 0.75rem;
       font-size: 1rem; } }
 
-.header__nav-item.active,
-.header__sub-nav-item.active {
+.header__nav-item.active {
   font-weight: 400;
   box-shadow: 0 4px 0 0 white; }
 
-.header__nav-item:hover,
-.header__sub-nav-item:hover {
+.header__nav-item:hover {
   box-shadow: 0 4px 0 0 white;
   text-decoration: none;
   color: white;
@@ -233,24 +231,6 @@ body {
       margin-left: auto;
       border: none;
       padding-right: 0.5rem; } }
-
-.header__sub-nav-item {
-  align-self: stretch;
-  display: flex;
-  align-items: center;
-  padding: 0 0.5rem;
-  color: white;
-  white-space: nowrap;
-  text-decoration: none;
-  font-family: "Roboto", sans-serif;
-  font-size: 0.8rem;
-  font-weight: 300;
-  transition: 0.1s all ease-in;
-  user-select: none; }
-  @media only screen and (min-width: 1030px) {
-    .header__sub-nav-item {
-      padding: 0 0.75rem;
-      font-size: 0.9rem; } }
 
 nav ul {
   display: flex;
@@ -422,7 +402,7 @@ nav ul {
 
 .classifier__page-header {
   font-size: 1.5rem;
-  margin: 1rem 0; }
+  margin: 2.5rem 0 1.5rem 0; }
 
 .classifiers__card {
   padding: 0;
@@ -865,10 +845,23 @@ nav ul {
   opacity: 0;
   height: 0; }
 
+.classifier__banner-image-container {
+  display: flex;
+  justify-content: center; }
+
+.classifier__banner-image-container--text {
+  background-color: #fdaf41; }
+
+.classifier__banner-image {
+  height: 260px;
+  width: auto !important;
+  border-bottom: none;
+  margin: 1rem 0; }
+
 .classifier__nav-tabs {
   width: 100%;
-  margin: 4rem auto 0 auto;
-  justify-content: center; }
+  justify-content: center;
+  margin-top: 3rem; }
 
 .classifier__nav-item .nav-link {
   margin: 1rem;
@@ -1388,27 +1381,28 @@ li.stepper__step {
   background: #d4d4d4 !important;
   border-radius: 50% !important; }
 
-.classifier__name {
-  display: none;
-  margin: 0.8rem 0; }
+.classifier__results {
+  margin: 2rem 0; }
 
-.classifier__status {
+.results__name {
+  display: none;
+  margin: 0.5rem 0; }
+
+.results__status {
   display: none; }
 
-.classifier__upload_progress {
+.results__upload-progress {
   display: none;
   font-size: 1rem;
   color: #8a8a8a; }
 
-.classifier__name-label,
-.classifier__status-label {
+.results__name-label,
+.results__status-label {
   font-size: 1.2rem;
-  color: #bbb; }
+  color: #bbb;
+  line-height: 1.3rem; }
 
-.classifier__name-value,
-.classifier__status-value {
+.results__name-value,
+.results__status-value {
   font-size: 1.2rem;
   color: #717171; }
-
-.classifier__train-results {
-  margin: 2rem 0; }
