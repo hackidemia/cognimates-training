@@ -869,7 +869,7 @@
           const resultsScore = ".js--predict--confidence-results";
           const resultsShow = ".js--predict-results__name"
           $(resultsLabel).html(window.top_class[0]);
-          $(resultsScore).html(window.top_class[1]);
+          $(resultsScore).html(window.top_class[1].toString().concat('%'));
           $(resultsShow).show();
         }
     }
@@ -883,6 +883,7 @@
             top = data[key]["className"]
         }
         });
+        max = 100*max;
         return [top, max];
     }
 
