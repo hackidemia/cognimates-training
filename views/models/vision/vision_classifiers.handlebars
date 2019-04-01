@@ -704,6 +704,7 @@
             $('.js--classifier__predict__button').attr('disabled', null);
             $(classifierRefreshSpinnerClass).hide();
             setAutoRefreshStatus(false);
+            setUserClassifiers();
         } else {
             $(classifierRefreshSpinnerClass).show();
         }
@@ -718,7 +719,7 @@
         } else {
             window.autoRefreshTimer = setInterval(() => {
                 loadUserClassifier(window.model_id);
-            }, 2000);
+            }, 3000);
         }
     }
 
