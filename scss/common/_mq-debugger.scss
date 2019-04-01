@@ -1,6 +1,6 @@
 .breakpoint { 
-  // remove this line to display the media query helper
-  display: block; 
+  // remove this line or set to block, to display the media query helper
+  display: none; 
   
   position: fixed;
   z-index: 1000000;

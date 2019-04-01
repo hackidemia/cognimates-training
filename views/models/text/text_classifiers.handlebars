@@ -1,5 +1,14 @@
 {{> header }}
 
+<div class="classifier__banner-image-container
+            classifier__banner-image-container--text">
+  <img src="/images/nlc_banner.png"
+        class="js-classifiers__card--image classifier__banner-image
+            card-img-top
+            classifiers__card-image"
+        alt="Train a Text Classifier">
+</div>
+
 <ul class="nav
           nav-tabs
           classifier__nav-tabs"
@@ -135,6 +144,7 @@
     $(document).ready(function init() {
 
       window.training_data = {};
+      window.top_class = [];
 
       $('form').submit(false);
 
@@ -182,7 +192,7 @@
       $('.js--Rapikey__input--set').click(function () {
         if ($('.js--Rapikey__input').val() == '') {
           var n = makeNotification({
-            message: 'Enter an API Key',
+            message: 'Enter an API Key.',
             type: 'warning',
             closeOlderInstances: true,
             stayOpenUntilClick: false
@@ -190,19 +200,28 @@
           n.show();
           return;
         }
-        window.RapiKey = $('.js--Rapikey__input').val();
-        $('.js--explore__Rapikey__input').val(window.RapiKey);
-        var x = document.getElementById("set_read_api");
-        x.style.display = "none";
-        $('#js--Rapikey__result').text(window.RapiKey);
-        var y = document.getElementById('Rapikey__show');
-        y.style.display = 'block';
+        if($('.js--set-creds').html() != 'Remove Credentials'){
+          window.RapiKey = $('.js--Rapikey__input').val();
+          $('.js--explore__Rapikey__input').val(window.RapiKey);
+          var x = document.getElementById("set_read_api");
+          x.style.display = "none";
+          $('#js--Rapikey__result').text(window.RapiKey);
+          var y = document.getElementById('Rapikey__show');
+          y.style.display = 'block';
+          showSuccessNotification('Read API key set!', true, true);
+        } else {
+          var x = document.getElementById("set_read_api");
+          x.style.display = "flex";
+          $('#js--Rapikey__result').text(window.RapiKey);
+          var y = document.getElementById('Rapikey__show');
+          y.style.display = 'none';
+        }
       });
 
       $('.js--explore__Rapikey__input--set').click(function () {
         if ($('.js--explore__Rapikey__input').val() == '') {
           var n = makeNotification({
-            message: 'Enter an API Key',
+            message: 'Enter an API Key.',
             type: 'warning',
             closeOlderInstances: true,
             stayOpenUntilClick: false
@@ -210,12 +229,20 @@
           n.show();
           return;
         }
-        window.RapiKey = $('.js--explore__Rapikey__input').val();
-        var x = document.getElementById("explore_set_read_api");
-        x.style.display = "none";
-        $('#explore-js--Rapikey__result').text(window.RapiKey);
-        var y = document.getElementById('explore_Rapikey__show');
-        y.style.display = 'block';
+        if($('.js--set-creds').html() != 'Remove Credentials'){
+          window.RapiKey = $('.js--explore__Rapikey__input').val();
+          var x = document.getElementById("explore_set_read_api");
+          x.style.display = "none";
+          $('#explore-js--Rapikey__result').text(window.RapiKey);
+          var y = document.getElementById('explore_Rapikey__show');
+          y.style.display = 'block';
+        } else {
+          var x = document.getElementById("explore_set_read_api");
+          x.style.display = "flex";
+          $('#explore-js--Rapikey__result').text(window.RapiKey);
+          var y = document.getElementById('explore_Rapikey__show');
+          y.style.display = 'none';
+        }
       });
 
     //write api key inputs
@@ -238,7 +265,7 @@
       $('.js--Wapikey__input--set').click(function () {
         if ($('.js--Wapikey__input').val() == '') {
           var n = makeNotification({
-            message: 'Enter an API Key',
+            message: 'Enter an API Key.',
             type: 'warning',
             closeOlderInstances: true,
             stayOpenUntilClick: false
@@ -246,19 +273,28 @@
           n.show();
           return;
         }
-        window.WapiKey = $('.js--Wapikey__input').val();
-        $('.js--explore__Wapikey__input').val(window.WapiKey);
-        var x = document.getElementById("set_write_api");
-        x.style.display = "none";
-        $('#js--Wapikey__result').text(window.WapiKey);
-        var y = document.getElementById('Wapikey__show');
-        y.style.display = 'block';
+        if($('.js--set-creds').html() != "Remove Credentials"){
+          window.WapiKey = $('.js--Wapikey__input').val();
+          $('.js--explore__Wapikey__input').val(window.WapiKey);
+          var x = document.getElementById("set_write_api");
+          x.style.display = "none";
+          $('#js--Wapikey__result').text(window.WapiKey);
+          var y = document.getElementById('Wapikey__show');
+          y.style.display = 'block';
+          showSuccessNotification('Write API key set!', true, true);
+        } else {
+          var x = document.getElementById("set_write_api");
+          x.style.display = "flex";
+          $('#js--Wapikey__result').text(window.WapiKey);
+          var y = document.getElementById('Wapikey__show');
+          y.style.display = 'none';
+        }
       });
 
       $('.js--explore__Wapikey__input--set').click(function () {
         if ($('.js--explore__Wapikey__input').val() == '') {
           var n = makeNotification({
-            message: 'Enter an API Key',
+            message: 'Enter an API Key.',
             type: 'warning',
             closeOlderInstances: true,
             stayOpenUntilClick: false
@@ -266,12 +302,20 @@
           n.show();
           return;
         }
-        window.WapiKey = $('.js--explore__Wapikey__input').val();
-        var x = document.getElementById("explore_set_write_api");
-        x.style.display = "none";
-        $('#explore-js--Wapikey__result').text(window.WapiKey);
-        var y = document.getElementById('explore_Wapikey__show');
-        y.style.display = 'block';
+        if($('.js--set-creds').html() != "Remove Credentials"){
+          window.WapiKey = $('.js--explore__Wapikey__input').val();
+          var x = document.getElementById("explore_set_write_api");
+          x.style.display = "none";
+          $('#explore-js--Wapikey__result').text(window.WapiKey);
+          var y = document.getElementById('explore_Wapikey__show');
+          y.style.display = 'block';
+        } else {
+          var x = document.getElementById("explore_set_write_api");
+          x.style.display = "flex";
+          $('#explore-js--Wapikey__result').text(window.WapiKey);
+          var y = document.getElementById('explore_Wapikey__show');
+          y.style.display = 'none';
+        }
       });
 
     //set username stuff
@@ -294,7 +338,7 @@
       $('.js--username__input--set').click(function () {
         if ($('.js--username__input').val() == '') {
           var n = makeNotification({
-            message: 'Enter a Username',
+            message: 'Enter a Username.',
             type: 'warning',
             closeOlderInstances: true,
             stayOpenUntilClick: false
@@ -302,19 +346,30 @@
           n.show();
           return;
         }
-        window.username = $('.js--username__input').val();
-        $('.js--explore__username__input').val(window.username);
-        var x = document.getElementById("set_username__Form");
-        x.style.display = "none";
-        $('#js--username__result').text(window.username);
-        var y = document.getElementById('username__show');
-        y.style.display = 'block';
+        if($('.js--set-creds').html() != 'Remove Credentials'){
+          window.username = $('.js--username__input').val();
+          $('.js--explore__username__input').val(window.username);
+          var x = document.getElementById("set_username__Form");
+          x.style.display = "none";
+          $('#js--username__result').text(window.username);
+          var y = document.getElementById('username__show');
+          y.style.display = 'block';
+          showSuccessNotification('Credentials set!', true, true);
+          $('.js--set-creds').html('Remove Credentials');
+        } else {
+          var x = document.getElementById("set_username__Form");
+          x.style.display = "flex";
+          $('#js--username__result').text(window.username);
+          var y = document.getElementById('username__show');
+          y.style.display = 'none';
+          $('.js--set-creds').html('Set Credentials');
+        }
       });
 
       $('.js--explore__username__input--set').click(function () {
         if ($('.js--explore__username__input').val() == '') {
           var n = makeNotification({
-            message: 'Enter a Username',
+            message: 'Enter a Username.',
             type: 'warning',
             closeOlderInstances: true,
             stayOpenUntilClick: false
@@ -322,12 +377,22 @@
           n.show();
           return;
         }
-        window.username = $('.js--explore__username__input').val();
-        var x = document.getElementById("explore_set_username_api");
-        x.style.display = "none";
-        $('#explore-js--username__result').text(window.username);
-        var y = document.getElementById('explore_username__show');
-        y.style.display = 'block';
+        if($('.js--set-creds').html() != 'Remove Credentials'){
+          window.username = $('.js--explore__username__input').val();
+          var x = document.getElementById("explore_set_username_api");
+          x.style.display = "none";
+          $('#explore-js--username__result').text(window.username);
+          var y = document.getElementById('explore_username__show');
+          y.style.display = 'block';
+          $('.js--set-creds').html('Remove Credentials');
+        } else {
+          var x = document.getElementById("explore_set_username_api");
+          x.style.display = "flex";
+          $('#explore-js--username__result').text(window.username);
+          var y = document.getElementById('explore_username__show');
+          y.style.display = 'none';
+          $('.js--set-creds').html('Set Credentials');
+        }
       });
       
     //setting project name stuff
@@ -394,7 +459,7 @@
 
         var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
         if (format.test(categoryName) != false) {
-            showWarningNotification('Category name cannot have spaces or special characters', true, false);
+            showWarningNotification('Category name should have only letters and numbers.', true, false);
             return;
         }
 
@@ -413,35 +478,31 @@
           setTrainButtonState('training');
           preprocessTrainData();
       })
-
-      $('.js--classifier__predict__button').on('click', function () {
-          preprocessPredictData();
-      })
     });
 
     //create extension url in create tab
     $('.js--classifier__open__codelab').on('click', function(){
         if(window.RapiKey != '' && window.WapiKey != '' && window.username != '' && window.projectName != ''){
-          var extensionUrl = `?url=https://cognimates.:2634/nlc/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.projectName}`;
+          var extensionUrl = `?url=https://cognimate.me:2635/nlc/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.projectName}`;
           extensionUrl = "https://hackidemia.github.io/cognimates-gui/" + extensionUrl;
           //var extensionUrl = `?url=http://localhost:2634/nlc/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.projectName}`;
           //extensionUrl = "http://localhost:8601/" + extensionUrl;
           window.open(extensionUrl);
         } else {
-          showWarningNotification('Must have a trained project with a username and both api keys set.', true, false);
+          showWarningNotification('We need a trained project with a username and both api keys set.', true, false);
         }
     })
 
     //create extension url in explore tab
     $('.js--explore__open__codelab').on('click', function() {
       if(window.RapiKey != '' && window.WapiKey != '' && window.username != '' && window.projectName != ''){
-        var extensionUrl = `?url=https://cognimates.:2634/vision/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.projectName}`;
+        var extensionUrl = `?url=https://cognimate.me:2635/nlc/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.projectName}`;
         extensionUrl = "https://hackidemia.github.io/cognimates-gui/" + extensionUrl;
         //var extensionUrl = `?url=http://localhost:2634/nlc/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.projectName}`;
         //extensionUrl = "http://localhost:8601/" + extensionUrl;
         window.open(extensionUrl);
       } else {
-        showWarningNotification('Must have a trained project with a username and both api keys set.', true, false);
+        showWarningNotification('We need a trained project with a username and both api keys set.', true, false);
       }
     });
                   
@@ -571,13 +632,13 @@
             var values = unparsed_result.split(","); 
             if (values === undefined || values.length < 10) {
               var n = makeNotification({
-                message: `${className} category needs at least 10 examples.`,
+                message: `Create at least 10 examples for ${className} category.`,
                 type: 'warning',
                 closeOlderInstances: true,
                 stayOpenUntilClick: true
               });
               n.show();
-              throw new Error(`${className} category has less than 10 examples`);
+              throw new Error(`Create at least 10 examples for ${className} category.`);
             } 
             for(var i = 0; i < values.length; i++){
               window.training_data[className].push(values[i]);
@@ -598,7 +659,7 @@
                 success: function (data) {
                     if(data.error != null) {
                         var n = makeNotification({
-                          message: 'We couldn\'t save to Clarifai :( Some technical info: ' + data.error,
+                          message: 'Oops. ' + data.error,
                           type: 'error',
                           closeOlderInstances: true,
                           stayOpenUntilClick: false
@@ -618,13 +679,15 @@
     }
 
     function setClassifierStatus() {
-        const classifierNameClass = ".js--classifier__name";
-        const classifierStatusClass = ".js--classifier__status";
-        const classifierRefreshSpinnerClass = ".js--classifier__status_spinner";
+        const classifierUploadProgressClass = ".js--train-results__upload_progress";
+        const classifierNameClass = ".js--train-results__name";
+        const classifierStatusClass = ".js--train-results__status";
+        const classifierRefreshSpinnerClass = ".js--train-results__status_spinner";
         $(`${classifierNameClass}--set`).html(window.projectName);
         $(`${classifierStatusClass}--set`).html(window.classifier_status);
         $(classifierNameClass).show();
         $(classifierStatusClass).show();
+        $(classifierUploadProgressClass).hide();
         if (window.classifier_status.includes('successfully')) {
             $(classifierRefreshSpinnerClass).hide();
             setAutoRefreshStatus(false);
@@ -658,7 +721,7 @@
       $('#button_exploreProjectName').click(function () {
         if ($('#input_exploreProjectName').val() == '') {
             var n = makeNotification({
-                message: 'Enter a project name to use.',
+                message: 'Enter a project name.',
                 type: 'warning',
                 closeOlderInstances: true,
                 stayOpenUntilClick: false
@@ -705,10 +768,12 @@
                     token: window.RapiKey, phrase: phraseToPredict},
             success: function(data) {
                 if(data.error == null) {
+                    window.predict_done = 'success';
                     showClassification(data);
                 } else {
+                    window.predict_done = 'fail';
                     var n = makeNotification({
-                      message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + data.error,
+                      message: 'Oops. ' + data.error,
                       type: 'error',
                       closeOlderInstances: true,
                       stayOpenUntilClick: true
@@ -719,7 +784,7 @@
             error: function (error) {
                 console.log(error);
                 var n = makeNotification({
-                  message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + error,
+                  message: 'Oops. ' + error,
                   type: 'error',
                   closeOlderInstances: true,
                   stayOpenUntilClick: true
@@ -752,7 +817,8 @@
 
     // TODO: Sanitize categoryName before further processing
     var phraseToPredict = $('#input_explore_predictText').val();
-    console.log('here');
+    const predictRefreshSpinnerClass = ".js--results__status_spinner";
+    $(predictRefreshSpinnerClass).show();
     $.ajax({
         url: "/nlc/classify",
         type: "POST",
@@ -760,10 +826,11 @@
                 token: window.RapiKey, phrase: phraseToPredict},
         success: function(data) {
             if(data.error == null) {
+                window.predict_done = 'success';
                 showClassification(data);
             } else {
                 var n = makeNotification({
-                    message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + data.error,
+                    message: 'Oops. ' + data.error,
                     type: 'error',
                     closeOlderInstances: true,
                     stayOpenUntilClick: true
@@ -774,7 +841,7 @@
         error: function (error) {
             console.log(error);
             var n = makeNotification({
-                message: 'We couldn\'t save the API key you entered :( Some more technical info: ' + error,
+                message: 'Oops. ' + error,
                 type: 'error',
                 closeOlderInstances: true,
                 stayOpenUntilClick: true
@@ -786,15 +853,25 @@
 
     //helper functions for predicting 
     function showClassification(response) {
-        var top_class = findTopClass(response);
+        window.top_class = findTopClass(response);
         console.log(top_class);
-        var n = makeNotification({
-            message: `The model says \"${top_class[0]}\"! with a confidence score of ${top_class[1]}.`,
+        {{!-- var n = makeNotification({
+            // message: `The model says \"${top_class[0]}\"! with a confidence score of ${top_class[1]}.`,
             type: 'success',
             closeOlderInstances: true,
             stayOpenUntilClick: true
         });
-        n.show();
+        n.show(); --}}
+
+        if(window.predict_done === 'success'){
+          console.log('somewhere here?');
+          const resultsLabel = ".js--predict--label-results";
+          const resultsScore = ".js--predict--confidence-results";
+          const resultsShow = ".js--predict-results__name"
+          $(resultsLabel).html(window.top_class[0]);
+          $(resultsScore).html(window.top_class[1]);
+          $(resultsShow).show();
+        }
     }
 
     function findTopClass(data) {

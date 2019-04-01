@@ -6,13 +6,14 @@
             <i></i>
         </div>
         <div class="step__body">
-          <h2 class="step__title">What is your {{ serviceName }} key?
+          <h2 class="step__title">What is your Clarifai key?
               <a href="#" class="step__help-open-button 
                                   js--open-help" role="button">
                   <i class="fas fa-question-circle"></i>
               </a>
           </h2>
-          <div class="step__form-with-button">
+          <div class="step__form-with-button
+                      js--apikey__form">
               <input type="text"
                   class="form-control
                          no-radius--right
@@ -40,10 +41,10 @@
               </a>
           </div>
 
-          <a href="{{ howToGuide }}" class="step__link step__link--get-key" target="_blank" >
+          <a href="https://docs.google.com/document/d/1q8Cj9QhwjUXM51Qqtj3V3jYMFA44SiAAIZzVck7Efdc/view#heading=h.4jovbu2htq86" class="step__link step__link--get-key" target="_blank" >
                  How-to guide
            </a>
-           <a href="{{ serviceUrl }}" class="step__link step__link--get-key" target="_blank" >
+           <a href="https://clarifai.com/signup" class="step__link step__link--get-key" target="_blank" >
                  Sign up &amp; get keys
            </a>
            <div class="step__help
@@ -101,41 +102,59 @@
             <i></i>
         </div>
         <div class="step__body">
-            <h2 class="step__title">Upload an image to test your model</h2>
-              <div class="category__container">
-                  <div class="category__box 
-                              category__box--dashed
-                              category__box--vision">
-                      <form action="/"
-                            id="js--explore__dropzone-predict"
-                            class="dropzone--predict">
-                          <div class="dropzone__header">
-                              <i class="fas fa-cloud-upload-alt dropzone__upload-icon"></i>
-                              <span class=" dropzone__label">Drop images here, or click to choose</span>
-                          </div>
-                          <div class="js--explore__dropzone__previews-container--predict
-                                      dropzone-previews"></div>
-                      </form>
-                  </div>
+          <h2 class="step__title">Upload an image to test your model</h2>
+          <div class="category__container">
+              <div class="category__box 
+                          category__box--dashed
+                          category__box--vision">
+                  <form action="/"
+                        id="js--explore__dropzone-predict"
+                        class="dropzone--predict">
+                      <div class="dropzone__header">
+                          <i class="fas fa-cloud-upload-alt dropzone__upload-icon"></i>
+                          <span class="dropzone__label">Drop images here, or click to choose</span>
+                      </div>
+                      <div class="js--explore__dropzone__previews-container--predict
+                                  dropzone-previews"></div>
+                  </form>
               </div>
-              <div class="classifier__train-or">
-                  &mdash; or  &mdash;
+          </div>
+          <div class="classifier__train-or">
+              &mdash; or  &mdash;
+          </div>
+          <input type="text"
+                class="form-control
+                       step__form-text
+                       classifier__train-url
+                       js--explore__predict-url"
+                autocomplete="off"
+                aria-describedby=""
+                placeholder="Enter an image URL">
+          <button class="btn btn-primary
+                         js--explore__predict_button"
+              type="button" disabled>
+              Predict
+          </button>
+          <div class="classifier__results">
+              <div class="results__name
+                          js--explore__predict-results__name" style="display:none;">
+                  <span class="results__name-label">Category:</span>
+                  <span class="results__name-value
+                               js--explore__results--category"></span>
+                  <br>
+                  <span class="results__name-label">Confidence score:</span>
+                  <span class="results__name-value
+                               js--explore__results--confidence"></span>
               </div>
-              <input type="text"
-                    class="form-control
-                           step__form-text
-                           classifier__train-url
-                           js--explore__predict-url"
-                    autocomplete="off"
-                    aria-describedby=""
-                    placeholder="Enter an image URL">
-              <button class="btn btn-primary
-                             js--explore__predict_button"
-                  type="button" disabled>
-                  Predict
-              </button>
-        </div>
+              <div class="spinner-grow
+                          js--explore__predict-results__status_spinner"
+                    style="display:none"
+                    role="status">
+                  <span class="sr-only"></span>
+              </div>
+          </div>
     </li>
+
 
     <li class="stepper__step">
         <span class="step__number">4</span>
@@ -153,7 +172,6 @@
                   type="button ">
                   Go!
           </button>
-          </h2>
         </div>
     </li>
 </ul>
