@@ -235,7 +235,7 @@ function classifyImage(req, res) {
 
 function classifyURLImage(req, res){
   const apiKey = req.headers.apikey;
-  var image_link = req.body.image_url;
+  var image_link = req.body.image_data;
   const model_id = req.body.classifier_id;
   const app = init(apiKey);
   app.models.predict(model_id, { url: image_link }).then(

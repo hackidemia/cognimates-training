@@ -874,10 +874,10 @@
             $.ajax({
                  url: "/vision/classifyURLImage",
                  type: "POST",
+                 headers: { 'apikey': window.apiKey },
                  data: {
-                   apikey: window.apiKey,
                    classifier_id: model_id,
-                   image_url: url
+                   image_data: url
                  },
                  success: function (data) {
                      if(data.error != null) {
