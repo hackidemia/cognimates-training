@@ -15,37 +15,14 @@ router.get('/home', function (req, res) {
     });
 });
 
-// router.get('/text_home', (req, res) => {
-//   res.render('models/text/text_home', {
-//       title: 'Cognimates, Train a text model, Home'
-//     })
-// })
-
+//begin text routes
 router.get('/text_home', (req, res) => {
   res.render('models/text/text_classifiers', {
       title: 'Cognimates, Train a text model, Home'
     })
 })
 
-router.get('/text_train', (req, res) => {
-  res.render('models/text/text_train', {
-      title: 'Cognimates, Train a text model, Train'
-    })
-})
-
-router.get('/text_examples', (req, res) => {
-  res.render('models/text/text_examples', {
-      title: 'Cognimates, Train a text model, Examples'
-    })
-})
-
-router.get('/text', (req, res) => {
-  res.render('models/text/text', {
-      title: 'Cognimates, Train a text model, Result'
-    })
-})
-
-////////////////////
+//routes for text api calls
 router.post('/nlc/classifier', textController.createClassifier)
 router.get('/nlc/classifier', textController.getClassifierInformation)
 router.delete('/nlc/classifier', textController.deleteClassifier)
@@ -71,38 +48,16 @@ router.get('/nlc/extension/:read/:write/:username/:model', (req, res) => {
       layout: false
     });
 });
-////////////////////
-// router.get('/vision_home', (req, res) => {
-//   res.render('models/vision/vision_home', {
-//       title: 'Cognimates, Train a vision model, Home'
-//     })
-// })
 
+
+//begin vision routes
 router.get('/vision_home', (req, res) => {
   res.render('models/vision/vision_classifiers', {
       title: 'Cognimates, Train a vision model, Home'
     })
 })
 
-router.get('/vision_train', (req, res) => {
-  res.render('models/vision/vision_train', {
-      title: 'Cognimates, Train a vision model, Train'
-    })
-})
-
-router.get('/vision_examples', (req, res) => {
-  res.render('models/vision/vision_examples', {
-      title: 'Cognimates, Train a vision model, Examples'
-    })
-})
-
-router.get('/vision', (req, res) => {
-  res.render('models/vision/vision', {
-      title: 'Cognimates, Train a vision model, Result'
-    })
-})
-
-////////////////////
+//vision api calls
 router.get('/vision/classifiers', visionController.getClassifiersList)
 router.post('/vision/classifier', visionController.createClassifier)
 router.get('/vision/classifier', visionController.getClassifierInformation)
@@ -123,6 +78,7 @@ router.get("/vision/extension/:apikey/:modelid", (req, res) => {
     });
 });
 
+//begin doodle routes
 router.get('/doodle', (req, res) => {
   res.render('models/doodle/doodle', {
       title: 'Cognimates, Doodle Model',
