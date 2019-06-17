@@ -48,18 +48,17 @@ function init(){
         }
     }));
 
+    // for ( var i = 0; i < 1; i ++ ) {
+    //     var x = Math.random() * 2000 - 1000;
+    //     var y = Math.random() * 2000 - 1000;
+    //     var z = Math.random() * 2000 - 1000;
+    //     vertices.push( x, y, z );
+    // }
+    // geo.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+
     promise.then(function() {
         // alert('all promises complete!');
         // console.log(images.length);
-
-
-        for ( var i = 0; i < 10000; i ++ ) {
-            var x = Math.random() * 2000 - 1000;
-            var y = Math.random() * 2000 - 1000;
-            var z = Math.random() * 2000 - 1000;
-            vertices.push( x, y, z );
-        }
-        geo.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
     
         // console.log(typeof images[2]);
     
@@ -71,16 +70,21 @@ function init(){
             [[ 1.0, 1.0, 1.0 ], images[4], 5 ]
         ];
     
-        for ( var i = 0; i < parameters.length; i ++ ) {
-            var color = parameters[ i ][ 0 ];
-            var sprite = parameters[ i ][ 1 ];
-            var size = parameters[ i ][ 2 ];
-            mat[ i ] = new THREE.PointsMaterial( { size: size, map: sprite, blending: THREE.AdditiveBlending, depthTest: false, transparent: true } );
-            mat[ i ].color.setHSL( color[ 0 ], color[ 1 ], color[ 2 ] );
+        for ( var i = 0; i < images.length; i ++ ) {
+            vertices = [];
+            geo = new THREE.BufferGeometry();
+            var x = Math.random() * window.innerWidth-window.innerWidth/2;
+            var y = Math.random() * window.innerHeight-window.innerHeight/2;
+            var z = Math.random() * window.innerHeight-window.innerHeight/2;
+            vertices.push( x, y, z );
+            geo.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+
+            mat[ i ] = new THREE.PointsMaterial( { size: 100, map: images[i], blending: THREE.AdditiveBlending, depthTest: false, transparent: true } );
+            //mat[ i ].color.setHSL( color[ 0 ], color[ 1 ], color[ 2 ] );
             var particles = new THREE.Points( geo, mat[ i ] );
             particles.rotation.x = Math.random() * 6;
-            particles.rotation.y = Math.random() * 6;
-            particles.rotation.z = Math.random() * 6;
+            // particles.rotation.y = Math.random() * 6;
+            // particles.rotation.z = Math.random() * 6;
             scene.add( particles );
         }
     });
@@ -103,7 +107,7 @@ function render(){
     for ( var i = 0; i < scene.children.length; i ++ ) {
         var object = scene.children[ i ];
         if ( object instanceof THREE.Points ) {
-            object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) );
+            //object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) );
         }
     }
 
