@@ -3,9 +3,6 @@ let geo, mat=[];
 let textureLoader;
 let frameCount = 0;
 
-// let box;
-// let pinLight, pinLightShape;
-
 init();
 animate();
 
@@ -23,13 +20,6 @@ function init(){
     controls.update();
 
     //setup
-    // let light = new THREE.AmbientLight( 0x050505 ); // soft white light
-    // scene.add( light );
-
-    // pinLight = new THREE.PointLight( 0xFFFFFF, 1, 100 );
-    // scene.add( pinLight );
-    // pinLight.position.x = 7;
-
     geo = new THREE.BufferGeometry();
     var vertices = [];
     textureLoader = new THREE.TextureLoader();
@@ -43,7 +33,8 @@ function init(){
     var dir = "textures/samples";
     var fileextension = ".png";
     var tmpSample;
-    $.ajax({
+
+    var promise = Promise.resolve($.ajax({
         //This will retrieve the contents of the folder if the folder is configured as 'browsable'
         url: dir,
         success: function (data) {
@@ -53,63 +44,47 @@ function init(){
                 var tmpsrc = "http://"+window.location.host+"/"+dir+filename;
                 tmpSample = textureLoader.load(tmpsrc);
                 images.push(tmpSample);
-                console.log(images.length);
             });
         }
+    }));
+
+    promise.then(function() {
+        // alert('all promises complete!');
+        // console.log(images.length);
+
+
+        for ( var i = 0; i < 10000; i ++ ) {
+            var x = Math.random() * 2000 - 1000;
+            var y = Math.random() * 2000 - 1000;
+            var z = Math.random() * 2000 - 1000;
+            vertices.push( x, y, z );
+        }
+        geo.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+    
+        // console.log(typeof images[2]);
+    
+        parameters = [
+            [[ 1.0, 1.0, 1.0 ], images[2], 20 ],
+            [[ 1.0, 1.0, 1.0 ], images[3], 15 ],
+            [[ 1.0, 1.0, 1.0 ], images[1], 10 ],
+            [[ 1.0, 1.0, 1.0 ], images[5], 8 ],
+            [[ 1.0, 1.0, 1.0 ], images[4], 5 ]
+        ];
+    
+        for ( var i = 0; i < parameters.length; i ++ ) {
+            var color = parameters[ i ][ 0 ];
+            var sprite = parameters[ i ][ 1 ];
+            var size = parameters[ i ][ 2 ];
+            mat[ i ] = new THREE.PointsMaterial( { size: size, map: sprite, blending: THREE.AdditiveBlending, depthTest: false, transparent: true } );
+            mat[ i ].color.setHSL( color[ 0 ], color[ 1 ], color[ 2 ] );
+            var particles = new THREE.Points( geo, mat[ i ] );
+            particles.rotation.x = Math.random() * 6;
+            particles.rotation.y = Math.random() * 6;
+            particles.rotation.z = Math.random() * 6;
+            scene.add( particles );
+        }
     });
-
-    while(images.length<30){
-        console.log(images.length+"loading...");
-    }
-
-
-    for ( var i = 0; i < 10000; i ++ ) {
-        var x = Math.random() * 2000 - 1000;
-        var y = Math.random() * 2000 - 1000;
-        var z = Math.random() * 2000 - 1000;
-        vertices.push( x, y, z );
-    }
-    geo.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
-
-    // console.log(typeof images[2]);
-
-    parameters = [
-        [[ 1.0, 1.0, 1.0 ], images[2], 20 ],
-        [[ 1.0, 1.0, 1.0 ], images[3], 15 ],
-        [[ 1.0, 1.0, 1.0 ], images[1], 10 ],
-        [[ 1.0, 1.0, 1.0 ], images[5], 8 ],
-        [[ 1.0, 1.0, 1.0 ], images[4], 5 ]
-    ];
-
-    for ( var i = 0; i < parameters.length; i ++ ) {
-        var color = parameters[ i ][ 0 ];
-        var sprite = parameters[ i ][ 1 ];
-        var size = parameters[ i ][ 2 ];
-        mat[ i ] = new THREE.PointsMaterial( { size: size, map: sprite, blending: THREE.AdditiveBlending, depthTest: false, transparent: true } );
-        mat[ i ].color.setHSL( color[ 0 ], color[ 1 ], color[ 2 ] );
-        var particles = new THREE.Points( geo, mat[ i ] );
-        particles.rotation.x = Math.random() * 6;
-        particles.rotation.y = Math.random() * 6;
-        particles.rotation.z = Math.random() * 6;
-        scene.add( particles );
-    }
-
-    // mat = new THREE.MeshBasicMaterial({ 
-    //     color: 0xFFFFFF,
-    // });
-    // pinLightShape = new THREE.Mesh( geo, mat);
-    // scene.add(pinLightShape);
-
-
-    // console.log(pinLight);
-
-    // geo = new THREE.SphereGeometry( 2, 32, 32 );
-    // mat = new THREE.MeshPhongMaterial({ 
-    //     color: 0xFFFFFF,
-    // });
-
-    // box = new THREE.Mesh( geo, mat );
-    // scene.add( box );
+    
     
 }
 
