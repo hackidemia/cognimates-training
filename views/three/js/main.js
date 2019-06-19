@@ -62,14 +62,6 @@ function init(){
     
         // console.log(typeof images[2]);
     
-        parameters = [
-            [[ 1.0, 1.0, 1.0 ], images[2], 20 ],
-            [[ 1.0, 1.0, 1.0 ], images[3], 15 ],
-            [[ 1.0, 1.0, 1.0 ], images[1], 10 ],
-            [[ 1.0, 1.0, 1.0 ], images[5], 8 ],
-            [[ 1.0, 1.0, 1.0 ], images[4], 5 ]
-        ];
-    
         for ( var i = 0; i < images.length; i ++ ) {
             vertices = [];
             geo = new THREE.BufferGeometry();
