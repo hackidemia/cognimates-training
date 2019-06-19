@@ -86,4 +86,10 @@ router.get('/doodle', (req, res) => {
     })
 })
 
+//begin visualizer routes
+router.post('/visualizer', (req, res) => {
+  var examples = req.body.examplesData;
+  res.render('three/test',{examples: examples});
+})
+
 module.exports = router
