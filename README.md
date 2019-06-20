@@ -1,18 +1,11 @@
-### cognimates-training
-Platform where kids train their own AI models 
+# Visualizer with ResNet-50 model
+## Running on the web browser
+Start a HTTP server on the package root directory (where `setup.py` exists)
+```
+python -m http.server
+```
 
-#### setup
+You can run the demo on `http://localhost:8000/example/resnet`
 
-- copy `config.js.example` in the project root as `config.js`
-- modify vars as needed
-- `npm install` to download necessary node packages
-
-#### dev
-- `npm run dev` to start server and watch for js + scss file changes. The browser still needs a refresh on each change, and handlebars files are not watched
-- open in `http://localhost:xxxx/`, with xxxx being the `module.exports.SERVER_PORT` is set in config.js  
-
-#### build just the scss
-- `npm run sass-build` 
-
-#### run server on production (no file watching)
-- `npm run prod-node-server`
+For IE11, `http://localhost:8000/three_webdnn/example/convert_resnet/descriptor_run_resnet.es5.html`
+ can be used. This is also example of automatic conversion of user code to ES5-compliant JavaScript code (see tips/es5).
