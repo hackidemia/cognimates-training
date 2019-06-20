@@ -1,0 +1,18 @@
+{
+  "name": "webdnn-exercise",
+  "version": "1.0.0",
+  "description": "WebDNN exercise example website using webpack",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "http-server"
+  },
+  "author": "Masatoshi Hidaka",
+  "license": "MIT",
+  "dependencies": {
+    "http-server": "^0.11.1",
+    "webdnn": "^1.2.0",
+    "webpack": "^3.10.0"
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "weight_encoding": "raw",
+  "memory_layout": {
+    "static": {
+      "size": 126810,
+      "allocations": {
+        "a35": {
+          "name": "a35",
+          "offset": 126026,
+          "size": 784
+        },
+        "a37": {
+          "name": "a37",
+          "offset": 75338,
+          "size": 6084
+        },
+        "a49": {
+          "name": "a49",
+          "offset": 116810,
+          "size": 5408
+        },
+        "a40": {
+          "name": "a40",
+          "offset": 75338,
+          "size": 41472
+        },
+        "a41": {
+          "name": "a41",
+          "offset": 116810,
+          "size": 9216
+        },
+        "a42": {
+          "name": "a42",
+          "offset": 75338,
+          "size": 9216
+        },
+        "a50": {
+          "name": "a50",
+          "offset": 84554,
+          "size": 2304
+        },
+        "a51": {
+          "name": "a51",
+          "offset": 86858,
+          "size": 32
+        },
+        "a53": {
+          "name": "a53",
+          "offset": 86890,
+          "size": 10
+        },
+        "a27": {
+          "name": "a27",
+          "offset": 0,
+          "size": 72
+        },
+        "a28": {
+          "name": "a28",
+          "offset": 72,
+          "size": 8
+        },
+        "a29": {
+          "name": "a29",
+          "offset": 80,
+          "size": 1152
+        },
+        "a30": {
+          "name": "a30",
+          "offset": 1232,
+          "size": 16
+        },
+        "a31": {
+          "name": "a31",
+          "offset": 1248,
+          "size": 73728
+        },
+        "a32": {
+          "name": "a32",
+          "offset": 74976,
+          "size": 32
+        },
+        "a33": {
+          "name": "a33",
+          "offset": 75008,
+          "size": 320
+        },
+        "a34": {
+          "name": "a34",
+          "offset": 75328,
+          "size": 10
+        }
+      }
+    },
+    "dynamic": {
+      "size": 0,
+      "allocations": {}
+    }
+  },
+  "placeholders": {},
+  "unresolved_value_lists": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ],
+  "inputs": [
+    "a35"
+  ],
+  "outputs": [
+    "a53"
+  ],
+  "licenses": {
+    "webdnn": "(C) Machine Intelligence Laboratory (The University of Tokyo), MIT License",
+    "eigen": "(C) Eigen authors, MPL 2.0 License"
+  }
+}
