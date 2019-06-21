@@ -87,9 +87,10 @@ router.get('/doodle', (req, res) => {
 })
 
 //begin visualizer routes
-router.post('/visualizer', (req, res) => {
-  var examples = req.body.examplesData;
-  res.render('three/test',{examples: examples});
+router.get('/visualizer', (req, res) => {
+  res.render('three/test', {
+    title: 'Cognimates, Neural Network Visualizer'
+  });
 })
 
 module.exports = router

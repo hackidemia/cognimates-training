@@ -653,33 +653,35 @@
                 label_items.push(image_file);
             });
             requestData.training_data.push({label: label, label_items: label_items});
-        })
-        return new Promise((resolve, reject) => {
-            $.ajax({
-                url: '/visualizer',
-                type: 'POST',
-                dataType: 'json',
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({"examplesData": requestData}),
-                success: function (data) {
-                    if(data.error != null) {
-                        reject(new Error(data.error));
-                        return;
-                    }
-                    if (data.classifier_id == undefined) {
-                        reject(new Error('Failed to create classifier.'));
-                        return;
-                    }
-                    //window.model_id = data.classifier_id;
-                    //window.classifier_status = data.status;
-                    console.log("post success");
-                    resolve();
-                },
-                error: function (error) {
-                    reject(error);
-                }
-            });
         });
+        window.visualizerData = requestData;
+        window.open("/visualizer");
+        // return new Promise((resolve, reject) => {
+        //     $.ajax({
+        //         url: '/visualizer',
+        //         type: 'POST',
+        //         dataType: 'json',
+        //         contentType: "application/json; charset=utf-8",
+        //         data: JSON.stringify({"examplesData": requestData}),
+        //         success: function (data) {
+        //             if(data.error != null) {
+        //                 reject(new Error(data.error));
+        //                 return;
+        //             }
+        //             if (data.classifier_id == undefined) {
+        //                 reject(new Error('Failed to create classifier.'));
+        //                 return;
+        //             }
+        //             //window.model_id = data.classifier_id;
+        //             //window.classifier_status = data.status;
+        //             console.log("post success");
+        //             resolve();
+        //         },
+        //         error: function (error) {
+        //             reject(error);
+        //         }
+        //     });
+        // });
     }
     function setUploadProgress(progress) {
         $('.js--train-results__upload_progress').show();
