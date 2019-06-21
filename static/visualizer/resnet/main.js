@@ -7,7 +7,7 @@ let coordinates;
 let resultArray = [];
 
 
-let requestData;
+let requestData = {};
 
 $(document).ready(function() {
   init();
@@ -69,10 +69,18 @@ function fetchImage(){
     setTimeout(function(){
         // doing async stuff
         var examplesData = window.opener.visualizerData;
-        requestData = window.opener.visualizerData.training_data;
+        // requestData = window.opener.visualizerData.training_data;
         examplesData.training_data.forEach((item) => {
+          console.log("item:", item.label_items);
           requestData[item.label] = item.label_items;
         });
+
+        Object.keys(requestData).forEach(function(key) {
+          for (let idx = 0; idx < requestData[key].length; idx++) {
+            requestData[key][idx] = "data:image/jpeg;base64," + requestData[key][idx];
+          }
+        });
+
         console.log(requestData);
         console.log('task 1 in fetchImage is done!');
         dfrd1.resolve();
