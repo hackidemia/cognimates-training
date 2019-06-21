@@ -1,0 +1,17 @@
+Metadata-Version: 1.2
+Name: webdnn
+Version: 1.2.8
+Summary: Deep Neural Network Execution Framework for Web Browsers
+Home-page: https://github.com/mil-tokyo/webdnn
+Author: Yuichiro Kikura
+Author-email: kikura@mi.t.u-tokyo.ac.jp
+License: UNKNOWN
+Description: UNKNOWN
+Keywords: deep-neural-networks accelerate optimization javascript webgpu
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.6
+Requires-Python: >=3.6
