@@ -132,7 +132,7 @@ async function populateImageDataArray(){
             myImage.onload = function() {
                 console.log('End load image');
                 var canvas = document.createElement('canvas');
-                document.body.appendChild(canvas);
+                //document.body.appendChild(canvas);
                 var context = canvas.getContext('2d');
                 
                 context.drawImage(myImage, 0, 0);
