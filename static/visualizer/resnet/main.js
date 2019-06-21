@@ -183,10 +183,11 @@ function doTsne(dists){
       opt.dim = 3; // dimensionality of the embedding (2 = default)
       var tsne = new tsnejs.tSNE(opt);
       tsne.initDataDist(dists);
-      for(var k = 0; k < 500; k++) {
+      for(var k = 0; k < 800; k++) {
         tsne.step(); // every time you call this, solution gets better
       }
       coordinates = tsne.getSolution();// Y is an array of 2-D points that you can plot
+      console.log(coordinates);
       console.log('task 1 in doTsne is done!');
       dfrd1.resolve();
     }, 1000);
@@ -195,7 +196,20 @@ function doTsne(dists){
 
 
 function loadFiles(){
-    console.log('task 1 in loadFiles is start!');
+  var minVal = 1;
+  var maxVal = -1;
+  coordinates.forEach(coorPos => {
+    coorPos.forEach(coorVal => {
+      if (coorVal > maxVal){
+        maxVal = coorVal;
+      }
+      if (coorVal < minVal){
+        minVal = coorVal;
+      }
+    })
+  });
+
+  console.log('task 1 in loadFiles is start!');
   var vertices = [];
   var sampleURI;
   var imageVector;
@@ -208,15 +222,15 @@ function loadFiles(){
         vertices = [];
         geo = new THREE.BufferGeometry();
 
-        var x = coordinates[count][0]*100000000000;
-        var y = coordinates[count][1]*100000000000;
-        var z = coordinates[count][2]*100000000000;
+        //var x = coordinates[count][0];
+        //var y = coordinates[count][1];
+        //var z = coordinates[count][2];
 
-        // var x = THREE.Math.mapLinear(coordinates[count][0],0,0.000000000001,-1000,1000);
-        // var y = THREE.Math.mapLinear(coordinates[count][1],0,0.000000000001,-1000,1000);
-        // var z = THREE.Math.mapLinear(coordinates[count][2],0,0.000000000001,-1000,1000);
+        var x = THREE.Math.mapLinear(coordinates[count][0],minVal,maxVal,-window.innerWidth/2,window.innerWidth/2);
+        var y = THREE.Math.mapLinear(coordinates[count][1],minVal,maxVal,-window.innerWidth/2,window.innerWidth/2);
+        var z = THREE.Math.mapLinear(coordinates[count][2],minVal,maxVal,-window.innerWidth/2,window.innerWidth/2);
 
-        //console.log(x,y,z);
+        console.log(x,y,z);
 
 
         vertices.push( x, y, z );
