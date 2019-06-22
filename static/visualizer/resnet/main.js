@@ -1,7 +1,6 @@
 let scene, camera, controls, renderer, stats, parameters;
-let geo, mat;//mat=[]
+let geo, mat;
 let textureLoader;
-let frameCount = 0;
 let coordinates;
 
 let resultArray = [];
@@ -13,9 +12,8 @@ var opt;
 var tsne;
 var count;
 var particles;
-var minVal,maxVal;
 
-var numberStep;
+var numberStep = 0;
 var initSuc = false;
 
 $(document).ready(function() {
@@ -34,36 +32,20 @@ function init(){
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.01, 10000 );
     controls = new THREE.OrbitControls( camera, renderer.domElement );
     camera.position.z = 10;
+    controls.minDistance = -700;
+    controls.maxDistance = 1500;
     controls.update();
 
     //setup
     geo = new THREE.BufferGeometry();
     textureLoader = new THREE.TextureLoader();
 
-    //extract features for images
-    /*
-    1.fetchImage();
-    2.run_entry();
-    3.modify dists;
 
-    var dists = createGround(20,100);
-
-    console.log(result);
-
-    //do tsne and render images
-    $(function(){
-      doTsne(dists).done(function(){
-          loadFiles();
-      });
-    });
-    */
 
     $(function(){
         fetchImage().done(function(){
             run_entry().then(function(){
-                console.log(resultArray);
                 dists = resultArray;
-                //var dists = createGround(20,100);
                 prepareTsne(dists);
                 doTsne().done(function(){
                     loadFiles();
@@ -78,11 +60,8 @@ function init(){
 function fetchImage(){
     var dfrd1 = $.Deferred();
     setTimeout(function(){
-        // doing async stuff
         var examplesData = window.opener.visualizerData;
-        // requestData = window.opener.visualizerData.training_data;
         examplesData.training_data.forEach((item) => {
-          console.log("item:", item.label_items);
           requestData[item.label] = item.label_items;
         });
 
@@ -91,59 +70,32 @@ function fetchImage(){
             requestData[key][idx] = "data:image/jpeg;base64," + requestData[key][idx];
           }
         });
-
-        console.log(requestData);
-        console.log('task 1 in fetchImage is done!');
         dfrd1.resolve();
     }, 2000);
     return dfrd1.promise();
 }
-
-function function2(){
-    var dfrd1 = $.Deferred();
-    setTimeout(function(){
-        // doing async stuff
-        console.log('task 1 in function2 is done!');
-        dfrd1.resolve();
-    }, 2000);
-    return dfrd1.promise();
-}
-
 
 function animate() {
     requestAnimationFrame( animate );
     render();
     renderer.render( scene, camera );
-    frameCount++;
 }
 
 function render(){
     var time = Date.now() * 0.00005;
     numberStep++;
-    //var timer = 0.0001 * Date.now();
 
     $(function(){
-      console.log("doing!");
-      if(initSuc){
-        doTsne().done(function(){
-          updatePos();
-        });
-      }else{
-        console.log("Loading");
+      if(numberStep < 1200){
+        if(initSuc){
+          doTsne().done(function(){
+            updatePos();
+          });
+        }else{
+          console.log("Loading");
+        }
       }
     });
-    // for ( var i = 0; i < scene.children.length; i ++ ) {
-    //     var object = scene.children[ i ];
-    //     if ( object instanceof THREE.Points ) {
-    //         //object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) );
-    //         //object.geometry.attributes.position.array[0] += time*0.001;
-    //         //console.log(object.geometry.attributes.position.array[1]);
-    //         // object.position.x = 5000 * Math.cos( timer + i );
-    //         // object.position.y = 5000 * Math.sin( timer + i * 1.1 );
-    //     }
-    // }
-
-    controls.update();
 }
 
 function createGround(width, height){
@@ -206,24 +158,17 @@ function prepareTsne(dists){
 
 function doTsne(){
     var dfrd1 = $.Deferred();
-
     setTimeout(function(){
-      // doing async stuff
-      //kaparthy tsne
-      // for(var k = 0; k < 1000000000; k++) {
-      tsne.step(); // every time you call this, solution gets better
-      // }
-      coordinates = tsne.getSolution();// Y is an array of 2-D points that you can plot
-      console.log(coordinates);
-      console.log('task 1 in doTsne is done!');
+      tsne.step();
+      coordinates = tsne.getSolution();
       dfrd1.resolve();
     }, 1000);
     return dfrd1.promise();
 }
 
 function updatePos(){
-  minVal = 1;
-  maxVal = -1;
+  var minVal = 1;
+  var maxVal = -1;
   coordinates.forEach(coorPos => {
     coorPos.forEach(coorVal => {
       if (coorVal > maxVal){
@@ -235,41 +180,20 @@ function updatePos(){
     })
   });
 
-  // minVal = -1;
-  // maxVal = 1;
-
   var idxCount = 0;
   var mulNum = 700/maxVal;
   for ( var i = 0; i < scene.children.length; i ++ ) {
       var object = scene.children[ i ];
       if ( object instanceof THREE.Points ) {
 
-        // if (idxCount == 0){
-        //   mulNum = Math.ceil(100/Math.max(...coordinates[idxCount]));
-        // }
         object.geometry.attributes.position.array[0] = coordinates[idxCount][0] * mulNum;
         object.geometry.attributes.position.array[1] = coordinates[idxCount][0] * mulNum;
         object.geometry.attributes.position.array[2] = coordinates[idxCount][0] * mulNum;
-
-
-        // console.log("+++++++++++++++++++++++++++");
-        // console.log(object.geometry.attributes.position.array);
-        // object.geometry.attributes.position.array[0] = THREE.Math.mapLinear(coordinates[idxCount][0],minVal,maxVal,-window.innerHeight/2,window.innerHeight/2);
-        // object.geometry.attributes.position.array[1] = THREE.Math.mapLinear(coordinates[idxCount][1],minVal,maxVal,-window.innerHeight/2,window.innerHeight/2);
-        // object.geometry.attributes.position.array[2] = THREE.Math.mapLinear(coordinates[idxCount][2],minVal,maxVal,500,1000);
         object.geometry.attributes.position.needsUpdate = true;
         object.geometry.computeBoundingSphere();
         idxCount ++;
       }
   }
-
-
-
-    //particles.geometry.attributes.position.array[i+0] = THREE.Math.mapLinear(coordinates[Math.floor(i/3)][0],minVal,maxVal,-window.innerWidth/2,window.innerWidth/2);
-    //particles.geometry.attributes.position.array[i+0] = THREE.Math.mapLinear(coordinates[Math.floor(i/3)][1],minVal,maxVal,-window.innerWidth/2,window.innerWidth/2);
-    //particles.geometry.attributes.position.array[i+0] = THREE.Math.mapLinear(coordinates[Math.floor(i/3)][2],minVal,maxVal,-window.innerWidth/2,window.innerWidth/2);
-
-  //particles.geometry.attributes.position.needsUpdate = true;
 }
 
 
@@ -287,14 +211,11 @@ function loadFiles(){
     })
   });
   var mulNum = Math.ceil(700/maxVal);
-
-  console.log('task 1 in loadFiles is start!');
   var vertices = [];
   var sampleURI;
   var imageVector;
 
   count = 0;
-  //load post files
   Object.keys(requestData).forEach(function(key) {
     requestData[key].forEach(function (arrayItem) {
 
@@ -304,13 +225,6 @@ function loadFiles(){
         var x = coordinates[count][0] * mulNum;
         var y = coordinates[count][1] * mulNum;
         var z = coordinates[count][2] * mulNum;
-
-        // var x = THREE.Math.mapLinear(coordinates[count][0],minVal,maxVal,-window.innerHeight/2,window.innerHeight/2);
-        // var y = THREE.Math.mapLinear(coordinates[count][1],minVal,maxVal,-window.innerHeight/2,window.innerHeight/2);
-        // var z = THREE.Math.mapLinear(coordinates[count][2],minVal,maxVal,500,1000);
-        console.log("~~~~~~~~~~~~~~~~~~");
-        console.log(x,y,z);
-
 
         vertices.push( x, y, z );
         geo.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
