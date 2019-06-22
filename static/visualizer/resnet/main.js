@@ -9,6 +9,15 @@ let resultArray = [];
 
 let requestData = {};
 
+var opt;
+var tsne;
+var count;
+var particles;
+var minVal,maxVal;
+
+var numberStep;
+var initSuc = false;
+
 $(document).ready(function() {
   init();
 });
@@ -22,7 +31,7 @@ function init(){
     scene = new THREE.Scene();
 
     // fov : Number, aspect : Number, near : Number, far : Number
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.01, 10000 );
     controls = new THREE.OrbitControls( camera, renderer.domElement );
     camera.position.z = 10;
     controls.update();
@@ -55,8 +64,10 @@ function init(){
                 console.log(resultArray);
                 dists = resultArray;
                 //var dists = createGround(20,100);
-                doTsne(dists).done(function(){
+                prepareTsne(dists);
+                doTsne().done(function(){
                     loadFiles();
+                    initSuc = true;
                 });
             });
         });
@@ -108,18 +119,30 @@ function animate() {
 
 function render(){
     var time = Date.now() * 0.00005;
+    numberStep++;
     //var timer = 0.0001 * Date.now();
 
-    for ( var i = 0; i < scene.children.length; i ++ ) {
-        var object = scene.children[ i ];
-        if ( object instanceof THREE.Points ) {
-            //object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) );
-            //object.geometry.attributes.position.array[0] += time*0.001;
-            //console.log(object.geometry.attributes.position.array[1]);
-            // object.position.x = 5000 * Math.cos( timer + i );
-            // object.position.y = 5000 * Math.sin( timer + i * 1.1 );
-        }
-    }
+    $(function(){
+      console.log("doing!");
+      if(initSuc){
+        doTsne().done(function(){
+          updatePos();
+        });
+      }else{
+        console.log("Loading");
+      }
+    });
+    // for ( var i = 0; i < scene.children.length; i ++ ) {
+    //     var object = scene.children[ i ];
+    //     if ( object instanceof THREE.Points ) {
+    //         //object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) );
+    //         //object.geometry.attributes.position.array[0] += time*0.001;
+    //         //console.log(object.geometry.attributes.position.array[1]);
+    //         // object.position.x = 5000 * Math.cos( timer + i );
+    //         // object.position.y = 5000 * Math.sin( timer + i * 1.1 );
+    //     }
+    // }
+
     controls.update();
 }
 
@@ -171,27 +194,82 @@ function base64DecToArr (sBase64, nBlockSize) {
 
   }
 
-function doTsne(dists){
+
+function prepareTsne(dists){
+  opt = {};
+  opt.epsilon = 10; // epsilon is learning rate (10 = default)
+  opt.perplexity = 30; // roughly how many neighbors each point influences (30 = default)
+  opt.dim = 3; // dimensionality of the embedding (2 = default)
+  tsne = new tsnejs.tSNE(opt);
+  tsne.initDataRaw(dists);
+}
+
+function doTsne(){
     var dfrd1 = $.Deferred();
 
     setTimeout(function(){
       // doing async stuff
       //kaparthy tsne
-      var opt = {}
-      opt.epsilon = 10; // epsilon is learning rate (10 = default)
-      opt.perplexity = 30; // roughly how many neighbors each point influences (30 = default)
-      opt.dim = 3; // dimensionality of the embedding (2 = default)
-      var tsne = new tsnejs.tSNE(opt);
-      tsne.initDataDist(dists);
-      for(var k = 0; k < 800; k++) {
-        tsne.step(); // every time you call this, solution gets better
-      }
+      // for(var k = 0; k < 1000000000; k++) {
+      tsne.step(); // every time you call this, solution gets better
+      // }
       coordinates = tsne.getSolution();// Y is an array of 2-D points that you can plot
       console.log(coordinates);
       console.log('task 1 in doTsne is done!');
       dfrd1.resolve();
     }, 1000);
     return dfrd1.promise();
+}
+
+function updatePos(){
+  minVal = 1;
+  maxVal = -1;
+  coordinates.forEach(coorPos => {
+    coorPos.forEach(coorVal => {
+      if (coorVal > maxVal){
+        maxVal = coorVal;
+      }
+      if (coorVal < minVal){
+        minVal = coorVal;
+      }
+    })
+  });
+
+  // minVal = -1;
+  // maxVal = 1;
+
+  var idxCount = 0;
+  var mulNum = 700/maxVal;
+  for ( var i = 0; i < scene.children.length; i ++ ) {
+      var object = scene.children[ i ];
+      if ( object instanceof THREE.Points ) {
+
+        // if (idxCount == 0){
+        //   mulNum = Math.ceil(100/Math.max(...coordinates[idxCount]));
+        // }
+        object.geometry.attributes.position.array[0] = coordinates[idxCount][0] * mulNum;
+        object.geometry.attributes.position.array[1] = coordinates[idxCount][0] * mulNum;
+        object.geometry.attributes.position.array[2] = coordinates[idxCount][0] * mulNum;
+
+
+        // console.log("+++++++++++++++++++++++++++");
+        // console.log(object.geometry.attributes.position.array);
+        // object.geometry.attributes.position.array[0] = THREE.Math.mapLinear(coordinates[idxCount][0],minVal,maxVal,-window.innerHeight/2,window.innerHeight/2);
+        // object.geometry.attributes.position.array[1] = THREE.Math.mapLinear(coordinates[idxCount][1],minVal,maxVal,-window.innerHeight/2,window.innerHeight/2);
+        // object.geometry.attributes.position.array[2] = THREE.Math.mapLinear(coordinates[idxCount][2],minVal,maxVal,500,1000);
+        object.geometry.attributes.position.needsUpdate = true;
+        object.geometry.computeBoundingSphere();
+        idxCount ++;
+      }
+  }
+
+
+
+    //particles.geometry.attributes.position.array[i+0] = THREE.Math.mapLinear(coordinates[Math.floor(i/3)][0],minVal,maxVal,-window.innerWidth/2,window.innerWidth/2);
+    //particles.geometry.attributes.position.array[i+0] = THREE.Math.mapLinear(coordinates[Math.floor(i/3)][1],minVal,maxVal,-window.innerWidth/2,window.innerWidth/2);
+    //particles.geometry.attributes.position.array[i+0] = THREE.Math.mapLinear(coordinates[Math.floor(i/3)][2],minVal,maxVal,-window.innerWidth/2,window.innerWidth/2);
+
+  //particles.geometry.attributes.position.needsUpdate = true;
 }
 
 
@@ -208,13 +286,14 @@ function loadFiles(){
       }
     })
   });
+  var mulNum = Math.ceil(700/maxVal);
 
   console.log('task 1 in loadFiles is start!');
   var vertices = [];
   var sampleURI;
   var imageVector;
 
-  var count = 0;
+  count = 0;
   //load post files
   Object.keys(requestData).forEach(function(key) {
     requestData[key].forEach(function (arrayItem) {
@@ -222,14 +301,14 @@ function loadFiles(){
         vertices = [];
         geo = new THREE.BufferGeometry();
 
-        //var x = coordinates[count][0];
-        //var y = coordinates[count][1];
-        //var z = coordinates[count][2];
+        var x = coordinates[count][0] * mulNum;
+        var y = coordinates[count][1] * mulNum;
+        var z = coordinates[count][2] * mulNum;
 
-        var x = THREE.Math.mapLinear(coordinates[count][0],minVal,maxVal,-window.innerWidth/2,window.innerWidth/2);
-        var y = THREE.Math.mapLinear(coordinates[count][1],minVal,maxVal,-window.innerWidth/2,window.innerWidth/2);
-        var z = THREE.Math.mapLinear(coordinates[count][2],minVal,maxVal,-window.innerWidth/2,window.innerWidth/2);
-
+        // var x = THREE.Math.mapLinear(coordinates[count][0],minVal,maxVal,-window.innerHeight/2,window.innerHeight/2);
+        // var y = THREE.Math.mapLinear(coordinates[count][1],minVal,maxVal,-window.innerHeight/2,window.innerHeight/2);
+        // var z = THREE.Math.mapLinear(coordinates[count][2],minVal,maxVal,500,1000);
+        console.log("~~~~~~~~~~~~~~~~~~");
         console.log(x,y,z);
 
 
@@ -238,7 +317,7 @@ function loadFiles(){
 
         sampleURI = arrayItem;
         mat = new THREE.PointsMaterial( { size: 100, map: textureLoader.load(sampleURI)} );
-        var particles = new THREE.Points( geo, mat );
+        particles = new THREE.Points( geo, mat );
 
         particles.rotation.x = Math.random() * 6;
         scene.add( particles );

@@ -96,7 +96,7 @@ async function run() {
     //var imageData = canvas.getContext('2d').createImageData(224, 224);
     //imageData.data.set(requestData["cat"][1]);
     
-
+    var mulNum =1;
     for (let idx = 0; idx < imageDataArray.length; idx++) {
         const imageData = imageDataArray[idx];
         x.set(await WebDNN.Image.getImageArray(imageData, image_options));
@@ -115,7 +115,13 @@ async function run() {
         //log(predicted_str);
     
         console.log('output vector: ', y.toActual());
-        let result = y.toActual();
+        let tmpy = y.toActual();
+        if (idx == 0){
+            mulNum = Math.ceil(1/Math.min(...tmpy));
+        }
+        console.log("----------->");
+        console.log(mulNum);
+        let result = tmpy.map(function(x) { return x * mulNum; });
         console.log(`Total Elapsed Time[ms/image]: ${elapsed_time.toFixed(2)}`);
         //log(`Total Elapsed Time[ms/image]: ${elapsed_time.toFixed(2)}`);
         resultArray.push(result);
