@@ -2,6 +2,7 @@ let scene, camera, controls, renderer, stats, parameters;
 let geo, mat;
 let textureLoader;
 let coordinates;
+var spinLoader;
 
 let resultArray = [];
 
@@ -16,10 +17,13 @@ var particles;
 var numberStep = 0;
 var initSuc = false;
 
+let textObj;
+let canvas1;
+
 $(document).ready(function() {
   init();
+  animate();
 });
-animate();
 
 function init(){
     renderer = new THREE.WebGLRenderer();
@@ -29,33 +33,42 @@ function init(){
     scene = new THREE.Scene();
 
     // fov : Number, aspect : Number, near : Number, far : Number
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.01, 10000 );
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 10000 );
     controls = new THREE.OrbitControls( camera, renderer.domElement );
-    camera.position.z = 10;
+    camera.position.z = 300;
     controls.minDistance = -700;
     controls.maxDistance = 1500;
     controls.update();
+    controls.enabled = false;
 
     //setup
     geo = new THREE.BufferGeometry();
     textureLoader = new THREE.TextureLoader();
 
-
-
+    updateProgressBar(10);
+    //resnet & tsne
     $(function(){
         fetchImage().done(function(){
+            updateProgressBar(35);
             run_entry().then(function(){
+                updateProgressBar(70);
                 dists = resultArray;
                 prepareTsne(dists);
+                updateProgressBar(80);             
                 doTsne().done(function(){
-                    loadFiles();
-                    initSuc = true;
+                    updateProgressBar(90);
+                    loadFiles().then(()=>{
+                      updateProgressBar(100);
+                      initSuc = true;
+                      removeProgressBar();
+                    }
+                    );
                 });
             });
         });
     });
-
 }
+
 
 function fetchImage(){
     var dfrd1 = $.Deferred();
@@ -71,8 +84,20 @@ function fetchImage(){
           }
         });
         dfrd1.resolve();
-    }, 2000);
+    }, 0);
     return dfrd1.promise();
+}
+
+function updateProgressBar(valeur){
+  $('.progress-bar').css('width', valeur+'%').attr('aria-valuenow', valeur).text(valeur+"%");  
+}
+
+function successProgressBar(){
+  $('.progress-bar').addClass('progress-bar-success');    
+}
+
+function removeProgressBar(){
+  $('.progress').hide();
 }
 
 function animate() {
@@ -86,13 +111,15 @@ function render(){
     numberStep++;
 
     $(function(){
-      if(numberStep < 1200){
+      if(numberStep < 3000){
         if(initSuc){
+          if(!controls.enabled){
+            controls.enabled = true;
+          }
           doTsne().done(function(){
+            //updatePos();
             updatePos();
           });
-        }else{
-          console.log("Loading");
         }
       }
     });
@@ -162,8 +189,59 @@ function doTsne(){
       tsne.step();
       coordinates = tsne.getSolution();
       dfrd1.resolve();
-    }, 1000);
+    }, 0);
     return dfrd1.promise();
+}
+
+function updatePos2(){
+  let centerPos = [0,0,0];
+  let pointsCount = 0;
+  coordinates.forEach(coorPos => {
+      centerPos[0] += coorPos[0];
+      centerPos[1] += coorPos[1];
+      centerPos[2] += coorPos[2];
+      pointsCount ++;
+  });
+  centerPos.forEach(centerPosVal =>{
+    centerPosVal /= pointsCount;
+  });
+
+  var minVal = 1;
+  var maxVal = -1;
+  coordinates.forEach(coorPos => {
+    coorPos.forEach(coorVal => {
+      if (coorVal > maxVal){
+        maxVal = coorVal;
+      }
+      if (coorVal < minVal){
+        minVal = coorVal;
+      }
+    })
+  });
+
+  var mulNum = window.innerWidth/2/maxVal;
+  coordinates.forEach(coorPos => {
+    coorPos[0] = centerPos[0] + (coorPos[0]-centerPos[0])*mulNum;
+    coorPos[1] = centerPos[1] + (coorPos[1]-centerPos[1])*mulNum;
+    coorPos[2] = centerPos[2] + (coorPos[2]-centerPos[2])*mulNum;
+  });
+
+
+  var idxCount = 0;
+  for ( var i = 0; i < scene.children.length; i ++ ) {
+    var object = scene.children[ i ];
+    if ( object instanceof THREE.Points ) {
+      object.geometry.attributes.position.array[0] = coordinates[idxCount][0];
+      object.geometry.attributes.position.array[1] = coordinates[idxCount][0];
+      object.geometry.attributes.position.array[2] = coordinates[idxCount][0];
+      object.geometry.attributes.position.needsUpdate = true;
+      object.geometry.computeBoundingSphere();
+      idxCount ++;
+    }
+    if (object.name == "loadingSign") {
+      scene.remove(object);
+    }
+  }
 }
 
 function updatePos(){
@@ -182,6 +260,7 @@ function updatePos(){
 
   var idxCount = 0;
   var mulNum = 700/maxVal;
+  //console.log(mulNum);
   for ( var i = 0; i < scene.children.length; i ++ ) {
       var object = scene.children[ i ];
       if ( object instanceof THREE.Points ) {
@@ -197,46 +276,50 @@ function updatePos(){
 }
 
 
-function loadFiles(){
-  var minVal = 1;
-  var maxVal = -1;
-  coordinates.forEach(coorPos => {
-    coorPos.forEach(coorVal => {
-      if (coorVal > maxVal){
-        maxVal = coorVal;
-      }
-      if (coorVal < minVal){
-        minVal = coorVal;
-      }
-    })
-  });
-  var mulNum = Math.ceil(700/maxVal);
-  var vertices = [];
-  var sampleURI;
-  var imageVector;
+async function loadFiles(){
 
-  count = 0;
-  Object.keys(requestData).forEach(function(key) {
-    requestData[key].forEach(function (arrayItem) {
-
-        vertices = [];
-        geo = new THREE.BufferGeometry();
-
-        var x = coordinates[count][0] * mulNum;
-        var y = coordinates[count][1] * mulNum;
-        var z = coordinates[count][2] * mulNum;
-
-        vertices.push( x, y, z );
-        geo.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
-
-        sampleURI = arrayItem;
-        mat = new THREE.PointsMaterial( { size: 100, map: textureLoader.load(sampleURI)} );
-        particles = new THREE.Points( geo, mat );
-
-        particles.rotation.x = Math.random() * 6;
-        scene.add( particles );
-
-        count++;
+  return new Promise((resolve, reject) => {
+    var minVal = 1;
+    var maxVal = -1;
+    coordinates.forEach(coorPos => {
+      coorPos.forEach(coorVal => {
+        if (coorVal > maxVal){
+          maxVal = coorVal;
+        }
+        if (coorVal < minVal){
+          minVal = coorVal;
+        }
+      })
     });
+    var mulNum = Math.ceil(700/maxVal);
+    var vertices = [];
+    var sampleURI;
+    var imageVector;
+
+    count = 0;
+    Object.keys(requestData).forEach(function(key) {
+      requestData[key].forEach(function (arrayItem) {
+
+          vertices = [];
+          geo = new THREE.BufferGeometry();
+
+          var x = coordinates[count][0] * mulNum;
+          var y = coordinates[count][1] * mulNum;
+          var z = coordinates[count][2] * mulNum;
+
+          vertices.push( x, y, z );
+          geo.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+
+          sampleURI = arrayItem;
+          mat = new THREE.PointsMaterial( { size: 100, map: textureLoader.load(sampleURI)} );
+          particles = new THREE.Points( geo, mat );
+
+          particles.rotation.x = Math.random() * 6;
+          scene.add( particles );
+
+          count++;
+      });
+    });
+    resolve("Done!");
   });
 }
