@@ -5,6 +5,7 @@ var imageDataArray = [];
 async function run_entry() {
     try {
         await populateImageDataArray();
+        updateProgressBar(55);
         await run();
 
     } catch (error) {
@@ -17,7 +18,7 @@ function getRawData(){
     setTimeout(function(){
         run_entry();
         dfrd1.resolve();
-    }, 2000);
+    }, 0);
     return dfrd1.promise();
 }
 
@@ -41,11 +42,13 @@ async function prepare_run() {
     } else {
         console.log('Model is already loaded');
     }
+    updateProgressBar(60);
     return runners[backend_key];
 }
 
 async function run() {
     let runner = await prepare_run();
+
     let x = runner.inputs[0];
     let y = runner.outputs[0];
 
@@ -54,9 +57,11 @@ async function run() {
         color: WebDNN.Image.Color.BGR,
         bias: [123.68, 116.779, 103.939],
     };
+
     
     var mulNum =1;
     for (let idx = 0; idx < imageDataArray.length; idx++) {
+
         const imageData = imageDataArray[idx];
         x.set(await WebDNN.Image.getImageArray(imageData, image_options));
     
