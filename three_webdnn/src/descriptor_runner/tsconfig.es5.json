@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "node",
+        "target": "es5",
+        "strictNullChecks": true,
+        "lib": [
+            "es2017",
+            "es2016",
+            "es2015",
+            "dom"
+        ],
+        "declaration": false
+    },
+    "files": [
+        "./webdnn.ts"
+    ]
+}

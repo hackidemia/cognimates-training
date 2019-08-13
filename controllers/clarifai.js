@@ -234,11 +234,10 @@ function classifyImage(req, res) {
 }
 
 function classifyURLImage(req, res){
-  const apiKey = req.body.apikey;
-  var image_link = req.body.image_url;
+  const apiKey = req.headers.apikey;
+  var image_link = req.body.image_data;
   const model_id = req.body.classifier_id;
   const app = init(apiKey);
-  console.log('here');
   app.models.predict(model_id, { url: image_link }).then(
     (response) =>{
       if(parseInt(response.status.code) == 10000) {

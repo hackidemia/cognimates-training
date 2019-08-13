@@ -96,32 +96,26 @@
 
 <script>
     $(function() {
-
     /// set up info icon toggles
     $('.js--open-help').on('click', function(e){
         const section = $(e.target).closest('.step__body');
         $(section).find('.step__help').toggle();
         event.preventDefault(); // to keep from scrolling
     });
-
       /// set up video embeds
     const player = new Plyr('#js-classifier__video--clarifai');
-
     // set up page tabs
     $('#classifier__tabs a').on('click', function (e) {
       e.preventDefault()
     })
-
     $('.js--nav__tab--create').on('click', function (e) {
         showCreateTab(true);
         showExploreTab(false);
     });
-
     $('.js--nav__tab--explore').on('click', function (e) {
         showCreateTab(false);
         showExploreTab(true);
     });
-
     function showCreateTab(show) {
         const tabContent = $('.js--classifier__tab--create');
         if (show) {
@@ -134,7 +128,6 @@
             tabContent.attr('style', 'display:none !important');
         }
     }
-
     function showExploreTab(show) {
         const tabContent = $('.js--classifier__tab--explore');
         if (show) {
@@ -147,7 +140,6 @@
             tabContent.attr('style', 'display:none !important');
         }
     }
-
       const dropzonePredictEl = "#js--dropzone-predict";
       window.dropzonePredict = new Dropzone(dropzonePredictEl, {
           url: "/",
@@ -175,7 +167,6 @@
           }
       });
     });
-
     const dropzoneExplorePredictEl = "#js--explore__dropzone-predict";
     window.dropzoneExplorePredict = new Dropzone(dropzoneExplorePredictEl, {
         url: "/",
@@ -202,14 +193,10 @@
             });
         }
     });
-
     $(document).ready(function init() {
-
       window.labels = [];
       window.dropZoneMap = {};
-
       $('form').submit(false);
-
       $('#input_projectName').keypress(function (e) {
           if (e.which == 13) {
               $('.js--project--name__button').trigger('click');
@@ -217,29 +204,24 @@
               return false;
           }
       });
-
       $('.js--project--name__button').click(function (e) {
           if ($('#input_projectName').val().length == 0) return;
           const name = $('#input_projectName').val().trim();
-
           if (name.length == 0) {
               showWarningNotification('Project name cannot be empty', true, false);
               return;
           }
-
           var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
           if (format.test(name) != false) {
               showWarningNotification('Project name should have only letters and numbers.', true, false);
               return;
           }
-
           $('.js--project-name__value--set').html(name);
           $('.project-name__result-row').show();
           window.projectName = name;
           $('.project-name__form').hide();
           showSuccessNotification('Project name set', false , false);
       });
-
       $('.project-name__remove-button').click(function (e) {
           window.projectName = undefined;
           $('#input_projectName').val('');
@@ -247,7 +229,6 @@
           $('.project-name__form').show();
           showWarningNotification('Project name unset', true, false);
       })
-
       $('.js--apikey__input').keypress((e) => {
           if (e.which == 13) {
               $('.js--apikey__input--set').trigger('click');
@@ -255,7 +236,6 @@
               return false;
           }
       });
-
       $('.js--explore__apikey__input').keypress((e) => {
           if (e.which == 13) {
               $('.js--explore__apikey__input--set').trigger('click');
@@ -263,7 +243,6 @@
               return false;
           }
       });
-
       $('.js--apikey__input--set').click(function () {
           if ($('.js--apikey__input').val() == '') {
               showWarningNotification('Enter an API Key.', true, false);
@@ -277,7 +256,6 @@
           showSuccessNotification('API key set', false , false);
           setUserClassifiers();
       });
-
       $('.js--explore__apikey__input--set').click(function () {
           if ($('.js--explore__apikey__input').val() == '') {
               showWarningNotification('Enter an API Key.', true, false);
@@ -291,7 +269,6 @@
           showSuccessNotification('API key set', false , false);
           setUserClassifiers();
       });
-
       $('.api-key__remove-button').click(function (e) {
           $('.js--apikey__form').show();
           $('.api-key__result-row').hide();
@@ -299,7 +276,6 @@
           $('.js--apikey__input').val('');
           showWarningNotification('API key unset', true, false);
       });
-
       $('#input_categoryName').keypress((e) => {
           if (e.which == 13) {
               $('#button_categoryName').trigger('click');
@@ -307,13 +283,11 @@
               return false;
           }
       });
-
       $('#button_categoryName').click(function () {
         if ($('#input_categoryName').val() == '') {
           showWarningNotification('Enter a category name.', true, false);
           return;
         }
-
         var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
         var categoryName = $('#input_categoryName').val();
         categoryName = categoryName.trim();
@@ -329,7 +303,6 @@
         createCategoryHTMLElement(categoryName);
         $('#input_categoryName').val('');
       });
-
       $('.js--train__button').on('click', function () {
           var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
           if (format.test(window.projectName) != false) {
@@ -339,16 +312,13 @@
           setTrainButtonState('training');
           preprocessTrainData();
       })
-
       $('.js--classifier__predict__button').on('click', function () {
           preprocessPredictData();
       })
-
       $('.js--explore__predict_button').on('click', function () {
           preprocessExplorePredictData();
       })
     });
-
     function selectClassifier(model_id) {
         $('.js--classifiers__dropdown--menu').html(model_id);
         $('.js--explore__predict_button').attr('disabled', null);
@@ -363,12 +333,10 @@
         });
         return false;
     };
-
     async function setUserClassifiers() {
         var userClassifiers = await loadUserClassifiers();
         addClassifiersToDropdown(userClassifiers);
     }
-
     function addClassifiersToDropdown(classifiers) {
         if (classifiers === undefined) return;
         const dropdownElement = $('.js--classifiers__dropdown');
@@ -379,7 +347,6 @@
             dropdownElement.append(dropdownItem);
         });
     }
-
     function loadUserClassifiers() {
       $.ajax({
            url: "/vision/classifiers",
@@ -399,7 +366,6 @@
            }
         });
     }
-
     function createCategoryHTMLElement(categoryName) {
         const htmlStructure = `<div class="category__container
                                            js--dropzone__category__container--${categoryName}">
@@ -412,14 +378,12 @@
                   <div class="category__name">
                         ${categoryName}
                     </div>
-
                     <div class="dropzone__header
                                 js--dropzone__header--${categoryName}">
                         <i class="fas fa-cloud-upload-alt
                                     dropzone__upload-icon"></i>
                         <span class="dropzone__label">Drag and drop 10 or more images</span>
                     </div>
-
                     <!-- inject image previews here -->
                     <div class="js--dropzone__previews-container dropzone-previews"
                          id="js--dropzone__previews-container_${categoryName}">
@@ -439,7 +403,6 @@
         categoriesContainerElement.append(htmlElement);
         initDropZoneForClass(categoryName);
     }
-
     function initDropZoneForClass(categoryName) {
       const dropzoneFormClass = `.js--dropzone__category--${categoryName}`;
       const dropzonePreviewsContainerClass = `.js--dropzone__previews__container--${categoryName}`;
@@ -483,7 +446,6 @@
       });
       window.dropZoneMap[categoryName] = dropzoneCategoryInstance;
     }
-
     function removeDropZoneByClass(categoryName) {
         if (window.labels == undefined || !window.labels.includes(categoryName)) {
             return;
@@ -501,7 +463,6 @@
             delete window.examples[categoryName];
         }
     }
-
     function setTrainButtonState(state) {
         if (state == 'normal') {
             $('.js--train__button').removeAttr('disabled');
@@ -518,7 +479,6 @@
             $('.js--train__button').unbind();
         }
     }
-
     async function preprocessTrainData() {
         setTrainButtonState('training');
         try {
@@ -543,6 +503,10 @@
             $('.js--classifier__open__codelab').click((e) => {
                 window.open(extensionUrl);
             });
+            $('.js--classifier__open__visualizer').attr('disabled', null);
+            $('.js--classifier__open__visualizer').click((e) => {
+                openVisualizer();
+            });
         } catch (error) {
             console.log(error);
             showErrorNotification(error.message, true, false);
@@ -551,7 +515,6 @@
             $(classifierUploadProgressClass).hide();
         }
     }
-
     function validateTrainingData() {
         if (window.projectName === undefined || window.projectName.length < 2) {
             throw new Error("Project name needs 3 or more letters/numbers.");
@@ -570,7 +533,6 @@
             }
         }
     }
-
     function loadUserClassifiers() {
         return new Promise((resolve, reject) => {
             $.ajax({
@@ -590,7 +552,6 @@
             });
         });
     }
-
     function projectNameAlreadyUsed(classifiers) {
         if (classifiers == undefined || classifiers.length == 0) return false;
         for (var index = 0; index < classifiers.length; index++) {
@@ -599,7 +560,6 @@
         }
         return false;
     }
-
     async function convertImagesIntoExamples() {
         if(window.dropZoneMap.length < 1) {
             throw new Error("Create at least 2 categories.");
@@ -625,14 +585,12 @@
             }
         }
     }
-
     function setBase64Examples(className, examples) {
         if (window.examples == undefined) {
             window.examples = {};
         }
         window.examples[className] = examples;
     }
-
     function createClassifier() {
         var requestData = {};
         requestData.name = window.projectName;
@@ -684,12 +642,51 @@
             });
         });
     }
-
+    function openVisualizer() {
+        var requestData = {};
+        requestData.name = window.projectName;
+        requestData.training_data = [];
+        window.labels.forEach((label) => {
+            label_items = [];
+            window.examples[label].forEach((example) => {
+                var image_file = example.split(',')[1];
+                label_items.push(image_file);
+            });
+            requestData.training_data.push({label: label, label_items: label_items});
+        });
+        window.visualizerData = requestData;
+        window.open("/visualizer");
+        // return new Promise((resolve, reject) => {
+        //     $.ajax({
+        //         url: '/visualizer',
+        //         type: 'POST',
+        //         dataType: 'json',
+        //         contentType: "application/json; charset=utf-8",
+        //         data: JSON.stringify({"examplesData": requestData}),
+        //         success: function (data) {
+        //             if(data.error != null) {
+        //                 reject(new Error(data.error));
+        //                 return;
+        //             }
+        //             if (data.classifier_id == undefined) {
+        //                 reject(new Error('Failed to create classifier.'));
+        //                 return;
+        //             }
+        //             //window.model_id = data.classifier_id;
+        //             //window.classifier_status = data.status;
+        //             console.log("post success");
+        //             resolve();
+        //         },
+        //         error: function (error) {
+        //             reject(error);
+        //         }
+        //     });
+        // });
+    }
     function setUploadProgress(progress) {
         $('.js--train-results__upload_progress').show();
         $('.js--train-results__upload__progress--set').html(`${Math.round(progress)}%`);
     }
-
     function setClassifierStatus() {
         const classifierUploadProgressClass = ".js--train-results__upload_progress";
         const classifierNameClass = ".js--train-results__name";
@@ -709,7 +706,6 @@
             $(classifierRefreshSpinnerClass).show();
         }
     }
-
     function setAutoRefreshStatus(autoRefresh) {
         if (!autoRefresh) {
             if (window.autoRefreshTimer != undefined) {
@@ -722,7 +718,6 @@
             }, 3000);
         }
     }
-
     function loadUserClassifier(classifier_id) {
         $.ajax({
              url: "/vision/classifier",
@@ -742,7 +737,6 @@
              }
           });
     }
-
     async function preprocessPredictData() {
         $('.js--classifier__predict__button').attr('disabled', '');
         $('.js--classifier__predict-results__name').hide();
@@ -766,7 +760,6 @@
             console.log(error);
         }
     }
-
     async function preprocessExplorePredictData() {
         $('.js--explore__predict__button').attr('disabled', '');
         $('.js--explore__predict-results__name').hide();
@@ -790,7 +783,6 @@
             console.log(error);
         }
     }
-
     function validateExplorePredictionData() {
         const predictionURL = $('.js--explore__predict-url').val();
         if ((window.dropzoneExplorePredict.files === undefined || window.dropzoneExplorePredict.files.length != 1) && predictionURL.length == 0) {
@@ -800,7 +792,6 @@
             throw new Error('The model has to be trained before attempting to predict.');
         }
     }
-
     function validatePredictionData() {
         const predictionURL = $('.js--classifier__predict-url').val();
         if ((window.dropzonePredict.files === undefined || window.dropzonePredict.files.length != 1) && predictionURL.length == 0) {
@@ -810,7 +801,6 @@
             throw new Error('The model has to be trained before attempting to predict.');
         }
     }
-
     function loadPredictionImage() {
         var promise = new Promise((resolve, reject) => {
             var reader = new FileReader();
@@ -822,7 +812,6 @@
         });
         return promise;
     }
-
     function loadExplorePredictionImage() {
         var promise = new Promise((resolve, reject) => {
             var reader = new FileReader();
@@ -834,7 +823,6 @@
         });
         return promise;
     }
-
     function classify(model_id) {
         return new Promise ((resolve, reject) => {
             if(window.predictionImage == undefined) {
@@ -864,7 +852,6 @@
             });
         });
     }
-
     function classifyByURL(model_id, url) {
         return new Promise ((resolve, reject) => {
             if(url == undefined) {
@@ -874,10 +861,10 @@
             $.ajax({
                  url: "/vision/classifyURLImage",
                  type: "POST",
+                 headers: { 'apikey': window.apiKey },
                  data: {
-                   apikey: window.apiKey,
                    classifier_id: model_id,
-                   image_url: url
+                   image_data: url
                  },
                  success: function (data) {
                      if(data.error != null) {
@@ -896,7 +883,6 @@
             });
         });
     }
-
     function showClassification(response, createTab) {
         var resultLabel;
         var resultConfidence;
@@ -934,5 +920,4 @@
               $('.js--explore__predict-results__status_spinner').hide();
         }
     }
-
 </script>
