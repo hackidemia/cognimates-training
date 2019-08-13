@@ -29,7 +29,7 @@
     margin: 1rem;
     border:  0;
 
-    @include mq('md') {  
+    @include mq('md') {
         padding: 0.75rem 0.5rem;
         border-top: 1px solid transparent;
         border-left: 1px solid transparent;
@@ -53,13 +53,13 @@
     text-align: center;
     font-style: italic;
 
-    @include mq('md') {  
+    @include mq('md') {
       display: none;
     }
 
     h2 {
-        color: #aeaeae;  
-    } 
+        color: #aeaeae;
+    }
 }
 
 .classifier__train-or {
@@ -81,12 +81,12 @@
 
 .classifier__nav-item h2 {
 	// left right mismatch accounts for the left side having an icon
-	padding: 0 1rem 0 0.65rem; 
+	padding: 0 1rem 0 0.65rem;
 	font-size: 1.3rem;
     letter-spacing: 0.3px;
 }
 
-.classifier__nav-item h2 i { 
+.classifier__nav-item h2 i {
 	color: $accent-color;
 	font-size: 1.1rem;
 	margin: 0 0.5rem;
@@ -95,7 +95,7 @@
 .classifier__tab {
 	background-color: #f7f7f7;
 
-	@include mq('lg') {  
+	@include mq('lg') {
 		// override Bootstrap tab
 		display: flex !important;
 		align-items: center;
@@ -110,8 +110,8 @@ ul.stepper {
 	margin: 0;
 
 	@include mq('md') {  padding: 4rem 2rem; }
-	@include mq('lg') {  
-		padding: 5rem 0 0 0; 
+	@include mq('lg') {
+		padding: 5rem 0 0 0;
 	    margin-left: -10rem;
 	}
 }
@@ -125,7 +125,7 @@ li.stepper__step {
 
   	@include mq('md') {
 		display: flex;
-		flex-direction: row; 
+		flex-direction: row;
 		line-height: 1;
 		padding: 0;
 		border-bottom: 0;
@@ -186,7 +186,7 @@ li.stepper__step {
     margin: 0.25rem 0;
 	user-select: none;
 	transition: all 0.1s ease-out;
-	color: #acacac; 
+	color: #acacac;
 
   	@include mq('md') {
 		margin: 0 1rem;
@@ -194,15 +194,15 @@ li.stepper__step {
 		font-size: 1.75rem;
 		border: 0;
 		text-align: right;
-	} 
+	}
 
 	@include mq('lg') {
 		flex: 0 0 150px;
 		margin: 0 50px 0 0;
 		font-size: 2rem;
 		text-align: right;
-		color: #acacac; 
-	} 
+		color: #acacac;
+	}
 }
 
 
@@ -222,7 +222,7 @@ li.stepper__step {
 	    margin-top: 0.7rem;
 	}
 }
-	
+
 .step__circle:before {
 	content: '';
 	position: absolute;
@@ -264,12 +264,12 @@ li.stepper__step {
 	padding-bottom: 1rem;
 	width: 100%;
 
-	@include mq('md') { 
+	@include mq('md') {
 		margin-left: 25px;
 		padding-bottom: 100px;
 	}
 
-	@include mq('lg') { 
+	@include mq('lg') {
 		margin-left: 50px;
 	}
 }
@@ -277,7 +277,7 @@ li.stepper__step {
 .step__link {
     display: inline-block;
     color: $pink;
-    transition: 0.1s ease-in all; 
+    transition: 0.1s ease-in all;
 }
 
 .step_link:hover {
@@ -295,7 +295,7 @@ li.stepper__step {
     justify-content: center;
 }
 
-.category__container { 
+.category__container {
 	position: relative;
 	border-radius: 1rem;
 	margin-bottom: 1rem;
@@ -315,7 +315,7 @@ li.stepper__step {
 }
 
 .category__box--vision {
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 .category__box:hover .dropzone__header { transform: scale(1.05); }
@@ -356,7 +356,7 @@ li.stepper__step {
 .dropzone__upload-icon {
   font-size: 2rem;
   color: lightgray;
-  user-select: none; 
+  user-select: none;
 }
 
 .dropzone__header {
@@ -367,7 +367,7 @@ li.stepper__step {
     pointer-events: none;
     color: #b7b7b7;
     margin: 1rem 0 0 0;
-    transition: 0.1s ease-in all; 
+    transition: 0.1s ease-in all;
 }
 
 .dropzone__label {
@@ -397,8 +397,9 @@ li.stepper__step {
 
 // .selectize-input and .selectize-control both refer to the same
 // DOM element. We'll need to use both to override styling
-.selectize-control { 
+.selectize-control {
     padding: 0.5rem 0.5rem 0 0.5rem !important;
+    user-select: all !important;
 }
 
 .selectize-input {
@@ -410,6 +411,7 @@ li.stepper__step {
     border: 0;
     padding: 0 0 0.5rem 0 !important;
     font-size: 0.9rem;
+    user-select: all !important;
 }
 
 .selectize-input.dropdown-active:before {
@@ -430,6 +432,7 @@ li.stepper__step {
     left: 0 !important;
     opacity: 1 !important;
     text-align: center !important;
+    user-select: all !important;
 }
 
 .selectize-input.focus {
@@ -441,9 +444,9 @@ li.stepper__step {
 }
 
 .selectize-input.input-active,
-.selectize-input.dropdown-active { 
+.selectize-input.dropdown-active {
     border: 0;
-    box-shadow: none !important; 
+    box-shadow: none !important;
 }
 
 .selectize-control.multi .selectize-input.has-items {
@@ -466,7 +469,7 @@ li.stepper__step {
     border-radius: 0 !important;
     transition: 0.1s all ease-in !important;
     cursor: default !important;
-    user-select: none !important;
+    user-select: all !important;
     align-items: center!important;
     justify-content: center!important;
     width: 100%!important;
@@ -477,6 +480,7 @@ li.stepper__step {
     margin: 0 0 1rem 0 !important;
     border-bottom: 1px solid gainsboro !important;
     padding: 0 0 1rem 0 !important;
+    user-select: all !important;
 }
 
 .selectize-input .item .label {
@@ -509,6 +513,7 @@ li.stepper__step {
     bottom: auto !important;
     transition: all 0.1s ease-out !important;
     visibility: hidden !important;
+    user-select: none !important;
 }
 
 .selectize-input .item:hover .remove {
