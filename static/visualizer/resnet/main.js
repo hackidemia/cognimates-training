@@ -1,18 +1,29 @@
 let scene, camera, controls, renderer, stats, parameters;
-let geo, mat;//mat=[]
+let geo, mat;
 let textureLoader;
-let frameCount = 0;
 let coordinates;
+var spinLoader;
 
 let resultArray = [];
 
 
 let requestData = {};
 
+var opt;
+var tsne;
+var count;
+var particles;
+
+var numberStep = 0;
+var initSuc = false;
+
+let textObj;
+let canvas1;
+
 $(document).ready(function() {
   init();
+  animate();
 });
-animate();
 
 function init(){
     renderer = new THREE.WebGLRenderer();
@@ -22,56 +33,48 @@ function init(){
     scene = new THREE.Scene();
 
     // fov : Number, aspect : Number, near : Number, far : Number
-    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 10000 );
     controls = new THREE.OrbitControls( camera, renderer.domElement );
-    camera.position.z = 10;
+    camera.position.z = 300;
+    controls.minDistance = -700;
+    controls.maxDistance = 1500;
     controls.update();
+    controls.enabled = false;
 
     //setup
     geo = new THREE.BufferGeometry();
     textureLoader = new THREE.TextureLoader();
 
-    //extract features for images
-    /*
-    1.fetchImage();
-    2.run_entry();
-    3.modify dists;
-
-    var dists = createGround(20,100);
-
-    console.log(result);
-
-    //do tsne and render images
-    $(function(){
-      doTsne(dists).done(function(){
-          loadFiles();
-      });
-    });
-    */
-
+    updateProgressBar(10);
+    //resnet & tsne
     $(function(){
         fetchImage().done(function(){
+            updateProgressBar(35);
             run_entry().then(function(){
-                console.log(resultArray);
+                updateProgressBar(70);
                 dists = resultArray;
-                //var dists = createGround(20,100);
-                doTsne(dists).done(function(){
-                    loadFiles();
+                prepareTsne(dists);
+                updateProgressBar(80);             
+                doTsne().done(function(){
+                    updateProgressBar(90);
+                    loadFiles().then(()=>{
+                      updateProgressBar(100);
+                      initSuc = true;
+                      removeProgressBar();
+                    }
+                    );
                 });
             });
         });
     });
-
 }
+
 
 function fetchImage(){
     var dfrd1 = $.Deferred();
     setTimeout(function(){
-        // doing async stuff
         var examplesData = window.opener.visualizerData;
-        // requestData = window.opener.visualizerData.training_data;
         examplesData.training_data.forEach((item) => {
-          console.log("item:", item.label_items);
           requestData[item.label] = item.label_items;
         });
 
@@ -80,47 +83,46 @@ function fetchImage(){
             requestData[key][idx] = "data:image/jpeg;base64," + requestData[key][idx];
           }
         });
-
-        console.log(requestData);
-        console.log('task 1 in fetchImage is done!');
         dfrd1.resolve();
-    }, 2000);
+    }, 0);
     return dfrd1.promise();
 }
 
-function function2(){
-    var dfrd1 = $.Deferred();
-    setTimeout(function(){
-        // doing async stuff
-        console.log('task 1 in function2 is done!');
-        dfrd1.resolve();
-    }, 2000);
-    return dfrd1.promise();
+function updateProgressBar(valeur){
+  $('.progress-bar').css('width', valeur+'%').attr('aria-valuenow', valeur).text(valeur+"%");  
 }
 
+function successProgressBar(){
+  $('.progress-bar').addClass('progress-bar-success');    
+}
+
+function removeProgressBar(){
+  $('.progress').hide();
+}
 
 function animate() {
     requestAnimationFrame( animate );
     render();
     renderer.render( scene, camera );
-    frameCount++;
 }
 
 function render(){
     var time = Date.now() * 0.00005;
-    //var timer = 0.0001 * Date.now();
+    numberStep++;
 
-    for ( var i = 0; i < scene.children.length; i ++ ) {
-        var object = scene.children[ i ];
-        if ( object instanceof THREE.Points ) {
-            //object.rotation.y = time * ( i < 4 ? i + 1 : - ( i + 1 ) );
-            //object.geometry.attributes.position.array[0] += time*0.001;
-            //console.log(object.geometry.attributes.position.array[1]);
-            // object.position.x = 5000 * Math.cos( timer + i );
-            // object.position.y = 5000 * Math.sin( timer + i * 1.1 );
+    $(function(){
+      if(numberStep < 3000){
+        if(initSuc){
+          if(!controls.enabled){
+            controls.enabled = true;
+          }
+          doTsne().done(function(){
+            //updatePos();
+            updatePos();
+          });
         }
-    }
-    controls.update();
+      }
+    });
 }
 
 function createGround(width, height){
@@ -171,65 +173,153 @@ function base64DecToArr (sBase64, nBlockSize) {
 
   }
 
-function doTsne(dists){
-    var dfrd1 = $.Deferred();
 
+function prepareTsne(dists){
+  opt = {};
+  opt.epsilon = 10; // epsilon is learning rate (10 = default)
+  opt.perplexity = 30; // roughly how many neighbors each point influences (30 = default)
+  opt.dim = 3; // dimensionality of the embedding (2 = default)
+  tsne = new tsnejs.tSNE(opt);
+  tsne.initDataRaw(dists);
+}
+
+function doTsne(){
+    var dfrd1 = $.Deferred();
     setTimeout(function(){
-      // doing async stuff
-      //kaparthy tsne
-      var opt = {}
-      opt.epsilon = 10; // epsilon is learning rate (10 = default)
-      opt.perplexity = 30; // roughly how many neighbors each point influences (30 = default)
-      opt.dim = 3; // dimensionality of the embedding (2 = default)
-      var tsne = new tsnejs.tSNE(opt);
-      tsne.initDataDist(dists);
-      for(var k = 0; k < 500; k++) {
-        tsne.step(); // every time you call this, solution gets better
-      }
-      coordinates = tsne.getSolution();// Y is an array of 2-D points that you can plot
-      console.log('task 1 in doTsne is done!');
+      tsne.step();
+      coordinates = tsne.getSolution();
       dfrd1.resolve();
-    }, 1000);
+    }, 0);
     return dfrd1.promise();
 }
 
+function updatePos2(){
+  let centerPos = [0,0,0];
+  let pointsCount = 0;
+  coordinates.forEach(coorPos => {
+      centerPos[0] += coorPos[0];
+      centerPos[1] += coorPos[1];
+      centerPos[2] += coorPos[2];
+      pointsCount ++;
+  });
+  centerPos.forEach(centerPosVal =>{
+    centerPosVal /= pointsCount;
+  });
 
-function loadFiles(){
-    console.log('task 1 in loadFiles is start!');
-  var vertices = [];
-  var sampleURI;
-  var imageVector;
+  var minVal = 1;
+  var maxVal = -1;
+  coordinates.forEach(coorPos => {
+    coorPos.forEach(coorVal => {
+      if (coorVal > maxVal){
+        maxVal = coorVal;
+      }
+      if (coorVal < minVal){
+        minVal = coorVal;
+      }
+    })
+  });
 
-  var count = 0;
-  //load post files
-  Object.keys(requestData).forEach(function(key) {
-    requestData[key].forEach(function (arrayItem) {
-
-        vertices = [];
-        geo = new THREE.BufferGeometry();
-
-        var x = coordinates[count][0]*100000000000;
-        var y = coordinates[count][1]*100000000000;
-        var z = coordinates[count][2]*100000000000;
-
-        // var x = THREE.Math.mapLinear(coordinates[count][0],0,0.000000000001,-1000,1000);
-        // var y = THREE.Math.mapLinear(coordinates[count][1],0,0.000000000001,-1000,1000);
-        // var z = THREE.Math.mapLinear(coordinates[count][2],0,0.000000000001,-1000,1000);
-
-        //console.log(x,y,z);
+  var mulNum = window.innerWidth/2/maxVal;
+  coordinates.forEach(coorPos => {
+    coorPos[0] = centerPos[0] + (coorPos[0]-centerPos[0])*mulNum;
+    coorPos[1] = centerPos[1] + (coorPos[1]-centerPos[1])*mulNum;
+    coorPos[2] = centerPos[2] + (coorPos[2]-centerPos[2])*mulNum;
+  });
 
 
-        vertices.push( x, y, z );
-        geo.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+  var idxCount = 0;
+  for ( var i = 0; i < scene.children.length; i ++ ) {
+    var object = scene.children[ i ];
+    if ( object instanceof THREE.Points ) {
+      object.geometry.attributes.position.array[0] = coordinates[idxCount][0];
+      object.geometry.attributes.position.array[1] = coordinates[idxCount][0];
+      object.geometry.attributes.position.array[2] = coordinates[idxCount][0];
+      object.geometry.attributes.position.needsUpdate = true;
+      object.geometry.computeBoundingSphere();
+      idxCount ++;
+    }
+    if (object.name == "loadingSign") {
+      scene.remove(object);
+    }
+  }
+}
 
-        sampleURI = arrayItem;
-        mat = new THREE.PointsMaterial( { size: 100, map: textureLoader.load(sampleURI)} );
-        var particles = new THREE.Points( geo, mat );
+function updatePos(){
+  var minVal = 1;
+  var maxVal = -1;
+  coordinates.forEach(coorPos => {
+    coorPos.forEach(coorVal => {
+      if (coorVal > maxVal){
+        maxVal = coorVal;
+      }
+      if (coorVal < minVal){
+        minVal = coorVal;
+      }
+    })
+  });
 
-        particles.rotation.x = Math.random() * 6;
-        scene.add( particles );
+  var idxCount = 0;
+  var mulNum = 700/maxVal;
+  //console.log(mulNum);
+  for ( var i = 0; i < scene.children.length; i ++ ) {
+      var object = scene.children[ i ];
+      if ( object instanceof THREE.Points ) {
 
-        count++;
+        object.geometry.attributes.position.array[0] = coordinates[idxCount][0] * mulNum;
+        object.geometry.attributes.position.array[1] = coordinates[idxCount][0] * mulNum;
+        object.geometry.attributes.position.array[2] = coordinates[idxCount][0] * mulNum;
+        object.geometry.attributes.position.needsUpdate = true;
+        object.geometry.computeBoundingSphere();
+        idxCount ++;
+      }
+  }
+}
+
+
+async function loadFiles(){
+
+  return new Promise((resolve, reject) => {
+    var minVal = 1;
+    var maxVal = -1;
+    coordinates.forEach(coorPos => {
+      coorPos.forEach(coorVal => {
+        if (coorVal > maxVal){
+          maxVal = coorVal;
+        }
+        if (coorVal < minVal){
+          minVal = coorVal;
+        }
+      })
     });
+    var mulNum = Math.ceil(700/maxVal);
+    var vertices = [];
+    var sampleURI;
+    var imageVector;
+
+    count = 0;
+    Object.keys(requestData).forEach(function(key) {
+      requestData[key].forEach(function (arrayItem) {
+
+          vertices = [];
+          geo = new THREE.BufferGeometry();
+
+          var x = coordinates[count][0] * mulNum;
+          var y = coordinates[count][1] * mulNum;
+          var z = coordinates[count][2] * mulNum;
+
+          vertices.push( x, y, z );
+          geo.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+
+          sampleURI = arrayItem;
+          mat = new THREE.PointsMaterial( { size: 100, map: textureLoader.load(sampleURI)} );
+          particles = new THREE.Points( geo, mat );
+
+          particles.rotation.x = Math.random() * 6;
+          scene.add( particles );
+
+          count++;
+      });
+    });
+    resolve("Done!");
   });
 }
