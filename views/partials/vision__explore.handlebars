@@ -1,0 +1,177 @@
+<ul class="stepper">
+
+    <li class="stepper__step">
+        <span class="step__number">1</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__body">
+          <h2 class="step__title">What is your Clarifai key?
+              <a href="#" class="step__help-open-button 
+                                  js--open-help" role="button">
+                  <i class="fas fa-question-circle"></i>
+              </a>
+          </h2>
+          <div class="step__form-with-button
+                      js--apikey__form">
+              <input type="text"
+                  class="form-control
+                         no-radius--right
+                         step__form-text
+                         js--explore__apikey__input"
+                  aria-describedby=""
+                  placeholder="Paste API Key here">
+               <button class="button--create
+                              d-inline-block
+                              btn
+                              btn-primary
+                              no-radius--left
+                              js--explore__apikey__input--set"
+                      type="button">
+                      Set Key
+                </button>
+          </div>
+          <div class="api-key__result-row" style="display:none;">
+              <span class="api-key__value
+                           js--api-key__value"></span>
+              <a href="#" class="api-key__remove-button
+                                 btn btn-primary"
+                          role="button">
+                  <i class="fas fa-times"></i>
+              </a>
+          </div>
+
+          <a href="https://docs.google.com/document/d/1q8Cj9QhwjUXM51Qqtj3V3jYMFA44SiAAIZzVck7Efdc/view#heading=h.4jovbu2htq86" class="step__link step__link--get-key" target="_blank" >
+                 How-to guide
+           </a>
+           <a href="https://clarifai.com/signup" class="step__link step__link--get-key" target="_blank" >
+                 Sign up &amp; get keys
+           </a>
+           <div class="step__help
+                      step__help--keys">
+                <div class="plyr__video-embed" id="js-classifier__video--clarifai">
+                    <iframe src="https://www.youtube.com/embed/YOrrROME2zc"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                    </iframe>
+                </div>
+           </div>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="step__number">2</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__body">
+          <h2 class="step__title">Select an existing project 
+              <a href="#" class="step__help-open-button 
+                                  js--open-help" role="button">
+                  <i class="fas fa-question-circle"></i>
+              </a>
+          </h2>
+          <div class="step__help">
+             <span>These are projects you have already trained. Unfortunately these cannot be modified once they are created.
+              </span>
+          </div>
+          <div class="step__form-with-button">
+              <div class="dropdown">
+                <a class="btn btn-primary dropdown-toggle
+                          js--classifiers__dropdown--menu"
+                    href="#"
+                    role="button"
+                    id="dropdownMenuLink"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
+                  Choose Project
+                </a>
+
+                <div class="js--classifiers__dropdown dropdown-menu" 
+                     aria-labelledby="dropdownMenuLink">
+                </div>
+              </div>
+          </div>
+        </div>
+    </li>
+
+    <li class="stepper__step">
+        <span class="step__number">3</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__body">
+          <h2 class="step__title">Upload an image to test your model</h2>
+          <div class="category__container">
+              <div class="category__box 
+                          category__box--dashed
+                          category__box--vision">
+                  <form action="/"
+                        id="js--explore__dropzone-predict"
+                        class="dropzone--predict">
+                      <div class="dropzone__header">
+                          <i class="fas fa-cloud-upload-alt dropzone__upload-icon"></i>
+                          <span class="dropzone__label">Drop images here, or click to choose</span>
+                      </div>
+                      <div class="js--explore__dropzone__previews-container--predict
+                                  dropzone-previews"></div>
+                  </form>
+              </div>
+          </div>
+          <div class="classifier__train-or">
+              &mdash; or  &mdash;
+          </div>
+          <input type="text"
+                class="form-control
+                       step__form-text
+                       classifier__train-url
+                       js--explore__predict-url"
+                autocomplete="off"
+                aria-describedby=""
+                placeholder="Enter an image URL">
+          <button class="btn btn-primary
+                         js--explore__predict_button"
+              type="button" disabled>
+              Predict
+          </button>
+          <div class="classifier__results">
+              <div class="results__name
+                          js--explore__predict-results__name" style="display:none;">
+                  <span class="results__name-label">Category:</span>
+                  <span class="results__name-value
+                               js--explore__results--category"></span>
+                  <br>
+                  <span class="results__name-label">Confidence score:</span>
+                  <span class="results__name-value
+                               js--explore__results--confidence"></span>
+              </div>
+              <div class="spinner-grow
+                          js--explore__predict-results__status_spinner"
+                    style="display:none"
+                    role="status">
+                  <span class="sr-only"></span>
+              </div>
+          </div>
+    </li>
+
+
+    <li class="stepper__step">
+        <span class="step__number">4</span>
+        <div class="step__circle">
+            <i></i>
+        </div>
+        <div class="step__body">
+          <h2 class="step__title">
+               Play with the model in Codelab
+          </h2>
+          <button class="btn 
+                          btn-primary 
+                          button--play
+                          js--explore__open__codelab"
+                  type="button ">
+                  Go!
+          </button>
+        </div>
+    </li>
+</ul>

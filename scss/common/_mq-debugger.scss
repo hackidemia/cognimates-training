@@ -1,0 +1,40 @@
+.breakpoint { 
+  // remove this line or set to block, to display the media query helper
+  display: none; 
+  
+  position: fixed;
+  z-index: 1000000;
+  right: 0;
+  bottom: 0;
+  text-transform: uppercase;
+
+  padding: 0.3rem 1em;
+  opacity: .5;
+  color: white;
+  border-top-left-radius: 0.75rem;
+  /* border-bottom-left-radius: 0.75rem; */
+
+  @include mq('xxs') { background-color: green; }
+  @include mq('xs') { background-color: red; }
+  @include mq('sm') { background-color: blue; }
+  @include mq('md') { background-color: green; }
+  @include mq('lg') {  background-color: blue; }
+  @include mq('xl') { background-color: green; }
+  @include mq('xxl') { background-color: blue;   }
+  @include mq('xxxl') { background-color: green;  }
+}
+
+// corresponds to breakpoints in mediaqueries.scss
+.breakpoint:after {
+  font-size: 1rem;
+  font-family: 'Graphik-Medium', sans-serif;
+
+  @include mq('xxs') { content: 'XXS'; }
+  @include mq('xs') { content: 'XS'; }
+  @include mq('sm') { content: 'SM'; }
+  @include mq('md') { content: 'MD'; }
+  @include mq('lg') { content: 'LG'; }
+  @include mq('xl') { content: 'XL'; }
+  @include mq('xxl') { content: 'XXL'; }
+  @include mq('xxxl') { content: 'XXXL'; }
+}
