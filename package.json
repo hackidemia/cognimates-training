@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm:sass-watch\" \"npm:dev-node-server\"",
+    "start": "node index.js",
     "prod-node-server": "node index.js",
     "dev-node-server": "nodemon index.js --http",
     "sass-build": "node-sass scss/style.scss -o static/css/",
