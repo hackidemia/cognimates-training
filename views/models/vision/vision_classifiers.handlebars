@@ -319,6 +319,14 @@
           preprocessExplorePredictData();
       })
     });
+    $('.js--classifier__open__visualizer').click((e) => {
+        testVisualizer();
+    });
+    
+    async function testVisualizer() {
+      await convertImagesIntoExamples();
+      openVisualizer();
+    }
     function selectClassifier(model_id) {
         $('.js--classifiers__dropdown--menu').html(model_id);
         $('.js--explore__predict_button').attr('disabled', null);
@@ -505,6 +513,7 @@
             });
             $('.js--classifier__open__visualizer').attr('disabled', null);
             $('.js--classifier__open__visualizer').click((e) => {
+                convertImagesIntoExamples();
                 openVisualizer();
             });
         } catch (error) {
