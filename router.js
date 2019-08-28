@@ -94,4 +94,7 @@ router.get('/visualizer', (req, res) => {
   });
 })
 
+//health check 
+router.get('/health', textController.health);
+
 module.exports = router

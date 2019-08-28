@@ -2,6 +2,11 @@ const request = require('request');
 const base_url = "https://api.uclassify.com/v1/";
 const async = require('async');
 
+function health(req, res){
+  res.json({message: 'healthy'});
+  return;
+}
+
 function getClassifierInformation(req, res) {
     let read_token = req.body.read_token
     var classifier_id = req.body.classifier_id
@@ -302,5 +307,6 @@ module.exports = {
   createClass: createClass,
   removeClass: removeClass,
   untrain: untrain,
-  trainAll: trainAll
+  trainAll: trainAll,
+  health: health
 }
