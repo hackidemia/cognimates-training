@@ -144,29 +144,23 @@ function classify(req, res) {
         res.json(body[0].classification);
         return;
       } else {
-        errorHandler(err, httpResponse, body);
+        var error = errorHandler(err, httpResponse, body);
+        res.json({error: error});
       }
   });
 }
 
 function errorHandler(err, httpResponse){
-  if(httpResponse.statusCode === 413){
-    res.json({error: 'Request entity too large'});
-    return;
+  if(httpResponse.statusCode === 413 || httpResponse.statusCode === 200){
+    return 'Request entity too large';
   } if(httpResponse.statusCode === 530){
-    res.json({error: 'uClassify Service Unavailable'});
-    return;
+    return 'uClassify Service Unavailable';
   } if(httpResponse.statusCode === 400){
-    res.json({error: 'Bad Request. Check your text again.'})
+    return 'Bad Request. Check your text again.';
   } if(httpResponse.statusCode === 500){
-    res.json({error: 'uClassify has an internal server error.'})
-  }if(err){
-   console.log("error here!!");
-   res.json({error: err.message});
-   return;
- } else {
-   res.json({ error: 'Could not classify the text' });
-   console.log(httpResponse);
+    return 'uClassify has an internal server error.';
+  } else {
+   return 'Could not classify the text. uClassify service may be unavailable.';
   }
 }
 
@@ -235,7 +229,7 @@ function trainAll(req, res) {
       return;
     }
     if(results[0] == 400){
-      res.json({error: 'Unable to train. Check your credentials, inputs, or internet.'});
+      res.json({error: 'Unable to train. Check your credentials, inputs, or internet and try again.'});
       return;
     } else {
       res.json("Trained successfully");
