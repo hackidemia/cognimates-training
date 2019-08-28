@@ -135,20 +135,35 @@ function classify(req, res) {
     headers: {'Content-Type': 'application/json', 'Authorization': token_text},
     body: {texts: [phrase]}, json: true},
     function(err,httpResponse, body){
-       if(err){
-         console.log("error here!!");
-         res.json({error: err.message});
-         return;
-       }
-       if(httpResponse.statusCode === 200){
-         res.json(body[0].classification);
-         return;
-       } else {
-        res.json({ error: 'Could not classify the text' });
-        console.log(httpResponse);
-       }
-    });
+      if(httpResponse.statusCode === 200){
+        res.json(body[0].classification);
+        return;
+      } else {
+        errorHandler(err, httpResponse, body);
+      }
+  });
+}
+
+function errorHandler(err, httpResponse){
+  if(httpResponse.statusCode === 413){
+    res.json({error: 'Request entity too large'});
+    return;
+  } if(httpResponse.statusCode === 530){
+    res.json({error: 'uClassify Service Unavailable'});
+    return;
+  } if(httpResponse.statusCode === 400){
+    res.json({error: 'Bad Request. Check your text again.'})
+  } if(httpResponse.statusCode === 500){
+    res.json({error: 'uClassify has an internal server error.'})
+  }if(err){
+   console.log("error here!!");
+   res.json({error: err.message});
+   return;
+ } else {
+   res.json({ error: 'Could not classify the text' });
+   console.log(httpResponse);
   }
+}
 
 function removeClass(req, res){
   let classifier_id = req.body.classifier_name;
@@ -212,7 +227,7 @@ function trainAll(req, res) {
           errorMessages.push(result.message);
         }
       });
-      res.json({ error: "Failed to train classifier", errorDetails: errorMessages });
+      res.json({ error: err.message, errorDetails: errorMessages });
       return;
     }
   });
