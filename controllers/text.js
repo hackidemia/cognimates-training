@@ -214,7 +214,6 @@ function untrain(req, res){
 }
 
 function trainAll(req, res) {
-  console.log(req.body);
   var classifierName = req.body.classifier_name;
   var training_data = req.body.training_data;
   var writeAPIKey = req.headers.api_key;
@@ -235,9 +234,14 @@ function trainAll(req, res) {
       res.json({ error: err.message, errorDetails: errorMessages });
       return;
     }
+    if(results[0] == 400){
+      res.json({error: 'Unable to train. Check your credentials, inputs, or internet.'});
+      return;
+    } else {
+      res.json("Trained successfully");
+    }
   });
 
-  res.json('Training completed successfully');
 }
 
 function getCreateClassifierFunction(writeAPIKey, classifierName) {
@@ -250,10 +254,10 @@ function getCreateClassifierFunction(writeAPIKey, classifierName) {
       body: {classifierName: classifierName}, json: true}, 
       function(err, body){
         if(err){
-          callback(err, body);
+          callback(err, body.statusCode);
           return;
         } else {
-          callback(null, true);
+          callback(null, body.statusCode);
         } 
     });
   };
@@ -274,9 +278,12 @@ function getTrainLabelFunction(writeAPIKey, classifierName, label, labelData) {
       body: {className: class_name}, json: true}, 
       function(err, body){
         if(err){
-          callback(err, body);
+          callback(err, body.statusCode);
           return;
-        } 
+        } else {
+          callback(err, body.statusCode);
+          return;
+        }
     });
     
     train_url = base_url + "me/" + classifierName + "/" + class_name + "/train"; 
@@ -287,11 +294,9 @@ function getTrainLabelFunction(writeAPIKey, classifierName, label, labelData) {
       body: {texts: training_data}, json: true}, 
       function(err, body){
         if(err){
-          callback(err, body);
+          callback(err, body.statusCode);
           return;
-        } else {
-          callback(null, true);
-        } 
+        }
     });
 
   }
