@@ -36,7 +36,7 @@ function addExamples(req, res) {
   let classifier_name = req.body.classifier_name;
   let class_name = req.body.class_name;
   let training_data = req.body.texts;
-  var create_url = base_url + "me/" + classifier_name + "/" + class_name + "/text_train";
+  var create_url = base_url + "me/" + classifier_name + "/" + class_name + "/train";
   let token_text = 'Token ' + write_token;
   request.post({
     url:create_url,
@@ -47,7 +47,7 @@ function addExamples(req, res) {
         res.json({error: err.message});
         return;
       } else {
-        console.log(httpResponse);
+        console.log(httpResponse.statusCode);
         res.json();
         return;
       }
