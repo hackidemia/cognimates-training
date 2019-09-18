@@ -114,7 +114,8 @@ function init(){
     document.body.appendChild( renderer.domElement );
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color('red');
+    scene.background = new THREE.Color(0x408fd6);
+    
 
     // fov : Number, aspect : Number, near : Number, far : Number
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 10000 );
@@ -196,6 +197,7 @@ function init(){
     loader.load( '/visualizer/resnet/textures/tri_pattern.jpg', onLoad );
     effectFXAA = new THREE.ShaderPass( THREE.FXAAShader );
     effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
+    effectFXAA.renderToScreen = true;
     composer.addPass( effectFXAA );
 
     window.addEventListener( 'resize', onWindowResize, false );
@@ -288,7 +290,7 @@ function animate() {
     requestAnimationFrame( animate );
     render();
     composer.render();
-    renderer.render( scene, camera );
+    //renderer.render( scene, camera );
 }
 
 function render(){
