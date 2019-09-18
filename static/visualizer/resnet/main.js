@@ -102,7 +102,7 @@ gui.addColor( conf, 'visibleEdgeColor' ).onChange( function ( value ) {
 gui.addColor( conf, 'hiddenEdgeColor' ).onChange( function ( value ) {
   outlinePass.hiddenEdgeColor.set( value );
 } );
-
+dat.GUI.toggleHide();
 
 $(document).ready(function() {
   init();
@@ -114,6 +114,13 @@ function init(){
     renderer.shadowMap.enabled = true;
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
+
+    //loader
+    $('.progress').css({
+      'background-color': 'rgba(64,143,214,1)',
+      'height':'100%',
+      'width':'100%'
+    });
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x408fd6);
@@ -151,23 +158,24 @@ function init(){
     scene.add( light );
 
     //model
-    updateProgressBar(10);
+    //updateprogressBar(10);
     //resnet & tsne
     $(function(){
         fetchImage().done(function(){
-            updateProgressBar(35);
+            //updateprogressBar(35);
             run_entry().then(function(){
-                updateProgressBar(70);
+                //updateprogressBar(70);
                 dists = resultArray;
                 //console.log(dists);
                 prepareTsne(dists,epsilon,perplexity);
-                updateProgressBar(80);             
+                //updateprogressBar(80);             
                 doTsne().done(function(){
-                    updateProgressBar(90);
+                    //updateprogressBar(90);
                     loadFiles2().then(()=>{
-                      updateProgressBar(100);
+                      //updateprogressBar(100);
                       initSuc = true;
                       removeProgressBar();
+                      dat.GUI.toggleHide();
                     }
                     );
                 });
@@ -241,13 +249,16 @@ function init(){
         $('#tip').text(selectedObject.userData.note);
 
         $('#tip').css({
-          'background-color': 'rgba(255,255,255,0.8)',
+          'background-color': 'rgba(255,255,255,0.95)',
           'width': '100px',
           'border' : '1px solid #408fd6',
+          'border-radius': '15px',
           'color' : '#408fd6',
           'font-size': '10px',
           'text-align' : 'center',
-          'display' : 'inline-block'
+          'word-wrap': 'break-word',
+          'white-space':'pre-wrap',
+          'display' : 'block'
       });
         //console.log(selectedObject.userData.note);
         // assuming that the actual position is at the center of the mesh, otherwise the text will display somewhere else
@@ -305,7 +316,7 @@ function fetchImage(){
     return dfrd1.promise();
 }
 
-function updateProgressBar(valeur){
+function removeBar(valeur){
   $('.progress-bar').css('width', valeur+'%').attr('aria-valuenow', valeur).text(valeur+"%");  
 }
 

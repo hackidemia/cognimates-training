@@ -39,11 +39,19 @@
 
     <script src="/visualizer/resnet/main.js" type="text/javascript"></script>
 
-    <div class="progress">
+    {{!-- <div class="progress">
     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
         0%
     </div>
+    </div> --}}
+
+    <div class="progress">
+    <div class="spinner-border text-light mx-auto my-auto" role="status">
+    <span class="sr-only">Loading...</span>
     </div>
+    </div>
+
+
 
     <div style="position: relative" width="10px">
     <div id="tip" style="position: absolute; display: none;">Some text</div>

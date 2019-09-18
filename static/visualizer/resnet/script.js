@@ -5,7 +5,7 @@ var imageDataArray = [];
 async function run_entry() {
     try {
         await populateImageDataArray();
-        updateProgressBar(55);
+        //updateProgressBar(55);
         await run();
 
     } catch (error) {
@@ -42,7 +42,7 @@ async function prepare_run() {
     } else {
         console.log('Model is already loaded');
     }
-    updateProgressBar(60);
+    //updateProgressBar(60);
     return runners[backend_key];
 }
 
@@ -70,9 +70,10 @@ async function run() {
         let elapsed_time = performance.now() - start;
     
         let top_labels = WebDNN.Math.argmax(y, 5);
-        let predicted_str = 'Predicted:';
+        let predicted_str = 'Predicted:\n';
         for (let j = 0; j < top_labels.length; j++) {
             predicted_str += `${imagenet_labels[top_labels[j]]}`;
+            predicted_str += '\n';
         }
 
         let tmpy = y.toActual();
