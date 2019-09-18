@@ -33,6 +33,8 @@ var epsilon =10;
 
 var particlesGruop =[];
 
+var labels = [];
+
 
 var params = {
   edgeStrength: 3.0,
@@ -232,12 +234,41 @@ function init(){
         var selectedObject = intersects[ 0 ].object;
         addSelectedObject( selectedObject );
         outlinePass.selectedObjects = selectedObjects;
-        console.log(outlinePass);
+
+        // toggle html element
+        // $('#tip').css('display', 'block');
+        // $("#tip").width(30);
+        $('#tip').text(selectedObject.userData.note);
+
+        $('#tip').css({
+          'background-color': 'rgba(255,255,255,0.8)',
+          'width': '100px',
+          'border' : '1px solid #408fd6',
+          'color' : '#408fd6',
+          'font-size': '10px',
+          'text-align' : 'center',
+          'display' : 'inline-block'
+      });
+        //console.log(selectedObject.userData.note);
+        // assuming that the actual position is at the center of the mesh, otherwise the text will display somewhere else
+        // alternatively you could store and pass the point of click: intersects[0].point
+        positionTip(selectedObject.position);
+        //console.log(outlinePass);
       } else {
         // outlinePass.selectedObjects = [];
       }
 
     }
+}
+
+function positionTip(pos3D) {
+
+  var p = new THREE.Vector3(pos3D.x, pos3D.y, pos3D.z);
+  var vector = p.project(camera);
+
+  vector.x = (vector.x + 1) / 2 * window.innerWidth;
+  vector.y = -(vector.y - 1) / 2 * window.innerHeight;
+  $('#tip').css({ left: vector.x,top: vector.y });
 }
 
 function onWindowResize() {
@@ -633,6 +664,7 @@ async function loadFiles2(){
           plane.geometry.computeBoundingSphere();
           plane.receiveShadow = true;
           plane.castShadow = true;
+          plane.userData.note = labels[count];
           scene.add( plane );
           count++;
       });

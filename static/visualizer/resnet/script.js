@@ -72,7 +72,7 @@ async function run() {
         let top_labels = WebDNN.Math.argmax(y, 5);
         let predicted_str = 'Predicted:';
         for (let j = 0; j < top_labels.length; j++) {
-            predicted_str += ` ${top_labels[j]}(${imagenet_labels[top_labels[j]]})`;
+            predicted_str += `${imagenet_labels[top_labels[j]]}`;
         }
 
         let tmpy = y.toActual();
@@ -81,7 +81,7 @@ async function run() {
         }
         let result = tmpy.map(function(x) { return x * 1; });
         //let result = tmpy;
-        //console.log(predicted_str);
+        labels.push(predicted_str);
         resultArray.push(result);
     }
 }
