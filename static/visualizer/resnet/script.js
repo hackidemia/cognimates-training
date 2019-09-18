@@ -79,7 +79,9 @@ async function run() {
         if (idx == 0){
             mulNum = Math.ceil(1/Math.min(...tmpy));
         }
-        let result = tmpy.map(function(x) { return x * mulNum; });
+        let result = tmpy.map(function(x) { return x * 1; });
+        //let result = tmpy;
+        //console.log(predicted_str);
         resultArray.push(result);
     }
 }
