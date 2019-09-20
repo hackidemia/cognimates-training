@@ -33,6 +33,9 @@ var epsilon =10;
 
 var particlesGruop =[];
 
+var planeGroup = [];
+var outlineGroup = [];
+
 var labels = [];
 
 
@@ -43,6 +46,7 @@ var params = {
   pulsePeriod: 0,
   rotate: false,
   usePatternTexture: false,
+  useClusterFrame: false,
   step: 5000,
   currentStep: 0,
   perplexity: 30,
@@ -62,22 +66,23 @@ var autoRotate = { autoRotate:function(){controls.autoRotate = !controls.autoRot
 // Init gui
 
 var gui = new dat.GUI( { width: 300 } );
-gui.add( params, 'edgeStrength', 0.01, 10 ).onChange( function ( value ) {
-  outlinePass.edgeStrength = Number( value );
-} );
-gui.add( params, 'edgeGlow', 0.0, 1 ).onChange( function ( value ) {
-  outlinePass.edgeGlow = Number( value );
-} );
-gui.add( params, 'edgeThickness', 1, 4 ).onChange( function ( value ) {
-  outlinePass.edgeThickness = Number( value );
-} );
-gui.add( params, 'pulsePeriod', 0.0, 5 ).onChange( function ( value ) {
-  outlinePass.pulsePeriod = Number( value );
-} );
+// gui.add( params, 'edgeStrength', 0.01, 10 ).onChange( function ( value ) {
+//   outlinePass.edgeStrength = Number( value );
+// } );
+// gui.add( params, 'edgeGlow', 0.0, 1 ).onChange( function ( value ) {
+//   outlinePass.edgeGlow = Number( value );
+// } );
+// gui.add( params, 'edgeThickness', 1, 4 ).onChange( function ( value ) {
+//   outlinePass.edgeThickness = Number( value );
+// } );
+// gui.add( params, 'pulsePeriod', 0.0, 5 ).onChange( function ( value ) {
+//   outlinePass.pulsePeriod = Number( value );
+// } );
 // gui.add( params, 'rotate' );
-gui.add( params, 'usePatternTexture' ).onChange( function ( value ) {
-  outlinePass.usePatternTexture = value;
-} );
+// gui.add( params, 'usePatternTexture' ).onChange( function ( value ) {
+//   outlinePass.usePatternTexture = value;
+// } );
+gui.add( params, 'useClusterFrame' );
 gui.add( params, 'epsilon',1,50 ).onChange( function ( value ) {
   epsilon = value;
 } );
@@ -91,17 +96,17 @@ gui.add( params, 'currentStep',0,30000 ).listen();
 gui.add(autoRotate,'autoRotate');
 gui.add(reset,'reset');
 
-var Configuration = function () {
-  this.visibleEdgeColor = '#ffffff';
-  this.hiddenEdgeColor = '#190a05';
-};
-var conf = new Configuration();
-gui.addColor( conf, 'visibleEdgeColor' ).onChange( function ( value ) {
-  outlinePass.visibleEdgeColor.set( value );
-} );
-gui.addColor( conf, 'hiddenEdgeColor' ).onChange( function ( value ) {
-  outlinePass.hiddenEdgeColor.set( value );
-} );
+// var Configuration = function () {
+//   this.visibleEdgeColor = '#ffffff';
+//   this.hiddenEdgeColor = '#190a05';
+// };
+// var conf = new Configuration();
+// gui.addColor( conf, 'visibleEdgeColor' ).onChange( function ( value ) {
+//   outlinePass.visibleEdgeColor.set( value );
+// } );
+// gui.addColor( conf, 'hiddenEdgeColor' ).onChange( function ( value ) {
+//   outlinePass.hiddenEdgeColor.set( value );
+// } );
 dat.GUI.toggleHide();
 
 $(document).ready(function() {
@@ -114,13 +119,6 @@ function init(){
     renderer.shadowMap.enabled = true;
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
-
-    //loader
-    $('.progress').css({
-      'background-color': 'rgba(64,143,214,1)',
-      'height':'100%',
-      'width':'100%'
-    });
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x408fd6);
@@ -197,14 +195,14 @@ function init(){
 
     outlinePass = new THREE.OutlinePass( new THREE.Vector2( window.innerWidth, window.innerHeight ), scene, camera );
     composer.addPass( outlinePass );
-    var onLoad = function ( texture ) {
-      outlinePass.patternTexture = texture;
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-    };
+    // var onLoad = function ( texture ) {
+    //   outlinePass.patternTexture = texture;
+    //   texture.wrapS = THREE.RepeatWrapping;
+    //   texture.wrapT = THREE.RepeatWrapping;
+    // };
 
-    var loader = new THREE.TextureLoader();
-    loader.load( '/visualizer/resnet/textures/tri_pattern.jpg', onLoad );
+    // var loader = new THREE.TextureLoader();
+    // loader.load( '/visualizer/resnet/textures/tri_pattern.jpg', onLoad );
     effectFXAA = new THREE.ShaderPass( THREE.FXAAShader );
     effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
     effectFXAA.renderToScreen = true;
@@ -225,7 +223,9 @@ function init(){
       }
       mouse.x = ( x / window.innerWidth ) * 2 - 1;
       mouse.y = - ( y / window.innerHeight ) * 2 + 1;
+
       checkIntersection();
+
     }
 
     function addSelectedObject( object ) {
@@ -235,19 +235,16 @@ function init(){
 
     function checkIntersection() {
       raycaster.setFromCamera( mouse, camera );
-      var intersects = raycaster.intersectObjects( scene.children,true);
-      //console.log([ scene ]);
-      //console.log(scene.children);
+      var intersects = raycaster.intersectObjects(planeGroup,true);
       if ( intersects.length > 0 ) {
         var selectedObject = intersects[ 0 ].object;
         addSelectedObject( selectedObject );
-        outlinePass.selectedObjects = selectedObjects;
-
-        // toggle html element
-        // $('#tip').css('display', 'block');
-        // $("#tip").width(30);
+        if(!params.useClusterFrame){
+          outlinePass.selectedObjects = selectedObjects;
+        }else{
+          outlinePass.selectedObjects = [];
+        }
         $('#tip').text(selectedObject.userData.note);
-
         $('#tip').css({
           'background-color': 'rgba(255,255,255,0.95)',
           'width': '100px',
@@ -259,14 +256,11 @@ function init(){
           'word-wrap': 'break-word',
           'white-space':'pre-wrap',
           'display' : 'block'
-      });
-        //console.log(selectedObject.userData.note);
-        // assuming that the actual position is at the center of the mesh, otherwise the text will display somewhere else
-        // alternatively you could store and pass the point of click: intersects[0].point
+        });
         positionTip(selectedObject.position);
-        //console.log(outlinePass);
       } else {
-        // outlinePass.selectedObjects = [];
+        outlinePass.selectedObjects = [];
+        $('#tip').css('display', 'none');
       }
 
     }
@@ -341,6 +335,12 @@ function render(){
     controls.update();
     //console.log(step);
 
+    var idxCount = 0;
+    for ( var i = 0; i < scene.children.length; i ++ ) {
+      var object = scene.children[ i ];
+      object.quaternion.copy(camera.quaternion);
+    }
+
     $(function(){
       if(numberStep < step){
         if(initSuc){
@@ -358,7 +358,6 @@ function render(){
         //controls.autoRotate = true;
       }
     });
-
     //composer.render();
 }
 
@@ -648,10 +647,18 @@ async function loadFiles2(){
     });
   
     var mulNum = window.innerWidth/2/maxVal;
+    minVal = -1;
+    maxVal = 1;
     coordinates.forEach(coorPos => {
       coorPos[0] = centerPos[0] + (coorPos[0]-centerPos[0])*mulNum;
+      if (coorPos[0]<minVal) minVal = coorPos[0];
+      if (coorPos[0]>maxVal) maxVal = coorPos[0];
       coorPos[1] = centerPos[1] + (coorPos[1]-centerPos[1])*mulNum;
+      if (coorPos[1]<minVal) minVal = coorPos[1];
+      if (coorPos[1]>maxVal) maxVal = coorPos[1];
       coorPos[2] = centerPos[2] + (coorPos[2]-centerPos[2])*mulNum;
+      if (coorPos[2]<minVal) minVal = coorPos[2];
+      if (coorPos[2]>maxVal) maxVal = coorPos[2];
     });
 
     var sampleURI;
@@ -661,6 +668,33 @@ async function loadFiles2(){
           var x = coordinates[count][0];
           var y = coordinates[count][1];
           var z = coordinates[count][2];
+
+          const scale = (num, in_min, in_max, out_min, out_max) => {
+            return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+          }
+          var r = scale(x, minVal, maxVal, 0, 1);
+          var g = scale(y, minVal, maxVal, 0, 1);
+          var b = scale(z, minVal, maxVal, 0, 1);
+          var colorOutline = new THREE.Color();
+          colorOutline.setHSL( r, g, b );
+          
+          geo = new THREE.PlaneBufferGeometry(80,80);
+          //var colorOutline = new THREE.Color( r, g, b );
+          mat = new THREE.MeshBasicMaterial( { color: colorOutline, side: THREE.DoubleSide} );
+          var planeOutline = new THREE.Mesh( geo, mat );
+          planeOutline.position.x = x;
+          planeOutline.position.y = y;
+          planeOutline.position.z = z;
+          planeOutline.scale.multiplyScalar(1.2);
+          planeOutline.geometry.verticesNeedUpdate = true;
+          planeOutline.position.needsUpdate = true;
+          planeOutline.geometry.computeFaceNormals();
+          planeOutline.geometry.computeBoundingSphere();
+          planeOutline.receiveShadow = true;
+          planeOutline.castShadow = true;
+          planeOutline.visible = false;
+          outlineGroup.push(planeOutline);
+          scene.add( planeOutline );
 
           geo = new THREE.PlaneBufferGeometry(80,80);
           sampleURI = arrayItem;
@@ -676,7 +710,10 @@ async function loadFiles2(){
           plane.receiveShadow = true;
           plane.castShadow = true;
           plane.userData.note = labels[count];
+          plane.renderOrder = 1;
+          planeGroup.push(plane);
           scene.add( plane );
+
           count++;
       });
     });
@@ -711,28 +748,78 @@ function updatePos3(){
   });
 
   var mulNum = window.innerWidth/2/maxVal;
+  minVal = -1;
+  maxVal = 1;
   coordinates.forEach(coorPos => {
     coorPos[0] = centerPos[0] + (coorPos[0]-centerPos[0])*mulNum;
+    if (coorPos[0]<minVal) minVal = coorPos[0];
+    if (coorPos[0]>maxVal) maxVal = coorPos[0];
     coorPos[1] = centerPos[1] + (coorPos[1]-centerPos[1])*mulNum;
+    if (coorPos[1]<minVal) minVal = coorPos[1];
+    if (coorPos[1]>maxVal) maxVal = coorPos[1];
     coorPos[2] = centerPos[2] + (coorPos[2]-centerPos[2])*mulNum;
+    if (coorPos[2]<minVal) minVal = coorPos[2];
+    if (coorPos[2]>maxVal) maxVal = coorPos[2];
   });
 
 
+  // var idxCount = 0;
+  // for ( var i = 0; i < scene.children.length; i ++ ) {
+  //   var object = scene.children[ i ];
+  //   if ( object instanceof THREE.Mesh ) {
+  //     object.position.x = coordinates[idxCount][0];
+  //     object.position.y = coordinates[idxCount][1];
+  //     object.position.z = coordinates[idxCount][2];
+  //     object.geometry.verticesNeedUpdate = true;
+  //     object.position.needsUpdate = true;
+  //     object.geometry.computeFaceNormals();
+  //     object.geometry.computeBoundingSphere();
+  //     idxCount ++;
+  //   }
+  //   if (object.name == "loadingSign") {
+  //     scene.remove(object);
+  //   }
+  // }
   var idxCount = 0;
-  for ( var i = 0; i < scene.children.length; i ++ ) {
-    var object = scene.children[ i ];
-    if ( object instanceof THREE.Mesh ) {
-      object.position.x = coordinates[idxCount][0];
-      object.position.y = coordinates[idxCount][1];
-      object.position.z = coordinates[idxCount][2];
-      object.geometry.verticesNeedUpdate = true;
-      object.position.needsUpdate = true;
-      object.geometry.computeFaceNormals();
-      object.geometry.computeBoundingSphere();
-      idxCount ++;
+  for ( var i = 0; i < planeGroup.length; i ++ ) {
+    var object = planeGroup[ i ];
+    var objectOutline = outlineGroup[ i ];
+
+    const scale = (num, in_min, in_max, out_min, out_max) => {
+      return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
-    if (object.name == "loadingSign") {
-      scene.remove(object);
-    }
+    objectOutline.position.x = coordinates[idxCount][0];
+    objectOutline.position.y = coordinates[idxCount][1];
+    objectOutline.position.z = coordinates[idxCount][2];
+    var r = scale(objectOutline.position.x, minVal, maxVal, 0, 1);
+    var g = scale(objectOutline.position.y, minVal, maxVal, 0, 1);
+    var b = scale(objectOutline.position.z, minVal, maxVal, 0, 1);
+    var colorOutline = new THREE.Color();
+    colorOutline.setHSL( r, g, b );
+    // var colorOutline = new THREE.Color( r, g, b );
+    objectOutline.material.color.set( colorOutline );
+    objectOutline.geometry.verticesNeedUpdate = true;
+    objectOutline.position.needsUpdate = true;
+    objectOutline.geometry.computeFaceNormals();
+    objectOutline.geometry.computeBoundingSphere();
+    objectOutline.visible = params.useClusterFrame;
+
+    object.position.x = coordinates[idxCount][0];
+    object.position.y = coordinates[idxCount][1];
+    object.position.z = coordinates[idxCount][2];
+    object.geometry.verticesNeedUpdate = true;
+    object.position.needsUpdate = true;
+    object.geometry.computeFaceNormals();
+    object.geometry.computeBoundingSphere();
+
+    idxCount ++;
   }
+
+  // if(params.useClusterFrame){
+  //   outlinePass.selectedObjects = scene.children;
+  // }else{
+  //   if (outlinePass.selectedObjects.length >1){
+  //     outlinePass.selectedObjects = [];
+  //   }
+  // }
 }
