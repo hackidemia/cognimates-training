@@ -82,7 +82,17 @@ var gui = new dat.GUI( { width: 300 } );
 // gui.add( params, 'usePatternTexture' ).onChange( function ( value ) {
 //   outlinePass.usePatternTexture = value;
 // } );
-gui.add( params, 'useClusterFrame' );
+gui.add( params, 'useClusterFrame' ).onChange( function ( value ) {
+  for ( var i = 0; i < outlineGroup.length; i ++ ) {
+    var object = outlineGroup[ i ];
+    object.visible = value;
+  }
+  // if(value){
+  //   scene.background = new THREE.Color(0x7bb0de);
+  // }else{
+  //   scene.background = new THREE.Color(0x408fd6);
+  // }
+} );
 gui.add( params, 'epsilon',1,50 ).onChange( function ( value ) {
   epsilon = value;
 } );
@@ -115,6 +125,10 @@ $(document).ready(function() {
 });
 
 function init(){
+    // window.onload = function() {
+    //   window.setTimeout(fadeout, 8000); //8 seconds
+    // }
+    displayInstruc();
     renderer = new THREE.WebGLRenderer();
     renderer.shadowMap.enabled = true;
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -165,6 +179,7 @@ function init(){
                 //updateprogressBar(70);
                 dists = resultArray;
                 //console.log(dists);
+                //fadeout();
                 prepareTsne(dists,epsilon,perplexity);
                 //updateprogressBar(80);             
                 doTsne().done(function(){
@@ -172,6 +187,7 @@ function init(){
                     loadFiles2().then(()=>{
                       //updateprogressBar(100);
                       initSuc = true;
+                      hideInstruc();
                       removeProgressBar();
                       dat.GUI.toggleHide();
                     }
@@ -335,7 +351,14 @@ function render(){
     controls.update();
     //console.log(step);
 
-    var idxCount = 0;
+    // if(params.useClusterFrame){
+    //   scene.background = new THREE.Color(0x408fd6);
+    // }
+    // for ( var i = 0; i < outlineGroup.length; i ++ ) {
+    //   var object = outlineGroup[ i ];
+    //   object.visible = params.useClusterFrame;
+    // }
+
     for ( var i = 0; i < scene.children.length; i ++ ) {
       var object = scene.children[ i ];
       object.quaternion.copy(camera.quaternion);
@@ -352,6 +375,9 @@ function render(){
             numberStep++;
             params.currentStep++;
           });
+          if(numberStep==200){
+            fadeout();
+          }
         }
         //controls.autoRotate = false;
       }else{
@@ -675,17 +701,17 @@ async function loadFiles2(){
           var r = scale(x, minVal, maxVal, 0, 1);
           var g = scale(y, minVal, maxVal, 0, 1);
           var b = scale(z, minVal, maxVal, 0, 1);
-          var colorOutline = new THREE.Color();
-          colorOutline.setHSL( r, g, b );
-          
+          //var colorOutline = new THREE.Color();
+          //colorOutline.setHSL( r, g, b );
+
           geo = new THREE.PlaneBufferGeometry(80,80);
-          //var colorOutline = new THREE.Color( r, g, b );
+          var colorOutline = new THREE.Color( r, g, b );
           mat = new THREE.MeshBasicMaterial( { color: colorOutline, side: THREE.DoubleSide} );
           var planeOutline = new THREE.Mesh( geo, mat );
           planeOutline.position.x = x;
           planeOutline.position.y = y;
           planeOutline.position.z = z;
-          planeOutline.scale.multiplyScalar(1.2);
+          planeOutline.scale.multiplyScalar(1.3);
           planeOutline.geometry.verticesNeedUpdate = true;
           planeOutline.position.needsUpdate = true;
           planeOutline.geometry.computeFaceNormals();
@@ -794,15 +820,15 @@ function updatePos3(){
     var r = scale(objectOutline.position.x, minVal, maxVal, 0, 1);
     var g = scale(objectOutline.position.y, minVal, maxVal, 0, 1);
     var b = scale(objectOutline.position.z, minVal, maxVal, 0, 1);
-    var colorOutline = new THREE.Color();
-    colorOutline.setHSL( r, g, b );
-    // var colorOutline = new THREE.Color( r, g, b );
+    //var colorOutline = new THREE.Color();
+    //colorOutline.setHSL( r, g, b );
+    var colorOutline = new THREE.Color( r, g, b );
     objectOutline.material.color.set( colorOutline );
     objectOutline.geometry.verticesNeedUpdate = true;
     objectOutline.position.needsUpdate = true;
     objectOutline.geometry.computeFaceNormals();
     objectOutline.geometry.computeBoundingSphere();
-    objectOutline.visible = params.useClusterFrame;
+    //objectOutline.visible = params.useClusterFrame;
 
     object.position.x = coordinates[idxCount][0];
     object.position.y = coordinates[idxCount][1];
@@ -814,12 +840,58 @@ function updatePos3(){
 
     idxCount ++;
   }
-
-  // if(params.useClusterFrame){
-  //   outlinePass.selectedObjects = scene.children;
-  // }else{
-  //   if (outlinePass.selectedObjects.length >1){
-  //     outlinePass.selectedObjects = [];
-  //   }
-  // }
 }
+
+function changeInstruc(newText) {
+  $('#fadeout').css('opacity','0');
+  return new Promise(function (resolve, reject) {
+    setTimeout(function () {
+      changeText(newText);
+      fadeIn();
+      resolve("anything");
+    }, 500);
+  });
+}
+
+function fadeIn(){
+  $('#fadeout').css('opacity','1');
+}
+
+function fadeout(){
+  $('#fadeout').css('opacity','0');
+}
+
+function changeText(newText){
+  $('#fadeout').text(newText);
+}
+
+function displayInstruc(){
+  //fadeIn();
+  //setTimeout(function(){ fadeout();}, 3000);
+  // changeText('Check Out Cluster Frame');
+  // fadeIn();
+  // setTimeout(function(){ fadeout(); }, 3000);
+  // changeText('Hover To See Predictions');
+
+  prevDis('Check Out Cluster Frame')
+  .then(function(value) {
+      prevDis('Hover To See Predictions').then(function(value) {
+        fadeout();
+    });
+  });
+}
+
+function prevDis (newText) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(function () {
+      changeInstruc(newText);
+      resolve("anything");
+    }, 2500);
+  });
+}
+
+function hideInstruc(){
+  $('#fadeout').hide();
+}
+
+
