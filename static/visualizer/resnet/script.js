@@ -5,7 +5,6 @@ var imageDataArray = [];
 async function run_entry() {
     try {
         await populateImageDataArray();
-        //updateProgressBar(55);
         await run();
 
     } catch (error) {
@@ -42,7 +41,6 @@ async function prepare_run() {
     } else {
         console.log('Model is already loaded');
     }
-    //updateProgressBar(60);
     return runners[backend_key];
 }
 
