@@ -38,6 +38,10 @@ var outlineGroup = [];
 
 var labels = [];
 
+var instrucGroup = ["Hover To See Predictions","Drag to Change the View","Scroll to Zoom In/Out","Try Cluster Frame Mode","Play with the Cluster Parameters"];
+var loadingGroup = ["Connecting to WebDNN...","Loading Resent Model...","Preparing T-SNE...","Running T-SNE...","Rendering..."];
+var loadingCount = 0;
+var loadingNote;
 
 var params = {
   edgeStrength: 3.0,
@@ -128,7 +132,7 @@ function init(){
     // window.onload = function() {
     //   window.setTimeout(fadeout, 8000); //8 seconds
     // }
-    displayInstruc();
+    displayLoadingNote();
     renderer = new THREE.WebGLRenderer();
     renderer.shadowMap.enabled = true;
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -141,7 +145,7 @@ function init(){
     // fov : Number, aspect : Number, near : Number, far : Number
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 10000 );
     controls = new THREE.OrbitControls( camera, renderer.domElement );
-    camera.position.z = 300;
+    camera.position.z = 1500;
     controls.minDistance = -700;
     controls.maxDistance = 1500;
     controls.enablePan = false;
@@ -189,7 +193,9 @@ function init(){
                       initSuc = true;
                       hideInstruc();
                       removeProgressBar();
+                      removeLoadingNote();
                       dat.GUI.toggleHide();
+                      //displayInstruction();
                     }
                     );
                 });
@@ -375,8 +381,8 @@ function render(){
             numberStep++;
             params.currentStep++;
           });
-          if(numberStep==200){
-            fadeout();
+          if(numberStep==50){
+            displayInstruction();
           }
         }
         //controls.autoRotate = false;
@@ -848,8 +854,8 @@ function changeInstruc(newText) {
     setTimeout(function () {
       changeText(newText);
       fadeIn();
-      resolve("anything");
-    }, 500);
+      resolve("ChangedNewText");
+    }, 1000);
   });
 }
 
@@ -865,28 +871,25 @@ function changeText(newText){
   $('#fadeout').text(newText);
 }
 
-function displayInstruc(){
-  //fadeIn();
-  //setTimeout(function(){ fadeout();}, 3000);
-  // changeText('Check Out Cluster Frame');
-  // fadeIn();
-  // setTimeout(function(){ fadeout(); }, 3000);
-  // changeText('Hover To See Predictions');
-
-  prevDis('Check Out Cluster Frame')
-  .then(function(value) {
-      prevDis('Hover To See Predictions').then(function(value) {
-        fadeout();
+function displayInstruc(count){
+  if (!initSuc){
+    count = count%3;
+    newText = instrucGroup[count];
+    prevDis(newText)
+    .then(function(value) {
+      displayInstruc(count+1);
     });
-  });
+  }else{
+    return 0;
+  }
 }
 
 function prevDis (newText) {
   return new Promise(function (resolve, reject) {
     setTimeout(function () {
       changeInstruc(newText);
-      resolve("anything");
-    }, 2500);
+      resolve("Shown1Sec");
+    }, 1000);
   });
 }
 
@@ -894,4 +897,20 @@ function hideInstruc(){
   $('#fadeout').hide();
 }
 
+function displayLoadingNote(){
+  loadingNote = setInterval(changeLoadingText, 2000);
+}
+function changeLoadingText() {
+  newText = loadingGroup[loadingCount%loadingGroup.length];
+  $('#fadeout').text(newText);
+  loadingCount++;
+}
+function removeLoadingNote(){
+  clearInterval(loadingNote);
+}
 
+function displayInstruction(){
+  $('.images').css('display',"block");
+  $('#zoom').css('animation', 'fadeZoom 5s forwards');
+  $('#drag').css('animation', 'fadeDrag 10s forwards');
+}

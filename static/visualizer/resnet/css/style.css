@@ -14,14 +14,69 @@ html,body{
 
 #fadeout {
     color: white;
-    opacity: 1;
-    transition: 0.5s opacity;
-    font-size:32px;
-    left: 50%;
-    right: 50%;
-    top:50%;
-    bottom:50%;
+    /* opacity: 1; */
+    /* transition: 1s opacity; */
+    animation: fade 1s infinite alternate;
 }
+
+#instruc {
+    color: white;
+    animation: fade 5s forwards;
+}
+
+@keyframes fade{
+    from{
+        opacity: 1;
+    }
+    to{
+        opacity: 0;
+    }
+}
+
+@keyframes fadeZoom {
+    0%{
+        opacity: 0;
+    }
+    30%{
+        opacity: 1;
+    }
+    90%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
+}
+
+@keyframes fadeDrag {
+    0%{
+        opacity: 0;
+    }
+    50%{
+        opacity: 0;
+    }
+    55%{
+        opacity: 1;
+    }
+    95%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+    }
+}
+
+.images{
+    display: none;
+}
+
+/* #zoom{
+    display: none;
+}
+
+#drag{
+    display: none;
+} */
 
 .dg.main.taller-than-window .close-button {
     border-top: 1px solid #ddd;
