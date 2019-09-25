@@ -8,6 +8,7 @@ var resultArray = [];
 
 
 var requestData = {};
+var categoryColor = {};
 
 var opt;
 var tsne;
@@ -35,6 +36,7 @@ var particlesGruop =[];
 
 var planeGroup = [];
 var outlineGroup = [];
+var catColorGroup = [];
 
 var labels = [];
 
@@ -45,6 +47,7 @@ var loadingNote;
 
 // Init gui
 var params = {
+  mode: 2,
   edgeStrength: 3.0,
   edgeGlow: 0.0,
   edgeThickness: 1.0,
@@ -67,12 +70,21 @@ var reset = { reset:function(){
 }};
 
 var gui = new dat.GUI( { width: 350 } );
-gui.add( params, 'useClusterFrame' ).name('Add Cluster Frame').onChange( function ( value ) {
-  for ( var i = 0; i < outlineGroup.length; i ++ ) {
-    var object = outlineGroup[ i ];
-    object.visible = value;
+gui.add(params, 'mode', { ClusterFrame: 0, CategoryFrame: 1, NoFrame: 2 } ).name('Mode').onChange(function(value){
+  console.log(value);
+  if(value == 2){
+    removeFrame();
+  }else{
+    displayFrame();
   }
-} );
+
+});
+// gui.add( params, 'useClusterFrame' ).name('Add Cluster Frame').onChange( function ( value ) {
+//   for ( var i = 0; i < outlineGroup.length; i ++ ) {
+//     var object = outlineGroup[ i ];
+//     object.visible = value;
+//   }
+// } );
 gui.add( params, 'rotate' ).name('Auto Rotate').onChange( function ( value ) {
   controls.autoRotate = !controls.autoRotate;
 } );
@@ -199,7 +211,7 @@ function init(){
       if ( intersects.length > 0 ) {
         var selectedObject = intersects[ 0 ].object;
         addSelectedObject( selectedObject );
-        if(!params.useClusterFrame){
+        if(params.mode==2){
           outlinePass.selectedObjects = selectedObjects;
         }else{
           outlinePass.selectedObjects = [];
@@ -258,6 +270,7 @@ function fetchImage(){
         var examplesData = window.opener.visualizerData;
         examplesData.training_data.forEach((item) => {
           requestData[item.label] = item.label_items;
+          categoryColor[item.label] = getRandomColor();
         });
 
         Object.keys(requestData).forEach(function(key) {
@@ -379,6 +392,7 @@ async function loadFiles(){
     var sampleURI;
     count = 0;
     Object.keys(requestData).forEach(function(key) {
+      var catColor = categoryColor[key];
       requestData[key].forEach(function (arrayItem) {
           var x = coordinates[count][0];
           var y = coordinates[count][1];
@@ -394,8 +408,16 @@ async function loadFiles(){
           //colorOutline.setHSL( r, g, b );
 
           geo = new THREE.PlaneBufferGeometry(80,80);
-          var colorOutline = new THREE.Color( r, g, b );
-          mat = new THREE.MeshBasicMaterial( { color: colorOutline, side: THREE.DoubleSide} );
+          var cluColor = new THREE.Color( r, g, b );
+
+          var outlineColor;
+          if(params.mode == 0){
+            outlineColor = cluColor;
+          }else{
+            outlineColor = catColor;
+          }
+
+          mat = new THREE.MeshBasicMaterial( { color: outlineColor, side: THREE.DoubleSide} );
           var planeOutline = new THREE.Mesh( geo, mat );
           planeOutline.position.x = x;
           planeOutline.position.y = y;
@@ -409,6 +431,7 @@ async function loadFiles(){
           planeOutline.castShadow = true;
           planeOutline.visible = false;
           outlineGroup.push(planeOutline);
+          catColorGroup.push(catColor);
           scene.add( planeOutline );
 
           geo = new THREE.PlaneBufferGeometry(80,80);
@@ -491,8 +514,16 @@ function updatePos(){
     var r = scale(objectOutline.position.x, minVal, maxVal, 0, 1);
     var g = scale(objectOutline.position.y, minVal, maxVal, 0, 1);
     var b = scale(objectOutline.position.z, minVal, maxVal, 0, 1);
-    var colorOutline = new THREE.Color( r, g, b );
-    objectOutline.material.color.set( colorOutline );
+    var cluColor = new THREE.Color( r, g, b );
+
+    var outlineColor;
+    if(params.mode == 0){
+      outlineColor = cluColor;
+    }else{
+      outlineColor = catColorGroup[i];
+    }
+
+    objectOutline.material.color.set( outlineColor );
     objectOutline.geometry.verticesNeedUpdate = true;
     objectOutline.position.needsUpdate = true;
     objectOutline.geometry.computeFaceNormals();
@@ -530,4 +561,28 @@ function displayInstruction(){
   $('.images').css('display',"block");
   $('#zoom').css('animation', 'fadeZoom 5s forwards');
   $('#drag').css('animation', 'fadeDrag 10s forwards');
+}
+
+function displayFrame(){
+  for ( var i = 0; i < outlineGroup.length; i ++ ) {
+    var object = outlineGroup[ i ];
+    object.visible = true;
+    console.log("Display");
+  }
+}
+
+function removeFrame(){
+  for ( var i = 0; i < outlineGroup.length; i ++ ) {
+    var object = outlineGroup[ i ];
+    object.visible = false;
+    console.log("Remove");
+  }
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+function getRandomColor(){
+  return new THREE.Color( Math.random(), Math.random(), Math.random() );
 }
