@@ -12,16 +12,34 @@ html,body{
     width:100%;
 }
 
-#fadeout {
-    color: white;
-    /* opacity: 1; */
-    /* transition: 1s opacity; */
-    animation: fade 1s infinite alternate;
+.instruc{
+    position: absolute; 
+    top: 80%; 
+    width: 100%;
+    left:0%; 
+    text-align: center;
+    display: none;
 }
 
-#instruc {
+.sampleNotes{
+    position: relative;
+    width: 10px;
+}
+
+#tip {
+    position: absolute; 
+    display: none;
+}
+
+#fadeout {
+    position: absolute; 
+    top: 55%; 
+    text-align: center;
+    font-size: 1.5em; 
+    width: 100%;
+    left:0%;
     color: white;
-    animation: fade 5s forwards;
+    animation: fade 1s infinite alternate;
 }
 
 @keyframes fade{
@@ -65,18 +83,6 @@ html,body{
         opacity: 0;
     }
 }
-
-.images{
-    display: none;
-}
-
-/* #zoom{
-    display: none;
-}
-
-#drag{
-    display: none;
-} */
 
 .dg.main.taller-than-window .close-button {
     border-top: 1px solid #ddd;

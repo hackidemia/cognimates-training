@@ -12,10 +12,9 @@ var categoryColor = {};
 
 var opt;
 var tsne;
-var count;
 var particles;
 
-var numberStep = 0;
+var stepCount = 0;
 var initSuc = false;
 
 var textObj;
@@ -27,10 +26,6 @@ raycaster.params.Points.threshold = 1;
 
 var mouse = new THREE.Vector2();
 var selectedObjects = [];
-var group = new THREE.Group();
-var step = 5000;
-var perplexity = 30;
-var epsilon =10;
 
 var particlesGruop =[];
 
@@ -55,7 +50,7 @@ var params = {
   rotate: false,
   usePatternTexture: false,
   useClusterFrame: false,
-  step: 5000,
+  targetStep: 5000,
   currentStep: 0,
   perplexity: 30,
   epsilon: 10
@@ -63,40 +58,27 @@ var params = {
 
 var reset = { reset:function(){ 
   if(initSuc){
-    numberStep = 0;
+    stepCount = 0;
     params.currentStep = 0;
-    prepareTsne(dists,epsilon,perplexity);
+    prepareTsne(dists,params.epsilon,params.perplexity);
   } 
 }};
 
 var gui = new dat.GUI( { width: 350 } );
 gui.add(params, 'mode', { ClusterFrame: 0, CategoryFrame: 1, NoFrame: 2 } ).name('Mode').onChange(function(value){
-  console.log(value);
   if(value == 2){
     removeFrame();
   }else{
     displayFrame();
   }
-
 });
-// gui.add( params, 'useClusterFrame' ).name('Add Cluster Frame').onChange( function ( value ) {
-//   for ( var i = 0; i < outlineGroup.length; i ++ ) {
-//     var object = outlineGroup[ i ];
-//     object.visible = value;
-//   }
-// } );
+
 gui.add( params, 'rotate' ).name('Auto Rotate').onChange( function ( value ) {
   controls.autoRotate = !controls.autoRotate;
 } );
-gui.add( params, 'epsilon',1,50 ).name('Learning Rate').onChange( function ( value ) {
-  epsilon = value;
-} );
-gui.add( params, 'perplexity',5,50 ).name('Neighbors Influenced').onChange( function ( value ) {
-  perplexity = value;
-} );
-gui.add( params, 'step',1,30000 ).name('Target t-SNE Step').onChange( function ( value ) {
-  step = value;
-} );
+gui.add( params, 'epsilon',1,50 ).name('Learning Rate');
+gui.add( params, 'perplexity',5,50 ).name('Neighbors Influenced');
+gui.add( params, 'targetStep',1,30000 ).name('Target t-SNE Step');
 gui.add( params, 'currentStep',0,30000 ).name('Current t-SNE Step').listen();
 gui.add(reset,'reset').name('Reset');
 dat.GUI.toggleHide();
@@ -149,25 +131,25 @@ function init(){
     scene.add( light );
 
     //model
-    //resnet & tsne
     $(function(){
-        fetchImage().done(function(){
+        fetchImage().then(function(){
             run_entry().then(function(){
                 dists = resultArray;
-                prepareTsne(dists,epsilon,perplexity);       
-                doTsne().done(function(){
+                prepareTsne(dists,params.epsilon,params.perplexity);       
+                doTsne().then(function(){
                     loadFiles().then(()=>{
                       initSuc = true;
-                      hideInstruc();
-                      dat.GUI.toggleHide();
-                      removeSpinner();
+                      hideLoadingNote();
+                      hideSpinner();
                       removeLoadingNote();
+                      dat.GUI.toggleHide();
                     }
                     );
                 });
             });
         });
     });
+
     // postprocessing
     composer = new THREE.EffectComposer( renderer );
     var renderPass = new THREE.RenderPass( scene, camera );
@@ -195,9 +177,7 @@ function init(){
       }
       mouse.x = ( x / window.innerWidth ) * 2 - 1;
       mouse.y = - ( y / window.innerHeight ) * 2 + 1;
-
       checkIntersection();
-
     }
 
     function addSelectedObject( object ) {
@@ -238,53 +218,30 @@ function init(){
     }
 }
 
-function positionTip(pos3D) {
-
-  var p = new THREE.Vector3(pos3D.x, pos3D.y, pos3D.z);
-  var vector = p.project(camera);
-
-  vector.x = (vector.x + 1) / 2 * window.innerWidth;
-  vector.y = -(vector.y - 1) / 2 * window.innerHeight;
-  $('#tip').css({ left: vector.x,top: vector.y });
-}
-
 function onWindowResize() {
-
   var width = window.innerWidth;
   var height = window.innerHeight;
-
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
-
   renderer.setSize( width, height );
   composer.setSize( width, height );
-
   effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
-
 }
 
-
-function fetchImage(){
-    var dfrd1 = $.Deferred();
-    setTimeout(function(){
-        var examplesData = window.opener.visualizerData;
-        examplesData.training_data.forEach((item) => {
-          requestData[item.label] = item.label_items;
-          categoryColor[item.label] = getRandomColor();
-        });
-
-        Object.keys(requestData).forEach(function(key) {
-          for (let idx = 0; idx < requestData[key].length; idx++) {
-            requestData[key][idx] = "data:image/jpeg;base64," + requestData[key][idx];
-          }
-        });
-        dfrd1.resolve();
-    }, 0);
-    return dfrd1.promise();
-}
-
-function removeSpinner(){
-  $('.progress').hide();
+async function fetchImage(){
+  return new Promise((resolve, reject) => {
+    var examplesData = window.opener.visualizerData;
+    examplesData.training_data.forEach((item) => {
+      requestData[item.label] = item.label_items;
+      categoryColor[item.label] = getRandomColor();
+    });
+    Object.keys(requestData).forEach(function(key) {
+      for (var idx = 0; idx < requestData[key].length; idx++) {
+        requestData[key][idx] = "data:image/jpeg;base64," + requestData[key][idx];
+      }
+    });
+    resolve("Done");
+  });
 }
 
 function animate() {
@@ -295,35 +252,36 @@ function animate() {
 
 function render(){
 
-    var time = Date.now() * 0.00005;
-    controls.update();
-
-    for ( var i = 0; i < scene.children.length; i ++ ) {
-      var object = scene.children[ i ];
-      object.quaternion.copy(camera.quaternion);
-    }
-
-    $(function(){
-      if(numberStep < step){
-        if(initSuc){
-          if(!controls.enabled){
-            controls.enabled = true;
-          }
-          doTsne().done(function(){
-            updatePos();
-            numberStep++;
-            params.currentStep++;
-          });
-          if(numberStep==50){
-            displayInstruction();
-          }
-        }
-        //controls.autoRotate = false;
-      }else{
-        //controls.autoRotate = true;
+    if(initSuc){
+      //enable control
+      if(!controls.enabled){
+        controls.enabled = true;
       }
-    });
-    //composer.render();
+
+      //display zoom/drag instruc
+      if(stepCount == 50){
+        displayInstruc();
+      }
+
+      //do remain steps
+      if(stepCount < params.targetStep){
+        doTsne().then(function(){
+          updatePos();
+          stepCount++;
+        });     
+      }else{
+        updateFrameColor();
+      }
+
+      //update control
+      controls.update();
+
+      //update model
+      doBillboard();
+
+      //update gui
+      updateCurrentStep();
+    }
 }
 
 
@@ -336,87 +294,31 @@ function prepareTsne(dists,epsilon,perplexity){
   tsne.initDataRaw(dists);
 }
 
-function doTsne(){
-    var dfrd1 = $.Deferred();
-    setTimeout(function(){
-      tsne.step();
-      coordinates = tsne.getSolution();
-      dfrd1.resolve();
-    }, 0);
-    return dfrd1.promise();
+async function doTsne(){
+  return new Promise((resolve, reject) => {
+    tsne.step();
+    coordinates = tsne.getSolution();
+    resolve("Done");
+  });
 }
 
 async function loadFiles(){
-
   return new Promise((resolve, reject) => {
-    let centerPos = [0,0,0];
-    let pointsCount = 0;
-    coordinates.forEach(coorPos => {
-        centerPos[0] += coorPos[0];
-        centerPos[1] += coorPos[1];
-        centerPos[2] += coorPos[2];
-        pointsCount ++;
-    });
-    centerPos.forEach(centerPosVal =>{
-      centerPosVal /= pointsCount;
-    });
-  
-    var minVal = 1;
-    var maxVal = -1;
-    coordinates.forEach(coorPos => {
-      coorPos.forEach(coorVal => {
-        if (coorVal > maxVal){
-          maxVal = coorVal;
-        }
-        if (coorVal < minVal){
-          minVal = coorVal;
-        }
-      })
-    });
-  
-    var mulNum = window.innerWidth/2/maxVal;
-    minVal = -1;
-    maxVal = 1;
-    coordinates.forEach(coorPos => {
-      coorPos[0] = centerPos[0] + (coorPos[0]-centerPos[0])*mulNum;
-      if (coorPos[0]<minVal) minVal = coorPos[0];
-      if (coorPos[0]>maxVal) maxVal = coorPos[0];
-      coorPos[1] = centerPos[1] + (coorPos[1]-centerPos[1])*mulNum;
-      if (coorPos[1]<minVal) minVal = coorPos[1];
-      if (coorPos[1]>maxVal) maxVal = coorPos[1];
-      coorPos[2] = centerPos[2] + (coorPos[2]-centerPos[2])*mulNum;
-      if (coorPos[2]<minVal) minVal = coorPos[2];
-      if (coorPos[2]>maxVal) maxVal = coorPos[2];
-    });
+    mapPos();
 
     var sampleURI;
-    count = 0;
+    var count = 0;
     Object.keys(requestData).forEach(function(key) {
-      var catColor = categoryColor[key];
       requestData[key].forEach(function (arrayItem) {
           var x = coordinates[count][0];
           var y = coordinates[count][1];
           var z = coordinates[count][2];
 
-          const scale = (num, in_min, in_max, out_min, out_max) => {
-            return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-          }
-          var r = scale(x, minVal, maxVal, 0, 1);
-          var g = scale(y, minVal, maxVal, 0, 1);
-          var b = scale(z, minVal, maxVal, 0, 1);
-          //var colorOutline = new THREE.Color();
-          //colorOutline.setHSL( r, g, b );
+          var catColor = getCatColorByKey(key);
+          var cluColor = getCluColor(x,y,z);
+          var outlineColor = getOutlineColor(catColor,cluColor);
 
           geo = new THREE.PlaneBufferGeometry(80,80);
-          var cluColor = new THREE.Color( r, g, b );
-
-          var outlineColor;
-          if(params.mode == 0){
-            outlineColor = cluColor;
-          }else{
-            outlineColor = catColor;
-          }
-
           mat = new THREE.MeshBasicMaterial( { color: outlineColor, side: THREE.DoubleSide} );
           var planeOutline = new THREE.Mesh( geo, mat );
           planeOutline.position.x = x;
@@ -434,8 +336,8 @@ async function loadFiles(){
           catColorGroup.push(catColor);
           scene.add( planeOutline );
 
-          geo = new THREE.PlaneBufferGeometry(80,80);
           sampleURI = arrayItem;
+          geo = new THREE.PlaneBufferGeometry(80,80);
           mat = new THREE.MeshBasicMaterial( { side: THREE.DoubleSide, map: textureLoader.load(sampleURI)} );
           var plane = new THREE.Mesh( geo, mat );
           plane.position.x = x;
@@ -455,13 +357,108 @@ async function loadFiles(){
           count++;
       });
     });
-    resolve("Done!");
+    resolve("Done");
   });
 }
 
 function updatePos(){
-  let centerPos = [0,0,0];
-  let pointsCount = 0;
+  mapPos();
+
+  for ( var i = 0; i < planeGroup.length; i ++ ) {
+    var object = planeGroup[ i ];
+    var objectOutline = outlineGroup[ i ];
+
+    objectOutline.position.x = coordinates[i][0];
+    objectOutline.position.y = coordinates[i][1];
+    objectOutline.position.z = coordinates[i][2];
+    var catColor = getCatColorByIdx(i);
+    var cluColor = getCluColor(objectOutline.position.x, objectOutline.position.y, objectOutline.position.z);
+    var outlineColor = getOutlineColor(catColor,cluColor);
+    objectOutline.material.color.set( outlineColor );
+    objectOutline.geometry.verticesNeedUpdate = true;
+    objectOutline.position.needsUpdate = true;
+    objectOutline.geometry.computeFaceNormals();
+    objectOutline.geometry.computeBoundingSphere();
+
+    object.position.x = coordinates[i][0];
+    object.position.y = coordinates[i][1];
+    object.position.z = coordinates[i][2];
+    object.geometry.verticesNeedUpdate = true;
+    object.position.needsUpdate = true;
+    object.geometry.computeFaceNormals();
+    object.geometry.computeBoundingSphere();
+  }
+}
+
+function hideSpinner(){
+  $('.progress').hide();
+}
+
+function hideLoadingNote(){
+  $('#fadeout').hide();
+}
+
+function displayLoadingNote(){
+  loadingNote = setInterval(changeLoadingNote, 2000);
+}
+function changeLoadingNote() {
+  newText = loadingGroup[loadingCount%loadingGroup.length];
+  $('#fadeout').text(newText);
+  loadingCount++;
+}
+function displayLoadingError(error){
+  $('#fadeout').text(error);
+}
+function removeLoadingNote(){
+  clearInterval(loadingNote);
+}
+
+function displayInstruc(){
+  $('.instruc').css('display',"block");
+  $('#zoom').css('animation', 'fadeZoom 5s forwards');
+  $('#drag').css('animation', 'fadeDrag 10s forwards');
+}
+
+function displayFrame(){
+  for ( var i = 0; i < outlineGroup.length; i ++ ) {
+    var object = outlineGroup[ i ];
+    object.visible = true;
+  }
+}
+
+function removeFrame(){
+  for ( var i = 0; i < outlineGroup.length; i ++ ) {
+    var object = outlineGroup[ i ];
+    object.visible = false;
+  }
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+function getRandomColor(){
+  return new THREE.Color( Colors.random() );
+}
+
+function doBillboard(){
+  for ( var i = 0; i < scene.children.length; i ++ ) {
+    var object = scene.children[ i ];
+    object.quaternion.copy(camera.quaternion);
+  }
+}
+
+function positionTip(pos3D) {
+  var p = new THREE.Vector3(pos3D.x, pos3D.y, pos3D.z);
+  var vector = p.project(camera);
+  vector.x = (vector.x + 1) / 2 * window.innerWidth;
+  vector.y = -(vector.y - 1) / 2 * window.innerHeight;
+  $('#tip').css({ left: vector.x,top: vector.y });
+}
+
+function getCenterPos(){
+  var centerPos = [0,0,0];
+  var pointsCount = 0;
   coordinates.forEach(coorPos => {
       centerPos[0] += coorPos[0];
       centerPos[1] += coorPos[1];
@@ -471,7 +468,27 @@ function updatePos(){
   centerPos.forEach(centerPosVal =>{
     centerPosVal /= pointsCount;
   });
+  return centerPos;
+}
 
+function getMulNum(){
+  var minmax = getMinMax();
+  var minVal = minmax.minVal;
+  var maxVal = minmax.maxVal;
+  return window.innerWidth/2/maxVal;
+}
+
+function mapPos(){
+  var centerPos = getCenterPos();
+  var mulNum = getMulNum();
+  coordinates.forEach(coorPos => {
+    coorPos[0] = centerPos[0] + (coorPos[0]-centerPos[0])*mulNum;
+    coorPos[1] = centerPos[1] + (coorPos[1]-centerPos[1])*mulNum;
+    coorPos[2] = centerPos[2] + (coorPos[2]-centerPos[2])*mulNum;
+  });
+}
+
+function getMinMax(){
   var minVal = 1;
   var maxVal = -1;
   coordinates.forEach(coorPos => {
@@ -479,110 +496,58 @@ function updatePos(){
       if (coorVal > maxVal){
         maxVal = coorVal;
       }
-      if (coorVal < minVal){
+      if(coorVal < minVal){
         minVal = coorVal;
       }
     })
   });
+  return {
+    minVal: minVal,
+    maxVal: maxVal,
+  };
+}
 
-  var mulNum = window.innerWidth/2/maxVal;
-  minVal = -1;
-  maxVal = 1;
-  coordinates.forEach(coorPos => {
-    coorPos[0] = centerPos[0] + (coorPos[0]-centerPos[0])*mulNum;
-    if (coorPos[0]<minVal) minVal = coorPos[0];
-    if (coorPos[0]>maxVal) maxVal = coorPos[0];
-    coorPos[1] = centerPos[1] + (coorPos[1]-centerPos[1])*mulNum;
-    if (coorPos[1]<minVal) minVal = coorPos[1];
-    if (coorPos[1]>maxVal) maxVal = coorPos[1];
-    coorPos[2] = centerPos[2] + (coorPos[2]-centerPos[2])*mulNum;
-    if (coorPos[2]<minVal) minVal = coorPos[2];
-    if (coorPos[2]>maxVal) maxVal = coorPos[2];
-  });
+function getOutlineColor(catColor,cluColor){
+  var outlineColor;
+  if(params.mode == 0){
+    outlineColor = cluColor;
+  }else{
+    outlineColor = catColor;
+  }
+  return outlineColor;
+}
 
-  var idxCount = 0;
-  for ( var i = 0; i < planeGroup.length; i ++ ) {
-    var object = planeGroup[ i ];
+function getCatColorByKey(key){
+  return categoryColor[key];
+}
+
+function getCatColorByIdx(i){
+  return catColorGroup[i];
+}
+
+function getCluColor(x,y,z){
+  var minmax = getMinMax();
+  var minVal = minmax.minVal;
+  var maxVal = minmax.maxVal;
+  const scale = (num, in_min, in_max, out_min, out_max) => {
+    return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  }
+  var r = scale(x, minVal, maxVal, 0, 1);
+  var g = scale(y, minVal, maxVal, 0, 1);
+  var b = scale(z, minVal, maxVal, 0, 1);
+  return new THREE.Color( r, g, b );
+}
+
+function updateCurrentStep(){
+  params.currentStep = stepCount;
+}
+
+function updateFrameColor(){
+  for ( var i = 0; i < outlineGroup.length; i ++ ) {
     var objectOutline = outlineGroup[ i ];
-
-    const scale = (num, in_min, in_max, out_min, out_max) => {
-      return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-    }
-    objectOutline.position.x = coordinates[idxCount][0];
-    objectOutline.position.y = coordinates[idxCount][1];
-    objectOutline.position.z = coordinates[idxCount][2];
-    var r = scale(objectOutline.position.x, minVal, maxVal, 0, 1);
-    var g = scale(objectOutline.position.y, minVal, maxVal, 0, 1);
-    var b = scale(objectOutline.position.z, minVal, maxVal, 0, 1);
-    var cluColor = new THREE.Color( r, g, b );
-
-    var outlineColor;
-    if(params.mode == 0){
-      outlineColor = cluColor;
-    }else{
-      outlineColor = catColorGroup[i];
-    }
-
+    var catColor = getCatColorByIdx(i);
+    var cluColor = getCluColor(objectOutline.position.x, objectOutline.position.y, objectOutline.position.z);
+    var outlineColor = getOutlineColor(catColor,cluColor);
     objectOutline.material.color.set( outlineColor );
-    objectOutline.geometry.verticesNeedUpdate = true;
-    objectOutline.position.needsUpdate = true;
-    objectOutline.geometry.computeFaceNormals();
-    objectOutline.geometry.computeBoundingSphere();
-
-    object.position.x = coordinates[idxCount][0];
-    object.position.y = coordinates[idxCount][1];
-    object.position.z = coordinates[idxCount][2];
-    object.geometry.verticesNeedUpdate = true;
-    object.position.needsUpdate = true;
-    object.geometry.computeFaceNormals();
-    object.geometry.computeBoundingSphere();
-
-    idxCount ++;
   }
-}
-
-function hideInstruc(){
-  $('#fadeout').hide();
-}
-
-function displayLoadingNote(){
-  loadingNote = setInterval(changeLoadingText, 2000);
-}
-function changeLoadingText() {
-  newText = loadingGroup[loadingCount%loadingGroup.length];
-  $('#fadeout').text(newText);
-  loadingCount++;
-}
-function removeLoadingNote(){
-  clearInterval(loadingNote);
-}
-
-function displayInstruction(){
-  $('.images').css('display',"block");
-  $('#zoom').css('animation', 'fadeZoom 5s forwards');
-  $('#drag').css('animation', 'fadeDrag 10s forwards');
-}
-
-function displayFrame(){
-  for ( var i = 0; i < outlineGroup.length; i ++ ) {
-    var object = outlineGroup[ i ];
-    object.visible = true;
-    console.log("Display");
-  }
-}
-
-function removeFrame(){
-  for ( var i = 0; i < outlineGroup.length; i ++ ) {
-    var object = outlineGroup[ i ];
-    object.visible = false;
-    console.log("Remove");
-  }
-}
-
-function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-}
-
-function getRandomColor(){
-  return new THREE.Color( Math.random(), Math.random(), Math.random() );
 }

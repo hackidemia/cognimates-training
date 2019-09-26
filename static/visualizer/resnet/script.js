@@ -8,23 +8,10 @@ async function run_entry() {
         await run();
 
     } catch (error) {
+        removeLoadingNote();
+        displayLoadingError(error);
         console.log('Error: ' + error);
     }
-}
-
-function getRawData(){
-    var dfrd1 = $.Deferred();
-    setTimeout(function(){
-        run_entry();
-        dfrd1.resolve();
-    }, 0);
-    return dfrd1.promise();
-}
-
-function log(msg) {
-    let msg_node = document.getElementById('messages');
-    msg_node.appendChild(document.createElement('br'));
-    msg_node.appendChild(document.createTextNode(msg));
 }
 
 let runners = {};
@@ -57,7 +44,7 @@ async function run() {
     };
 
     
-    var mulNum =1;
+    let mulNum =1;
     for (let idx = 0; idx < imageDataArray.length; idx++) {
 
         const imageData = imageDataArray[idx];

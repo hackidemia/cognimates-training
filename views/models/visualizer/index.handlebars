@@ -19,7 +19,9 @@
     <script src="/visualizer/resnet/js/lib/RenderPass.js"></script>
     <script src="/visualizer/resnet/js/lib/ShaderPass.js"></script>
     <script src="/visualizer/resnet/js/lib/OutlinePass.js"></script>
-    <script src="/visualizer/resnet/js/lib/dat.gui.min.js"></script>    
+    <script src="/visualizer/resnet/js/lib/dat.gui.min.js"></script>
+    <script src="/visualizer/resnet/js/lib/color.js"></script>
+
     <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.14.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-tsne"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -47,18 +49,18 @@
        </div>
     </div>
 
-    <div id="fadeout" style="position: absolute; top: 55%; text-align: center;font-size: 1.5em; width: 100%;left:0%;">Collecting Data...</div>
+    <div id="fadeout">Collecting Data...</div>
 
-    <div class="images" style="position: absolute; top: 80%; width: 100%;left:0%; text-align: center;">
+    <div class="instruc">
         <img id="zoom" src="/visualizer/resnet/textures/zoom.png" />
     </div>
 
-    <div class="images" style="position: absolute; top: 80%; width: 100%;left:0%; text-align: center;">
+    <div class="instruc">
         <img id="drag" src="/visualizer/resnet/textures/drag.png" />
     </div>
 
-    <div style="position: relative" width="10px">
-    <div id="tip" style="position: absolute; display: none;">Some text</div>
+    <div class="sampleNotes">
+    <div id="tip">Some text</div>
     </div>
 </body>
 </html>
