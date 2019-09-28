@@ -36,7 +36,7 @@ var catColorGroup = [];
 var labels = [];
 
 var instrucGroup = ["Hover To See Predictions","Drag to Change the View","Scroll to Zoom In/Out","Try Cluster Frame Mode","Play with the Cluster Parameters"];
-var loadingGroup = ["Connecting to WebDNN...","Loading Resent Model...","Preparing T-SNE...","Running T-SNE...","Rendering..."];
+var loadingGroup = ["Connecting to WebDNN...","Loading Resnet Model...","Preparing T-SNE...","Running T-SNE...","Rendering..."];
 var loadingCount = 0;
 var loadingNote;
 
