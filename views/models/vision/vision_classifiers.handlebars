@@ -697,7 +697,7 @@
         $(classifierNameClass).show();
         $(classifierStatusClass).show();
         $(classifierUploadProgressClass).hide();
-        if (window.classifier_status.includes('successfully')) {
+        if (window.classifier_status.includes('successfully') || window.classifier_status.includes('ready')) {
             $('.js--classifier__predict__button').attr('disabled', null);
             $(classifierRefreshSpinnerClass).hide();
             setAutoRefreshStatus(false);
