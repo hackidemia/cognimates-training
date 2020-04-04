@@ -23,7 +23,7 @@
     "express-busboy": "^7.0.0",
     "express-handlebars": "^3.0.2",
     "localforage": "^1.7.3",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.3",
     "mkdirp": "^0.5.1",
     "request": "^2.88.0",
     "whirlpool": "0.0.4"
