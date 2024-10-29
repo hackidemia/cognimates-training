@@ -1,7 +1,8 @@
 {
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "npm install && npm run sass-build"
+    "buildCommand": "npm install && npm run sass-build",
+    "watchPatterns": ["scss/**/*.scss"]
   },
   "deploy": {
     "startCommand": "npm run prod-node-server",

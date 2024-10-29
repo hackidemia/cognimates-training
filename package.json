@@ -1,7 +1,7 @@
 {
   "name": "cognimates-web",
   "version": "1.0.0",
-  "description": "",
+  "description": "Training interface for Cognimates AI platform",
   "main": "index.js",
   "engines": {
     "node": "18.x"
