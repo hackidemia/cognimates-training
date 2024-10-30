@@ -2,17 +2,25 @@ const axios = require('axios');
 const base_url = "https://api.uclassify.com/v1/";
 const async = require('async');
 
+// Validate required environment variables
+if (!process.env.UCLASSIFY_READ_API_KEY || !process.env.UCLASSIFY_WRITE_API_KEY) {
+  console.error('UCLASSIFY_READ_API_KEY and UCLASSIFY_WRITE_API_KEY environment variables are required');
+  process.exit(1);
+}
+
+const readToken = process.env.UCLASSIFY_READ_API_KEY;
+const writeToken = process.env.UCLASSIFY_WRITE_API_KEY;
+
 function health(req, res){
   res.json({message: 'healthy'});
   return;
 }
 
 function getClassifierInformation(req, res) {
-    let read_token = req.body.read_token;
     var classifier_id = req.body.classifier_id;
     let username = req.body.username;
     get_classifier_url = base_url + username + "/" + classifier_id;
-    token_text = "Token " + read_token;
+    token_text = "Token " + readToken;
     axios.get(get_classifier_url, {
         headers: {'Content-Type': 'application/json', 'Authorization': token_text}
     })
@@ -29,12 +37,11 @@ function getClassifierInformation(req, res) {
  * This will be called after a classifier has already been created.
  */
 function addExamples(req, res) {
-  let write_token = req.body.write_token;
   let classifier_name = req.body.classifier_name;
   let class_name = req.body.class_name;
   let training_data = req.body.texts;
   var create_url = base_url + "me/" + classifier_name + "/" + class_name + "/train";
-  let token_text = 'Token ' + write_token;
+  let token_text = 'Token ' + writeToken;
   axios.post(create_url, {texts: training_data}, {
     headers: {'Content-Type': 'application/json', 'Authorization': token_text}
   })
@@ -48,11 +55,10 @@ function addExamples(req, res) {
 }
 
 function createClass(req, res) {
-  let write_token = req.body.write_token;
   let classifier_name = req.body.classifier_name;
   let class_name = req.body.class_name;
   var create_url = base_url + "me/" + classifier_name + "/addClass";
-  let token_text = 'Token ' + write_token;
+  let token_text = 'Token ' + writeToken;
   axios.post(create_url, {className: class_name}, {
     headers: {'Content-Type': 'application/json', 'Authorization': token_text}
   })
@@ -71,11 +77,10 @@ function createClass(req, res) {
  * addExamples for both initializing + adding examples later.
  */
 function createClassifier(req, res) {
-  let write_token = req.body.write_token;
   let classifier_name = req.body.classifier_name;
   console.log(classifier_name)
   var create_url = base_url + "me/";
-  let token_text = 'Token ' + write_token;
+  let token_text = 'Token ' + writeToken;
   axios.post(create_url, {classifierName: classifier_name}, {
     headers: {'Content-Type': 'application/json', 'Authorization': token_text}
   })
@@ -90,9 +95,8 @@ function createClassifier(req, res) {
 
 function delClassifier(req, res) {
   let classifier_id = req.body.classifier_id;
-  let write_token = req.body.write_token;
   var del_url = base_url + "me/" + classifier_id;
-  let token_text = 'Token ' + write_token;
+  let token_text = 'Token ' + writeToken;
   axios.delete(del_url, {
     headers: {'Content-Type': 'application/json', 'Authorization': token_text}
   })
@@ -105,7 +109,6 @@ function delClassifier(req, res) {
 }
 
 function classify(req, res) {
-  let token = req.body.token;
   var classifier_id = req.body.classifier_id;
   var phrase = req.body.phrase;
   var classify_username = req.body.classify_username;
@@ -114,7 +117,7 @@ function classify(req, res) {
   }
 
   let classifyURL = base_url+classify_username+'/'+classifier_id+'/classify';
-  let token_text = 'Token ' + token;
+  let token_text = 'Token ' + readToken;
 
   axios.post(classifyURL, {texts: [phrase]}, {
     headers: {'Content-Type': 'application/json', 'Authorization': token_text}
@@ -145,9 +148,8 @@ function errorHandler(err, httpResponse){
 function removeClass(req, res){
   let classifier_id = req.body.classifier_name;
   let class_name = req.body.class_name;
-  let write_token = req.body.write_token;
   var del_url = base_url + "me/" + classifier_id + "/" + class_name;
-  let token_text = 'Token ' + write_token;
+  let token_text = 'Token ' + writeToken;
   axios.delete(del_url, {
     headers: {'Content-Type': 'application/json', 'Authorization': token_text}
   })
@@ -162,10 +164,9 @@ function removeClass(req, res){
 function untrain(req, res){
   let classifier_name = req.body.classifier_name;
   let class_name = req.body.class_name;
-  let write_token = req.body.write_token;
   let training_data = req.body.training_data;
   var untrain_url = base_url + "me/" + classifier_name + "/" + class_name + "/untrain";
-  let token_text = 'Token ' + write_token;
+  let token_text = 'Token ' + writeToken;
   axios.post(untrain_url, {texts: training_data}, {
     headers: {'Content-Type': 'application/json', 'Authorization': token_text}
   })
@@ -181,12 +182,11 @@ function untrain(req, res){
 function trainAll(req, res) {
   var classifierName = req.body.classifier_name;
   var training_data = req.body.training_data;
-  var writeAPIKey = req.headers.api_key;
   var functionsToExecute = [];
-  functionsToExecute.push(getCreateClassifierFunction(writeAPIKey, classifierName));
-  Object.keys(training_data).forEach((key) => {
-    functionsToExecute.push(getTrainLabelFunction(writeAPIKey, classifierName, key, training_data[key]));
-  });
+  functionsToExecute.push(getCreateClassifierFunction(writeToken, classifierName));
+  Object.keys(training_data).forEach((key) => {
+    functionsToExecute.push(getTrainLabelFunction(writeToken, classifierName, key, training_data[key]));
+  });
 
   async.series(functionsToExecute, (err, results) => {
     if (err) {
@@ -200,17 +200,16 @@ function trainAll(req, res) {
       return;
     }
     if(results[0] == 400){
-      res.json({error: 'Unable to train. Check your credentials, inputs, or internet and try again.'});
+      res.json({error: 'Unable to train. Check your inputs or internet and try again.'});
       return;
     } else {
       res.json("Trained successfully");
     }
   });
-
 }
 
 function getCreateClassifierFunction(writeAPIKey, classifierName) {
-  return function (callback) {
+  return function (callback) {
     var create_url = base_url + "me/";
     let token_text = 'Token ' + writeAPIKey;
     axios.post(create_url, {classifierName: classifierName}, {
@@ -224,7 +223,6 @@ function getCreateClassifierFunction(writeAPIKey, classifierName) {
     });
   };
 }
-
 
 function getTrainLabelFunction(writeAPIKey, classifierName, label, labelData) {
   return function (callback) {
@@ -257,7 +255,6 @@ function getTrainLabelFunction(writeAPIKey, classifierName, label, labelData) {
     });
   }
 }
-
 
 module.exports = {
   getClassifierInformation: getClassifierInformation,

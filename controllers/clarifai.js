@@ -5,20 +5,16 @@ if (!process.env.CLARIFAI_API_KEY) {
   process.exit(1);
 }
 
-function init(api_key) {
-  if (!api_key) {
-    throw new Error('CLARIFAI_API_KEY is required');
-  }
-  console.log("Initializing Clarifai App with API Key:", api_key);
-  var app = new Clarifai.App({
-    apiKey: api_key
-  });
-  return app;
-}
+// Initialize Clarifai app once at module level
+console.log("Initializing Clarifai App with API Key:", process.env.CLARIFAI_API_KEY);
+const app = new Clarifai.App({
+  apiKey: process.env.CLARIFAI_API_KEY
+});
+
+// Export singleton app instance
+module.exports.app = app;
 
 function getClassifiersList(req, res) {
-  const apiKey = process.env.CLARIFAI_API_KEY;
-  const app = init(apiKey);
   app.models.list().then(
   (response) => {
     var models = [];
@@ -41,8 +37,6 @@ function getClassifiersList(req, res) {
 }
 
 function getClassifierInformation(req, res) {
-  const apiKey = process.env.CLARIFAI_API_KEY;
-  const app = init(apiKey);
   const model_id = req.query.classifier_id;
   app.models.get(model_id).then(
     (response) => {
@@ -60,10 +54,8 @@ function getClassifierInformation(req, res) {
 }
 
 function createClassifier(req, res) {
-  const apiKey = process.env.CLARIFAI_API_KEY;
   const modelName = req.body.name;
   var data = req.body.training_data;
-  const app = init(apiKey);
 
   var inputs = []
   var labels = []
@@ -149,9 +141,7 @@ function createClassifier(req, res) {
 }
 
 function deleteClassifier(req, res) {
-  const apiKey = process.env.CLARIFAI_API_KEY;
   const model_id = req.query.classifier_id;
-  const app = init(apiKey);
   app.models.delete(model_id).then(
   (response) => {
     if (response.status != null && response.status.code == 10000) {
@@ -167,7 +157,6 @@ function deleteClassifier(req, res) {
 }
 
 function classifyImage(req, res) {
-  const apiKey = process.env.CLARIFAI_API_KEY;
   var image_data = req.body.image_data;
   if (image_data != undefined) {
     if (image_data.length == 0) {
@@ -182,7 +171,6 @@ function classifyImage(req, res) {
     return;
   }
   const model_id = req.body.classifier_id;
-  const app = init(apiKey);
   if (model_id === 'general1234') {
     app.models.predict(Clarifai.GENERAL_MODEL, { base64: image_data }).then(
     (response) => {
@@ -243,10 +231,8 @@ function classifyImage(req, res) {
 }
 
 function classifyURLImage(req, res){
-  const apiKey = process.env.CLARIFAI_API_KEY;
   var image_link = req.body.image_data;
   const model_id = req.body.classifier_id;
-  const app = init(apiKey);
   app.models.predict(model_id, { url: image_link }).then(
     (response) =>{
       if(parseInt(response.status.code) == 10000) {
@@ -282,8 +268,6 @@ function classifyURLImage(req, res){
 
 function updateClassifier(req, res){
   //info needed for both
-  const apiKey = process.env.CLARIFAI_API_KEY;
-  const app = init(apiKey);
   const model_id = req.body.classifier_id;
   const images = req.body.images;
   const concept = req.body.class;
