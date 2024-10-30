@@ -197,6 +197,17 @@
       window.labels = [];
       window.dropZoneMap = {};
       $('form').submit(false);
+
+      // Initialize API key from server-provided value
+      window.apiKey = '{{CLARIFAI_KEY}}';
+      if (window.apiKey) {
+        $('.js--apikey__form').hide();
+        $('.js--explore__apikey__input').val(window.apiKey);
+        $('.js--api-key__value').html('API Key Set (Environment)');
+        $('.api-key__result-row').show();
+        setUserClassifiers();
+      }
+
       $('#input_projectName').keypress(function (e) {
           if (e.which == 13) {
               $('.js--project--name__button').trigger('click');
@@ -228,42 +239,15 @@
           $('.project-name__result-row').hide();
           $('.project-name__form').show();
           showWarningNotification('Project name unset', true, false);
-      })
-      $('.js--apikey__input').keypress((e) => {
-          if (e.which == 13) {
-              $('.js--apikey__input--set').trigger('click');
-              e.preventDefault();
-              return false;
-          }
       });
-      $('.js--explore__apikey__input').keypress((e) => {
-          if (e.which == 13) {
-              $('.js--explore__apikey__input--set').trigger('click');
-              e.preventDefault();
-              return false;
-          }
-      });
-      $('.js--apikey__input--set').click(function () {
-          if ($('.js--apikey__input').val() == '') {
-              showWarningNotification('Enter an API Key.', true, false);
-              return;
-          }
-          window.apiKey = $('.js--apikey__input').val();
-          $('.js--apikey__form').hide();
-          $('.js--explore__apikey__input').val(window.apiKey);
-          $('.js--api-key__value').html(window.apiKey);
-          $('.api-key__result-row').show();
-          showSuccessNotification('API key set', false , false);
-          setUserClassifiers();
-      });
-      $('.js--explore__apikey__input--set').click(function () {
-          if ($('.js--explore__apikey__input').val() == '') {
-              showWarningNotification('Enter an API Key.', true, false);
-              return;
-          }
-          window.apiKey = $('.js--explore__apikey__input').val();
-          $('.js--apikey__form').hide();
-          $('.js--apikey__input').val(window.apiKey);
+
+      // Remove API key input handlers since we're using environment variables
+      $('.js--apikey__form').hide();
+      $('.js--explore__apikey__input').hide();
+      $('.js--apikey__input--set').hide();
+      $('.js--explore__apikey__input--set').hide();
+      $('.js--api-key__value').html('API Key Set (Environment)');
+      $('.api-key__result-row').show();
           $('.js--api-key__value').html(window.apiKey);
           $('.api-key__result-row').show();
           showSuccessNotification('API key set', false , false);
