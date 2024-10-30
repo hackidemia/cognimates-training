@@ -1,0 +1,14 @@
+{
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "npm install && npm run sass-build",
+    "watchPatterns": ["scss/**/*.scss"]
+  },
+  "deploy": {
+    "startCommand": "npm run prod-node-server",
+    "healthcheckPath": "/",
+    "healthcheckTimeout": 100,
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}
