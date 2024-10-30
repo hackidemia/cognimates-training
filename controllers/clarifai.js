@@ -1,7 +1,14 @@
 const Clarifai = require('clarifai');
-const config = require('../config.js');
+
+if (!process.env.CLARIFAI_API_KEY) {
+  console.error('CLARIFAI_API_KEY environment variable is required');
+  process.exit(1);
+}
 
 function init(api_key) {
+  if (!api_key) {
+    throw new Error('CLARIFAI_API_KEY is required');
+  }
   console.log("Initializing Clarifai App with API Key:", api_key);
   var app = new Clarifai.App({
     apiKey: api_key
@@ -10,7 +17,7 @@ function init(api_key) {
 }
 
 function getClassifiersList(req, res) {
-  const apiKey = config.CLARIFAI_API_KEY;
+  const apiKey = process.env.CLARIFAI_API_KEY;
   const app = init(apiKey);
   app.models.list().then(
   (response) => {
@@ -34,10 +41,9 @@ function getClassifiersList(req, res) {
 }
 
 function getClassifierInformation(req, res) {
-  const apiKey = config.CLARIFAI_API_KEY;
-  console.log("Clarifai API Key:", apiKey);
-  const model_id = req.query.classifier_id;
+  const apiKey = process.env.CLARIFAI_API_KEY;
   const app = init(apiKey);
+  const model_id = req.query.classifier_id;
   app.models.get(model_id).then(
     (response) => {
       var model = {};
@@ -54,7 +60,7 @@ function getClassifierInformation(req, res) {
 }
 
 function createClassifier(req, res) {
-  const apiKey = config.CLARIFAI_API_KEY;
+  const apiKey = process.env.CLARIFAI_API_KEY;
   const modelName = req.body.name;
   var data = req.body.training_data;
   const app = init(apiKey);
@@ -143,7 +149,7 @@ function createClassifier(req, res) {
 }
 
 function deleteClassifier(req, res) {
-  const apiKey = config.CLARIFAI_API_KEY;
+  const apiKey = process.env.CLARIFAI_API_KEY;
   const model_id = req.query.classifier_id;
   const app = init(apiKey);
   app.models.delete(model_id).then(
@@ -161,7 +167,7 @@ function deleteClassifier(req, res) {
 }
 
 function classifyImage(req, res) {
-  const apiKey = config.CLARIFAI_API_KEY;
+  const apiKey = process.env.CLARIFAI_API_KEY;
   var image_data = req.body.image_data;
   if (image_data != undefined) {
     if (image_data.length == 0) {
@@ -237,7 +243,7 @@ function classifyImage(req, res) {
 }
 
 function classifyURLImage(req, res){
-  const apiKey = config.CLARIFAI_API_KEY;
+  const apiKey = process.env.CLARIFAI_API_KEY;
   var image_link = req.body.image_data;
   const model_id = req.body.classifier_id;
   const app = init(apiKey);
@@ -276,7 +282,7 @@ function classifyURLImage(req, res){
 
 function updateClassifier(req, res){
   //info needed for both
-  const apiKey = config.CLARIFAI_API_KEY;
+  const apiKey = process.env.CLARIFAI_API_KEY;
   const app = init(apiKey);
   const model_id = req.body.classifier_id;
   const images = req.body.images;

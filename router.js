@@ -53,7 +53,8 @@ router.get('/nlc/extension/:read/:write/:username/:model', (req, res) => {
 //begin vision routes
 router.get('/vision_home', (req, res) => {
   res.render('models/vision/vision_classifiers', {
-      title: 'Cognimates, Train a vision model, Home'
+      title: 'Cognimates, Train a vision model, Home',
+      CLARIFAI_KEY: process.env.CLARIFAI_API_KEY
     })
 })
 
@@ -65,14 +66,13 @@ router.delete('/vision/classifier', visionController.deleteClassifier)
 router.post('/vision/classify', visionController.classifyImages)
 router.post('/vision/classifyURLImage', visionController.classifyURLImage)
 router.post('/vision/updateClassifier', visionController.updateClassifier)
-router.get("/vision/extension/:apikey/:modelid", (req, res) => {
-    var apikey = req.params.apikey;
+router.get("/vision/extension/:modelid", (req, res) => {
     var model_id = req.params.modelid;
 
     res.contentType('application/javascript');
     res.charset = 'UTF-8';
     res.render('models/vision/extension', {
-      CLARIFAI_KEY: apikey,
+      CLARIFAI_KEY: process.env.CLARIFAI_API_KEY,
       MODEL_ID: model_id,
       layout: false
     });
