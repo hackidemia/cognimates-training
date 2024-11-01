@@ -43,8 +43,8 @@ bb.extend(app, {
 
 // Validate required environment variables
 if (!process.env.CLARIFAI_API_KEY) {
-  console.error('CLARIFAI_API_KEY environment variable is required');
-  process.exit(1);
+  console.warn('CLARIFAI_API_KEY is missing, vision classification will be disabled');
+  // Continue without vision classification
 }
 
 if (!process.env.UCLASSIFY_READ_API_KEY || !process.env.UCLASSIFY_WRITE_API_KEY) {

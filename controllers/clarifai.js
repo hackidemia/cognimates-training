@@ -1,15 +1,23 @@
 const Clarifai = require('clarifai');
 
+let app = null;
 if (!process.env.CLARIFAI_API_KEY) {
-  console.error('CLARIFAI_API_KEY environment variable is required');
-  process.exit(1);
+  console.warn('CLARIFAI_API_KEY environment variable is missing - vision classification will be disabled');
+  // Create dummy app with no-op functions
+  app = {
+    models: {
+      create: () => Promise.reject(new Error('Vision classification disabled - missing API key')),
+      delete: () => Promise.reject(new Error('Vision classification disabled - missing API key')),
+      predict: () => Promise.reject(new Error('Vision classification disabled - missing API key'))
+    }
+  };
+} else {
+  // Initialize Clarifai app once at module level
+  console.log("Initializing Clarifai App with API Key:", process.env.CLARIFAI_API_KEY);
+  app = new Clarifai.App({
+    apiKey: process.env.CLARIFAI_API_KEY
+  });
 }
-
-// Initialize Clarifai app once at module level
-console.log("Initializing Clarifai App with API Key:", process.env.CLARIFAI_API_KEY);
-const app = new Clarifai.App({
-  apiKey: process.env.CLARIFAI_API_KEY
-});
 
 // Export singleton app instance
 module.exports.app = app;
