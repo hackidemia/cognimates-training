@@ -7,35 +7,24 @@
     "node": "18.x"
   },
   "scripts": {
-    "start": "npm run prod-node-server",
-    "prestart": "npm run sass-build",
-    "dev": "concurrently \"npm:sass-watch\" \"npm:dev-node-server\"",
-    "prod-node-server": "node index.js",
-    "dev-node-server": "nodemon index.js --http",
-    "sass-build": "node-sass scss/style.scss -o static/css/",
-    "sass-watch": "node-sass --watch scss/style.scss -o static/css/"
+    "start": "node index.js",
+    "build": "npm install && npm run sass-build",
+    "dev": "nodemon index.js",
+    "sass-build": "sass scss/style.scss static/css/style.css"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "archiver": "^2.1.1",
-    "axios": "^1.7.2",
-    "body-parser": "^1.18.2",
-    "clarifai": "^2.9.0",
-    "concurrently": "^8.2.2",
+    "axios": "^1.7.7",
+    "body-parser": "^1.20.3",
+    "clarifai-nodejs-grpc": "^10.9.8",
     "cors": "^2.8.5",
-    "csv": "^6.3.9",
-    "ejs": "^3.1.10",
-    "express": "^4.16.3",
-    "express-busboy": "^7.0.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
     "express-handlebars": "^7.1.3",
-    "localforage": "^1.7.3",
-    "minimist": "^1.2.0",
-    "node-sass": "^9.0.0",
-    "whirlpool": "0.0.4"
+    "multer": "^1.4.5-lts.1",
+    "sass": "^1.69.5",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
-    "mkdirp": "^3.0.1",
     "nodemon": "^3.1.4"
   }
 }

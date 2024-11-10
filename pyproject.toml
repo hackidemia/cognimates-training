@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cognimates-training"
+version = "1.0.0"
+description = "Training interface for Cognimates AI platform"
+readme = "README.md"
+requires-python = ">=3.8"
+
+[tool.hatch.build.targets.wheel]
+packages = ["cognimates_training"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build]
+artifacts = [
+    "static/css/style.css",
+    "static/js/*.js",
+    "views/**/*.handlebars"
+]
+
+[tool.hatch.envs.default]
+dependencies = [
+    "nodejs>=18.0.0"
+]
+
+[tool.hatch.envs.default.scripts]
+start = "npm start"
+build = "npm run build"
+
+[tool.hatch.build.hooks.custom]
+dependencies = ["nodejs>=18.0.0"]
+command = "npm install && npm run sass-build"
