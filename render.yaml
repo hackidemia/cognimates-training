@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: cognimates-training
+    env: node
+    buildCommand: npm install && npm run sass-build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: UCLASSIFY_READ_API_KEY
+        value: ${read_api}
+      - key: UCLASSIFY_WRITE_API_KEY
+        value: ${write_api}
+      - key: CLARIFAI_API_KEY
+        value: ${clarifai_api}
+      - key: PORT
+        value: "2634"
+    healthCheckPath: /health
+    healthCheckTimeout: 100

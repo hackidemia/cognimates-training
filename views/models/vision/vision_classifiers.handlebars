@@ -248,11 +248,9 @@
       $('.js--explore__apikey__input--set').hide();
       $('.js--api-key__value').html('Using Server Authentication');
       $('.api-key__result-row').show();
-          $('.js--api-key__value').html('Using Server Authentication');
-          $('.api-key__result-row').show();
-          showSuccessNotification('Server authentication enabled', false , false);
-          setUserClassifiers();
-      });
+      showSuccessNotification('Server authentication enabled', false , false);
+      setUserClassifiers();
+
       $('.api-key__remove-button').click(function (e) {
           showWarningNotification('Server authentication cannot be disabled', true, false);
       });
