@@ -1,77 +1,68 @@
-const path = require('path')
-const express = require('express')
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const router = require('./router')
-const fs = require('fs')
-const bb = require('express-busboy')
-const https = require('https')
-const args = require('minimist')(process.argv.slice(2))
-const { create } = require('express-handlebars')
+require('dotenv').config();
+const express = require('express');
+const exphbs = require('express-handlebars');
+const bodyParser = require('body-parser');
+const path = require('path');
+const router = require('./router');
+const cors = require('cors');
 
-// Set default port if not provided in environment
-const PORT = process.env.PORT || process.env.SERVER_PORT || 2634;
+const app = express();
+const port = process.env.PORT || 2634;
+const host = process.env.HOST || '0.0.0.0';
 
-// SSL configuration from environment variables
-const SSL_KEY_PATH = process.env.SSL_KEY_PATH;
-const SSL_CERT_PATH = process.env.SSL_CERT_PATH;
+// Configure body-parser first
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
-const app = express()
-app.use(cors())
+// Configure CORS
+app.use(cors());
 
-const hbs = create({
-  defaultLayout: 'main'
-})
+// Check and log environment variables
+console.log('Environment Variables Check:');
+console.log('UCLASSIFY_READ_API_KEY:', process.env.UCLASSIFY_READ_API_KEY ? 'Present' : 'Missing');
+console.log('UCLASSIFY_WRITE_API_KEY:', process.env.UCLASSIFY_WRITE_API_KEY ? 'Present' : 'Missing');
+console.log('CLARIFAI_API_KEY:', process.env.CLARIFAI_API_KEY ? 'Present' : 'Missing');
 
-app.engine('handlebars', hbs.engine)
-app.set('view engine', 'handlebars')
+// Configure handlebars
+const hbs = exphbs.create({
+  defaultLayout: 'main',
+  extname: '.handlebars',
+  layoutsDir: path.join(__dirname, 'views', 'layouts'),
+  partialsDir: path.join(__dirname, 'views', 'partials')
+});
 
-app.use(express.static(path.join(__dirname, 'static')))
+// Set up view engine
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
+app.set('views', path.join(__dirname, 'views'));
 
-app.use(bodyParser.json({limit: '337mb'}))
-app.use(bodyParser.urlencoded({
-  extended: false,
-  limit: '50mb'
-}))
-app.use(express.static('static'))
-
-app.use(router)
-
-bb.extend(app, {
-  upload: true
-})
-
-// Validate required environment variables
-if (!process.env.CLARIFAI_API_KEY) {
-  console.warn('CLARIFAI_API_KEY is missing, vision classification will be disabled');
-  // Continue without vision classification
-}
-
-if (!process.env.UCLASSIFY_READ_API_KEY || !process.env.UCLASSIFY_WRITE_API_KEY) {
-  console.error('UCLASSIFY_READ_API_KEY and UCLASSIFY_WRITE_API_KEY environment variables are required');
-  process.exit(1);
-}
-
-// Start server with appropriate protocol
-if (args.http === true || !SSL_KEY_PATH || !SSL_CERT_PATH) {
-  app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`)
-  })
-} else {
-  try {
-    const options = {
-      key: fs.readFileSync(SSL_KEY_PATH),
-      cert: fs.readFileSync(SSL_CERT_PATH)
+// Serve static files with proper content types and logging
+app.use('/static', express.static(path.join(__dirname, 'static'), {
+  setHeaders: (res, filepath) => {
+    // Set appropriate content types for different file extensions
+    if (filepath.endsWith('.jpg') || filepath.endsWith('.jpeg')) {
+      res.set('Content-Type', 'image/jpeg');
+    } else if (filepath.endsWith('.png')) {
+      res.set('Content-Type', 'image/png');
+    } else if (filepath.endsWith('.svg')) {
+      res.set('Content-Type', 'image/svg+xml');
+    } else if (filepath.endsWith('.js')) {
+      res.set('Content-Type', 'application/javascript');
+    } else if (filepath.endsWith('.css')) {
+      res.set('Content-Type', 'text/css');
     }
-    const server = https.createServer(options, app)
-    server.listen(PORT, () => {
-      console.log(`Server running at https://localhost:${PORT}`)
-    })
-  } catch (error) {
-    console.error('SSL configuration error:', error.message)
-    console.log('Falling back to HTTP')
-    app.listen(PORT, () => {
-      console.log(`Server running at http://localhost:${PORT}`)
-    })
-  }
-}
+
+    // Log detailed information about the served file
+    const relativePath = filepath.replace(__dirname, '');
+    console.log(`Serving static file: ${relativePath} (${res.get('Content-Type')})`);
+  },
+  fallthrough: false, // Return 404 if file not found
+  index: false // Disable directory indexing
+}));
+
+// Routes
+app.use('/', router);
+
+app.listen(port, host, () => {
+  console.log(`Server running on ${host}:${port}`);
+});
