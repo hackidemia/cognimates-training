@@ -42,77 +42,6 @@
             <i></i>
         </div>
         <div class="step__body">
-            <h2 class="step__title">What are your uClassify keys?
-            </h2>
-            <div class="step__form-with-button" id="set_read_api">
-                <input type="text"
-                    class="form-control
-                           no-radius--right
-                           step__form-text
-                           js--Rapikey__input"
-                    aria-describedby=""
-                    placeholder="Paste Read API Key here">
-            </div>
-
-            <div class="step__form-with-button" id="set_write_api">
-                <input type="text"
-                    class="form-control
-                           no-radius--right
-                           step__form-text
-                           js--Wapikey__input"
-                    aria-describedby=""
-                    placeholder="Paste Write API Key here">
-            </div>
-
-            <div class="step__form-with-button" id="set_username__Form">
-                <input type="text"
-                    class="form-control
-                           no-radius--right
-                           step__form-text
-                           js--username__input"
-                    aria-describedby=""
-                    placeholder="Paste Username here">
-            </div>
-            <div class="api-key__result-row" style="display: none;" id="Rapikey__show">
-                <span class="api-key__value" id="js--Rapikey__result">8c529910925e45c3932343e56cf58</span>
-            </div>
-            <div class="api-key__result-row" style="display: none;" id="Wapikey__show">
-                <span class="api-key__value" id="js--Wapikey__result">8c529910925e45c3932343e56cf58</span>
-            </div>
-            <div class="api-key__result-row" style="display: none;" id="username__show">
-                <span class="api-key__value" id="js--username__result">unicorn5432</span>
-            </div>
-            <button class="btn btn-primary button--train js--set-creds
-                               js--Wapikey__input--set js--Rapikey__input--set
-                               js--username__input--set"
-                        type="button">
-                     Set Credentials
-            </button>
-
-            <a href="https://docs.google.com/document/d/1owZxciBFD9UWaPBfDKoXK9DaBejm5aSNlP_Wl0RmMIE/view" class="step__link step__link--get-key" target="_blank" >
-                   How-to guide
-             </a>
-             <a href="https://www.uclassify.com/account/register" class="step__link step__link--get-key" target="_blank" >
-                   Sign up &amp; get keys
-             </a>
-           {{!--  <div class="step__help
-                        step__help--keys">
-                <div class="plyr__video-embed" id="js-classifier__video--clarifai">
-                    <iframe src="https://www.youtube.com/embed/YOrrROME2zc"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-                    </iframe>
-                </div>
-             </div> --}}
-        </div>
-    </li>
-
-    <li class="stepper__step">
-        <span class="step__number">3</span>
-        <div class="step__circle">
-            <i></i>
-        </div>
-        <div class="step__body">
             <h2 class="step__title">What categories should your model have?
                 <a href="#" class="step__help-open-button
                                     js--open-help" role="button">
@@ -152,7 +81,7 @@
     </li>
 
     <li class="stepper__step">
-        <span class="step__number">4</span>
+        <span class="step__number">3</span>
         <div class="step__circle">
             <i></i>
         </div>
@@ -171,10 +100,10 @@
             <div class="classifier__results">
                 <div class="results__upload-progress
                             js--train-results__upload_progress">
-                    Uploading: 
+                    Uploading:
                     <span class="js--train-results__upload__progress--set"><span>
                 </div>
-                <div class="results__name 
+                <div class="results__name
                             js--train-results__name">
                     <span class="results__name-label">Model Name: </span>
                     <span class="results__name-value
@@ -182,12 +111,12 @@
                 </div>
                 <div class="results__status
                             js--train-results__status">
-                    <span class="results__status-label">Model Status: </span> 
+                    <span class="results__status-label">Model Status: </span>
                     <span class="results__status-value
                                  js--train-results__status--set">Model not ready</span>
                 </div>
-                <div class="spinner-grow 
-                            js--train-results__status_spinner" 
+                <div class="spinner-grow
+                            js--train-results__status_spinner"
                       style="display:none"
                       role="status">
                     <span class="sr-only"></span>
@@ -197,7 +126,7 @@
     </li>
 
     <li class="stepper__step">
-        <span class="step__number">5</span>
+        <span class="step__number">4</span>
         <div class="step__circle">
             <i></i>
         </div>
@@ -217,7 +146,7 @@
                 Predict
             </button>
             <div class="classifier__results">
-                <div class="results__name 
+                <div class="results__name
                             js--predict-results__name">
                     <span class ="results__name-value">Category: </span>
                     <span class="results__name-value js--predict--label-results">Confidence score:</span>
@@ -225,8 +154,8 @@
                     <span class="results__name-label">Confidence Score:</span>
                     <span class="results__name-label js--predict--confidence-results">85.02%</span>
                 </div>
-                <div class="spinner-grow 
-                            js--predict-results__status_spinner" 
+                <div class="spinner-grow
+                            js--predict-results__status_spinner"
                       style="display:none"
                       role="status">
                     <span class="sr-only"></span>
@@ -236,7 +165,7 @@
     </li>
 
     <li class="stepper__step">
-        <span class="step__number">6</span>
+        <span class="step__number">5</span>
         <div class="step__circle">
             <i></i>
         </div>
@@ -244,8 +173,8 @@
             <h2 class="step__title">
                  Play with the model in Codelab
             </h2>
-            <button class="btn 
-                            btn-primary 
+            <button class="btn
+                            btn-primary
                             button--play
                             js--classifier__open__codelab"
                     type="button ">
@@ -254,4 +183,3 @@
         </div>
     </li>
 </ul>
-

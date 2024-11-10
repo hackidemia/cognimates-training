@@ -2,7 +2,7 @@
 
 <div class="classifier__banner-image-container
             classifier__banner-image-container--vision ">
-  <img src="/images/vision_banner.png"
+  <img src="/static/images/vision_banner.png"
         class="js-classifiers__card--image classifier__banner-image
             card-img-top
             classifiers__card-image"
@@ -382,7 +382,7 @@
     }
     function initDropZoneForClass(categoryName) {
       const dropzoneFormClass = `.js--dropzone__category--${categoryName}`;
-      const dropzonePreviewsContainerClass = `.js--dropzone__previews__container--${categoryName}`;
+      const dropzonePreviewsContainerId = `#js--dropzone__previews-container_${categoryName}`;
       const dropzoneRemoveClass = `.js--${categoryName}-category--vision__remove`;
       const dropzoneCategoryInstance = new Dropzone(dropzoneFormClass, {
           url: "/file/post" ,
@@ -395,7 +395,7 @@
           addRemoveLinks: true, //  enable person to del file
           thumbnailWidth: 80,
           thumbnailHeight: 80,
-          previewsContainer: document.querySelector(dropzonePreviewsContainerClass),
+          previewsContainer: document.querySelector(dropzonePreviewsContainerId),
           init: function () {
             this.on("error", function(file) {
               if (!file.accepted) {

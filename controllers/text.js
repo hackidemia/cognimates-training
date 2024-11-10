@@ -1,270 +1,141 @@
 const axios = require('axios');
-const base_url = "https://api.uclassify.com/v1/";
-const async = require('async');
 
-// Validate required environment variables
-if (!process.env.UCLASSIFY_READ_API_KEY || !process.env.UCLASSIFY_WRITE_API_KEY) {
-  console.error('UCLASSIFY_READ_API_KEY and UCLASSIFY_WRITE_API_KEY environment variables are required');
-  process.exit(1);
+const uclassifyReadApiKey = process.env.UCLASSIFY_READ_API_KEY;
+const uclassifyWriteApiKey = process.env.UCLASSIFY_WRITE_API_KEY;
+
+if (!uclassifyReadApiKey || !uclassifyWriteApiKey) {
+  console.warn('Warning: uClassify API keys not found in environment variables');
 }
 
-const readToken = process.env.UCLASSIFY_READ_API_KEY;
-const writeToken = process.env.UCLASSIFY_WRITE_API_KEY;
+exports.trainAll = async function(req, res) {
+  try {
+    const classifierName = req.body.classifier_name;
+    const trainingData = req.body.training_data;
 
-function health(req, res){
-  res.json({message: 'healthy'});
-  return;
-}
+    if (!classifierName || !trainingData) {
+      return res.status(400).json({ error: 'Missing required parameters' });
+    }
 
-function getClassifierInformation(req, res) {
-    var classifier_id = req.body.classifier_id;
-    let username = req.body.username;
-    get_classifier_url = base_url + username + "/" + classifier_id;
-    token_text = "Token " + readToken;
-    axios.get(get_classifier_url, {
-        headers: {'Content-Type': 'application/json', 'Authorization': token_text}
-    })
-    .then(response => {
-        res.json(response.data);
-    })
-    .catch(err => {
-        res.json({error: err.message});
+    // Validate classifier name format
+    if (!/^[a-zA-Z0-9_-]+$/.test(classifierName)) {
+      return res.status(400).json({ error: 'Classifier name must contain only letters, numbers, underscores and hyphens' });
+    }
+
+    console.log('Training classifier:', classifierName);
+    console.log('Training data:', trainingData);
+
+    // Train the classifier directly - uClassify creates the classifier automatically
+    const trainUrl = `https://api.uclassify.com/v1/uclassify/${classifierName}/train`;
+    console.log('Training classifier at:', trainUrl);
+
+    // Convert training data from {category: [texts]} format to uClassify format
+    const texts = [];
+    Object.entries(trainingData).forEach(([className, examples]) => {
+      if (!Array.isArray(examples)) {
+        throw new Error(`Training data for class ${className} must be an array`);
+      }
+      examples.forEach(text => {
+        if (typeof text !== 'string' || !text.trim()) {
+          throw new Error(`Invalid training example in class ${className}: ${text}`);
+        }
+        texts.push({
+          text: text.trim(),
+          className: className
+        });
+      });
     });
-}
 
-/**
- * This allows for adding examples + more training for a classifier.
- * This will be called after a classifier has already been created.
- */
-function addExamples(req, res) {
-  let classifier_name = req.body.classifier_name;
-  let class_name = req.body.class_name;
-  let training_data = req.body.texts;
-  var create_url = base_url + "me/" + classifier_name + "/" + class_name + "/train";
-  let token_text = 'Token ' + writeToken;
-  axios.post(create_url, {texts: training_data}, {
-    headers: {'Content-Type': 'application/json', 'Authorization': token_text}
-  })
-  .then(response => {
-    console.log(response.status);
-    res.json();
-  })
-  .catch(err => {
-    res.json({error: err.message});
-  });
-}
+    if (texts.length === 0) {
+      return res.status(400).json({ error: 'No valid training examples provided' });
+    }
 
-function createClass(req, res) {
-  let classifier_name = req.body.classifier_name;
-  let class_name = req.body.class_name;
-  var create_url = base_url + "me/" + classifier_name + "/addClass";
-  let token_text = 'Token ' + writeToken;
-  axios.post(create_url, {className: class_name}, {
-    headers: {'Content-Type': 'application/json', 'Authorization': token_text}
-  })
-  .then(response => {
-    console.log(response);
-    res.json();
-  })
-  .catch(err => {
-    res.json({error: err.message});
-  });
-}
+    const trainData = { texts };
 
-/**
- * User first creates a classifier by choosing a name, create an empty classifier
- * so that we can use the above function
- * addExamples for both initializing + adding examples later.
- */
-function createClassifier(req, res) {
-  let classifier_name = req.body.classifier_name;
-  console.log(classifier_name)
-  var create_url = base_url + "me/";
-  let token_text = 'Token ' + writeToken;
-  axios.post(create_url, {classifierName: classifier_name}, {
-    headers: {'Content-Type': 'application/json', 'Authorization': token_text}
-  })
-  .then(response => {
-    console.log(response);
-    res.json();
-  })
-  .catch(err => {
-    res.json({error: err.message});
-  });
-}
+    console.log('Sending training data:', JSON.stringify(trainData, null, 2));
 
-function delClassifier(req, res) {
-  let classifier_id = req.body.classifier_id;
-  var del_url = base_url + "me/" + classifier_id;
-  let token_text = 'Token ' + writeToken;
-  axios.delete(del_url, {
-    headers: {'Content-Type': 'application/json', 'Authorization': token_text}
-  })
-  .then(response => {
-    res.json();
-  })
-  .catch(err => {
-    res.json({error: err.message});
-  });
-}
-
-function classify(req, res) {
-  var classifier_id = req.body.classifier_id;
-  var phrase = req.body.phrase;
-  var classify_username = req.body.classify_username;
-  if (classify_username == null) {
-    classify_username = ""
-  }
-
-  let classifyURL = base_url+classify_username+'/'+classifier_id+'/classify';
-  let token_text = 'Token ' + readToken;
-
-  axios.post(classifyURL, {texts: [phrase]}, {
-    headers: {'Content-Type': 'application/json', 'Authorization': token_text}
-  })
-  .then(response => {
-    res.json(response.data[0].classification);
-  })
-  .catch(err => {
-    var error = errorHandler(err, response);
-    res.json({error: error});
-  });
-}
-
-function errorHandler(err, httpResponse){
-  if(httpResponse.status === 413 || httpResponse.status === 200){
-    return 'Request entity too large';
-  } if(httpResponse.status === 530){
-    return 'uClassify Service Unavailable';
-  } if(httpResponse.status === 400){
-    return 'Bad Request. Check your text again.';
-  } if(httpResponse.status === 500){
-    return 'uClassify has an internal server error.';
-  } else {
-   return 'Could not classify the text. uClassify service may be unavailable.';
-  }
-}
-
-function removeClass(req, res){
-  let classifier_id = req.body.classifier_name;
-  let class_name = req.body.class_name;
-  var del_url = base_url + "me/" + classifier_id + "/" + class_name;
-  let token_text = 'Token ' + writeToken;
-  axios.delete(del_url, {
-    headers: {'Content-Type': 'application/json', 'Authorization': token_text}
-  })
-  .then(response => {
-    res.json();
-  })
-  .catch(err => {
-    res.json({error: err.message});
-  });
-}
-
-function untrain(req, res){
-  let classifier_name = req.body.classifier_name;
-  let class_name = req.body.class_name;
-  let training_data = req.body.training_data;
-  var untrain_url = base_url + "me/" + classifier_name + "/" + class_name + "/untrain";
-  let token_text = 'Token ' + writeToken;
-  axios.post(untrain_url, {texts: training_data}, {
-    headers: {'Content-Type': 'application/json', 'Authorization': token_text}
-  })
-  .then(response => {
-    console.log(response);
-    res.json();
-  })
-  .catch(err => {
-    res.json({error: err.message});
-  });
-}
-
-function trainAll(req, res) {
-  var classifierName = req.body.classifier_name;
-  var training_data = req.body.training_data;
-  var functionsToExecute = [];
-  functionsToExecute.push(getCreateClassifierFunction(writeToken, classifierName));
-  Object.keys(training_data).forEach((key) => {
-    functionsToExecute.push(getTrainLabelFunction(writeToken, classifierName, key, training_data[key]));
-  });
-
-  async.series(functionsToExecute, (err, results) => {
-    if (err) {
-      var errorMessages = [];
-      results.forEach((result) => {
-        if (result != null) {
-          errorMessages.push(result.message);
+    // First create the classifier if it doesn't exist
+    try {
+      const createUrl = `https://api.uclassify.com/v1/uclassify/${classifierName}/create`;
+      await axios.post(createUrl, {}, {
+        headers: {
+          'Authorization': `Token ${uclassifyWriteApiKey}`,
+          'Content-Type': 'application/json'
         }
       });
-      res.json({ error: err.message, errorDetails: errorMessages });
-      return;
+    } catch (createError) {
+      // Ignore 409 Conflict error which means classifier already exists
+      if (createError.response?.status !== 409) {
+        throw createError;
+      }
     }
-    if(results[0] == 400){
-      res.json({error: 'Unable to train. Check your inputs or internet and try again.'});
-      return;
-    } else {
-      res.json("Trained successfully");
-    }
-  });
-}
 
-function getCreateClassifierFunction(writeAPIKey, classifierName) {
-  return function (callback) {
-    var create_url = base_url + "me/";
-    let token_text = 'Token ' + writeAPIKey;
-    axios.post(create_url, {classifierName: classifierName}, {
-      headers: {'Content-Type': 'application/json', 'Authorization': token_text}
-    })
-    .then(response => {
-      callback(null, response.status);
-    })
-    .catch(err => {
-      callback(err, err.response.status);
-    });
-  };
-}
-
-function getTrainLabelFunction(writeAPIKey, classifierName, label, labelData) {
-  return function (callback) {
-    let class_name = label;
-    var create_url = base_url + "me/" + classifierName + "/addClass";
-    let token_text = 'Token ' + writeAPIKey;
-    let training_data = labelData;
-
-    //first create the class
-    axios.post(create_url, {className: class_name}, {
-      headers: {'Content-Type': 'application/json', 'Authorization': token_text}
-    })
-    .then(response => {
-      callback(null, response.status);
-    })
-    .catch(err => {
-      callback(err, err.response.status);
+    // Then train the classifier
+    const trainResponse = await axios.post(trainUrl, trainData, {
+      headers: {
+        'Authorization': `Token ${uclassifyWriteApiKey}`,
+        'Content-Type': 'application/json'
+      }
     });
 
-    train_url = base_url + "me/" + classifierName + "/" + class_name + "/train";
-    //train the label by adding examples
-    axios.post(train_url, {texts: training_data}, {
-      headers: {'Content-Type': 'application/json', 'Authorization': token_text}
-    })
-    .then(response => {
-      callback(null, response.status);
-    })
-    .catch(err => {
-      callback(err, err.response.status);
+    console.log('Training response:', trainResponse.data);
+    res.json({ message: 'Classifier trained successfully', data: trainResponse.data });
+  } catch (error) {
+    console.error('Training error:', error.response ? {
+      status: error.response.status,
+      data: error.response.data,
+      url: error.response.config?.url,
+      method: error.response.config?.method,
+      headers: error.response.config?.headers
+    } : error.message);
+
+    res.status(error.response?.status || 500).json({
+      error: 'Training failed',
+      details: error.response ? error.response.data : error.message
     });
   }
-}
+};
 
-module.exports = {
-  getClassifierInformation: getClassifierInformation,
-  classifyText: classify,
-  deleteClassifier: delClassifier,
-  createClassifier: createClassifier,
-  addExamples: addExamples,
-  createClass: createClass,
-  removeClass: removeClass,
-  untrain: untrain,
-  trainAll: trainAll,
-  health: health
-}
+exports.classify = async function(req, res) {
+  try {
+    const classifierName = req.body.classifier_name;
+    const text = req.body.text;
+
+    if (!classifierName || !text) {
+      return res.status(400).json({ error: 'Missing required parameters' });
+    }
+
+    console.log('Classifying text for classifier:', classifierName);
+    console.log('Text to classify:', text);
+
+    const url = `https://api.uclassify.com/v1/uclassify/${classifierName}/classify`;
+    const data = {
+      texts: [text]
+    };
+
+    console.log('Making classification request to:', url);
+    console.log('With data:', JSON.stringify(data, null, 2));
+
+    const response = await axios.post(url, data, {
+      headers: {
+        'Authorization': `Token ${uclassifyReadApiKey}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    console.log('Classification response:', response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Classification error:', error.response ? {
+      status: error.response.status,
+      data: error.response.data,
+      url: error.response.config?.url,
+      method: error.response.config?.method,
+      headers: error.response.config?.headers
+    } : error.message);
+
+    res.status(error.response?.status || 500).json({
+      error: 'Classification failed',
+      details: error.response ? error.response.data : error.message
+    });
+  }
+};

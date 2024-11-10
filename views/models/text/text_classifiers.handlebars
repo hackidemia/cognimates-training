@@ -24,7 +24,7 @@
       aria-selected="true">
         <h2>
           <i class="fas fa-plus"></i>
-          Create 
+          Create
           Model
         </h2>
     </a>
@@ -99,21 +99,6 @@
         showExploreTab(true);
     });
 
-    // initialize the text classifier select area as a field for tags
-    // using the Selectivize library
-    {{!-- $('.category__tag-select-container').selectize({
-        delimiter: ',',
-        persist: false,
-        placeholder: 'write text things here!',
-        create: function(input) {
-            return {
-                value: input,
-                text: input
-            }
-        }
-    }); --}}
-
-
     function showCreateTab(show) {
         const tabContent = $('.js--classifier__tab--create');
         if (show) {
@@ -172,229 +157,6 @@
         selectClassifier();
       })
 
-      //read api key inputs
-      $('.js--Rapikey__input').keypress((e) => {
-          if (e.which == 13) {
-              $('.js--Rapikey__input--set').trigger('click');
-              e.preventDefault();
-              return false;
-          }
-      });
-
-      $('.js--explore__Rapikey__input').keypress((e) => {
-          if (e.which == 13) {
-              $('.js--explore__Rapikey__input--set').trigger('click');
-              e.preventDefault();
-              return false;
-          }
-      });
-
-      $('.js--Rapikey__input--set').click(function () {
-        if ($('.js--Rapikey__input').val() == '') {
-          var n = makeNotification({
-            message: 'Enter an API Key.',
-            type: 'warning',
-            closeOlderInstances: true,
-            stayOpenUntilClick: false
-          });
-          n.show();
-          return;
-        }
-        if($('.js--set-creds').html() != 'Remove Credentials'){
-          window.RapiKey = $('.js--Rapikey__input').val();
-          $('.js--explore__Rapikey__input').val(window.RapiKey);
-          var x = document.getElementById("set_read_api");
-          x.style.display = "none";
-          $('#js--Rapikey__result').text(window.RapiKey);
-          var y = document.getElementById('Rapikey__show');
-          y.style.display = 'block';
-          showSuccessNotification('Read API key set!', true, true);
-        } else {
-          var x = document.getElementById("set_read_api");
-          x.style.display = "flex";
-          $('#js--Rapikey__result').text(window.RapiKey);
-          var y = document.getElementById('Rapikey__show');
-          y.style.display = 'none';
-        }
-      });
-
-      $('.js--explore__Rapikey__input--set').click(function () {
-        if ($('.js--explore__Rapikey__input').val() == '') {
-          var n = makeNotification({
-            message: 'Enter an API Key.',
-            type: 'warning',
-            closeOlderInstances: true,
-            stayOpenUntilClick: false
-          });
-          n.show();
-          return;
-        }
-        if($('.js--set-creds').html() != 'Remove Credentials'){
-          window.RapiKey = $('.js--explore__Rapikey__input').val();
-          var x = document.getElementById("explore_set_read_api");
-          x.style.display = "none";
-          $('#explore-js--Rapikey__result').text(window.RapiKey);
-          var y = document.getElementById('explore_Rapikey__show');
-          y.style.display = 'block';
-        } else {
-          var x = document.getElementById("explore_set_read_api");
-          x.style.display = "flex";
-          $('#explore-js--Rapikey__result').text(window.RapiKey);
-          var y = document.getElementById('explore_Rapikey__show');
-          y.style.display = 'none';
-        }
-      });
-
-    //write api key inputs
-      $('.js--Wapikey__input').keypress((e) => {
-          if (e.which == 13) {
-              $('.js--Wapikey__input--set').trigger('click');
-              e.preventDefault();
-              return false;
-          }
-      });
-
-      $('.js--explore__Wapikey__input').keypress((e) => {
-          if (e.which == 13) {
-              $('.js--explore__Wapikey__input--set').trigger('click');
-              e.preventDefault();
-              return false;
-          }
-      });
-
-      $('.js--Wapikey__input--set').click(function () {
-        if ($('.js--Wapikey__input').val() == '') {
-          var n = makeNotification({
-            message: 'Enter an API Key.',
-            type: 'warning',
-            closeOlderInstances: true,
-            stayOpenUntilClick: false
-          });
-          n.show();
-          return;
-        }
-        if($('.js--set-creds').html() != "Remove Credentials"){
-          window.WapiKey = $('.js--Wapikey__input').val();
-          $('.js--explore__Wapikey__input').val(window.WapiKey);
-          var x = document.getElementById("set_write_api");
-          x.style.display = "none";
-          $('#js--Wapikey__result').text(window.WapiKey);
-          var y = document.getElementById('Wapikey__show');
-          y.style.display = 'block';
-          showSuccessNotification('Write API key set!', true, true);
-        } else {
-          var x = document.getElementById("set_write_api");
-          x.style.display = "flex";
-          $('#js--Wapikey__result').text(window.WapiKey);
-          var y = document.getElementById('Wapikey__show');
-          y.style.display = 'none';
-        }
-      });
-
-      $('.js--explore__Wapikey__input--set').click(function () {
-        if ($('.js--explore__Wapikey__input').val() == '') {
-          var n = makeNotification({
-            message: 'Enter an API Key.',
-            type: 'warning',
-            closeOlderInstances: true,
-            stayOpenUntilClick: false
-          });
-          n.show();
-          return;
-        }
-        if($('.js--set-creds').html() != "Remove Credentials"){
-          window.WapiKey = $('.js--explore__Wapikey__input').val();
-          var x = document.getElementById("explore_set_write_api");
-          x.style.display = "none";
-          $('#explore-js--Wapikey__result').text(window.WapiKey);
-          var y = document.getElementById('explore_Wapikey__show');
-          y.style.display = 'block';
-        } else {
-          var x = document.getElementById("explore_set_write_api");
-          x.style.display = "flex";
-          $('#explore-js--Wapikey__result').text(window.WapiKey);
-          var y = document.getElementById('explore_Wapikey__show');
-          y.style.display = 'none';
-        }
-      });
-
-    //set username stuff
-      $('.js--username__input').keypress((e) => {
-          if (e.which == 13) {
-              $('.js--username__input--set').trigger('click');
-              e.preventDefault();
-              return false;
-          }
-      });
-
-      $('.js--explore__username__input').keypress((e) => {
-          if (e.which == 13) {
-              $('.js--explore__username__input--set').trigger('click');
-              e.preventDefault();
-              return false;
-          }
-      });
-
-      $('.js--username__input--set').click(function () {
-        if ($('.js--username__input').val() == '') {
-          var n = makeNotification({
-            message: 'Enter a Username.',
-            type: 'warning',
-            closeOlderInstances: true,
-            stayOpenUntilClick: false
-          });
-          n.show();
-          return;
-        }
-        if($('.js--set-creds').html() != 'Remove Credentials'){
-          window.username = $('.js--username__input').val();
-          $('.js--explore__username__input').val(window.username);
-          var x = document.getElementById("set_username__Form");
-          x.style.display = "none";
-          $('#js--username__result').text(window.username);
-          var y = document.getElementById('username__show');
-          y.style.display = 'block';
-          showSuccessNotification('Credentials set!', true, true);
-          $('.js--set-creds').html('Remove Credentials');
-        } else {
-          var x = document.getElementById("set_username__Form");
-          x.style.display = "flex";
-          $('#js--username__result').text(window.username);
-          var y = document.getElementById('username__show');
-          y.style.display = 'none';
-          $('.js--set-creds').html('Set Credentials');
-        }
-      });
-
-      $('.js--explore__username__input--set').click(function () {
-        if ($('.js--explore__username__input').val() == '') {
-          var n = makeNotification({
-            message: 'Enter a Username.',
-            type: 'warning',
-            closeOlderInstances: true,
-            stayOpenUntilClick: false
-          });
-          n.show();
-          return;
-        }
-        if($('.js--set-creds').html() != 'Remove Credentials'){
-          window.username = $('.js--explore__username__input').val();
-          var x = document.getElementById("explore_set_username_api");
-          x.style.display = "none";
-          $('#explore-js--username__result').text(window.username);
-          var y = document.getElementById('explore_username__show');
-          y.style.display = 'block';
-          $('.js--set-creds').html('Remove Credentials');
-        } else {
-          var x = document.getElementById("explore_set_username_api");
-          x.style.display = "flex";
-          $('#explore-js--username__result').text(window.username);
-          var y = document.getElementById('explore_username__show');
-          y.style.display = 'none';
-          $('.js--set-creds').html('Set Credentials');
-        }
-      });
-      
     //setting project name stuff
     $('#input_projectName').keypress((e) => {
           if (e.which == 13) {
@@ -406,13 +168,7 @@
 
     $('#button_set_project_name').click(function () {
       if ($('#input_projectName').val() == '') {
-        var n = makeNotification({
-          message: 'Enter a project name.',
-          type: 'warning',
-          closeOlderInstances: true,
-          stayOpenUntilClick: false
-        });
-        n.show();
+        makeNotification('Enter a project name.', 'warning');
         return;
       }
       window.projectName = $('#input_projectName').val();
@@ -434,32 +190,20 @@
 
       $('#button_categoryName').click(function () {
         if ($('#input_categoryName').val() == '') {
-          var n = makeNotification({
-            message: 'Enter a category to train.',
-            type: 'warning',
-            closeOlderInstances: true,
-            stayOpenUntilClick: false
-          });
-          n.show();
+          makeNotification('Enter a category to train.', 'warning');
           return;
         }
 
         // TODO: Sanitize categoryName before further processing
         var categoryName = $('#input_categoryName').val().replace(/\s/g, '');;
         if (window.training_data.hasOwnProperty(categoryName)) {
-          var n = makeNotification({
-            message: 'A category with this name already exists. Enter a different name.',
-            type: 'warning',
-            closeOlderInstances: true,
-            stayOpenUntilClick: false
-          });
-          n.show();
+          makeNotification('A category with this name already exists. Enter a different name.', 'warning');
           return;
         }
 
         var format = /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
         if (format.test(categoryName) != false) {
-            showWarningNotification('Category name should have only letters and numbers.', true, false);
+            makeNotification('Category name should have only letters and numbers.', 'warning');
             return;
         }
 
@@ -470,50 +214,49 @@
       });
 
       $('.js--train__button').on('click', function () {
-          var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-          if (format.test(window.projectName) != false) {
-              showWarningNotification('Project name should have only letters and numbers.', true, false);
+          if (!window.projectName) {
+              makeNotification('Please set a project name first.', 'warning');
               return;
           }
+
+          var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+          if (format.test(window.projectName) != false) {
+              makeNotification('Project name should have only letters and numbers.', 'warning');
+              return;
+          }
+
           setTrainButtonState('training');
           preprocessTrainData();
-      })
-    });
+      });
 
     //create extension url in create tab
     $('.js--classifier__open__codelab').on('click', function(){
-        if(window.RapiKey != '' && window.WapiKey != '' && window.username != '' && window.projectName != ''){
-          var extensionUrl = `?url=https://cognimate.me:2635/nlc/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.projectName}`;
-          extensionUrl = "https://hackidemia.github.io/cognimates-gui/" + extensionUrl;
-          //var extensionUrl = `?url=http://localhost:2634/nlc/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.projectName}`;
-          //extensionUrl = "http://localhost:8601/" + extensionUrl;
+        if(window.projectName) {
+          var extensionUrl = `/text/extension/${window.projectName}`;
           window.open(extensionUrl);
         } else {
-          showWarningNotification('We need a trained project with a username and both api keys set.', true, false);
+          makeNotification('Please train a project first.', 'warning');
         }
     })
 
     //create extension url in explore tab
     $('.js--explore__open__codelab').on('click', function() {
-      if(window.RapiKey != '' && window.WapiKey != '' && window.username != '' && window.projectName != ''){
-        var extensionUrl = `?url=https://cognimate.me:2635/nlc/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.projectName}`;
-        extensionUrl = "https://hackidemia.github.io/cognimates-gui/" + extensionUrl;
-        //var extensionUrl = `?url=http://localhost:2634/nlc/extension/${window.RapiKey}/${window.WapiKey}/${window.username}/${window.projectName}`;
-        //extensionUrl = "http://localhost:8601/" + extensionUrl;
+      if(window.projectName) {
+        var extensionUrl = `/text/extension/${window.projectName}`;
         window.open(extensionUrl);
       } else {
-        showWarningNotification('We need a trained project with a username and both api keys set.', true, false);
+        makeNotification('Please select a project first.', 'warning');
       }
     });
-                  
+
     function createCategoryHTMLElement(categoryName) {
         const htmlStructure = `
           <div class="category__container tag-contain-${categoryName}">
-            <div class="category__box 
+            <div class="category__box
                         category__box--solid
                         category__box--text">
               <div class="category__name">${categoryName}</div>
-              <input type="text" id="${categoryName}" 
+              <input type="text" id="${categoryName}"
                     class="category__tag-select-container-${categoryName}">
               <a href="#" class="category--text__remove-button
                                btn btn-primary
@@ -536,7 +279,7 @@
           e.preventDefault();
           removeCategory(categoryName);
       });
-      
+
       $(textBoxFormClass).selectize({
         delimiter: ',',
         persist: false,
@@ -561,9 +304,14 @@
         },
         onDropdownOpen: function(dropdown) {
           dropdown.remove();
+        },
+        onChange: function(values) {
+          if (!window.training_data[categoryName]) {
+            window.training_data[categoryName] = [];
+          }
+          window.training_data[categoryName] = values || [];
         }
       });
-
     }
 
     function removeCategory(categoryName){
@@ -617,32 +365,17 @@
 
     function validateTrainingData() {
         if (window.training_data === undefined || Object.keys(window.training_data).length < 2) {
-            var n = makeNotification({
-              message: 'Create at least 2 categories.',
-              type: 'warning',
-              closeOlderInstances: true,
-              stayOpenUntilClick: true
-            });
-            n.show();
-
+            makeNotification('Create at least 2 categories.', 'warning');
             throw new Error("Create at least 2 categories.");
         }
         for (const className of Object.keys(window.training_data)) {
-            var unparsed_result = $(`#${className}`).val();
-            var values = unparsed_result.split(","); 
+            const selectizeInput = $(`.category__tag-select-container-${className}`)[0].selectize;
+            const values = selectizeInput.getValue();
             if (values === undefined || values.length < 10) {
-              var n = makeNotification({
-                message: `Create at least 10 examples for ${className} category.`,
-                type: 'warning',
-                closeOlderInstances: true,
-                stayOpenUntilClick: true
-              });
-              n.show();
+              makeNotification(`Create at least 10 examples for ${className} category.`, 'warning');
               throw new Error(`Create at least 10 examples for ${className} category.`);
-            } 
-            for(var i = 0; i < values.length; i++){
-              window.training_data[className].push(values[i]);
             }
+            window.training_data[className] = values;
         }
         console.log(training_data);
     }
@@ -650,21 +383,17 @@
     function createClassifier() {
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: '/nlc/trainAll',
+                url: '/text/train',
                 type: 'POST',
                 dataType: 'json',
                 contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({training_data: window.training_data, classifier_name: window.projectName}),
-                headers: { api_key: window.WapiKey },
+                data: JSON.stringify({
+                    training_data: window.training_data,
+                    classifier_name: window.projectName
+                }),
                 success: function (data) {
                     if(data.error != null) {
-                        var n = makeNotification({
-                          message: 'Oops. ' + data.error,
-                          type: 'error',
-                          closeOlderInstances: true,
-                          stayOpenUntilClick: false
-                        });
-                        n.show();
+                        makeNotification('Oops. ' + data.error, 'error');
                         reject(new Error(data.error));
                         return;
                     }
@@ -672,6 +401,8 @@
                     resolve();
                 },
                 error: function (error) {
+                    console.error('Training error:', error);
+                    makeNotification('Training failed. Please try again.', 'error');
                     reject(error);
                 }
             });
@@ -709,7 +440,7 @@
       }
     }
 
-    //setting the explore project name 
+    //setting the explore project name
     $('#input_exploreProjectName').keypress((e) => {
           if (e.which == 13) {
               $('#button_projectName').trigger('click');
@@ -720,13 +451,7 @@
 
       $('#button_exploreProjectName').click(function () {
         if ($('#input_exploreProjectName').val() == '') {
-            var n = makeNotification({
-                message: 'Enter a project name.',
-                type: 'warning',
-                closeOlderInstances: true,
-                stayOpenUntilClick: false
-            });
-            n.show();
+            makeNotification('Enter a project name.', 'warning');
             return;
         }
         window.projectName = $('#input_exploreProjectName').val();
@@ -748,48 +473,31 @@
 
       $('#button_predictText').click(function () {
         if ($('#input_predictText').val() == '') {
-          var n = makeNotification({
-            message: 'Enter a phrase to predict.',
-            type: 'warning',
-            closeOlderInstances: true,
-            stayOpenUntilClick: false
-          });
-          n.show();
+          makeNotification('Enter a phrase to predict.', 'warning');
           return;
         }
 
-        // TODO: Sanitize categoryName before further processing
         var phraseToPredict = $('#input_predictText').val();
-        console.log('here');
         $.ajax({
-            url: "/nlc/classify",
+            url: "/text/classify",
             type: "POST",
-            data: {classifier_id: window.projectName, classify_username: window.username,
-                    token: window.RapiKey, phrase: phraseToPredict},
+            contentType: "application/json",
+            data: JSON.stringify({
+                classifier_name: window.projectName,
+                phrase: phraseToPredict
+            }),
             success: function(data) {
                 if(data.error == null) {
                     window.predict_done = 'success';
                     showClassification(data);
                 } else {
                     window.predict_done = 'fail';
-                    var n = makeNotification({
-                      message: 'Oops. ' + data.error,
-                      type: 'error',
-                      closeOlderInstances: true,
-                      stayOpenUntilClick: true
-                    });
-                    n.show();
+                    makeNotification('Oops. ' + data.error, 'error');
                 }
             },
             error: function (error) {
-                console.log(error);
-                var n = makeNotification({
-                  message: 'Oops. ' + error,
-                  type: 'error',
-                  closeOlderInstances: true,
-                  stayOpenUntilClick: true
-                });
-                n.show();
+                console.error('Classification error:', error);
+                makeNotification('Classification failed. Please try again.', 'error');
              }
         })
       });
@@ -805,63 +513,40 @@
 
     $('#button_explore_predictText').click(function () {
     if ($('#input_explore_predictText').val() == '') {
-        var n = makeNotification({
-        message: 'Enter a phrase to predict.',
-        type: 'warning',
-        closeOlderInstances: true,
-        stayOpenUntilClick: false
-        });
-        n.show();
+        makeNotification('Enter a phrase to predict.', 'warning');
         return;
     }
 
-    // TODO: Sanitize categoryName before further processing
     var phraseToPredict = $('#input_explore_predictText').val();
     const predictRefreshSpinnerClass = ".js--results__status_spinner";
     $(predictRefreshSpinnerClass).show();
     $.ajax({
-        url: "/nlc/classify",
+        url: "/text/classify",
         type: "POST",
-        data: {classifier_id: window.projectName, classify_username: window.username,
-                token: window.RapiKey, phrase: phraseToPredict},
+        contentType: "application/json",
+        data: JSON.stringify({
+            classifier_name: window.projectName,
+            phrase: phraseToPredict
+        }),
         success: function(data) {
             if(data.error == null) {
                 window.predict_done = 'success';
                 showClassification(data);
             } else {
-                var n = makeNotification({
-                    message: 'Oops. ' + data.error,
-                    type: 'error',
-                    closeOlderInstances: true,
-                    stayOpenUntilClick: true
-                });
-                n.show();
+                makeNotification('Oops. ' + data.error, 'error');
             }
         },
         error: function (error) {
-            console.log(error);
-            var n = makeNotification({
-                message: 'Oops. ' + error,
-                type: 'error',
-                closeOlderInstances: true,
-                stayOpenUntilClick: true
-            });
-            n.show();
+            console.error('Classification error:', error);
+            makeNotification('Classification failed. Please try again.', 'error');
             }
     })
     });
 
-    //helper functions for predicting 
+    //helper functions for predicting
     function showClassification(response) {
         window.top_class = findTopClass(response);
         console.log(top_class);
-        {{!-- var n = makeNotification({
-            // message: `The model says \"${top_class[0]}\"! with a confidence score of ${top_class[1]}.`,
-            type: 'success',
-            closeOlderInstances: true,
-            stayOpenUntilClick: true
-        });
-        n.show(); --}}
 
         if(window.predict_done === 'success'){
           console.log('somewhere here?');
@@ -887,4 +572,5 @@
         return [top, max];
     }
 
+    });
 </script>

@@ -1,0 +1,11 @@
+template: MMClassification_EfficientNet
+hyperparameters:
+  use_embeddings: true
+  epochs: 5
+  batch_size: 32
+  learning_rate: 0.001
+concepts:
+  - id: cat
+    name: cat
+  - id: dog
+    name: dog
