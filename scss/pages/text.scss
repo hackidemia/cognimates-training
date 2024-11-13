@@ -1,5 +1,61 @@
-@import '../common/variables';
-@import '../common/mq';
+@use '../common/variables' as *;
+@use '../common/mq' as *;
+@use 'sass:color';
+
+.text-training {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: color.adjust($blue, $lightness: 95%);
+            border-radius: 8px;
+            box-shadow: $box-shadow--base;
+
+            h2 {
+                color: $blue;
+                margin-bottom: 1rem;
+                font-size: 1.2rem;
+            }
+        }
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 0.8rem;
+        margin-bottom: 1rem;
+        border: 2px solid color.adjust($blue, $lightness: 85%);
+        border-radius: 4px;
+        font-size: 1rem;
+
+        &:focus {
+            outline: none;
+            border-color: $blue;
+        }
+    }
+
+    button {
+        background: $blue;
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background: color.adjust($blue, $lightness: -10%);
+        }
+    }
+}
 
 .remove-example {
     opacity: 0;
@@ -7,47 +63,48 @@
     right: 20px;
     text-decoration: none;
     color: #fff;
+    transition: all 0.2s ease;
 
-    transition: all .2s ease;
-}
-
-@-webkit-keyframes fadeInUp {
-    from {
-        opacity: 0;
-        -webkit-transform: translate3d(0, 100%, 0);
-        transform: translate3d(0, 100%, 0);
-    }
-
-    to {
+    &:hover {
         opacity: 1;
-        -webkit-transform: translate3d(0, 0, 0);
-        transform: translate3d(0, 0, 0);
     }
 }
 
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        -webkit-transform: translate3d(0, 100%, 0);
         transform: translate3d(0, 100%, 0);
     }
 
     to {
         opacity: 1;
-        -webkit-transform: translate3d(0, 0, 0);
         transform: translate3d(0, 0, 0);
     }
 }
 
 .fadeInUp {
-    -webkit-animation-name: fadeInUp;
     animation-name: fadeInUp;
+    animation-duration: 0.3s;
+    animation-fill-mode: both;
 }
 
 .answer {
-    margin-top: 20%;
+    margin-top: 2rem;
+    padding: 1rem;
+    background: color.adjust($blue, $lightness: 90%);
+    border-radius: 4px;
 }
 
 .space {
-    margin-top: 20px;
+    margin-top: 1.25rem;
+}
+
+a {
+    color: $blue;
+    text-decoration: none;
+    margin-right: 1rem;
+
+    &:hover {
+        text-decoration: underline;
+    }
 }

@@ -202,31 +202,32 @@
             <i></i>
         </div>
         <div class="step__body">
-            <h2 class="step__title">Type in a phrase to test your model</h2>
-            <div class="step__form-with-button">
-                <input type="text"
-                    class="form-control
-                            no-radius--right
-                            step__form-text"
-                    id="input_predictText"
-                    aria-describedby=""
-                    placeholder="I had a good day!">
-            </div>
-            <button class="btn btn-primary"
-                    type="button" id="button_predictText">
-                Predict
-            </button>
-            <div class="classifier__results">
-                <div class="results__name 
-                            js--predict-results__name">
-                    <span class ="results__name-value">Category: </span>
-                    <span class="results__name-value js--predict--label-results">Confidence score:</span>
-                    <br><br>
-                    <span class="results__name-label">Confidence Score:</span>
-                    <span class="results__name-label js--predict--confidence-results">85.02%</span>
+            <h2 class="step__title">Chat with your model</h2>
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Messages will be dynamically added here -->
                 </div>
-                <div class="spinner-grow 
-                            js--predict-results__status_spinner" 
+                <div class="chat-input-container">
+                    <input type="text"
+                        class="chat-input"
+                        id="input_predictText"
+                        aria-describedby=""
+                        placeholder="Type a message...">
+                    <button class="chat-submit"
+                            type="button"
+                            id="button_predictText">
+                        Send
+                    </button>
+                </div>
+            </div>
+            <div class="classifier__results" style="display: none;">
+                <div class="results__name
+                            js--predict-results__name">
+                    <span class="results__name-value js--predict--label-results"></span>
+                    <span class="results__name-label js--predict--confidence-results"></span>
+                </div>
+                <div class="spinner-grow
+                            js--predict-results__status_spinner"
                       style="display:none"
                       role="status">
                     <span class="sr-only"></span>

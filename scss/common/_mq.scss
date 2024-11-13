@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 $breakpoints: (
     "xxs":  1px,
     "xs":   400px,
@@ -10,8 +12,8 @@ $breakpoints: (
 );
 
 @mixin mq($width, $type: min) {
-    @if map_has_key($breakpoints, $width) {
-        $width: map_get($breakpoints, $width);
+    @if map.has-key($breakpoints, $width) {
+        $width: map.get($breakpoints, $width);
         @if $type == max {
             $width: $width - 1px;
         }

@@ -1,5 +1,5 @@
-@import '../../common/variables';
-@import '../../common/mq';
+@use '../../common/variables' as *;
+@use '../../common/mq' as *;
 
 .app-insert {
     width: 100%;

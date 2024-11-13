@@ -22,6 +22,12 @@ router.get('/text_home', (req, res) => {
     })
 })
 
+router.get('/text/train', (req, res) => {
+  res.render('models/text/text_classifiers', {
+      title: 'Cognimates, Train a text model'
+    })
+})
+
 //routes for text api calls
 router.post('/nlc/classifier', textController.createClassifier)
 router.get('/nlc/classifier', textController.getClassifierInformation)
@@ -59,13 +65,14 @@ router.get('/vision_home', (req, res) => {
 })
 
 //vision api calls
-router.get('/vision/classifiers', visionController.getClassifiersList)
-router.post('/vision/classifier', visionController.createClassifier)
-router.get('/vision/classifier', visionController.getClassifierInformation)
-router.delete('/vision/classifier', visionController.deleteClassifier)
-router.post('/vision/classify', visionController.classifyImages)
-router.post('/vision/classifyURLImage', visionController.classifyURLImage)
-router.post('/vision/updateClassifier', visionController.updateClassifier)
+// Temporarily commenting out vision routes to focus on text classification
+// router.get('/vision/classifiers', visionController.getClassifiers)
+// router.post('/vision/classifier', visionController.createClassifier)
+// router.get('/vision/classifier', visionController.getClassifierInformation)
+// router.delete('/vision/classifier', visionController.deleteClassifier)
+// router.post('/vision/classify', visionController.classifyImages)
+// router.post('/vision/classifyURLImage', visionController.classifyURLImage)
+// router.post('/vision/updateClassifier', visionController.updateClassifier)
 router.get("/vision/extension/:modelid", (req, res) => {
     var model_id = req.params.modelid;
 

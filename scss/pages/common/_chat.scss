@@ -1,0 +1,117 @@
+@use '../../common/variables' as *;
+@use '../../common/mixins' as *;
+
+// Chat container styles
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    border: 1px solid #e7e7e7;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    background: #fff;
+    overflow-y: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.chat-message {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-message--user {
+    align-items: flex-end;
+}
+
+.chat-message--model {
+    align-items: flex-start;
+}
+
+.chat-bubble {
+    max-width: 80%;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+    word-wrap: break-word;
+    line-height: 1.4;
+    transition: transform 0.2s ease-out;
+}
+
+.chat-bubble--user {
+    background-color: $blue;
+    color: white;
+    border-radius: 1rem 1rem 0 1rem;
+    box-shadow: 0 2px 4px rgba($blue, 0.15);
+
+    &:hover {
+        transform: translateY(-1px);
+    }
+}
+
+.chat-bubble--model {
+    background-color: #f0f0f0;
+    color: #333;
+    border-radius: 1rem 1rem 1rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.chat-input-container {
+    display: flex;
+    padding: 1.25rem;
+    border-top: 1px solid #e7e7e7;
+    background: #fff;
+    gap: 0.75rem;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 0.875rem 1.25rem;
+    border: 1px solid #e7e7e7;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: all 0.2s ease-out;
+
+    &::placeholder {
+        color: #BDBDBD;
+    }
+
+    &:focus {
+        border-color: $blue;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba($blue, 0.1);
+    }
+}
+
+.chat-submit {
+    padding: 0.875rem 1.5rem;
+    background-color: $blue;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease-out;
+
+    &:hover {
+        background-color: darken($blue, 10%);
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+.confidence-score {
+    font-size: 0.875rem;
+    color: #717171;
+    margin-top: 0.375rem;
+    padding-left: 0.75rem;
+    font-weight: 400;
+}
