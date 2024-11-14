@@ -1,19 +1,34 @@
-@import '../common/variables';
-@import '../common/mq';
+@use '../common/variables' as *;
+@use '../common/mq' as *;
+@use 'sass:color';
 
 .doodle {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: $font-family;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .doodle__button {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 24pt;
-    margin-right: 10px;
-    border: 1px solid black;
-    background: white;
+    font-family: $font-family;
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    background: $blue;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background: color.adjust($blue, $lightness: -10%);
+    }
 }
 
 .doodle canvas {
-    border: 1px solid black;
-    margin: 20px 0;
+    border: 2px solid color.adjust($blue, $lightness: 85%);
+    border-radius: 4px;
+    margin: 1.5rem 0;
+    box-shadow: $box-shadow--base;
 }

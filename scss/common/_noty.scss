@@ -1,4 +1,4 @@
-@import 'variables';
+@use 'variables' as *;
 
 .noty__icon {
     position: relative;
@@ -31,8 +31,8 @@
     border: 0;
     box-shadow: $box-shadow--base;
     color: $notification-text;
-    
-    .noty__icon, 
+
+    .noty__icon,
     .noty__text { color: white; }
 }
 
@@ -41,8 +41,8 @@
     border: 0;
     box-shadow: $box-shadow--base;
     color: $notification-text;
-    
-    .noty__icon { color: $pink; } 
+
+    .noty__icon { color: $pink; }
     .noty__text { color: $notification-text; }
 }
 
@@ -51,8 +51,8 @@
     border: 0;
     box-shadow: $box-shadow--base;
     color: $notification-text !important;
-    
-    .noty__icon, 
+
+    .noty__icon,
     .noty__text { color: white }
 }
 
@@ -61,7 +61,7 @@
     border: 0;
     box-shadow: $box-shadow--base;
     color: white;
-    
-    .noty__icon, 
+
+    .noty__icon,
     .noty__text { color: white; }
 }

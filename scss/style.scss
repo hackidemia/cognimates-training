@@ -1,19 +1,21 @@
 // node middleware needs this exact filename, not sure why
+@use 'sass:color';
 
 // common
-@import 'common/variables';
-@import 'common/base';
-@import 'common/mixins';
-@import 'common/mq';
-@import 'common/mq-debugger';
-@import 'common/header';
-@import 'common/footer';
+@use 'common/variables' as *;
+@use 'common/base';
+@use 'common/mixins';
+@use 'common/mq';
+@use 'common/mq-debugger';
+@use 'common/header';
+@use 'common/footer';
+@use 'common/noty';
 
-@import 'common/noty';
-
-@import 'pages/index';
-@import 'pages/doodle';
-@import 'pages/vision';
-@import 'pages/text';
-@import 'pages/common/examples';
-@import 'pages/common/classifiers';
+// pages
+@use 'pages/index';
+@use 'pages/doodle';
+@use 'pages/vision';
+@use 'pages/text';
+@use 'pages/common/examples';
+@use 'pages/common/classifiers';
+@use 'pages/common/chat';

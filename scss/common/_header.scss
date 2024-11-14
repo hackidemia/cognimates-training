@@ -1,5 +1,5 @@
-@import 'variables';
-@import 'mq';
+@use 'variables' as *;
+@use 'mq' as *;
 
 .header {
 	position: sticky;
@@ -11,114 +11,123 @@
 
 	display: flex;
 	align-items: center;
-	justify-content: center;
-	flex-wrap: wrap;
-
+	justify-content: space-between;
 	width: 100%;
-	background-color: $main-color;
-	min-height: $header--height;
+	background-color: #4A90E2;
+	min-height: 4rem;
+	padding: 0 2.5rem;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 
 	@include mq('lg') {
-		margin-left: auto;
-		justify-content: flex-start;
-	}    
+		padding: 0 3rem;
+		min-height: 4.5rem;
+	}
 }
 
 .header__logo-link {
-	// stretch the height to fill the nav 
-	align-self: stretch;
+	// stretch the height to fill the nav
+	align-self: center;
 
 	// use flexbox to vertically center the text
   	display: flex;
 	align-items: center;
-
+	padding: 0.5rem 0;
 	user-select: none;
 }
 
 .header__logo-image {
-	height: 1.6rem;
-	margin: 0 1rem;
-}
+	height: 2.5rem;
+	transition: opacity 0.2s ease-in-out;
 
-.header__logo-image:hover {
-	opacity: 0.9;
+	&:hover {
+		opacity: 0.8;
+	}
 }
 
 .header__nav {
 	display: flex;
-	height: $header--height;
-	width: 100%;
-    justify-content: center;
+	align-items: center;
+	height: 100%;
+	margin-left: 2rem;
 
 	@include mq('lg') {
-    	justify-content: flex-start;
-		width: auto;
+		margin-left: 3rem;
 	}
 }
 
 .header__nav-item {
-	// stretch the height to fill the nav 
+	// stretch the height to fill the nav
 	align-self: stretch;
 
 	// use flexbox to vertically center the text
   	display: flex;
 	align-items: center;
-
-	padding: 0 0.5rem;
+	height: $header--height;
+	padding: 0 1.5rem;
 	color: white;
 	white-space: nowrap;
 	text-decoration: none;
 	font-family: $font-family;
-	font-size: 0.9rem;
-	font-weight: 400;
-	transition: 0.1s all ease-in;
+	font-size: 1rem;
+	font-weight: $medium-weight;
+	transition: all 0.3s ease-in-out;
 	user-select: none;
+	position: relative;
+
+	&:after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 4px;
+		background-color: white;
+		transform: scaleX(0);
+		transition: transform 0.3s ease-in-out;
+		opacity: 0.9;
+	}
 
 	@include mq('xl') {
-		padding: 0 0.75rem;
-    	font-size: 1rem;
-	} 
-}
+		padding: 0 2rem;
+		font-size: 1.1rem;
+	}
 
-.header__nav-item.active {
-	// border bottom, so it falls outside the container
-	font-weight: 400;
-	box-shadow: 0 4px 0 0 white; 
-}
+	&.active,
+	&:hover {
+		color: white;
+		text-decoration: none;
+		background-color: rgba(255, 255, 255, 0.1);
 
-.header__nav-item:hover {
-	// border bottom, so it falls outside the container
-	box-shadow: 0 4px 0 0 white;
-	text-decoration: none;
-	color: white;
-	opacity: 0.8;
+		&:after {
+			transform: scaleX(1);
+		}
+	}
 }
 
 .header__sub-nav {
 	display: flex;
-	height: $header--height;
-	width: 100%;
-    justify-content: center;
-    align-items: center;
-    border-top: 1px solid #47a1ec;
+	align-items: center;
+	height: 100%;
+	margin-left: auto;
 
 	@include mq('lg') {
-		width: auto;
-		margin-left: auto;
-		border: none;
-		padding-right: 0.5rem;
+		margin-left: 2rem;
 	}
 }
 
 nav ul {
     display: flex;
-    flex-flow: row wrap;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 /* Remove the navbar's default margin-bottom and rounded borders */
 .navbar {
-    margin-bottom: 0;
-    border-radius: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
 }
-
 

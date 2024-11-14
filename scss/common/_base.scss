@@ -1,5 +1,5 @@
-@import 'mq';
-@import 'variables';
+@use 'mq' as *;
+@use 'variables' as *;
 
 *,
 *:after,
@@ -8,94 +8,133 @@
 }
 
 body {
-	font-family: $font-family;
-	margin: 0;
-	padding: 0;
+    font-family: $font-family;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
 
-	h1 {
-		font-size: 2rem;
-		line-height: 1;
+    h1 {
+        font-size: 2rem;
+        line-height: 1;
+        color: $main-color;
+        margin-bottom: 1.5rem;
 
-		@include mq('md') {
-			font-size: 2.5rem;
-		}
+        @include mq('md') {
+            font-size: 2.5rem;
+        }
 
-		@include mq('lg') {
-			font-size: 2.75rem;
-			letter-spacing: -1px;
-		}
-	}
-	
-	h2 {
-		font-size: 1.25rem;
-		font-weight: $heavy-weight;
-		line-height: 1.75rem;
-		color: $main-color;
-		padding: 0;
-		margin: 0;
+        @include mq('lg') {
+            font-size: 2.75rem;
+            letter-spacing: -1px;
+        }
+    }
 
-		@include mq('lg') {
-			font-size: 1.6rem;
-			line-height: 2.1rem;
-		}
-	}
+    h2 {
+        font-size: 1.4rem;
+        font-weight: $heavy-weight;
+        line-height: 1.75rem;
+        color: $main-color;
+        padding: 0;
+        margin: 0 0 1.5rem 0;
 
-	h3 {
-		font-size: 1.5rem;
-		font-weight: $heavy-weight;
-		color: $main-color;
-		margin: 0;
-		padding: 0;
-	}
+        @include mq('lg') {
+            font-size: 1.8rem;
+            line-height: 2.2rem;
+        }
+    }
 
-	p {
-		padding: 0;
-		margin: 0;
-		line-height: 1.2rem;
-	}
+    h3 {
+        font-size: 1.5rem;
+        font-weight: $heavy-weight;
+        color: $main-color;
+        margin: 0 0 1rem 0;
+        padding: 0;
+    }
 
-	a {
-		color: $accent-color;
-		text-decoration: none;
-		padding-bottom: 2px;
-		transition: 0.1s all ease-in;
-	}
+    p {
+        padding: 0;
+        margin: 0 0 1rem 0;
+        line-height: 1.5;
+        color: $text-gray;
+    }
 
-	a:hover {
-		color: $main-color;
-	}
+    a {
+        color: $accent-color;
+        text-decoration: none;
+        padding-bottom: 2px;
+        transition: 0.1s all ease-in;
+
+        &:hover {
+            color: $main-color;
+            text-decoration: underline;
+        }
+    }
 }
 
 .btn {
-	transition: 0.1s all ease-in;
-	padding-right: 2rem;
-    padding-left: 2rem;
+    transition: 0.3s all ease-in-out;
+    padding: 1rem 2.5rem;
     border: 0;
+    font-weight: $medium-weight;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba($main-color, 0.25);
+    }
 }
 
 .btn-primary {
-	background-color: $main-color;
+    background-color: #4A90E2;
+    color: white;
     border: 0;
-}
 
-.btn-primary:hover {
-    background-color: $accent-color;
-    border-color: $accent-color;
+    &:hover {
+        background-color: #3579C6;
+    }
 }
 
 .btn-danger {
-    background-color: $accent-color;
-    border-color: $accent-color;
+    background-color: $pink;
+    color: white;
+    border: 0;
+
+    &:hover {
+        background-color: darken($pink, 10%);
+    }
 }
 
 .btn-success {
-    background-color: $light-main-color;
-    border-color: $light-main-color;
+    background-color: $green;
+    color: white;
+    border: 0;
+
+    &:hover {
+        background-color: darken($green, 10%);
+    }
 }
 
-.btn-success:hover {
-    background-color: $accent-color;
-    border-color: $accent-color;
+.btn-primary.disabled,
+.btn-primary:disabled {
+    background-color: $gray;
+    border: 0;
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background-color: $main-color;
+    color: white;
+    border-radius: 50%;
+    margin-right: 1rem;
+    font-weight: $heavy-weight;
 }
 
 .no-radius--right {
@@ -107,11 +146,4 @@ body {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
 }
-
-.btn-primary.disabled,  
-.btn-primary:disabled {  
-	background: #a8a8a8;
-    border: 0;
-}
-
 

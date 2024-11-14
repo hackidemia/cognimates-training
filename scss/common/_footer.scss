@@ -1,5 +1,5 @@
-@import 'variables';
-@import 'mq';
+@use 'variables' as *;
+@use 'mq' as *;
 
 .footer {
 

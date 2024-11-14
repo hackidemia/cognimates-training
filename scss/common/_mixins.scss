@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 @mixin icon--remove {
     display: inline-flex;
     align-items: center;
