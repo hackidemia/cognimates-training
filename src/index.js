@@ -20,10 +20,8 @@ const PORT = process.env.PORT || 3000;
 // --- Middleware ---
 // Enable All CORS Requests (adjust origins in production)
 app.use(cors());
-// Body parsing middleware for JSON requests
-app.use(express.json());
-// Body parsing for URL-encoded data (optional, if needed)
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Serve static files (HTML, CSS, JS for frontend)
 // Assuming your static files remain in a 'static' folder at the project root

@@ -273,7 +273,8 @@
         return
       }
       var error = false
-      for (var idx = 0, label = window.labelListItems[idx]; idx < window.labelListItems.length; idx++) {
+      for (var idx = 0; idx < window.labelListItems.length; idx++) {
+        var label = window.labelListItems[idx];
         if (window.examples[label].length < 10) {
           alert('10 or more examples required for each label')
           error = true
@@ -283,38 +284,106 @@
       if(error == true) {
         return
       }
-      var requestData = {}
-      requestData.name = window.classifierName
-      requestData.training_data = []
-      window.labelListItems.forEach((label) => {
-        label_items = []
-        window.examples[label].forEach((example) => {
-          var image_file = example.split(',')[1]
-          label_items.push(image_file)
-        })
-        requestData.training_data.push({label: label, label_items: label_items})
-      })
-      $.ajax({
-        url: '/api/image/classifier',
-        type: 'POST',
-        dataType: 'json',
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(requestData),
-        headers: { apikey: window.apiKey },
-        success: function (data) {
-          if(data.error == null) {
-            window.localStorage.setItem('selectedClassifier', data.classifier_id)
-            window.location.replace('/vision')
-          } else {
-            alert(data.error)
+      
+      // Disable the train button and show progress
+      $('#trainButton').prop('disabled', true);
+      $('#trainButton').text('Preparing upload...');
+      
+      // Generate a unique session ID for this upload
+      const sessionId = 'upload_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15);
+      
+      // Prepare data for chunked upload
+      const name = window.classifierName;
+      const labels = window.labelListItems;
+      
+      // Count total chunks to send
+      let totalChunks = 0;
+      let chunkMap = new Map();
+      
+      // Calculate chunks per label (each image is a chunk)
+      labels.forEach(label => {
+        const images = window.examples[label] || [];
+        totalChunks += images.length;
+        chunkMap.set(label, images.length);
+      });
+      
+      if (totalChunks === 0) {
+        alert('No images to upload');
+        $('#trainButton').prop('disabled', false);
+        $('#trainButton').text('Train classifier');
+        return;
+      }
+      
+      $('#trainButton').text(`Uploading... (0/${totalChunks})`);
+      
+      // Track upload progress
+      let uploadedChunks = 0;
+      let lastClassifierId = null;
+      
+      // Function to upload a single image
+      function uploadImage(label, imageIndex, image) {
+        // Extract base64 data
+        const imageData = image.split(',')[1];
+        
+        // Prepare chunk data
+        const chunkData = {
+          name: name,
+          sessionId: sessionId,
+          chunkIndex: uploadedChunks,
+          totalChunks: totalChunks,
+          label: label,
+          data: imageData
+        };
+        
+        // Send the chunk
+        $.ajax({
+          url: '/api/image/upload-chunk',
+          type: 'POST',
+          dataType: 'json',
+          contentType: "application/json; charset=utf-8",
+          data: JSON.stringify(chunkData),
+          headers: { apikey: window.apiKey },
+          success: function(data) {
+            uploadedChunks++;
+            
+            // Update progress
+            $('#trainButton').text(`Uploading... (${uploadedChunks}/${totalChunks})`);
+            
+            // If this is the last response with a classifier_id, save it
+            if (data.classifier_id) {
+              lastClassifierId = data.classifier_id;
+            }
+            
+            // If all chunks are uploaded, redirect to the classifier page
+            if (uploadedChunks === totalChunks) {
+              if (lastClassifierId) {
+                window.localStorage.setItem('selectedClassifier', lastClassifierId);
+                window.location.replace('/vision');
+              } else {
+                $('#trainButton').text('Upload complete, processing...');
+              }
+            }
+          },
+          error: function(xhr, status, error) {
+            console.error(`Error uploading image ${imageIndex} for label ${label}:`, error);
+            alert(`Error uploading image: ${(xhr.responseJSON ? xhr.responseJSON.error : error)}`);
+            $('#trainButton').prop('disabled', false);
+            $('#trainButton').text('Train classifier');
           }
-        },
-        error: function(xhr, status, error) {
-          console.error("Error training classifier:", error);
-          alert("Error training classifier: " + (xhr.responseJSON ? xhr.responseJSON.error : error));
-        }
-      })
-    })
+        });
+      }
+      
+      // Start uploading images for each label
+      labels.forEach(label => {
+        const images = window.examples[label] || [];
+        images.forEach((image, index) => {
+          // Add a small delay between uploads to prevent overwhelming the server
+          setTimeout(() => {
+            uploadImage(label, index, image);
+          }, index * 100); // 100ms delay between uploads
+        });
+      });
+    });
 
     init();
   });

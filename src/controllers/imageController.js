@@ -6,8 +6,13 @@ const gcpService = require('../services/gcpAutoML');
 const storageService = require('../services/storageService');
 const { validationResult } = require('express-validator');
 const config = require('../../config');
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
 
 const useMockResponses = !process.env.GOOGLE_APPLICATION_CREDENTIALS || process.env.NODE_ENV === 'development';
+
+const partialUploads = new Map();
 
 // --- Controller Methods ---
 
@@ -15,14 +20,82 @@ const useMockResponses = !process.env.GOOGLE_APPLICATION_CREDENTIALS || process.
  * Creates a new image classifier with the given training data.
  * This is the main endpoint that handles the direct upload of image data.
  */
-exports.createClassifier = async (req, res) => {
+/**
+ * Handles chunked uploads for image training data
+ * Expects { name, chunkIndex, totalChunks, label, data } in request body
+ */
+exports.uploadImageChunk = async (req, res) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array(), error: 'Validation failed' });
         }
 
-        const { name, training_data } = req.body;
+        const { name, chunkIndex, totalChunks, label, data, sessionId } = req.body;
+        
+        if (!name || !sessionId || chunkIndex === undefined || totalChunks === undefined || !label) {
+            return res.status(400).json({ error: 'Missing required fields for chunked upload' });
+        }
+
+        console.log(`Received chunk ${chunkIndex + 1}/${totalChunks} for label "${label}" in session "${sessionId}"`);
+        
+        if (!partialUploads.has(sessionId)) {
+            partialUploads.set(sessionId, {
+                name,
+                totalChunks,
+                receivedChunks: 0,
+                labels: new Map(),
+                createdAt: new Date()
+            });
+        }
+        
+        const sessionData = partialUploads.get(sessionId);
+        
+        if (!sessionData.labels.has(label)) {
+            sessionData.labels.set(label, []);
+        }
+        
+        if (data) {
+            sessionData.labels.get(label).push(data);
+        }
+        
+        sessionData.receivedChunks++;
+        
+        if (sessionData.receivedChunks === totalChunks) {
+            console.log(`All ${totalChunks} chunks received for session "${sessionId}". Processing...`);
+            
+            const training_data = [];
+            for (const [label, images] of sessionData.labels.entries()) {
+                training_data.push({
+                    label,
+                    label_items: images
+                });
+            }
+            
+            partialUploads.delete(sessionId);
+            
+            return await processCompleteUpload(res, name, training_data);
+        }
+        
+        return res.status(200).json({
+            message: `Chunk ${chunkIndex + 1}/${totalChunks} received successfully`,
+            sessionId,
+            receivedChunks: sessionData.receivedChunks,
+            totalChunks
+        });
+    } catch (error) {
+        console.error('Error processing image chunk:', error);
+        res.status(500).json({
+            error: `Failed to process image chunk: ${error.message}`
+        });
+    }
+};
+
+/**
+ * Process a complete upload after all chunks have been received
+ */
+async function processCompleteUpload(res, name, training_data) {
+    try {
         if (!training_data || !Array.isArray(training_data) || training_data.length < 2) {
             return res.status(400).json({ error: 'At least 2 labels are required' });
         }
@@ -52,7 +125,7 @@ exports.createClassifier = async (req, res) => {
         const trainOperation = await gcpService.trainModel(datasetId, name, 'imageClassification');
         const trainOperationId = trainOperation.name.split('/').pop();
 
-        res.status(201).json({
+        return res.status(201).json({
             message: 'Classifier creation and training initiated',
             classifier_id: trainOperationId,
             dataset_id: datasetId,
@@ -64,6 +137,28 @@ exports.createClassifier = async (req, res) => {
                 train: trainOperationId
             }
         });
+    } catch (error) {
+        console.error('Error creating classifier:', error);
+        return res.status(500).json({
+            error: `Failed to create classifier: ${error.message}`
+        });
+    }
+}
+
+/**
+ * Creates a new image classifier with the given training data.
+ * This is the main endpoint that handles the direct upload of image data.
+ */
+exports.createClassifier = async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array(), error: 'Validation failed' });
+        }
+
+        const { name, training_data } = req.body;
+        
+        return await processCompleteUpload(res, name, training_data);
     } catch (error) {
         console.error('Error creating classifier:', error);
         res.status(500).json({

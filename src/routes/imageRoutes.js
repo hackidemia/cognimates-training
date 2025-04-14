@@ -26,6 +26,18 @@ const validateOperationId = [
 
 // --- Routes ---
 router.post(
+    '/upload-chunk',
+    [
+        body('name', 'Classifier name is required').notEmpty().isString().trim(),
+        body('sessionId', 'Session ID is required').notEmpty().isString().trim(),
+        body('chunkIndex', 'Chunk index is required').isNumeric(),
+        body('totalChunks', 'Total chunks is required').isNumeric(),
+        body('label', 'Label is required').notEmpty().isString().trim(),
+    ],
+    imageController.uploadImageChunk
+);
+
+router.post(
     '/classifier',
     [
         body('name', 'Classifier name is required').notEmpty().isString().trim(),
