@@ -1,554 +1,263 @@
-const { ClarifaiStub, grpc } = require('clarifai-nodejs-grpc');
-const multer = require('multer');
-const path = require('path');
+// ... (rest of the code remains the same)
 
-// Initialize the gRPC client with PAT configuration
-const stub = ClarifaiStub.grpc();
-const metadata = new grpc.Metadata();
-const pat = (process.env.CLARIFAI_PAT || process.env.clarifai_api || '').trim();
-metadata.set('authorization', pat.startsWith('Key ') ? pat : `Key ${pat}`);
+/**
+ * Trains a Vertex AI AutoML Image Classification model.
+ * Expects a multipart/form-data request with a single 'images' field containing a ZIP file.
+ * The ZIP file should contain folders named after the labels, with images inside.
+ * Example ZIP structure:
+ *   training_images.zip
+ *   ├── label1/
+ *   │   ├── image1.jpg
+ *   │   └── image2.png
+ *   └── label2/
+ *       ├── image3.jpeg
+ */
+exports.trainClassifier = async (req, res) => {
+  const classifierName = req.params.classifier_name; // Get name from URL param
+  console.log('[trainClassifier] Function entry.'); // <<< ADDED LOG
 
-// Default user and app configuration for Clarifai
-const USER_ID = process.env.USER_ID || process.env.CLARIFAI_USER_ID;  // We'll use Clarifai's public user ID for now
-const APP_ID = process.env.APP_ID || process.env.CLARIFAI_APP_ID;       // We'll use the main app for now
+  console.log(`[trainClassifier] Received training request for image classifier: ${classifierName}`);
 
-// Configure multer for handling file uploads
-const storage = multer.memoryStorage();
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
-    },
-    fileFilter: (req, file, cb) => {
-        const filetypes = /jpeg|jpg|png/;
-        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-        const mimetype = filetypes.test(file.mimetype);
-        if (mimetype && extname) {
-            return cb(null, true);
-        }
-        cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+  if (!req.file) {
+    console.error('[trainClassifier] Error: Missing req.file.'); // <<< ADDED LOG
+    return res.status(400).json({ error: 'Missing "images" field with ZIP file in multipart/form-data request.' });
+  }
+
+  if (!classifierName) {
+    console.error('[trainClassifier] Error: Missing classifierName.'); // <<< ADDED LOG
+    return res.status(400).json({ error: 'Missing classifier_name in URL path.' });
+  }
+
+  console.log('[trainClassifier] Received uploaded file:', req.file.originalname, 'Size:', req.file.size);
+
+  let tempZipPath = null;
+  let tempExtractDir = null;
+  let gcsTrainingData = []; // To store { gcsUri: '...', label: '...' }
+
+  try {
+    console.log('[trainClassifier] Entering main try block.'); // <<< ADDED LOG
+    // --- 1. Save and Extract ZIP --- 
+    console.log('[trainClassifier] Step 1: Saving uploaded ZIP file temporarily...');
+    // Create a temporary file for the zip
+    const tempZipObject = tmp.fileSync({ postfix: '.zip' });
+    tempZipPath = tempZipObject.name;
+    await fs.writeFile(tempZipPath, req.file.buffer);
+    console.log(`[trainClassifier] Temporary ZIP saved to: ${tempZipPath}`);
+
+    // Create a temporary directory for extraction
+    console.log('[trainClassifier] Creating temporary directory for extraction...');
+    const tempDirObject = tmp.dirSync({ unsafeCleanup: true });
+    tempExtractDir = tempDirObject.name;
+    console.log(`[trainClassifier] Extracting ZIP to temporary directory: ${tempExtractDir}`);
+
+    const zip = new AdmZip(tempZipPath);
+    zip.extractAllTo(tempExtractDir, /*overwrite*/ true);
+    console.log('[trainClassifier] ZIP extraction complete.');
+
+    // --- 2. Process Extracted Files and Upload to GCS ---
+    const zipEntries = zip.getEntries(); // Get list of files/folders in zip
+    const gcsUploadPromises = [];
+    const gcsBasePrefix = `training-images/${classifierName}/`; // GCS path prefix
+
+    console.log('[trainClassifier] Step 2: Processing extracted files and uploading to GCS...');
+    for (const entry of zipEntries) {
+      console.log(`[trainClassifier] Processing entry: ${entry.entryName}`); // <<< ADDED LOG
+      if (entry.isDirectory || !entry.entryName.includes('/')) {
+        console.log(`[trainClassifier] Skipping entry: ${entry.entryName}`); // <<< ADDED LOG
+        continue;
+      }
+
+      const parts = entry.entryName.split('/');
+      if (parts.length < 2 || !parts[0] || !parts[1]) {
+          console.warn(`Skipping invalid entry path: ${entry.entryName}`);
+          continue; // Expecting label/filename.ext
+      }
+      console.log(`[trainClassifier] Identified Label: ${parts[0]}, Original Filename: ${parts[parts.length - 1]}`); // <<< ADDED LOG
+      const label = parts[0];
+      const originalFileName = parts[parts.length - 1]; // Get the actual filename
+      const localFilePath = path.join(tempExtractDir, entry.entryName);
+
+      // Create a unique GCS path to avoid collisions
+      const gcsFileName = `${gcsBasePrefix}${label}/${uuidv4()}-${originalFileName}`;
+      const gcsFile = bucket.file(gcsFileName);
+      const gcsUri = `gs://${GCS_BUCKET_NAME}/${gcsFileName}`;
+
+      // Add upload promise
+      gcsUploadPromises.push(
+          gcsFile.upload(localFilePath, {
+              destination: gcsFileName,
+              // Optional: Set metadata, e.g., contentType
+              // metadata: { contentType: 'image/jpeg' }, // Adjust based on file type if needed
+          }).then(() => {
+              console.log(`Uploaded ${originalFileName} for label '${label}' to ${gcsUri}`);
+              gcsTrainingData.push({ gcsUri, label });
+              console.log(`[trainClassifier] GCS Upload successful for: ${originalFileName}`); // <<< ADDED LOG
+          })
+      );
     }
-}).single('category-image');
 
-exports.uploadFile = (req, res) => {
-    upload(req, res, function(err) {
-        if (err) {
-            console.error('Error uploading file:', err);
-            return res.status(400).json({ error: err.message });
-        }
-        if (!req.file) {
-            return res.status(400).json({ error: 'No file uploaded' });
-        }
-        // Convert file buffer to base64
-        const base64Image = req.file.buffer.toString('base64');
-        res.json({
-            success: true,
-            base64: `data:${req.file.mimetype};base64,${base64Image}`
-        });
+    // Wait for all GCS uploads to complete
+    await Promise.all(gcsUploadPromises);
+    console.log(`Finished uploading ${gcsTrainingData.length} images to GCS.`);
+    console.log('[trainClassifier] Step 2 complete: All GCS uploads finished.'); // <<< ADDED LOG
+
+    if (gcsTrainingData.length === 0) {
+        throw new Error('No valid image files found in the ZIP structure (expected label/image.ext).');
+    }
+
+    // --- 3 & 4: Prepare and Upload Import File (CSV format) ---
+    console.log('[trainClassifier] Step 3/4: Generating CSV import file content...');
+    const importFileContent = gcsTrainingData.map(item => `${item.gcsUri},${item.label}`).join('\n');
+    const importFileName = `import-files/image-${classifierName}-${Date.now()}.csv`;
+    const gcsImportFile = bucket.file(importFileName);
+
+    console.log(`[trainClassifier] Uploading import file to GCS as ${importFileName}...`);
+    await gcsImportFile.save(importFileContent, {
+        contentType: 'text/csv',
+        // Optional: Make it public for easier debugging if needed, but generally not recommended
+        // public: true, 
     });
-};
+    const importFileGcsUri = `gs://${GCS_BUCKET_NAME}/${importFileName}`;
+    console.log(`[trainClassifier] Import file uploaded: ${importFileGcsUri}`);
 
-exports.getClassifiers = async (req, res) => {
-    try {
-        const response = await new Promise((resolve, reject) => {
-            stub.ListModels(
-                {
-                    user_app_id: {
-                        user_id: USER_ID,
-                        app_id: APP_ID
-                    },
-                    per_page: 100
-                },
-                metadata,
-                (err, response) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(response);
-                    }
-                }
-            );
-        });
+    // --- 5. Find or Create Dataset ID --- 
+    let datasetId;
+    const datasetDisplayName = classifierName; // Use classifier name as dataset name
+    console.log(`Looking for existing dataset with display name: ${datasetDisplayName}...`);
+    const listDatasetsRequest = {
+        parent: datasetServiceClient.locationPath(GCP_PROJECT_ID, GCP_REGION),
+        filter: `displayName="${datasetDisplayName}"`, // Filter by display name
+    };
+    const [datasets] = await datasetServiceClient.listDatasets(listDatasetsRequest);
 
-        if (response.status.code !== 10000) {
-            throw new Error('List models failed, status: ' + response.status.description);
+    if (datasets && datasets.length > 0) {
+        if (datasets.length > 1) {
+            console.warn(`Multiple datasets found with display name '${datasetDisplayName}'. Using the first one: ${datasets[0].name}`);
         }
-
-        const classifiers = response.models.map(model => ({
-            id: model.id,
-            name: model.name,
-            created_at: model.created_at
-        }));
-
-        res.json(classifiers);
-    } catch (error) {
-        console.error('Error getting classifiers:', error);
-        res.status(500).json({ error: error.message });
-    }
-};
-
-exports.classify = async (req, res) => {
-    try {
-        const { image_data, classifier_id } = req.body;
-        if (!image_data) {
-            throw new Error('No image data provided');
-        }
-
-        let imageInput;
-        if (image_data.startsWith('data:image')) {
-            // Handle base64 image data
-            const base64Data = image_data.split(',')[1];
-            imageInput = { base64: base64Data };
-        } else {
-            // Handle URL image data
-            imageInput = { url: image_data };
-        }
-
-        const response = await new Promise((resolve, reject) => {
-            stub.PostModelOutputs(
-                {
-                    user_app_id: {
-                        user_id: USER_ID,
-                        app_id: APP_ID
-                    },
-                    model_id: classifier_id || 'general-image-recognition',
-                    inputs: [{ data: { image: imageInput } }]
-                },
-                metadata,
-                (err, response) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(response);
-                    }
-                }
-            );
-        });
-
-        if (response.status.code !== 10000) {
-            throw new Error('Post model outputs failed, status: ' + response.status.description);
-        }
-
-        const results = response.outputs[0].data.concepts.map(concept => ({
-            class: concept.name,
-            score: concept.value
-        }));
-
-        res.json(results);
-    } catch (error) {
-        console.error('Error classifying image:', error);
-        res.status(500).json({ error: error.message });
-    }
-};
-
-exports.classifyURLImage = exports.classify;
-
-exports.createClassifier = async (req, res) => {
-    try {
-        console.log('createClassifier called with body:', JSON.stringify(req.body, null, 2));
-        const { name, concepts } = req.body;
-        if (!name || !concepts || !Array.isArray(concepts) || concepts.length === 0) {
-            throw new Error('Name and at least one concept are required');
-        }
-
-        const modelId = name.toLowerCase().replace(/[^a-z0-9]/g, '');
-        console.log('Creating classifier with model ID:', modelId);
-
-        // First attempt to delete existing model if it exists
-        try {
-            console.log(`Attempting to delete existing model: ${modelId}`);
-            await new Promise((resolve, reject) => {
-                stub.DeleteModel(
-                    {
-                        user_app_id: {
-                            user_id: USER_ID,
-                            app_id: APP_ID
-                        },
-                        model_id: modelId
-                    },
-                    metadata,
-                    (err, response) => {
-                        if (err) {
-                            console.warn('Warning during model deletion:', err);
-                            resolve(); // Continue even if deletion fails
-                        } else {
-                            console.log('Existing model deleted:', JSON.stringify(response, null, 2));
-                            resolve(response);
-                        }
-                    }
-                );
-            });
-
-            // Wait for deletion to propagate
-            await new Promise(resolve => setTimeout(resolve, 2000));
-        } catch (deleteError) {
-            console.warn('Warning during model deletion:', deleteError);
-            // Continue with model creation even if deletion fails
-        }
-
-        // Create model request with visual-classifier type
-        const modelRequest = {
-            user_app_id: {
-                user_id: USER_ID,
-                app_id: APP_ID
-            },
-            model: {
-                id: modelId,
-                name: name,
-                model_type_id: "visual-classifier",
-                model_version: {
-                    id: `initial_${Date.now()}`,
-                    output_info: {
-                        data: {
-                            concepts: concepts.map(concept => ({
-                                id: concept.toLowerCase().replace(/[^a-z0-9]/g, ''),
-                                name: concept,
-                                value: 1
-                            }))
-                        },
-                        output_config: {
-                            concepts_mutually_exclusive: true,
-                            closed_environment: true
-                        }
-                    }
-                },
-                output_info: {
-                    data: {
-                        concepts: concepts.map(concept => ({
-                            id: concept.toLowerCase().replace(/[^a-z0-9]/g, ''),
-                            name: concept,
-                            value: 1
-                        }))
-                    },
-                    output_config: {
-                        concepts_mutually_exclusive: true,
-                        closed_environment: true
-                    }
-                }
-            }
+        datasetId = datasets[0].name; // Full resource name
+        console.log(`Found existing dataset: ${datasetId}`);
+    } else {
+        console.log(`[trainClassifier] Dataset '${datasetDisplayName}' not found. Creating a new one...`);
+        // Create the dataset
+        const dataset = {
+            displayName: datasetDisplayName,
+            metadataSchemaUri: 'gs://google-cloud-aiplatform/schema/dataset/metadata/image_1.0.0.yaml', // Schema for image data
         };
 
-        console.log('Creating model with request:', JSON.stringify(modelRequest, null, 2));
-        const response = await new Promise((resolve, reject) => {
-            stub.PostModels(
-                modelRequest,
-                metadata,
-                (err, response) => {
-                    if (err) {
-                        console.error('Error creating model:', err);
-                        reject(err);
-                    } else {
-                        console.log('Model created successfully:', JSON.stringify(response, null, 2));
-                        // Verify model type
-                        if (response.model && response.model.model_type_id !== "visual-classifier") {
-                            console.error('Warning: Created model type does not match requested type:', response.model.model_type_id);
-                        }
-                        resolve(response);
-                    }
-                }
-            );
-        });
+        const request = {
+            parent: datasetServiceClient.locationPath(GCP_PROJECT_ID, GCP_REGION),
+            dataset: dataset,
+        };
 
-        if (response.status.code !== 10000) {
-            throw new Error('Model creation failed: ' + response.status.description);
-        }
-
-        res.json({
-            id: response.model.id,
-            name: response.model.name,
-            created_at: response.model.created_at
-        });
-    } catch (error) {
-        console.error('Error in createClassifier:', error);
-        res.status(500).json({ error: error.message });
+        // Create the dataset
+        console.log('[trainClassifier] Creating Vertex AI Image Dataset...');
+        const [operation] = await datasetServiceClient.createDataset(request);
+        console.log('Create dataset operation started:', operation.name);
+        console.log('[trainClassifier] Awaiting dataset creation...'); // <<< ADDED LOG
+        const [createdDataset] = await operation.promise();
+        datasetId = createdDataset.name;
+        console.log(`[trainClassifier] Dataset created successfully: ${datasetId}`);
     }
-};
-exports.trainClassifier = async (req, res) => {
+    console.log(`[trainClassifier] Using Dataset ID: ${datasetId}`); // <<< ADDED LOG
+
+    // --- 6. Import Data --- 
+    console.log(`[trainClassifier] Step 6: Importing data from ${importFileGcsUri} into dataset ${datasetId}...`);
+    const importConfigs = [{
+        gcsSource: { uris: [importFileGcsUri] }, // Simplified for CSV
+        importSchemaUri: 'gs://google-cloud-aiplatform/schema/dataset/ioformat/image_classification_single_label_io_format_1.0.0.yaml',
+    }];
+
+    const importRequest = {
+        name: datasetId,
+        importConfigs: importConfigs,
+    };
+
+    const [importOperation] = await datasetServiceClient.importData(importRequest);
+    console.log('Import data operation started:', importOperation.name);
+    console.log('[trainClassifier] Waiting for data import to complete (this might take a while)...');
+    await importOperation.promise(); // Wait for the import LRO to complete.
+    console.log('[trainClassifier] Data import completed.');
+
+    // --- 7. Create and Run Training Pipeline --- 
+    console.log('[trainClassifier] Step 7: Defining AutoML Image Classification training pipeline...');
+    const pipelineDisplayName = `train-${classifierName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}-${Date.now()}`;
+    const modelDisplayName = `${classifierName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}-model`; // More stable model name
+
+    // Check if datasetId is the full resource name
+    let datasetNumericId;
+    if (datasetId.includes('/')) {
+        datasetNumericId = datasetId.split('/').pop();
+    } else {
+         console.warn('[trainClassifier] Dataset ID does not look like a full resource name. Using it directly, but this might fail:', datasetId);
+         datasetNumericId = datasetId; // Hope for the best?
+    }
+
+    const trainingPipeline = {
+        displayName: pipelineDisplayName,
+        inputDataConfig: {
+            datasetId: datasetNumericId, // Use the extracted numeric ID
+            // AutoML handles data splitting by default
+        },
+        modelToUpload: {
+             displayName: modelDisplayName
+        },
+        trainingTaskDefinition: 'gs://google-cloud-aiplatform/schema/trainingjob/definition/automl_image_classification_1.0.0.yaml',
+        trainingTaskInputs: {
+             budgetMilliNodeHours: 1000, // 1 node hour budget (minimum recommended)
+             modelType: 'CLOUD', // For standard accuracy and latency
+             disableEarlyStopping: false,
+             // multiLabel: false, // Default is single-label
+        }
+    };
+
+    // Convert trainingTaskInputs struct to Value
+    const { struct } = require('pb-util');
+    trainingPipeline.trainingTaskInputs = struct.encode(trainingPipeline.trainingTaskInputs);
+
+    const createPipelineRequest = {
+        parent: datasetServiceClient.locationPath(GCP_PROJECT_ID, GCP_REGION),
+        trainingPipeline: trainingPipeline,
+    };
+
+    console.log('[trainClassifier] Submitting training pipeline job...');
+    const [createPipelineOperation] = await pipelineServiceClient.createTrainingPipeline(createPipelineRequest);
+    // Note: We don't wait for the *training* pipeline here, as it can take hours.
+    // We just acknowledge that it has been submitted.
+    const pipelineJobName = createPipelineOperation.name; 
+    console.log(`Training pipeline job submitted: ${pipelineJobName}`);
+    console.log(`You can monitor the pipeline progress in the Google Cloud Console: Vertex AI -> Training -> Training Pipelines`);
+
+    console.log('[trainClassifier] Pipeline submitted. Sending 202 response.'); // <<< ADDED LOG
+    // Respond to the client immediately after submitting the job
+    res.status(202).json({ 
+        message: 'Training pipeline submitted successfully.',
+        datasetId: datasetId,
+        pipelineJobName: pipelineJobName,
+        importFile: importFileGcsUri,
+        monitoringInfo: 'Monitor progress in the Google Cloud Console (Vertex AI -> Training -> Training Pipelines).' 
+    });
+
+  } catch (error) {
+    console.error('[trainClassifier] Error caught in main try/catch block:', error); // <<< ADDED LOG
+    // Ensure response is sent even if headers were already sent (less likely here, but good practice)
+    if (!res.headersSent) {
+        res.status(500).json({ error: 'Failed to start training pipeline.', details: error.message });
+    } else {
+        console.error('[trainClassifier] Headers already sent, cannot send error JSON response.');
+    }
+  } finally {
+    // --- Cleanup Temporary Files/Dirs ---
+    console.log('[trainClassifier] Entering finally block for cleanup.'); // <<< ADDED LOG
     try {
-        const { name, images } = req.body;
-        if (!name || !images || !Array.isArray(images)) {
-            throw new Error('Name and images array are required');
-        }
-
-        // Validate minimum number of images per category
-        const categoryCounts = {};
-        images.forEach(item => {
-            categoryCounts[item.category] = (categoryCounts[item.category] || 0) + 1;
-        });
-
-        const insufficientCategories = Object.entries(categoryCounts)
-            .filter(([category, count]) => count < 10)
-            .map(([category]) => category);
-
-        if (insufficientCategories.length > 0) {
-            throw new Error(`Insufficient images for categories: ${insufficientCategories.join(', ')}. Each category needs at least 10 images.`);
-        }
-
-        const modelId = name.toLowerCase().replace(/[^a-z0-9]/g, '');
-        console.log('Training classifier with model ID:', modelId);
-
-        // Verify model exists and is ready
-        console.log('Verifying model exists...');
-        const modelResponse = await new Promise((resolve, reject) => {
-            stub.GetModel(
-                {
-                    user_app_id: {
-                        user_id: USER_ID,
-                        app_id: APP_ID
-                    },
-                    model_id: modelId
-                },
-                metadata,
-                (err, response) => {
-                    if (err) {
-                        console.error('Error getting model:', err);
-                        reject(err);
-                    } else {
-                        console.log('Model verification response:', response);
-                        resolve(response);
-                    }
-                }
-            );
-        });
-
-        if (!modelResponse.model) {
-            throw new Error('Model not found');
-        }
-
-        console.log('Model found, preparing training data...');
-
-        // Process and validate inputs with improved error handling
-        const inputs = await Promise.all(images.map(async (item, index) => {
-            try {
-                let base64Data;
-                // Handle both prefixed and raw base64 data
-                if (item.image.includes('base64,')) {
-                    base64Data = item.image.split('base64,')[1];
-                } else {
-                    // More lenient base64 validation - just check for invalid characters
-                    if (!/^[A-Za-z0-9+/=]+$/.test(item.image)) {
-                        console.error(`Image ${index + 1} data validation failed:`, {
-                            preview: item.image.substring(0, 100) + '...',
-                            category: item.category
-                        });
-                        throw new Error(`Invalid base64 characters in image ${index + 1}`);
-                    }
-                    base64Data = item.image;
-                }
-
-                const input = {
-                    data: {
-                        image: {
-                            base64: base64Data,
-                            allow_duplicate_url: true
-                        }
-                    },
-                    concepts: [{
-                        id: item.category.toLowerCase().replace(/[^a-z0-9]/g, ''),
-                        name: item.category,
-                        value: 1
-                    }]
-                };
-
-                console.log(`Prepared input ${index + 1}:`, {
-                    category: item.category,
-                    conceptId: input.concepts[0].id,
-                    imageSize: base64Data.length
-                });
-
-                return input;
-            } catch (error) {
-                console.error(`Error processing image ${index + 1}:`, error);
-                throw error;
-            }
-        }));
-
-        console.log(`Adding ${inputs.length} inputs to model...`);
-
-        // Add inputs to the model with detailed logging
-        const addInputsResponse = await new Promise((resolve, reject) => {
-            stub.PostInputs(
-                {
-                    user_app_id: {
-                        user_id: USER_ID,
-                        app_id: APP_ID
-                    },
-                    inputs: inputs
-                },
-                metadata,
-                (err, response) => {
-                    if (err) {
-                        console.error('Error adding inputs. Details:', {
-                            error: err.message,
-                            code: err.code,
-                            details: err.details,
-                            inputCount: inputs.length,
-                            modelId: modelId
-                        });
-                        reject(err);
-                    } else {
-                        console.log('Inputs added successfully:', {
-                            status: response.status,
-                            inputCount: inputs.length
-                        });
-                        resolve(response);
-                    }
-                }
-            );
-        });
-
-        if (addInputsResponse.status.code !== 10000) {
-            console.error('Add inputs failed:', {
-                status: addInputsResponse.status,
-                inputCount: inputs.length,
-                modelId: modelId
-            });
-            throw new Error(`Failed to add inputs: ${addInputsResponse.status.description}`);
-        }
-
-        console.log('Inputs added successfully, waiting for processing...');
-        // Wait longer for inputs to be processed - 30 seconds with status checks
-        let processingAttempts = 0;
-        const MAX_PROCESSING_ATTEMPTS = 6;
-        const PROCESSING_DELAY = 5000;
-
-        while (processingAttempts < MAX_PROCESSING_ATTEMPTS) {
-            await new Promise(resolve => setTimeout(resolve, PROCESSING_DELAY));
-            console.log(`Checking input processing status (attempt ${processingAttempts + 1}/${MAX_PROCESSING_ATTEMPTS})...`);
-
-            try {
-                const inputsStatus = await new Promise((resolve, reject) => {
-                    stub.ListInputs(
-                        {
-                            user_app_id: {
-                                user_id: USER_ID,
-                                app_id: APP_ID
-                            },
-                            page: 1,
-                            per_page: 1
-                        },
-                        metadata,
-                        (err, response) => {
-                            if (err) reject(err);
-                            else resolve(response);
-                        }
-                    );
-                });
-
-                if (inputsStatus.status.code === 10000) {
-                    console.log('Inputs processed successfully');
-                    break;
-                }
-            } catch (error) {
-                console.warn(`Input status check failed (attempt ${processingAttempts + 1}):`, error);
-            }
-
-            processingAttempts++;
-            if (processingAttempts === MAX_PROCESSING_ATTEMPTS) {
-                console.warn('Max processing attempts reached, proceeding with training...');
-            }
-        }
-
-        // Start model training with retries
-        console.log('Starting model training...');
-        let trainingAttempts = 0;
-        const MAX_TRAINING_ATTEMPTS = 3;
-        const TRAINING_RETRY_DELAY = 5000;
-        let trainResponse;
-
-        while (trainingAttempts < MAX_TRAINING_ATTEMPTS) {
-            try {
-                trainResponse = await new Promise((resolve, reject) => {
-                    const simpleVersionId = `v${Date.now()}`;
-                    console.log('Creating model version:', simpleVersionId);
-
-                    stub.PostModelVersions(
-                        {
-                            user_app_id: {
-                                user_id: USER_ID,
-                                app_id: APP_ID
-                            },
-                            model_id: modelId,
-                            version: {
-                                id: simpleVersionId,
-                                output_info: {
-                                    data: {
-                                        concepts: Object.keys(categoryCounts).map(category => ({
-                                            id: category.toLowerCase().replace(/[^a-z0-9]/g, ''),
-                                            name: category,
-                                            value: 1
-                                        }))
-                                    },
-                                    output_config: {
-                                        concepts_mutually_exclusive: true,
-                                        closed_environment: true
-                                    }
-                                },
-                                train_info: {
-                                    params: {
-                                        template: 'classification_base_workflow',
-                                        use_embeddings: true,
-                                        epochs: 5,
-                                        batch_size: 32,
-                                        learning_rate: 0.001
-                                    },
-                                    dataset: {
-                                        concepts: Object.keys(categoryCounts).map(category => ({
-                                            id: category.toLowerCase().replace(/[^a-z0-9]/g, ''),
-                                            name: category
-                                        }))
-                                    }
-                                }
-                            }
-                        },
-                        metadata,
-                        (err, response) => {
-                            if (err) {
-                                console.error('Error starting training:', {
-                                    error: err.message,
-                                    code: err.code,
-                                    details: err.details,
-                                    modelId: modelId,
-                                    attempt: trainingAttempts + 1
-                                });
-                                reject(err);
-                            } else {
-                                console.log('Training initiated:', {
-                                    status: response.status,
-                                    modelId: modelId,
-                                    attempt: trainingAttempts + 1
-                                });
-                                resolve(response);
-                            }
-                        }
-                    );
-                });
-
-                if (trainResponse.status.code === 10000) {
-                    console.log('Training initiated successfully');
-                    break;
-                }
-            } catch (error) {
-                console.error(`Training attempt ${trainingAttempts + 1} failed:`, error);
-                if (trainingAttempts < MAX_TRAINING_ATTEMPTS - 1) {
-                    console.log(`Retrying in ${TRAINING_RETRY_DELAY/1000} seconds...`);
-                    await new Promise(resolve => setTimeout(resolve, TRAINING_RETRY_DELAY));
-                }
-            }
-            trainingAttempts++;
-        }
-
-        if (!trainResponse || trainResponse.status.code !== 10000) {
-            throw new Error('Failed to initiate training after multiple attempts');
-        }
-
-        res.json({
-            success: true,
-            message: 'Model training initiated successfully',
-            model_id: modelId
-        });
-    } catch (error) {
-        console.error('Error training classifier:', error);
-        res.status(500).json({ error: error.message });
+      if (tempZipPath) await fs.unlink(tempZipPath);
+      if (tempExtractDir) await fs.rm(tempExtractDir, { recursive: true, force: true }); 
+      console.log('[trainClassifier] Temporary files cleaned up successfully.');
+    } catch (cleanupError) {
+      console.error('[trainClassifier] Error cleaning up temporary files:', cleanupError);
+      // Don't prevent response due to cleanup error
     }
-};
+    console.log('[trainClassifier] Function exit.'); // <<< ADDED LOG
+  }
+ };
+
+// ... (rest of the code remains the same)
