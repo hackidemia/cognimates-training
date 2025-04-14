@@ -299,11 +299,125 @@ const getOperationStatus = async (operationName) => {
 };
 
 
+/**
+ * Lists all models in the project.
+ */
+const listModels = async () => {
+    if (useMockResponses) {
+        console.log('[MOCK] Returning mock models list');
+        return [
+            {
+                name: `projects/${projectId || 'mock-project'}/locations/${location}/models/mock-model-1`,
+                displayName: 'Mock Model 1',
+                createTime: new Date().toISOString(),
+                deploymentState: 'DEPLOYED'
+            },
+            {
+                name: `projects/${projectId || 'mock-project'}/locations/${location}/models/mock-model-2`,
+                displayName: 'Mock Model 2',
+                createTime: new Date(Date.now() - 86400000).toISOString(),
+                deploymentState: 'DEPLOYED'
+            }
+        ];
+    }
+
+    try {
+        const parent = autoMlClient.locationPath(projectId, location);
+        const request = {
+            parent: parent
+        };
+        
+        return handleGcpError(
+            autoMlClient.listModels(request),
+            `list models in project "${projectId}" and location "${location}"`
+        );
+    } catch (error) {
+        console.error('Error listing models:', error);
+        const customError = new Error(`Failed to list models. Reason: ${error.message}`);
+        customError.statusCode = mapGcpErrorCode(error.code);
+        customError.originalError = error;
+        throw customError;
+    }
+};
+
+/**
+ * Deletes a model.
+ */
+const deleteModel = async (modelName) => {
+    if (useMockResponses) {
+        console.log(`[MOCK] Mocking deletion of model: ${modelName}`);
+        return { 
+            name: `projects/${projectId || 'mock-project'}/locations/${location}/operations/mock-delete-operation-${Date.now()}`,
+            done: true
+        };
+    }
+
+    try {
+        const request = {
+            name: modelName
+        };
+        
+        return handleGcpError(
+            autoMlClient.deleteModel(request),
+            `delete model "${modelName}"`
+        );
+    } catch (error) {
+        console.error(`Error deleting model ${modelName}:`, error);
+        const customError = new Error(`Failed to delete model. Reason: ${error.message}`);
+        customError.statusCode = mapGcpErrorCode(error.code);
+        customError.originalError = error;
+        throw customError;
+    }
+};
+
+/**
+ * Predicts using an image.
+ */
+const predictImage = async (modelName, imageContent) => {
+    if (useMockResponses) {
+        console.log(`[MOCK] Mocking prediction for model: ${modelName}`);
+        return [
+            {
+                displayName: 'class1',
+                classification: { score: 0.85 }
+            },
+            {
+                displayName: 'class2',
+                classification: { score: 0.15 }
+            }
+        ];
+    }
+
+    try {
+        const predictionServiceClient = new PredictionServiceClient();
+        
+        const request = {
+            name: modelName,
+            payload: {
+                image: {
+                    imageBytes: imageContent
+                }
+            }
+        };
+
+        const [response] = await predictionServiceClient.predict(request);
+        return response.payload;
+    } catch (error) {
+        console.error(`Error predicting with model ${modelName}:`, error);
+        const customError = new Error(`Failed to predict with model. Reason: ${error.message}`);
+        customError.statusCode = mapGcpErrorCode(error.code);
+        customError.originalError = error;
+        throw customError;
+    }
+};
+
 // --- Export Service Methods ---
 module.exports = {
     createDataset,
     importData,
     trainModel,
     getOperationStatus,
-    // Add other necessary methods: listDatasets, listModels, deleteDataset, deleteModel etc.
+    listModels,
+    deleteModel,
+    predictImage
 };

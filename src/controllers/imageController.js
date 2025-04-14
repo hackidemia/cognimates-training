@@ -172,15 +172,32 @@ exports.createClassifier = async (req, res) => {
  */
 exports.getClassifierStatus = async (req, res) => {
     try {
-        const operationId = req.params.operationId;
-        if (!operationId) {
-            return res.status(400).json({ error: 'Missing operation ID' });
+        const classifier_id = req.query.classifier_id;
+        if (!classifier_id) {
+            return res.status(400).json({ error: 'Missing classifier_id parameter' });
         }
 
-        const operationName = `projects/${config.GCP_PROJECT_ID}/locations/${config.GCP_LOCATION}/operations/${operationId}`;
+        console.log(`Getting status for classifier: ${classifier_id}`);
+        
+        if (useMockResponses) {
+            console.log('[MOCK] Returning mock classifier status');
+            return res.status(200).json({
+                classifier_id: classifier_id,
+                name: "Mock Classifier",
+                created: new Date().toISOString(),
+                status: "READY",
+                classes: ["class1", "class2", "class3"]
+            });
+        }
+
+        const operationName = `projects/${config.GCP_PROJECT_ID}/locations/${config.GCP_LOCATION}/operations/${classifier_id}`;
         const operation = await gcpService.getOperationStatus(operationName);
 
         res.status(200).json({
+            classifier_id: classifier_id,
+            name: "GCP AutoML Classifier",
+            created: new Date().toISOString(),
+            status: operation.done ? "READY" : "TRAINING",
             operationName: operation.name,
             done: operation.done,
             // Include error or response based on whether the operation is done
@@ -325,6 +342,131 @@ exports.getOperationStatus = async (req, res, next) => {
         res.status(error.statusCode || 500).json({
             error: 'Failed to get operation status.',
             details: error.message
+        });
+    }
+};
+
+/**
+ * Lists all classifiers for the user.
+ */
+exports.listClassifiers = async (req, res) => {
+    try {
+        console.log('Listing all classifiers');
+        
+        if (useMockResponses) {
+            console.log('[MOCK] Returning mock classifiers list');
+            return res.status(200).json({
+                classifiers: [
+                    {
+                        classifier_id: 'mock-train-operation-' + Date.now(),
+                        name: 'Mock Classifier_vision',
+                        created: new Date().toISOString(),
+                        status: 'READY'
+                    },
+                    {
+                        classifier_id: 'mock-train-operation-' + (Date.now() - 86400000),
+                        name: 'Sample Classifier_vision',
+                        created: new Date(Date.now() - 86400000).toISOString(),
+                        status: 'READY'
+                    }
+                ]
+            });
+        }
+
+        const models = await gcpService.listModels();
+        
+        res.status(200).json({
+            classifiers: models.map(model => ({
+                classifier_id: model.name.split('/').pop(),
+                name: model.displayName,
+                created: model.createTime,
+                status: model.deploymentState || 'READY'
+            }))
+        });
+    } catch (error) {
+        console.error('Error listing classifiers:', error);
+        res.status(500).json({
+            error: `Failed to list classifiers: ${error.message}`
+        });
+    }
+};
+
+/**
+ * Deletes a classifier.
+ */
+exports.deleteClassifier = async (req, res) => {
+    try {
+        const classifier_id = req.body.classifier_id;
+        if (!classifier_id) {
+            return res.status(400).json({ error: 'Missing classifier_id parameter' });
+        }
+
+        console.log(`Deleting classifier: ${classifier_id}`);
+        
+        if (useMockResponses) {
+            console.log('[MOCK] Mocking successful classifier deletion');
+            return res.status(200).json({
+                message: `Classifier ${classifier_id} deleted successfully`
+            });
+        }
+
+        const modelName = `projects/${config.GCP_PROJECT_ID}/locations/${config.GCP_LOCATION}/models/${classifier_id}`;
+        await gcpService.deleteModel(modelName);
+        
+        res.status(200).json({
+            message: `Classifier ${classifier_id} deleted successfully`
+        });
+    } catch (error) {
+        console.error('Error deleting classifier:', error);
+        res.status(500).json({
+            error: `Failed to delete classifier: ${error.message}`
+        });
+    }
+};
+
+/**
+ * Classifies an image using the specified classifier.
+ */
+exports.classifyImage = async (req, res) => {
+    try {
+        const { classifier_id, image_data } = req.body;
+        if (!classifier_id) {
+            return res.status(400).json({ error: 'Missing classifier_id parameter' });
+        }
+        if (!image_data) {
+            return res.status(400).json({ error: 'Missing image_data parameter' });
+        }
+
+        console.log(`Classifying image with classifier: ${classifier_id}`);
+        
+        if (useMockResponses) {
+            console.log('[MOCK] Returning mock classification results');
+            return res.status(200).json([
+                {
+                    class: 'class1',
+                    score: 0.85
+                },
+                {
+                    class: 'class2',
+                    score: 0.15
+                }
+            ]);
+        }
+
+        const base64Data = image_data.split(',')[1];
+        const modelName = `projects/${config.GCP_PROJECT_ID}/locations/${config.GCP_LOCATION}/models/${classifier_id}`;
+        const results = await gcpService.predictImage(modelName, base64Data);
+        
+        const formattedResults = results.map(result => ({
+            class: result.displayName,
+            score: result.classification.score
+        }));
+        
+        res.status(200).json(formattedResults);
+    } catch (error) {
+        console.error('Error classifying image:', error);
+        res.status(500).json({
+            error: `Failed to classify image: ${error.message}`
         });
     }
 };

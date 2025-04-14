@@ -47,9 +47,18 @@ router.post(
 );
 
 router.get(
-    '/classifier/:operationId',
-    validateOperationId,
+    '/classifier',
     imageController.getClassifierStatus
+);
+
+router.delete(
+    '/classifier',
+    imageController.deleteClassifier
+);
+
+router.post(
+    '/classify',
+    imageController.classifyImage
 );
 
 // POST /api/image/datasets - Create a new image dataset
@@ -78,6 +87,11 @@ router.get(
     '/operations/:operationId',
     validateOperationId,
     imageController.getOperationStatus
+);
+
+router.get(
+    '/classifiers',
+    imageController.listClassifiers
 );
 
 module.exports = router;
