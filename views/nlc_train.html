@@ -87,6 +87,10 @@
   </div>
   <br>
   <div class="row">
+    <!-- Instructions for users -->
+    <div class="alert alert-info" style="width: 600px; margin: 10px auto;">
+      <strong>Tip:</strong> Click on a label name to add examples. Each label needs at least 5 examples.
+    </div>
     <ul class="list-group" id="labelList">
     </ul>
   </div>
@@ -284,18 +288,37 @@
     var listItem = document.createElement('li')
     listItem.className = "list-group-item"
     listItem.id = `label_item_${label}`
+    listItem.style.cursor = "pointer" // Make cursor a pointer to indicate clickability
+    
+    // Add main label text
+    listItem.append(`${label} `)
+    
+    // Add badge
     var span = document.createElement('span')
     span.className = "badge"
     span.id = `label_badge_${label}`
     span.innerHTML = 0
-    listItem.append(`${label} `)
-    listItem.addEventListener('click', function(labelName) {
-      return function() { showLabelModal(labelName) }
-    }(label))
     listItem.append(span)
+    
+    // Add click indicator text
+    var clickIndicator = document.createElement('div')
+    clickIndicator.style.fontSize = "12px"
+    clickIndicator.style.color = "#666"
+    clickIndicator.style.marginTop = "5px"
+    clickIndicator.innerHTML = "Click to add examples"
+    listItem.append(clickIndicator)
+    
+    // Add click event listener
+    listItem.addEventListener('click', function(labelName) {
+      return function() { 
+        console.log("label clicked: " + labelName);
+        showLabelModal(labelName) 
+      }
+    }(label))
+    
     $('#labelList').append(listItem)
     window.labelListItems.push(label)
-    console.log(window.examples);
+    
     if(window.examples === undefined) {
       window.examples = {}
     }
@@ -347,6 +370,16 @@
       addExampleItem(example)
     })
   }
+
+  // Initialize modals properly when the document is ready
+  $(document).ready(function() {
+    // Initialize all modals
+    $('.modal').modal({
+      backdrop: 'static',
+      keyboard: false,
+      show: false
+    });
+  });
 </script>
 </body>
 </html>

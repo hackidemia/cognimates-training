@@ -150,7 +150,7 @@ ul {
 	padding-top: 65px;
 	margin: 20px;
 	margin-bottom: 0;
-	/*position: relative;*/
+	position: relative;
 	color: #fff;
 	font-size: 30px;
 	font-weight: bold;
@@ -160,7 +160,8 @@ ul {
 	border-radius: 20px;
 	/*background-image: url("https://imgur.com/LpBjrXm.png/");*/
 	background-size: 270px;
-
+	cursor: pointer; /* Make cursor a pointer to indicate clickability */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for better visibility */
 }
 
 
