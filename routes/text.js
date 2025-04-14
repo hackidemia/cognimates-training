@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const textController = require('../controllers/text'); // Import the text controller
+const textController = require('../controllers/gcp-text-trainer'); // Import the text controller
 
 // --- Text Classification Routes ---
 
@@ -13,11 +13,10 @@ router.get('/', (req, res) => {
 router.post('/:classifier_name', textController.classifyText);
 
 // POST /classify/text/:classifier_name/train - Train a specific text classifier
-// Note: The trainAll function in controller currently handles multiple, 
-// so this route might need adjustment based on how you want to trigger training.
-// We might need a dedicated `trainTextClassifier` function in the controller.
-// For now, let's point to a placeholder or the existing trainAll.
-router.post('/:classifier_name/train', textController.trainAll); // Placeholder - Review this logic
+router.post('/:classifier_name/train', textController.trainTextClassifier); // Use renamed function
+
+// POST /classify/text/register-endpoint - Manually register a deployed endpoint
+router.post('/register-endpoint', textController.registerEndpoint);
 
 // You might add more routes here if needed, e.g., for deleting classifiers
 

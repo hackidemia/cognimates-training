@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const imageController = require('../controllers/clarifai'); // Ensure controller path is correct
+const imageController = require('../controllers/gcp-image-trainer'); 
 const multer = require('multer');
 
 // Configure Multer for file uploads

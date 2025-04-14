@@ -12,13 +12,13 @@ const args = require('minimist')(process.argv.slice(2))
 const { create } = require('express-handlebars')
 
 // --- Import Routers ---
-const indexRouter = require('./routes/index'); 
+const indexRouter = require('./routes/index');
 const textClassifierRouter = require('./routes/text');
-const imageClassifierRouter = require('./routes/clarifai');
+const gcpImageRouter = require('./routes/image');
 
 // Check for required environment variables for GCP
-if (!process.env.GCP_PROJECT_ID || !process.env.GCS_BUCKET_NAME || !process.env.GOOGLE_APPLICATION_CREDENTIALS) {
-  console.error('FATAL ERROR: GCP_PROJECT_ID, GCS_BUCKET_NAME, and GOOGLE_APPLICATION_CREDENTIALS environment variables are required in .env file.');
+if (!process.env.GCP_PROJECT_ID || !process.env.GCS_BUCKET_NAME || !process.env.GOOGLE_APPLICATION_CREDENTIALS || !process.env.GCP_REGION) {
+  console.error('FATAL ERROR: GCP_PROJECT_ID, GCS_BUCKET_NAME, GOOGLE_APPLICATION_CREDENTIALS, and GCP_REGION environment variables are required in .env file.');
   // Optionally check if the credential file exists
   try {
     if (!fs.existsSync(process.env.GOOGLE_APPLICATION_CREDENTIALS)) {
@@ -33,6 +33,7 @@ if (!process.env.GCP_PROJECT_ID || !process.env.GCS_BUCKET_NAME || !process.env.
   console.log(`  GCP Project ID: ${process.env.GCP_PROJECT_ID}`);
   console.log(`  GCS Bucket Name: ${process.env.GCS_BUCKET_NAME}`);
   console.log(`  Credentials File: ${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
+  console.log(`  GCP Region: ${process.env.GCP_REGION}`);
 }
 
 // Set default port if not provided in environment
@@ -63,7 +64,7 @@ app.use(bodyParser.urlencoded({
 // --- Mount Routers ---
 app.use('/', indexRouter); 
 app.use('/classify/text', textClassifierRouter); 
-app.use('/classify/image', imageClassifierRouter); 
+app.use('/classify/image', gcpImageRouter); 
 
 // Keep express-busboy for now, though multer is used in clarifai route
 // Consider standardizing later if causing issues.
