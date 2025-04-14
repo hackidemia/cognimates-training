@@ -36,6 +36,10 @@ exports.uploadImageChunk = async (req, res) => {
         if (!name || !sessionId || chunkIndex === undefined || totalChunks === undefined || !label) {
             return res.status(400).json({ error: 'Missing required fields for chunked upload' });
         }
+        
+        if (!data && !useMockResponses) {
+            return res.status(400).json({ error: 'Image data is required' });
+        }
 
         console.log(`Received chunk ${chunkIndex + 1}/${totalChunks} for label "${label}" in session "${sessionId}"`);
         

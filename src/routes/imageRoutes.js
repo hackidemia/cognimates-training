@@ -33,6 +33,7 @@ router.post(
         body('chunkIndex', 'Chunk index is required').isNumeric(),
         body('totalChunks', 'Total chunks is required').isNumeric(),
         body('label', 'Label is required').notEmpty().isString().trim(),
+        body('data', 'Image data is required').optional(), // Make data optional to allow empty uploads for testing
     ],
     imageController.uploadImageChunk
 );
