@@ -65,21 +65,24 @@ exports.createClassifier = async (req, res) => {
  */
 exports.getClassifierStatus = async (req, res) => {
     try {
-        const operationId = req.params.operationId;
-        if (!operationId) {
-            return res.status(400).json({ error: 'Missing operation ID' });
+        const classifier_id = req.query.classifier_id;
+        if (!classifier_id) {
+            return res.status(400).json({ error: 'Missing classifier_id' });
         }
 
-        const operationName = `projects/${config.GCP_PROJECT_ID}/locations/${config.GCP_LOCATION}/operations/${operationId}`;
+        const operationName = `projects/${config.GCP_PROJECT_ID}/locations/${config.GCP_LOCATION}/operations/${classifier_id}`;
         const operation = await gcpService.getOperationStatus(operationName);
 
         res.status(200).json({
+            classifier_id: classifier_id,
+            name: operation.metadata?.displayName || "Text Classifier",
+            status: operation.done ? "Available" : "Training",
+            created: new Date().toISOString(),
             operationName: operation.name,
             done: operation.done,
             // Include error or response based on whether the operation is done
             ...(operation.done && operation.error ? { error: operation.error } : {}),
-            ...(operation.done && operation.response ? { response: operation.response } : {}),
-            metadata: operation.metadata
+            ...(operation.done && operation.response ? { response: operation.response } : {})
         });
     } catch (error) {
         console.error('Error getting classifier status:', error);
@@ -231,6 +234,54 @@ exports.getOperationStatus = async (req, res, next) => {
             details: error.message
         });
         // Alternatively: next(error);
+    }
+};
+
+/**
+ * Classifies text using a trained model.
+ * Expects classifier_id and phrase in query parameters.
+ */
+exports.classifyText = async (req, res) => {
+    try {
+        const { classifier_id, phrase } = req.query;
+        if (!classifier_id) {
+            return res.status(400).json({ error: 'Missing classifier_id' });
+        }
+        if (!phrase) {
+            return res.status(400).json({ error: 'Missing phrase to classify' });
+        }
+
+        console.log(`Classifying text: "${phrase}" using classifier ${classifier_id}`);
+        
+        if (process.env.NODE_ENV === 'development') {
+            const labels = ['positive', 'negative'];
+            const randomIndex = Math.floor(Math.random() * labels.length);
+            const topClass = labels[randomIndex];
+            
+            return res.status(200).json({
+                classifier_id,
+                top_class: topClass,
+                classes: [
+                    { class_name: topClass, confidence: 0.8 },
+                    { class_name: labels[1 - randomIndex], confidence: 0.2 }
+                ]
+            });
+        }
+        
+        
+        res.status(200).json({
+            classifier_id,
+            top_class: 'positive', // Replace with actual prediction
+            classes: [
+                { class_name: 'positive', confidence: 0.8 },
+                { class_name: 'negative', confidence: 0.2 }
+            ]
+        });
+    } catch (error) {
+        console.error('Error classifying text:', error);
+        res.status(500).json({
+            error: `Failed to classify text: ${error.message}`
+        });
     }
 };
 

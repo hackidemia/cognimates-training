@@ -266,7 +266,7 @@
         })
       })
       $.ajax({
-        url: '/nlc/classifier',
+        url: '/api/text/classifier',
         type: 'POST',
         dataType: 'json',
         contentType: "application/json; charset=utf-8",
@@ -280,6 +280,10 @@
           } else {
             alert(data.error)
           }
+        },
+        error: function(xhr, status, error) {
+          console.error("Error training classifier:", error);
+          alert("Error training classifier: " + (xhr.responseJSON ? xhr.responseJSON.error : error));
         }
       })
     })

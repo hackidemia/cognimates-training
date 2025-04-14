@@ -210,7 +210,7 @@
 
   function loadUserClassifiers() {
     $.ajax({
-         url: "/vision/classifiers",
+         url: "/api/image/classifiers",
          type: "GET",
          headers: { 'apiKey': window.apiKey },
          success: function (data) {

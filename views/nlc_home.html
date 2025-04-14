@@ -155,7 +155,7 @@
 
   function loadUserClassifiers() {
     $.ajax({
-         url: "/nlc/classifiers",
+         url: "/api/text/classifiers",
          type: "GET",
          headers: { 'token': window.access_token },
          success: function (data) {

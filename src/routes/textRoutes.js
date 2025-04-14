@@ -41,9 +41,13 @@ router.post(
 );
 
 router.get(
-    '/classifier/:operationId',
-    validateOperationId,
+    '/classifier',
     textController.getClassifierStatus
+);
+
+router.get(
+    '/classify',
+    textController.classifyText
 );
 
 // POST /api/text/datasets - Create a new text dataset
