@@ -129,6 +129,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal" id="removeLabelButton">Remove label</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveExamplesButton">Save Examples</button>
         <button type="button" class="btn btn-default" data-dismiss="modal" id="closeLabelModal">Close</button>
       </div>
     </div>
@@ -187,6 +188,8 @@
       var labelInput = $('#labelInput').val()
       if(labelInput != null && labelInput.length > 0) {
         addLabelItem(labelInput);
+        // Clear the input field after adding
+        $('#labelInput').val('');
       }
       return false;
     })
@@ -200,6 +203,12 @@
         window.labelListItems.splice(index, 1);
       }
       window.selectedLabel = undefined
+      $('#labelModal').modal('hide')
+      return false;
+    })
+    
+    $('#saveExamplesButton').click(function (e) {
+      e.preventDefault();
       $('#labelModal').modal('hide')
       return false;
     })
@@ -221,6 +230,8 @@
         window.examples[window.selectedLabel].push(exampleInput)
         addExampleItem(exampleInput);
         $(`#label_badge_${window.selectedLabel}`).html(window.examples[window.selectedLabel].length)
+        // Clear the input field after adding
+        $('#exampleInput').val('')
       }
       return false;
     })
