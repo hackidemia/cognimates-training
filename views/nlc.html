@@ -204,7 +204,7 @@
 
   function loadUserClassifier(classifier_id) {
     $.ajax({
-         url: "/nlc/classifier",
+         url: "/api/text/classifier",
          type: "GET",
          headers: { 'token': window.access_token },
          data: { classifier_id: classifier_id},
@@ -250,7 +250,7 @@
 
   function deleteClassifier() {
     $.ajax({
-         url: "/nlc/classifier",
+         url: "/api/text/classifier",
          type: "DELETE",
          headers: { 'token': window.access_token },
          data: { classifier_id: window.userClassifier.classifier_id },
@@ -271,7 +271,7 @@
 
   function classify(phrase) {
     $.ajax({
-         url: "/nlc/classify",
+         url: "/api/text/classify",
          type: "GET",
          headers: { 'token': window.access_token },
          data: { classifier_id: window.userClassifier.classifier_id, phrase: phrase },

@@ -36,11 +36,23 @@ router.get('/nlc_examples', (req, res) => {
 router.post('/auth/register', authController.register)
 router.post('/auth/login', authController.login)
 
-router.get('/nlc/classifiers', nlcController.getClassifiersList)
-router.post('/nlc/classifier', nlcController.createClassifier)
-router.get('/nlc/classifier', nlcController.getClassifierInformation)
-router.delete('/nlc/classifier', nlcController.deleteClassifier)
-router.get('/nlc/classify', nlcController.classifyText)
+router.get('/nlc/classifiers', (req, res) => res.redirect('/api/text/classifiers'))
+router.post('/nlc/classifier', (req, res) => {
+  req.url = '/api/text/classifier';
+  req.app.handle(req, res);
+})
+router.get('/nlc/classifier', (req, res) => {
+  req.url = '/api/text/classifier';
+  req.app.handle(req, res);
+})
+router.delete('/nlc/classifier', (req, res) => {
+  req.url = '/api/text/classifier';
+  req.app.handle(req, res);
+})
+router.get('/nlc/classify', (req, res) => {
+  req.url = '/api/text/classify';
+  req.app.handle(req, res);
+})
 
 router.get('/vision_home', (req, res) => {
   res.render('vision_home.html')
@@ -62,11 +74,23 @@ router.get('/vision', (req, res) => {
   res.render('vision.html')
 })
 
-router.get('/vision/classifiers', visionController.getClassifiersList)
-router.post('/vision/classifier', visionController.createClassifier)
-router.get('/vision/classifier', visionController.getClassifierInformation)
-router.delete('/vision/classifier', visionController.deleteClassifier)
-router.post('/vision/classify', visionController.classifyImages)
+router.get('/vision/classifiers', (req, res) => res.redirect('/api/image/classifiers'))
+router.post('/vision/classifier', (req, res) => {
+  req.url = '/api/image/classifier';
+  req.app.handle(req, res);
+})
+router.get('/vision/classifier', (req, res) => {
+  req.url = '/api/image/classifier';
+  req.app.handle(req, res);
+})
+router.delete('/vision/classifier', (req, res) => {
+  req.url = '/api/image/classifier';
+  req.app.handle(req, res);
+})
+router.post('/vision/classify', (req, res) => {
+  req.url = '/api/image/classify';
+  req.app.handle(req, res);
+})
 
 
 module.exports = router
