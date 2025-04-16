@@ -3,616 +3,280 @@
 @use '../../common/mq' as *;
 @use '../../common/mixins' as *;
 
-.classifier__banner-image-container {
-    display: flex;
-    justify-content: center;
+// Variables
+$primary-color: #3B8DD9;
+$accent-color: #3ACEFC;
+$danger-color: #FF718B;
+$success-color: #66C675;
+$warning-color: #FFE4AC;
+$neutral-color: #ACC5DE;
+$text-color: #333;
+$border-color: #e8e8e8;
+$table-header-bg: #F8FAFC;
+
+// Mixins
+@mixin transition($property: all) {
+  transition: #{$property} 0.2s ease;
 }
 
-.classifier__banner-image-container--text {
-    background-color: #fdaf41;
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.classifier__banner-image {
-    height: 260px;
-    width: auto !important;
-    border-bottom: none;
-    margin: 1rem 0;
-}
+// Classifier Page
+.classifier-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
 
-.classifier__nav-tabs {
-	width: 100%;
-	justify-content: center;
-    margin-top: 3rem;
-}
-
-.classifier__nav-item .nav-link {
-    margin: 1rem;
-    border:  0;
-
-    @include mq('md') {
-        padding: 0.75rem 0.5rem;
-        border-top: 1px solid transparent;
-        border-left: 1px solid transparent;
-        border-right: 1px solid transparent;
-        border-bottom: 0;
-        margin: 0 0.5rem;
-    }
-}
-
-.classifier__nav-link.active {
-    background-color: #f7f7f7 !important;
-}
-
-.classifier__nav-link h2 span {
-    color: #bebebe;
-}
-
-.classifier__nav-item--or {
-    display: block;
-    width: 100%;
+  &__header {
     text-align: center;
-    font-style: italic;
+    margin-bottom: 3rem;
 
-    @include mq('md') {
-      display: none;
+    h1 {
+      color: $primary-color;
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
     }
+  }
 
-    h2 {
-        color: #aeaeae;
-    }
+  &__description {
+    color: color.adjust($text-color, $lightness: 20%);
+    font-size: 1.1rem;
+  }
 }
 
-.classifier__train-or {
-    display: block;
-    width: 100%;
-    text-align: center;
-    font-style: italic;
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.75rem;
-    padding: 0;
-    margin: 0;
-    color: #aeaeae;
-}
+// Form Styles
+.classifier-form {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
 
-.classifier__train-url {
-    margin: 0.5rem 0 1rem 0;
-}
-
-.classifier__nav-item h2 {
-	// left right mismatch accounts for the left side having an icon
-	padding: 0 1rem 0 0.65rem;
-	font-size: 1.3rem;
-    letter-spacing: 0.3px;
-}
-
-.classifier__nav-item h2 i {
-	color: $accent-color;
-	font-size: 1.1rem;
-	margin: 0 0.5rem;
-}
-
-.classifier__tab {
-	background-color: #f7f7f7;
-
-	@include mq('lg') {
-		// override Bootstrap tab
-		display: flex !important;
-		align-items: center;
-		justify-content: center;
-	}
-}
-
-// adapted from https://codepen.io/lifeinchords/pen/wOyOEm
-ul.stepper {
-	position: relative;
-	padding: 1.5rem;
-	margin: 0;
-
-	@include mq('md') {  padding: 3rem 2rem; }
-	@include mq('lg') {
-		padding: 3rem 0 0 0;
-	    margin-left: 0;
-	}
-}
-
-li.stepper__step {
-	display: flex;
-	padding: 0;
-	border-bottom: 1px solid #dddddd;
-	flex-direction: column;
-	margin-bottom: 2rem;
-
-  	@include mq('md') {
-		display: flex;
-		flex-direction: row;
-		line-height: 1;
-		padding: 0;
-		border-bottom: 0;
-		margin-bottom: 2rem;
-	}
-
-  	@include mq('lg') {
-		width: 800px;
-	}
-}
-
-.step__title {
-	margin: 0 0 1rem 0;
-}
-
-.step__form-with-button {
-    display: flex;
-    margin: 0 0 0.5rem 0;
-}
-
-.project-name__result-row,
-.api-key__result-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 1.5rem 0;
-}
-
-.api-key__result-row {
-    margin: 1.5rem 0;
-    padding: 0 0 1.5rem 0;
-    border-bottom: 1px solid #e7e7e7;
-}
-
-.api-key__value,
-.project-name__value {
-    font-size: 1.2rem;
-    color: #717171;
-    margin: 0.75rem 1.5rem 0 1.5rem;
-}
-
-.api-key__remove-button,
-.project-name__remove-button {
-    @include icon--remove;
-}
-
-.step__form-text {
-    padding: 0.75rem 1rem;
-    margin: 0.5rem 0;
-    border: 1px solid #e7e7e7;
-    border-radius: 4px;
-    transition: all 0.2s ease-out;
-
-    &::placeholder {
-        user-select: none !important;
-        color: #BDBDBD;
-    }
-
-    &:focus::-webkit-input-placeholder {
-        color: transparent;
-    }
-
-    &:focus {
-        border-color: $blue;
-        outline: none;
-    }
-}
-
-.step__number {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 3rem;
-    height: 3rem;
-    font-size: 1.5rem;
-    margin: 0;
-    padding: 0;
-    user-select: none;
-    transition: all 0.2s ease-out;
-    color: white;
-    background-color: $blue;
-    border-radius: 50%;
-    position: relative;
-    z-index: 2;
-
-    @include mq('md') {
-        width: 3.5rem;
-        height: 3.5rem;
-        margin: 0 1.5rem;
-        font-family: 'Roboto', sans-serif;
-        font-size: 1.75rem;
-    }
-
-    @include mq('lg') {
-        width: 3rem;
-        height: 3rem;
-        margin: 0 30px 0 0;
-        font-size: 1.5rem;
-    }
-}
-
-/* vertical line */
-.step__circle {
-    display: block;
-    position: relative;
-    margin: 0;
-    padding: 0;
-
-    @include mq('md') {
-        position: absolute;
-        left: 2rem;
-        width: 4px;
-        height: calc(100% - 4rem);
-        margin-top: 4rem;
-        background: $blue;
-        opacity: 0.8;
-    }
-
-    @include mq('lg') {
-        left: 1.5rem;
-        height: calc(100% - 3.5rem);
-        margin-top: 3.5rem;
-    }
-}
-
-.step__circle:before {
-    content: '';
-    position: absolute;
-    z-index: 1;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 100%;
-    width: 4px;
-    background: $blue;
-    opacity: 0.8;
-}
-
-.step__circle i {
-    position: relative;
-    display: inline-block;
-    z-index: 3;
-    width: 12px;
-    height: 12px;
-    background: $blue;
-    border-radius: 50%;
-    box-sizing: border-box;
-    transition: all 0.1s ease-out;
-}
-
-.stepper li:hover {
-	.step__number {
-		background-color: darken($blue, 10%);
-	}
-
-	.step__circle {
-	    i {
-			background: darken($blue, 10%);
-			transform: scale(1.75);
-	    }
-	  }
-}
-
-.step__body {
-    padding: 2rem;
-    width: 100%;
-    background-color: #fff;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  &__section {
     margin-bottom: 2rem;
 
-    @include mq('md') {
-        margin-left: 3rem;
-        padding: 2.5rem;
+    &:last-child {
+      margin-bottom: 0;
     }
+  }
 
-    @include mq('lg') {
-        margin-left: 4rem;
-        padding: 3rem;
-    }
-}
-
-.step__link {
-    display: inline-block;
-    color: $pink;
-    transition: 0.1s ease-in all;
-}
-
-.step_link:hover {
-    opacity: 0.9
-}
-
-.step__link--get-key {
-    display: inline-block;
-    margin: 0 1rem;
-    font-size: 0.9rem;
-}
-
-.category__dropzone {
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-}
-
-.category__container {
-    position: relative;
-    border-radius: 1.25rem;
-    margin-bottom: 1.5rem;
-    transition: transform 0.2s ease-out;
-}
-
-.category__container:nth-child(1n) .category__box { background-color: $category--blue; }
-.category__container:nth-child(2n) .category__box { background-color: $category--yellow; }
-.category__container:nth-child(3n) .category__box { background-color: $category--pink; }
-.category__container:nth-child(4n) .category__box { background-color: $category--turqoise; }
-
-.category__box {
-    padding: 1rem;
-    border-radius: 1rem;
-    color: #656565;
-    background-color: white;
-    transition: all 0.2s ease-out;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.category__box--vision {
-    cursor: pointer;
-}
-
-.category__box:hover .dropzone__header {
-    transform: scale(1.02);
-    color: $blue;
-}
-
-.category__box--dashed {
-    border: 2px dashed #e7e7e7;
-    background-color: #fafafa;
-}
-.category__box--dashed:hover {
-    border: 2px dashed $blue;
-    background-color: color.scale($blue, $lightness: 95%);
-}
-.category__box--solid { border: 2px solid #e7e7e7; }
-
-.category--vision__remove-button {
-    position: absolute;
-    top: -0.5rem;
-    right: 0.7rem;
-
-    @include icon--remove;
-}
-
-.category--text__remove-button {
-    position: absolute;
-    top: -0.5rem;
-    right: 0.7rem;
-
-    @include icon--remove;
-}
-
-.category__name {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: auto;
-	margin: 0.5rem 0 0.25rem 0;
-	font-weight: 600;
-	line-height: 1;
-	pointer-events: none;
-    color: #656565;
-}
-
-// these dropzone classes are new, not overrides
-.dropzone__upload-icon {
-  font-size: 2rem;
-  color: lightgray;
-  user-select: none;
-}
-
-.dropzone__header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    pointer-events: none;
-    color: color.scale($blue, $lightness: 40%);
-    margin: 1rem 0 0 0;
-    transition: 0.1s ease-in all;
-}
-
-.dropzone__label {
-    margin: 0.35rem 0 0rem 0;
-}
-
-.button--create {
-	white-space: nowrap;
-}
-
-.step__help-open-button {
-    margin-left: 0.75rem;
-    font-size: 1.25rem;
-    vertical-align: middle;
-}
-
-.step__help {
-	display: none;
-	margin: 1.5rem 0 1rem 0;
-	transition: 0.1s all ease-in;
-	color: #6d6d6d;
-}
-
-.button--train { margin-right: 0.75rem; }
-.button--play { margin-right: 0.75rem; }
-
-
-// .selectize-input and .selectize-control both refer to the same
-// DOM element. We'll need to use both to override styling
-.selectize-control {
-    padding: 0.5rem 0.5rem 0 0.5rem !important;
-    user-select: all !important;
-}
-
-.selectize-input {
-    display: flex;
-    flex-direction: column-reverse;
-
-    background: transparent;
-    box-shadow: none;
-    border: 0;
-    padding: 0 0 0.5rem 0 !important;
-    font-size: 0.9rem;
-    user-select: all !important;
-}
-
-.selectize-input.dropdown-active:before {
-    border: 0 !important;
-    box-shadow: 0 !important;
-    height: 0 !important;
-    background-color: transparent !important;
-    outline: 0 !important;
-}
-
-.selectize-input input {
-    font-size: 0.9rem;
-    border-bottom: 1px solid rgb(197, 197, 197) !important;
-    margin: 0 0 1rem 0px !important;
-    width: 100% !important;
-    height: 2.5rem !important;
-    position: relative !important;
-    left: 0 !important;
-    opacity: 1 !important;
-    text-align: center !important;
-    user-select: all !important;
-}
-
-.selectize-input.focus {
-    box-shadow: none !important;
-}
-
-.selectize-input input::placeholder {
-    color: #aaa;
-}
-
-.selectize-input.input-active,
-.selectize-input.dropdown-active {
-    border: 0;
-    box-shadow: none !important;
-}
-
-.selectize-control.multi .selectize-input.has-items {
-    padding: 0;
-}
-
-.selectize-input .item,
-.selectize-input .item.item-active {
-    display: flex !important;
-    margin: 0.3rem 0.3rem 0 0 !important;
-    padding: 0 !important;
-    font-size: 1.1rem!important;
-    box-shadow: none !important;
-    background-image: none !important;
-    background-color: transparent !important;
-    color: $blue !important;
-    text-shadow: none !important;
-    text-align: center !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    transition: 0.1s all ease-in !important;
-    cursor: default !important;
-    user-select: all !important;
-    align-items: center!important;
-    justify-content: center!important;
-    width: 100%!important;
-}
-
-.selectize-control.multi .selectize-input [data-value] {
-    padding: 0 !important;
-    margin: 0 0 1rem 0 !important;
-    border-bottom: 1px solid gainsboro !important;
-    padding: 0 0 1rem 0 !important;
-    user-select: all !important;
-}
-
-.selectize-input .item .label {
+  &__actions {
     text-align: center;
-    align-items: center;
-    justify-content: center;
+    margin-top: 3rem;
+  }
+}
+
+// Form Elements
+.form-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: $text-color;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid $border-color;
+  border-radius: 8px;
+  font-size: 1rem;
+  @include transition;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px color.adjust($primary-color, $alpha: -0.9);
+  }
+
+  &::placeholder {
+    color: color.adjust($text-color, $lightness: 40%);
+  }
+}
+
+.form-help {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: color.adjust($text-color, $lightness: 30%);
+}
+
+// Training Data Section
+.training-data-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+
+  h2 {
+    font-size: 1.25rem;
+    color: $text-color;
+    margin: 0;
+  }
+}
+
+.training-data-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.training-data {
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  overflow: hidden;
+
+  &__categories {
     display: flex;
-    width: 100%;
+    background: $table-header-bg;
+    border-bottom: 2px solid $border-color;
+    padding: 1rem;
+  }
+
+  &__rows {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  &__summary {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: $table-header-bg;
+    border-top: 1px solid $border-color;
+    font-size: 0.9rem;
+    color: color.adjust($text-color, $lightness: 20%);
+  }
 }
 
-// hide the regular icon
-// use ours
-// https://stackoverflow.com/questions/14049423/in-css-use-displaynone-on-the-element-but-keep-its-after
-// https://jsfiddle.net/2jgj2/2/
-.selectize-input .item .remove {
-    color: $blue !important;
-    font-size: 0.8rem !important;
-    border-left: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 1rem !important;
-    height: 1rem !important;
-    text-indent: -9999px !important;
-    display: block !important;
-    background: transparent !important;
-    position: relative !important;
-    text-align: center !important;
-    top: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    transition: all 0.1s ease-out !important;
-    visibility: hidden !important;
-    user-select: none !important;
+// Category Header
+.category-header {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.5rem;
+
+  &:not(:last-child) {
+    border-right: 1px solid $border-color;
+  }
+
+  &__input {
+    border-radius: 6px;
+    padding: 0.5rem;
+    font-weight: 500;
+    background: white;
+  }
+
+  &__remove {
+    opacity: 0;
+    @include transition;
+  }
+
+  &:hover &__remove {
+    opacity: 1;
+  }
 }
 
-.selectize-input .item:hover .remove {
-    visibility: visible !important
+// Training Row
+.training-row {
+  display: flex;
+  border-bottom: 1px solid $border-color;
+  @include transition;
+
+  &:hover {
+    background: color.adjust($neutral-color, $alpha: -0.97);
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
-.selectize-input .item .remove:before {
-    content: "\f00d";
-    font-family: "Font Awesome 5 Free";
-    position: absolute;
+// Training Cell
+.training-cell {
+  flex: 1;
+  padding: 0.75rem 0.5rem;
 
-    @include icon--remove;
+  &:not(:last-child) {
+    border-right: 1px solid $border-color;
+  }
 
-    // override the mixin
-    height: 1rem !important;
-    width: 1rem  !important;
-    color: $blue !important;
-    top: 0 !important;
-    left: 5000px !important;
+  &__input {
+    border: none;
+    background: transparent;
+    padding: 0.5rem;
+    border-radius: 4px;
+
+    &:focus {
+      background: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+  }
 }
 
-.selectize-control.plugin-remove_button [data-value] .remove:hover {
-    background: #d4d4d4 !important;
-    border-radius: 50% !important;
+// Button Styles
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  border: 0;
+  @include transition;
+
+  &-primary {
+    background: $primary-color;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background: color.adjust($primary-color, $lightness: -5%);
+      transform: translateY(-1px);
+    }
+
+    &:disabled {
+      background: color.adjust($primary-color, $lightness: 30%);
+      cursor: not-allowed;
+    }
+  }
+
+  &-outline-primary {
+    background: transparent;
+    border: 2px solid $primary-color;
+    color: $primary-color;
+
+    &:hover {
+      background: color.adjust($primary-color, $alpha: -0.9);
+    }
+  }
+
+  &-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  &-icon {
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: transparent;
+    color: color.adjust($text-color, $lightness: 30%);
+    @include flex-center;
+
+    &:hover {
+      background: color.adjust($danger-color, $alpha: -0.9);
+      color: $danger-color;
+    }
+  }
 }
 
-.classifier__results {
-    margin: 2rem 0;
-}
+// Responsive Design
+@include mq('md') {
+  .classifier-page {
+    padding: 3rem 2rem;
+  }
 
-.results__name {
-    display: none;
-    margin: 0.5rem 0;
-}
-
-.results__status {
-    display: none;
-}
-
-.results__upload-progress {
-    display: none;
-    font-size: 1rem;
-    color: #8a8a8a;
-}
-
-.results__name-label,
-.results__status-label {
-    font-size: 1.2rem;
-    color: #bbb;
-    line-height: 1.3rem;
-}
-
-.results__name-value,
-.results__status-value {
-    font-size: 1.2rem;
-    color: #717171;
+  .classifier-form {
+    padding: 3rem;
+  }
 }

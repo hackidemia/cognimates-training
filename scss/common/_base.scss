@@ -1,5 +1,6 @@
 @use 'mq' as *;
 @use 'variables' as *;
+@use 'sass:color';
 
 *,
 *:after,
@@ -102,7 +103,7 @@ body {
     border: 0;
 
     &:hover {
-        background-color: darken($pink, 10%);
+        background-color: color.adjust($pink, $lightness: -10%);
     }
 }
 
@@ -112,7 +113,7 @@ body {
     border: 0;
 
     &:hover {
-        background-color: darken($green, 10%);
+        background-color: color.adjust($green, $lightness: -10%);
     }
 }
 
@@ -146,4 +147,3 @@ body {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
 }
-

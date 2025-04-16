@@ -1,297 +1,197 @@
-{{> header }}
-
-<div class="container mt-5">
-  <div class="row mb-4">
-    <div class="col-12">
-      <h1>Create Text Classifier</h1>
-      <p class="lead">Train a custom text classifier by adding examples for each category.</p>
-    </div>
+{{!-- Text Classifier Creation Page --}}
+<div class="classifier-page">
+  <div class="classifier-page__header">
+    <h1>Create Text Classifier</h1>
+    <p class="classifier-page__description">Train a custom text classifier by adding examples for each category.</p>
   </div>
 
-  <div class="row">
-    <div class="col-lg-8">
-      <div class="card shadow mb-4">
-        <div class="card-header bg-primary text-white">
-          <h2 class="h5 mb-0">New Text Classifier</h2>
+  <div class="classifier-form">
+    {{!-- Classifier Name Section --}}
+    <div class="classifier-form__section">
+      <label class="form-label" for="classifier-name">Classifier Name</label>
+      <input type="text" 
+             id="classifier-name" 
+             class="form-input" 
+             placeholder="Enter a descriptive name (no spaces)"
+             autocomplete="off">
+      <div class="form-help">Give your classifier a descriptive name to identify it later</div>
+    </div>
+
+    {{!-- Training Data Section --}}
+    <div class="classifier-form__section">
+      <div class="training-data-header">
+        <h2>Training Data</h2>
+        <div class="training-data-actions">
+          <button type="button" class="btn btn-outline-primary btn-sm" id="add-row">
+            <i class="fas fa-plus"></i> Add Row
+          </button>
+          <button type="button" class="btn btn-outline-primary btn-sm" id="add-category">
+            <i class="fas fa-columns"></i> Add Category
+          </button>
         </div>
-        <div class="card-body">
-          <form id="create-classifier-form">
-            <div class="form-group">
-              <label for="classifier-name">Classifier Name</label>
-              <input type="text" class="form-control" id="classifier-name" placeholder="E.g., sentiment, topic, language">
-              <small class="form-text text-muted">Give your classifier a descriptive name (no spaces)</small>
-            </div>
+      </div>
 
-            <div class="mt-4 mb-3">
-              <div class="d-flex justify-content-between align-items-center">
-                <h3 class="h5">Categories</h3>
-                <button type="button" class="btn btn-sm btn-outline-primary" id="add-category-btn">
-                  <i class="fas fa-plus"></i> Add Category
-                </button>
-              </div>
-              <small class="form-text text-muted mb-3">Add at least two categories and provide example text for each</small>
-            </div>
+      <div class="training-data">
+        <div class="training-data__categories" id="categories-header">
+          {{!-- Category headers will be added here --}}
+        </div>
+        
+        <div class="training-data__rows" id="training-rows">
+          {{!-- Training rows will be added here --}}
+        </div>
 
-            <div id="categories-container">
-              <!-- Categories will be added here dynamically -->
-            </div>
-
-            <div class="mt-4">
-              <button type="submit" class="btn btn-lg btn-primary" id="train-btn">
-                <i class="fas fa-cogs"></i> Train Classifier
-              </button>
-            </div>
-          </form>
+        <div class="training-data__summary">
+          <span id="examples-count">0 examples</span>
+          <span id="categories-count">0 categories</span>
         </div>
       </div>
     </div>
 
-    <div class="col-lg-4">
-      <div class="card shadow mb-4">
-        <div class="card-header bg-light">
-          <h3 class="h5 mb-0">Tips for Better Results</h3>
-        </div>
-        <div class="card-body">
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">Add at least 5-10 examples per category</li>
-            <li class="list-group-item">Use real-world examples similar to what you'll classify</li>
-            <li class="list-group-item">Include variety in your examples</li>
-            <li class="list-group-item">Balance the number of examples across categories</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="card shadow">
-        <div class="card-header bg-light">
-          <h3 class="h5 mb-0">What's Next?</h3>
-        </div>
-        <div class="card-body">
-          <p>After training, you can:</p>
-          <ul>
-            <li>Test your classifier with new text</li>
-            <li>View confidence scores for each category</li>
-            <li>Use the classifier in your projects</li>
-          </ul>
-        </div>
-      </div>
+    {{!-- Training Button --}}
+    <div class="classifier-form__actions">
+      <button type="button" class="btn btn-primary btn-train" id="train-classifier" disabled>
+        <i class="fas fa-cog"></i> Train Classifier
+      </button>
     </div>
   </div>
 </div>
 
-<!-- Category Template -->
-<template id="category-template">
-  <div class="category-section card mb-3">
-    <div class="card-header bg-light d-flex justify-content-between align-items-center">
-      <h4 class="category-name h6 mb-0"></h4>
-      <button type="button" class="btn btn-sm btn-outline-danger remove-category-btn">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="card-body">
-      <div class="examples-container">
-        <div class="example-row input-group mb-2">
-          <input type="text" class="form-control example-input" placeholder="Add example text...">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary add-example-btn" type="button">
-              <i class="fas fa-plus"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-      <button type="button" class="btn btn-sm btn-outline-secondary mt-2 add-example-btn-alt">
-        <i class="fas fa-plus"></i> Add Another Example
-      </button>
-    </div>
+{{!-- Category Header Template --}}
+<template id="category-header-template">
+  <div class="category-header">
+    <input type="text" class="category-header__input form-input" placeholder="Category name">
+    <button type="button" class="btn btn-icon category-header__remove">
+      <i class="fas fa-times"></i>
+    </button>
   </div>
 </template>
 
+{{!-- Training Row Template --}}
+<template id="training-row-template">
+  <div class="training-row">
+    {{!-- Example cells will be added dynamically based on categories --}}
+  </div>
+</template>
+
+{{!-- Training Cell Template --}}
+<template id="training-cell-template">
+  <div class="training-cell">
+    <input type="text" class="training-cell__input form-input" placeholder="Enter example text">
+  </div>
+</template>
+
+{{!-- Scripts --}}
 <script>
-  $(document).ready(function() {
-    // Add category functionality
-    $('#add-category-btn').click(function() {
-      const categoryName = prompt('Enter category name (e.g., positive, negative, sports, news):');
-      if (categoryName && categoryName.trim() !== '') {
-        addCategory(categoryName.trim());
-      }
+document.addEventListener('DOMContentLoaded', () => {
+  const classifierName = document.getElementById('classifier-name');
+  const addRowBtn = document.getElementById('add-row');
+  const addCategoryBtn = document.getElementById('add-category');
+  const trainBtn = document.getElementById('train-classifier');
+  const categoriesHeader = document.getElementById('categories-header');
+  const trainingRows = document.getElementById('training-rows');
+  const examplesCount = document.getElementById('examples-count');
+  const categoriesCount = document.getElementById('categories-count');
+
+  // Templates
+  const categoryHeaderTemplate = document.getElementById('category-header-template');
+  const trainingRowTemplate = document.getElementById('training-row-template');
+  const trainingCellTemplate = document.getElementById('training-cell-template');
+
+  // Add category handler
+  addCategoryBtn.addEventListener('click', () => {
+    // Add category header
+    const headerElement = categoryHeaderTemplate.content.cloneNode(true);
+    categoriesHeader.appendChild(headerElement);
+
+    // Add cell to each existing row
+    const rows = trainingRows.querySelectorAll('.training-row');
+    rows.forEach(row => {
+      const cell = trainingCellTemplate.content.cloneNode(true);
+      row.appendChild(cell);
     });
 
-    // Handle form submission
-    $('#create-classifier-form').submit(function(e) {
-      e.preventDefault();
-      trainClassifier();
-    });
-
-    // Function to add new category
-    function addCategory(categoryName) {
-      const template = document.getElementById('category-template');
-      const clone = document.importNode(template.content, true);
-      
-      // Set category name
-      clone.querySelector('.category-name').textContent = categoryName;
-      
-      // Add data attribute for category identification
-      const categorySection = clone.querySelector('.category-section');
-      categorySection.dataset.category = categoryName;
-      
-      // Add event listener for removing category
-      clone.querySelector('.remove-category-btn').addEventListener('click', function() {
-        if (confirm(`Remove category "${categoryName}" and all its examples?`)) {
-          $(this).closest('.category-section').remove();
-        }
-      });
-      
-      // Add event listeners for adding examples
-      clone.querySelector('.add-example-btn').addEventListener('click', function() {
-        addExampleRow($(this).closest('.examples-container'));
-      });
-      
-      clone.querySelector('.add-example-btn-alt').addEventListener('click', function() {
-        addExampleRow($(this).closest('.card-body').find('.examples-container'));
-      });
-      
-      // Add event for example input keypress (Enter)
-      clone.querySelector('.example-input').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const container = $(this).closest('.examples-container');
-          addExampleRow(container);
-        }
-      });
-      
-      // Append the new category to the container
-      document.getElementById('categories-container').appendChild(categorySection);
-    }
-
-    // Function to add new example row
-    function addExampleRow(container) {
-      const input = container.find('.example-input:last');
-      const text = input.val().trim();
-      
-      if (text) {
-        // Clear the last input
-        input.val('');
-      }
-      
-      // Create new row
-      const newRow = $(`
-        <div class="example-row input-group mb-2">
-          <input type="text" class="form-control example-input" placeholder="Add example text...">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary add-example-btn" type="button">
-              <i class="fas fa-plus"></i>
-            </button>
-            <button class="btn btn-outline-danger remove-example-btn" type="button">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-        </div>
-      `);
-      
-      // If there was text in the previous input, set it in the newly created row
-      if (text) {
-        newRow.find('.example-input').val(text);
-      }
-      
-      // Add event listeners
-      newRow.find('.add-example-btn').click(function() {
-        addExampleRow(container);
-      });
-      
-      newRow.find('.remove-example-btn').click(function() {
-        $(this).closest('.example-row').remove();
-      });
-      
-      newRow.find('.example-input').keypress(function(e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          addExampleRow(container);
-        }
-      });
-      
-      // Append new row to container
-      container.append(newRow);
-      
-      // Focus on the new input
-      newRow.find('.example-input').focus();
-    }
-
-    // Function to train classifier
-    function trainClassifier() {
-      const classifierName = $('#classifier-name').val().trim();
-      
-      if (!classifierName) {
-        alert('Please enter a classifier name');
-        $('#classifier-name').focus();
-        return;
-      }
-      
-      const categories = $('.category-section');
-      if (categories.length < 2) {
-        alert('Please add at least two categories');
-        return;
-      }
-      
-      // Collect training data
-      const trainingData = {};
-      let isValid = true;
-      
-      categories.each(function() {
-        const category = $(this).data('category');
-        const examples = [];
-        
-        $(this).find('.example-input').each(function() {
-          const text = $(this).val().trim();
-          if (text) {
-            examples.push(text);
-          }
-        });
-        
-        if (examples.length === 0) {
-          alert(`Category "${category}" has no examples. Please add at least one example.`);
-          isValid = false;
-          return false; // Break the loop
-        }
-        
-        trainingData[category] = examples;
-      });
-      
-      if (!isValid) return;
-      
-      // Show loading state
-      $('#train-btn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Training...');
-      
-      // Send to server
-      $.ajax({
-        url: `/classify/text/${classifierName}/train`,
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({ training_data: trainingData }),
-        success: function(response) {
-          alert('Classifier created successfully!');
-          window.location.href = '/models/text/text_classifiers';
-        },
-        error: function(xhr) {
-          let errorMessage = 'Failed to create classifier';
-          try {
-            const response = JSON.parse(xhr.responseText);
-            if (response.error) {
-              errorMessage = response.error;
-              if (response.details) {
-                errorMessage += ': ' + response.details;
-              }
-            }
-          } catch (e) {}
-          
-          alert(errorMessage);
-          $('#train-btn').prop('disabled', false).html('<i class="fas fa-cogs"></i> Train Classifier');
-        }
-      });
-    }
-
-    // Add initial categories
-    addCategory('positive');
-    addCategory('negative');
+    updateCounts();
+    updateTrainButtonState();
   });
+
+  // Add row handler
+  addRowBtn.addEventListener('click', () => {
+    const rowElement = trainingRowTemplate.content.cloneNode(true);
+    const row = rowElement.querySelector('.training-row');
+    
+    // Add cells for each category
+    const categoryCount = categoriesHeader.children.length;
+    for (let i = 0; i < categoryCount; i++) {
+      const cell = trainingCellTemplate.content.cloneNode(true);
+      row.appendChild(cell);
+    }
+    
+    trainingRows.appendChild(row);
+    updateCounts();
+    updateTrainButtonState();
+  });
+
+  // Remove category handler
+  categoriesHeader.addEventListener('click', (e) => {
+    if (!e.target.closest('.category-header__remove')) return;
+    
+    const header = e.target.closest('.category-header');
+    const index = Array.from(categoriesHeader.children).indexOf(header);
+    
+    // Remove header
+    header.remove();
+    
+    // Remove corresponding cell from each row
+    const rows = trainingRows.querySelectorAll('.training-row');
+    rows.forEach(row => {
+      row.children[index].remove();
+    });
+
+    updateCounts();
+    updateTrainButtonState();
+  });
+
+  // Update counts
+  function updateCounts() {
+    const categories = categoriesHeader.querySelectorAll('.category-header').length;
+    const rows = trainingRows.querySelectorAll('.training-row').length;
+    const examples = categories * rows;
+    
+    categoriesCount.textContent = `${categories} ${categories === 1 ? 'category' : 'categories'}`;
+    examplesCount.textContent = `${examples} ${examples === 1 ? 'example' : 'examples'}`;
+  }
+
+  // Enable/disable train button based on validation
+  function updateTrainButtonState() {
+    const hasName = classifierName.value.trim().length > 0;
+    const categories = categoriesHeader.querySelectorAll('.category-header');
+    const hasValidCategories = Array.from(categories).every(category => {
+      const name = category.querySelector('.category-header__input').value.trim();
+      return name.length > 0;
+    });
+    
+    const rows = trainingRows.querySelectorAll('.training-row');
+    const hasValidExamples = rows.length > 0 && Array.from(rows).every(row => {
+      return Array.from(row.querySelectorAll('.training-cell__input')).every(input => 
+        input.value.trim().length > 0
+      );
+    });
+    
+    trainBtn.disabled = !hasName || categories.length < 2 || !hasValidCategories || !hasValidExamples;
+  }
+
+  // Update train button state on input changes
+  document.addEventListener('input', (e) => {
+    if (e.target.matches('.form-input')) {
+      updateTrainButtonState();
+    }
+  });
+
+  // Initialize with 2 categories and 1 row
+  addCategoryBtn.click();
+  addCategoryBtn.click();
+  addRowBtn.click();
+});
 </script>
 
 {{> footer }}

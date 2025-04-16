@@ -1,5 +1,6 @@
 @use '../../common/variables' as *;
 @use '../../common/mixins' as *;
+@use 'sass:color';
 
 // Chat container styles
 .chat-container {
@@ -99,7 +100,7 @@
     transition: all 0.2s ease-out;
 
     &:hover {
-        background-color: darken($blue, 10%);
+        background-color: color.adjust($blue, $lightness: -10%);
         transform: translateY(-1px);
     }
 
