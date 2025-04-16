@@ -29,12 +29,32 @@ router.get('/text_home', (req, res) => {
 });
 
 /**
+ * Vision classification home page
+ */
+router.get('/vision_home', (req, res) => {
+  res.render('models/vision-home', {
+    title: 'Vision Classification',
+    description: 'Train and test image classification models'
+  });
+});
+
+/**
  * New text classifier page
  */
 router.get('/classify/text/new', (req, res) => {
   res.render('models/text/new-classifier', {
     title: 'Create Text Classifier',
     description: 'Create and train a new text classifier'
+  });
+});
+
+/**
+ * New vision classifier page
+ */
+router.get('/classify/vision/new', (req, res) => {
+  res.render('models/vision/new-classifier', {
+    title: 'Create Vision Classifier',
+    description: 'Create and train a new image classifier'
   });
 });
 
