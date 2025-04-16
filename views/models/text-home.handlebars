@@ -1,0 +1,79 @@
+{{> header }}
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-12 text-center mb-4">
+      <h1>Text Classification</h1>
+      <p class="lead">Train and test custom text classification models with the improved Cognimates platform.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card h-100 shadow">
+        <div class="card-body">
+          <h2 class="card-title">Create Text Classifier</h2>
+          <p class="card-text">Build a custom text classifier by providing examples for each category.</p>
+          <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item">Train with just a few examples per category</li>
+            <li class="list-group-item">Fast, simplified training process</li>
+            <li class="list-group-item">Ideal for sentiment analysis and text categorization</li>
+          </ul>
+          <a href="/classify/text/new" class="btn btn-primary btn-lg btn-block">Create New Classifier</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="card h-100 shadow">
+        <div class="card-body">
+          <h2 class="card-title">Use Existing Classifier</h2>
+          <p class="card-text">Test and use your previously trained text classifiers.</p>
+          <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item">Test classification with new text</li>
+            <li class="list-group-item">View confidence scores for each category</li>
+            <li class="list-group-item">Manage your saved classifiers</li>
+          </ul>
+          <a href="/models/text/text_classifiers" class="btn btn-success btn-lg btn-block">My Classifiers</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card shadow">
+        <div class="card-header bg-light">
+          <h3>How Text Classification Works</h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4 text-center mb-3">
+              <div class="p-3 border rounded bg-light">
+                <i class="fas fa-pencil-alt fa-3x mb-3 text-primary"></i>
+                <h4>1. Create Categories</h4>
+                <p>Define the categories you want to classify text into</p>
+              </div>
+            </div>
+            <div class="col-md-4 text-center mb-3">
+              <div class="p-3 border rounded bg-light">
+                <i class="fas fa-list fa-3x mb-3 text-primary"></i>
+                <h4>2. Add Examples</h4>
+                <p>Provide example text for each category</p>
+              </div>
+            </div>
+            <div class="col-md-4 text-center mb-3">
+              <div class="p-3 border rounded bg-light">
+                <i class="fas fa-check-circle fa-3x mb-3 text-primary"></i>
+                <h4>3. Train & Test</h4>
+                <p>Train your model and classify new text</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{> footer }}

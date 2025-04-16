@@ -5,3 +5,5 @@ temp/
 package-lock.json
 .vscode/
 .env
+key/
+coverage/
