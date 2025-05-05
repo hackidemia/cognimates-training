@@ -10,7 +10,9 @@
 
 // Import the GCP service
 const GcpAutoMlService = require('../services/gcp-auto-ml');
+const MockGcpService = require('../services/mock-gcp-service');
 const { Storage } = require('@google-cloud/storage');
+const fs = require('fs').promises;
 
 /**
  * Response data for a successful operation
@@ -40,7 +42,7 @@ const { Storage } = require('@google-cloud/storage');
 
 /**
  * Create a configured instance of the GCP AutoML service
- * @returns {GcpAutoMlService} Configured service instance
+ * @returns {GcpAutoMlService|MockGcpService} Configured service instance
  */
 function createGcpService() {
   // Get configuration from environment variables
@@ -49,6 +51,18 @@ function createGcpService() {
     region: process.env.GCP_REGION,
     bucketName: process.env.GCS_BUCKET_NAME,
   };
+  
+  const useMockService = process.env.NODE_ENV === 'development' || 
+                         !process.env.GOOGLE_APPLICATION_CREDENTIALS ||
+                         !fs.access(process.env.GOOGLE_APPLICATION_CREDENTIALS)
+                           .then(() => false)
+                           .catch(() => true);
+  
+  if (useMockService) {
+    console.log('Using mock GCP service for development or missing credentials');
+    return new MockGcpService(config);
+  }
+  
   return new GcpAutoMlService(config);
 }
 
